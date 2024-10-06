@@ -57,8 +57,8 @@ export class SuiClefChangeAdapter extends SuiComponentAdapter {
   }
 }
 /**
- * @category SuiDialog
  * clefs same as new part
+ * @category SuiDialog
  */
 export class SuiClefChangeDialog extends SuiDialogAdapterBase<SuiClefChangeAdapter> {
   /**

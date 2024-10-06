@@ -5,6 +5,9 @@ import { SuiRenderState } from "../render/sui/renderState";
 export type promiseFunction = () => void;
 export type promiseCondition = () => boolean;
 export type promiseInstance = () => Promise<any>;
+/**
+ * @internal
+ */
 export interface PromiseParameters {
   endCondition: promiseCondition, preResolveMethod: promiseFunction | null, pollMethod: promiseFunction | null, pollTime: number
 }

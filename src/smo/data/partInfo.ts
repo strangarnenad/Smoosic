@@ -20,6 +20,9 @@ export type SmoPartInfoBooleanType = 'preserveTextGroups' | 'cueInScore' | 'expa
 export const SmoPartInfoBooleanTypes: SmoPartInfoBooleanType[] = ['preserveTextGroups', 'cueInScore', 'expandMultimeasureRests'];
 
 export const SmoPartAttributesBasic = ['partName', 'partAbbreviation', 'stavesAfter', 'stavesBefore', 'preserveTextGroups', 'cueInScore', 'expandMultimeasureRests'];
+/**
+ * @category SmoObject
+ */
 export interface SmoMidiInstrument {
   channel: number,
   program: number,

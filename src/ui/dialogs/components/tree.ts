@@ -4,6 +4,9 @@ import { SuiComponentBase, SuiDialogNotifier } from './baseComponent';
 import { buildDom } from '../../../common/htmlHelpers';
 declare var $: any;
 
+/**
+ * @category SuiDialog
+ */
 export interface TreeComponentOption {
   label: string,
   value: string | undefined, 
@@ -11,7 +14,9 @@ export interface TreeComponentOption {
   format: string,
   expanded: boolean
 }
-
+/**
+ * @category SuiDialog
+ */
 export interface SuiTreeComponentParams {
   id: string,
   classes: string,

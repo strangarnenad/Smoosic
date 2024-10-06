@@ -7,9 +7,15 @@ import { buildDom } from '../../../common/htmlHelpers';
 import { SuiScoreViewOperations } from '../../../render/sui/scoreViewOperations';
 import { SmoSystemGroup } from '../../../smo/data/scoreModifiers';
 declare var $: any;
+/**
+ * @category SuiDialog
+ */
 export interface StaffAddControlRow {
   showCtrl: SuiToggleComposite
 }
+/**
+ * @category SuiDialog
+ */
 export interface StaffAddRemoveComponentParams {
   id: string,
   classes: string,
@@ -143,6 +149,9 @@ export class StaffAddRemoveComponent extends SuiComponentBase {
     this.bind();
   }
 }
+/**
+ * @category SuiDialog
+ */
 export interface StaffCheckComponentParams {
   id: string,
   classes: string,
@@ -150,9 +159,15 @@ export interface StaffCheckComponentParams {
   smoName: string,
   control: string
 }
+/**
+ * @category SuiDialog
+ */
 export interface StaffCheckControlRow {
   showCtrl: SuiToggleComposite
 }
+/**
+ * @category SuiDialog
+ */
 export interface StaffCheckValue {
   show: boolean;
 }

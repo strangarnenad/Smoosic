@@ -10,6 +10,7 @@ import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComp
 
 /**
  * Pitch and chord manipulation components.
+ * @category SuiDialog
  */
 export class SuiTransposeButtonComponent extends SuiComponentParent {
   upOctaveComponent: SuiButtonComposite;

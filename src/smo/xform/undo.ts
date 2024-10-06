@@ -9,7 +9,9 @@ import { SmoMeasure, SmoMeasureParamsSer } from '../data/measure';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoTextGroup, SmoTextGroupContainer } from '../data/scoreText';
 import { SmoSelector } from './selections';
-
+/**
+ * @category SmoTransform
+ */
 export interface UndoEntry {
   title: string,
   type: number,

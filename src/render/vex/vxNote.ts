@@ -22,7 +22,9 @@ import { VexFlow, Stave,StemmableNote, Note, Beam, Tuplet, Voice,
   TabNote} from '../../common/vex';
 
 const VF = VexFlow;
-
+/**
+ * @category SuiRender
+ */
 export interface VxMeasureIf {
   isWholeRest(): boolean;
   noteToVexMap: Record<string, Note>;
@@ -30,6 +32,9 @@ export interface VxMeasureIf {
   tickmapObject: MeasureTickmaps | null
 }
 
+/**
+ * @category SuiRender
+ */
 export interface VexNoteModifierIf {
   smoMeasure: SmoMeasure,
   vxMeasure: VxMeasureIf,

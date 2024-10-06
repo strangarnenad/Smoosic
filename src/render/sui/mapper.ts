@@ -34,7 +34,10 @@ export interface SuiRendererBase {
   addToReplaceQueue(mm: SmoSelection[]): void,
   renderElement: Element
 }
-// used to perform highlights in the backgroundd
+/**
+ * used to perform highlights in the backgroundd
+ * @category SuiRender
+ */
 export interface HighlightQueue {
   selectionCount: number, deferred: boolean
 }

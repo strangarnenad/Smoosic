@@ -238,6 +238,7 @@ export class SmoScoreText extends SmoScoreModifierBase {
 }
 /**
  * Each text block has the text data itself and some data about how it's placed
+ * @category SmoObject
  */
 export interface SmoTextBlock {
   /**
@@ -253,6 +254,9 @@ export interface SmoTextBlock {
    */
   activeText: boolean
 }
+/**
+ * @category SmoObject
+ */
 export interface SmoTextBlockSer {
   /**
    * The score text
@@ -265,6 +269,7 @@ export interface SmoTextBlockSer {
 }
 /**
  * Used to place text imported from other formats, e.g. music xml
+ * @category SmoObject
  */
 export interface SmoTextPlacement {
   fontFamily: string,
@@ -365,7 +370,9 @@ function isTextBlockSer(params: Partial<SmoTextBlockSer>): params is SmoTextBloc
  * Suggestion for text purpose, maybe used to find a match..maybe not used at all
  */
 export type SmoTextGroupPurpose = 'NONE' |'TITLE' | 'SUBTITLE' | 'COMPOSER' | 'COPYRIGHT';
-
+/**
+ * @category SmoObject
+ */
 export interface SmoTextGroupContainer {
   updateTextGroup: (textGroup: SmoTextGroup, toAdd: boolean) => void,
   addTextGroup: (textGroup: SmoTextGroup) => void,

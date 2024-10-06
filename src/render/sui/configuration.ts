@@ -3,6 +3,7 @@ import { SuiAudioAnimationParams } from '../audio/musicCursor';
 
 /**
  * Define configurable rendering options
+ * @category SuiRender
  * @module /render/sui/configuration
  */
 export interface SmoRenderConfiguration {

@@ -8,6 +8,7 @@ declare var $: any;
 
 /**
  * SuiRender
+ * @internal
  */
 export interface CodeRegion {
   time: number,

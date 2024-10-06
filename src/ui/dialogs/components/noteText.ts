@@ -11,12 +11,9 @@ import { SuiComponentBase, SuiDialogNotifier } from './baseComponent';
 import { SmoLyric } from '../../../smo/data/noteModifiers';
 
 declare var $: any;
-
 /**
-
+ * @category SuiDialog
  */
-
-
 export interface SuiNoteTextParams {
   id: string,
   classes: string,

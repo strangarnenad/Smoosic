@@ -29,6 +29,7 @@ const VF = VexFlow;
 /**
  * a renderer creates the SVG render context for vexflow from the given element. Then it
  * renders the initial score.
+ * @category SuiRender
  */
  export interface ScoreRenderParams {
   elementId: any,
@@ -36,7 +37,9 @@ const VF = VexFlow;
   config: SmoRenderConfiguration,
   undoBuffer: UndoBuffer
 }
-
+/**
+ * @category SuiRender
+ */
 export interface MapParameters {
   vxSystem: VxSystem, measuresToBox: SmoMeasure[], modifiersToBox: StaffModifierBase[], printing: boolean
 }

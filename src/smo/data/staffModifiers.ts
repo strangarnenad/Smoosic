@@ -53,6 +53,9 @@ export abstract class StaffModifierBase implements SmoModifierBase {
   }
   abstract serialize(): any;
 }
+/**
+ * @category serialization
+ */
 export interface StaffModifierBaseSer {
   attrs: SmoAttrs;
   ctor: string;
@@ -266,7 +269,9 @@ export class SmoInstrument extends StaffModifierBase {
     return rv;
   }
 }
-
+/**
+ * @category SmoObject
+ */
 export interface SmoInstrumentMeasure {
   measureIndex: number,
   instrument: SmoInstrumentParams;
@@ -579,6 +584,7 @@ export class SmoStaffTextBracket extends StaffModifierBase {
 
 /**
  * used for debugging
+ * @internal
  */
 export interface SlurDefaultParams {
   stemDir1: number,
@@ -786,6 +792,7 @@ export class SmoSlur extends StaffModifierBase {
 
 /**
  * Map pitch indices of the tie line
+ * @category SmoObject
  */
 export interface TieLine {
   from: number,

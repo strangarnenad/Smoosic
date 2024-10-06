@@ -22,11 +22,16 @@ import { VexFlow, Voice, Note, createHairpin, createSlur, createTie, PedalMarkin
  } from '../../common/vex';
 import { toVexVolta, vexOptions } from './smoAdapter';
 const VF = VexFlow;
-
+/**
+ * @category SuiRender
+ */
 export interface VoltaInfo {
   smoMeasure: SmoMeasure,
   ending: SmoVolta
 }
+/**
+ * @category SuiRender
+ */
 export interface SuiSystemGroup {
   firstMeasure: VxMeasure,
   voices: Voice[]

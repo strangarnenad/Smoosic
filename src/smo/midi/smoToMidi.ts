@@ -59,7 +59,9 @@ declare var MidiWriter: any;
               value: 'none',
               label: 'None'
             }]*/
-
+/**
+ * @category serialization
+ */
 export interface MidiTrackHash {
   track: any,
   lastMeasure: number

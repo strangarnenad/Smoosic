@@ -4,7 +4,7 @@ declare var $: any;
 
 /**
  * parameters for text input component (simple text entry, not SVG text)
- * @category SuiDialogParams
+ * @category SuiDialog
  */
 export interface SuiTextInputComponentParams {
   id: string,
@@ -58,6 +58,9 @@ export class SuiTextInputComponent extends SuiComponentBase {
     });
   }
 }
+/**
+ * @category SuiDialog
+ */
 export interface SuiTextInputCompositeParams {
   id: string,
   classes: string,
@@ -85,6 +88,10 @@ export class SuiTextInputComposite extends SuiTextInputComponent {
     this.changeFlag = false;
   }
 }
+/**
+ * A static text message that appears in the dialog
+ * @category SuiDialog
+ */
 export class SuiReadOnlyTextComponent extends SuiTextInputComponent {
   constructor(dialog: SuiDialogNotifier, parameter: SuiTextInputComponentParams) {
     super(dialog, parameter);

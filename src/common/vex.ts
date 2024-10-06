@@ -23,36 +23,67 @@ import { SvgBox } from "../smo/data/common";
 // export type Vex = SmoVex;
 export const VexFlow = SmoVex.Flow;
 const VF = VexFlow;
+// @internal
 export type Music = VexMusic;
+// @internal
 export type Note = VexNote;
+// @internal
 export type StaveNote = VexStaveNote;
+// @internal
 export type Stem = VexStem;
+// @internal
 export type StemmableNote = VexStemmableNote;
+// @internal
 export type Beam = VexBeam;
+// @internal
 export type Tuplet = VexTuplet;
+// @internal
 export type TupletOptions = VexTupletOptions;
+// @internal
 export type PedalMarking = VexPedalMarking;
+// @internal
 export type Voice = VexVoice;
+// @internal
 export type Accidental = VexAccidental;
+// @internal
 export type Font = VexFont;
+// @internal
 export type FontInfo = VexFontInfo;
+// @internal
 export type FontStyle = VexFontStyle;
+// @internal
 export type FontWeight = VexFontWeight;
+// @internal
 export type Formatter = VexFormatter;
+// @internal
 export type Annotation = VexAnnotation;
+// @internal
 export type TextNote = VexTextNote;
+// @internal
 export type StaveNoteStruct = VexStaveNoteStruct;
+// @internal
 export type StaveModifier = VexStaveModifier;
+// @internal
 export type StaveText = VexStaveText;
+// @internal
 export type Stave = VexStave;
+// @internal
 export type Curve = VexCurve;
+// @internal
 export type StaveTie = VexStaveTie;
+// @internal
 export type ClefNote = VexClefNote;
+// @internal
 export type StaveModifierPosition = VexStaveModifierPosition;
+// @internal
 export type TabStave = VexTabStave;
+// @internal
 export type TabNote = VexTabNote;
+// @internal
 export type TabSlide = VexTabSlide;
+// @internal
 export type TabNotePosition = VexTabNotePosition;
+// @internal
 export type TabNoteStruct = VexTabNoteStruct;
 
 /**

@@ -4,8 +4,8 @@
 declare var JSZip: any;
 
 /**
- * @category SuiFile
  * Load a file.  Guess based on the extension whether the file is string or binary
+ * @category SuiFile
  */
 export class SuiXhrLoader {
   compressed: boolean = false;

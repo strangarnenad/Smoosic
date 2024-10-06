@@ -2,6 +2,9 @@ import { buildDom } from '../../../common/htmlHelpers';
 import { SuiComponentBase, SuiDialogNotifier, SuiComponentParent } from './baseComponent';
 import { SuiFileInput } from '../../fileio/fileInput';
 declare var $: any;
+/**
+ * @category SuiDialog
+ */
 export interface SuiFileDownloadComponentParams {
   id: string,
   classes: string,

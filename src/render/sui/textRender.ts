@@ -18,7 +18,7 @@ const VF = VexFlow;
 
 /**
  * parameters to render text
- * @category SuiParameters
+ * @category SuiRender
  */
 export interface SuiInlineTextParams {
   fontFamily: string,
@@ -35,7 +35,7 @@ export interface SuiInlineTextParams {
 /**
  * metrics for a single line of text.  A textGroup can be composed
  * of multiple inline blocks.
- * @category SuiParameters
+ * @category SuiRender
  */
 export interface SuiInlineBlock {
   symbolType: number,
@@ -51,6 +51,9 @@ export interface SuiInlineBlock {
   glyphCode: string,
   text: string
 }
+/**
+ * @category SuiRender
+ */
 export interface SuiInlineArtifact {
   block: SuiInlineBlock,
   box: SvgBox,
@@ -570,11 +573,17 @@ export class SuiInlineText {
   }
 }
 
+/**
+ * @category SuiRender
+ */
 export interface SuiTextBlockBlock {
   text: SuiInlineText;
   position: number;
   activeText: boolean;
 }
+/**
+ * @category SuiRender
+ */
 export interface SuiTextBlockParams {
   blocks: SuiTextBlockBlock[];
   scroller: SuiScroller;
@@ -583,11 +592,16 @@ export interface SuiTextBlockParams {
   skipRender: boolean;
   justification: number;
 }
+/**
+ * @category SuiRender
+ */
 export interface SuiTextBlockJusityCalc {
   blocks: SuiInlineText[], minx: number, maxx: number, width: number
 }
-// ## SuiTextBlock
-// A text block is a set of inline blocks that can be aligned/arranged in different ways.
+/**
+ * SVG representation of SmoTextGroup
+ * @category SuiRender
+ */
 export class SuiTextBlock {
   static get relativePosition() {
     return {

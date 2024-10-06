@@ -2,10 +2,15 @@
 // Copyright (c) Aaron David Newman 2021.
 import { buildDom, createTopDomContainer, draggable } from "../common/htmlHelpers";
 import { KeyEvent } from '../smo/data/common';
-
+/**
+ * @category SuiDialog
+ */
 export interface SuiKbRow {
   row: string, shifted: string;
 };
+/**
+ * @category SuiDialog
+ */
 export interface SuiKbKey {
   icon: string, text: string, shifted: string, classes: string, dataKey: string
 };

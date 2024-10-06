@@ -149,7 +149,6 @@ export class SuiRockerComponent extends SuiComponentBase {
 /**
  * Create rocker composite
  * @category SuiDialog
- * @param{id}
  */
 export interface SuiRockerCompositeParams {
   id: string,
@@ -162,6 +161,9 @@ export interface SuiRockerCompositeParams {
   control: string,
   parentControl: SuiComponentParent
 }
+/**
+ * @category SuiDialog
+ */
 export class SuiRockerComposite extends SuiRockerComponent {
   parentControl: SuiComponentParent;
   constructor(dialog: SuiDialogNotifier, parameters: SuiRockerCompositeParams) {

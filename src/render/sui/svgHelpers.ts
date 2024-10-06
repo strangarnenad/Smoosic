@@ -5,7 +5,9 @@ import { Transposable, SvgBox, SvgPoint } from '../../smo/data/common';
 import { SvgPage } from './svgPageMap';
 
 declare var $: any;
-
+/**
+ * @internal
+ */
 export interface StrokeInfo {
   strokeName: string,
   stroke: string,
@@ -15,6 +17,9 @@ export interface StrokeInfo {
   opacity: number
 }
 
+/**
+ * @internal
+ */
 export interface OutlineInfo {
   stroke: StrokeInfo,
   classes: string,
@@ -26,10 +31,16 @@ export interface OutlineInfo {
   element?: SVGSVGElement
 }
 
+/**
+ * @internal
+ */
 export interface GradientInfo {
   color: string, offset: string, opacity: number
 }
 
+/**
+ * @internal
+ */
 export interface Boxable {
   box: SvgBox
 }

@@ -23,6 +23,7 @@ declare var $: any;
 
 /**
  * Basic parameters to create a text editor
+ * @category SuiRender
  * @param context Vex renderer context
  * @param scroller
  * @param x initial x position
@@ -37,10 +38,16 @@ export interface SuiTextEditorParams {
   y: number,
   text: string
 }
+/**
+ * @category SuiRender
+ */
 export interface SuiLyricEditorParams extends SuiTextEditorParams {
   lyric: SmoLyric
 }
 
+/**
+ * @category SuiRender
+ */
 export interface SuiTextSessionParams {
   scroller: SuiScroller;
   renderer: SuiRenderState;
@@ -51,6 +58,9 @@ export interface SuiTextSessionParams {
   textGroup: SmoTextGroup;
 }
 
+/**
+ * @category SuiRender
+ */
 export interface SuiLyricSessionParams {
   score: SmoScore;
   renderer: SuiRenderState;

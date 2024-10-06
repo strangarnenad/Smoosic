@@ -106,6 +106,7 @@ export interface SmoMeasureFormatParamsSer extends  SmoMeasureFormatParams{
  * ISmoMeasureFormatMgr is the DI interface to the
  * format manager.  Measure formats are often the same to multiple measures
  * so we don't serialize each one - instead we map them with this interface
+ * @category SmoObject
  */
 export interface ISmoMeasureFormatMgr {
   format: SmoMeasureFormatParams,
@@ -212,12 +213,15 @@ export class SmoMeasureFormat extends SmoMeasureModifierBase implements SmoMeasu
 }
 /**
  * Used to create a {@link SmoBarline}
+ * @category SmoObject
  */
 export interface SmoBarlineParams {
   position: number | null,
   barline: number | null
 }
-
+/**
+ * @category serialization
+ */
 export interface SmoBarlineParamsSer extends SmoBarlineParams {
   ctor: string,
   position: number | null,
@@ -668,6 +672,7 @@ export type SmoTempoBooleanAttribute = 'display';
 export type SmoTempoMode = 'duration' | 'text' | 'custom';
 /**
  * constructor parameters for {@link SmoTempoText}
+ * @category SmoObject
  */
 export interface SmoTempoTextParams {
   /**
@@ -706,6 +711,9 @@ export interface SmoTempoTextParams {
 export interface SmoTempoTextParamsSer extends SmoTempoTextParams {
   ctor: string;
 }
+/**
+ * @internal
+ */
 export interface VexTempoTextParams {
   duration?: string, dots?: number, bpm?: number, name?: string 
 }

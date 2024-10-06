@@ -18,7 +18,7 @@ declare var $: any;
  * @param smoName variable name in dialog/adapter
  * @param control name of constructor
  * @param disabledOption
- * @category SuiDialogParams
+ * @category SuiDialog
  */
 export interface SuiDropdownComponentParams {
   id: string,

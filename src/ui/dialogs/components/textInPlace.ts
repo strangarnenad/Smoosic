@@ -11,7 +11,9 @@ import { SuiInlineText } from '../../../render/sui/textRender';
 import { buildDom } from '../../../common/htmlHelpers';
 
 declare var $: any;
-
+/**
+ * @category SuiDialog
+ */
 export interface SuiTextInPlaceParams {
   id: string,
   classes: string,
@@ -165,8 +167,9 @@ export class SuiTextInPlace extends SuiComponentBase {
     });
   }
 }
-
-
+/**
+ * @category SuiDialog
+ */
 export interface SuiTextBlockComponentParams {
   id: string,
   classes: string,
@@ -174,6 +177,9 @@ export interface SuiTextBlockComponentParams {
   smoName: string,
   control: string
 }
+/**
+ * @category SuiDialog
+ */
 export interface SuiTextBlockValue {
   modifier: SmoTextGroup,
   activeScoreText: SmoScoreText

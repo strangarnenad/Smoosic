@@ -9,10 +9,16 @@ import { SmoTie, TieLine } from '../../../smo/data/staffModifiers';
 import { SmoNote } from '../../../smo/data/note';
 declare var $: any;
 
+/**
+ * @category SuiDialog
+ */
 export interface PitchTieControlRow {
   leftControl: SuiDropdownComposite,
   rightControl: SuiDropdownComposite
 }
+/**
+ * @category SuiDialog
+ */
 export interface TieMappingComponentParams {
   id: string,
   classes: string,

@@ -21,7 +21,9 @@ import { SvgPageMap } from './svgPageMap';
 import { VexFlow, defaultMeasurePadding } from '../../common/vex';
 import { TextFormatter } from '../../common/textformatter';
 const VF = VexFlow;
-
+/**
+ * @category SuiRender
+ */
 export interface SuiTickContext {
   widths: number[],
   tickCounts: number[]
@@ -33,6 +35,9 @@ export interface SuiTickContext {
 export interface MeasureEstimate {
   measures: SmoMeasure[], x: number, y: number
 }
+/**
+ * @category SuiRender
+ */
 export interface LineRender {
   systems: Record<number, SmoMeasure[]>
 }
@@ -41,7 +46,7 @@ export interface LineRender {
  * Keep track of start/end measures on a page.  If the page
  * content doesn't change, and the measures don't change, we don't
  * need to re-render the content
- * @catgegory SuiRender
+ * @category SuiRender
  */
 export interface RenderedPage {
   startMeasure: number,

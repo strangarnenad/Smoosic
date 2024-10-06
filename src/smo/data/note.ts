@@ -17,7 +17,9 @@ import { Ticks, Pitch, SmoAttrs, Transposable, PitchLetter, SvgBox, getId,
   createXmlAttribute,  serializeXmlModifierArray} from './common';
 import { FontInfo, vexCanonicalNotes } from '../../common/vex';
 import { SmoTupletParamsSer } from './tuplet';
-
+/**
+ * @category SmoObject
+ */
 export interface TupletInfo {
   id: string;
 }

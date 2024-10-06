@@ -31,6 +31,9 @@ export interface MenuDefinition {
   label: string,
   menuItems: MenuChoiceDefinition[]
 }
+/**
+ * @category SuiMenu
+ */
 export interface MenuTranslation {
   ctor: string,
   label: string,

@@ -5,7 +5,9 @@ import { buildDom } from "../../common/htmlHelpers";
 import { SuiScoreViewOperations } from "./scoreViewOperations";
 import { SvgBox, Pitch, PitchLetter } from '../../smo/data/common';
 declare var $: any;
-
+/**
+ * @internal
+ */
 export interface PianoKey {
   box: SvgBox,
   keyElement: SVGSVGElement

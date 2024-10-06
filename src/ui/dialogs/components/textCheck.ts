@@ -7,6 +7,9 @@ import { SuiTextInputComposite } from '../components/textInput';
 import { buildDom } from '../../../common/htmlHelpers';
 import { SuiScoreViewOperations } from '../../../render/sui/scoreViewOperations';
 declare var $: any;
+/**
+ * @category SuiDialog
+ */
 export interface TextCheckComponentParams {
   id: string,
   classes: string,
@@ -14,6 +17,9 @@ export interface TextCheckComponentParams {
   smoName: string,
   control: string
 }
+/**
+ * @category SuiDialog
+ */
 export interface TextCheckPair {
   checked: boolean,
   text: string

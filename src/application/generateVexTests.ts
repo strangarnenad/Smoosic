@@ -3,6 +3,9 @@ import { SmoConfigurationParams } from "./configuration";
 import { SmoToVex } from '../render/vex/toVex';
 import { SuiXhrLoader } from '../ui/fileio/xhrLoader';
 import { SmoScore } from '../smo/data/score';
+/**
+ * @internal
+ */
 export interface ScoreToRender {
   title: string, path: string, pages: number[]
 }

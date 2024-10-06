@@ -6,15 +6,24 @@ import { SuiScoreViewOperations } from '../../../render/sui/scoreViewOperations'
 import { SuiButtonComponentParams } from './button';
 
 declare var $: any;
+/**
+ * @category SuiDialog
+ */
 export interface SuiButtonComponentRowParameters {
   label: string,
   classes: string
   buttons: SuiButtonComponentParams[]
 }
+/**
+ * @category SuiDialog
+ */
 export interface SuiButtonArrayParameters {
   label: string,
   rows: SuiButtonComponentRowParameters[] 
 }
+/**
+ * @category SuiDialog
+ */
 declare interface SuiButtonCompositeParams extends SuiButtonComponentParams {
   parentControl: SuiComponentParent
 }
@@ -104,6 +113,9 @@ export interface SuiButtonComponentRow {
   buttons: SuiButtonArrayButton[]
 }
 export type getButtonsFcn = () => SuiButtonArrayParameters;
+/**
+ * @category SuiDialog
+ */
 export abstract class SuiButtonArrayBase extends SuiComponentParent {
   view: SuiScoreViewOperations;
   buttonRows: SuiButtonComponentRow[] = [];

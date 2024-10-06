@@ -4,6 +4,7 @@
  */
 /**
  * Same as attrs object in Vex objects.
+ * @category SmoObject
  * @param id - unique identifier, can be used in DOM elements
  * @param type - a little bit redundate with `ctor` in `SmoObjectParams`
  */
@@ -38,6 +39,7 @@ export const getId = () => `smo` + (nextId++).toString();
 /**
  * All note, measure, staff, and score objects have
  * a serialize method and are deserializable with constructor `ctor`
+ * @category SmoObject
  */
 export interface SmoObjectParams {
     ctor: string,
@@ -47,6 +49,7 @@ export interface SmoObjectParams {
 /**
  * Note duration.  The same abstraction used by vex, except here denominator is
  * always 1.  remainder is used to reconstruct non-tuplets from tuplets.
+ * @category SmoObject
  * @param numerator - duration, 4096 is 1/4 note
  * @param denominator - always 1 for SMO objects
  * @param remainder - used for tuplets whose duration doesn't divide evenly
@@ -68,6 +71,7 @@ export function IsPitchLetter(letter: PitchLetter | string): letter is PitchLett
 
 /**
  * PitchKey is a SmoPitch, without the octave
+ * @category SmoObject
  * @param letter - letter note
  * @param accidental - an accidental or microtone
  */
@@ -77,6 +81,7 @@ export interface PitchKey {
 }
 /**
  * Represents a single pitch in Smo object model.
+ * @category SmoObject
  * @param letter - letter note
  * @param accidental - an accidental or microtone
  * @param octave - standard octave
@@ -93,6 +98,7 @@ export interface Pitch {
 
 /**
  * A tuple indicating measure location in the score:
+ * @category SmoObject
  * @param measureIndex - the actual offset from the first measure
  * @param localIndex - the index as shown to the user, considers renumbering
  * @param sytemIndex - which bar (column) of a system this measure is
@@ -165,8 +171,6 @@ export interface Transposable {
     renderId: string | null,
     logicalBox: SvgBox | null
 }
-
-
 /**
  * All note, measure etc. modifiers have these attributes.  The SVG info
  * is for the tracker to track the artifacts in the UI (mouse events, etc)
@@ -200,6 +204,7 @@ export function serializeXmlModifierArray(object: SmoXmlSerializable[], namespac
 
 /**
  * Renderable is just a thing that has a bounding box
+ * @internal
  */
 export interface Renderable {
     logicalBox: SvgBox | null | undefined
@@ -220,6 +225,7 @@ export function IsClef(clef: Clef | string): clef is Clef {
 /**
  * Most event handling in SMO is an 'any' from jquery, but
  * key events are sometimes narrowed to the common browser key event
+ * @internal
  */
 export interface KeyEvent {
   type: string,
@@ -243,7 +249,9 @@ export function keyEventMatch(ev1: KeyEvent, ev2: KeyEvent): boolean {
   ev1.ctrlKey === ev2.ctrlKey &&
   ev1.altKey === ev2.altKey && ev1.shiftKey === ev2.shiftKey
 }
-
+/**
+ * @internal
+ */
 export interface TickAccidental {
   duration: number,
   pitch: Pitch

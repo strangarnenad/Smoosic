@@ -10,6 +10,9 @@ import { SuiRockerComposite } from './rocker';
 import { SuiButtonComposite } from './button';
 import { SmoTabStave } from '../../../smo/data/staffModifiers';
 declare var $: any;
+/**
+ * @category SuiDialog
+ */
 export interface SuiPitchComponentParams {
   id: string,
   classes: string,
@@ -133,11 +136,17 @@ export class SuiPitchComposite extends SuiPitchComponent {
     this.changeFlag = false;
   }
 }
+/**
+ * @category SuiDialog
+ */
 export interface SuiPitchArrayItem {
   buttonCtrl: SuiButtonComposite,
   pitchCtrl: SuiPitchComposite,
   pitch: Pitch
 }
+/**
+ * @category SuiDialog
+ */
 export interface SuiPitchArrayParams {
   id: string,
   classes: string,

@@ -7,7 +7,9 @@ import { smoSerialize } from '../../common/serializationHelpers';
 import { SuiMenuParams } from '../menus/menu';
 declare var $: any;
 
-
+/**
+ * @category SuiButton
+ */
 export interface SuiCollapsableButtonParams {
   ctor: string,
   buttonId: string,

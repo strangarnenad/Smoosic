@@ -4,7 +4,7 @@ declare var $: any;
 
 /**
  * parameters for simple on-off toggle
- * @category SuiDialogParams
+ * @category SuiDialog
  */
 export interface SuiToggleComponentParams {
   id: string,
@@ -57,6 +57,7 @@ export class SuiToggleComponent extends SuiComponentBase {
 
 /**
  * Params for toggle combined with another component
+ * @category SuiDialog
  */
 export interface SuiToggleCompositeParams {
   id: string,

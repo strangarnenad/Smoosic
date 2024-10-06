@@ -56,6 +56,7 @@ export abstract class SmoScoreModifierBase implements SmoModifierBase {
 
 /**
  * For global/default font settings.
+ * @category SmoObject
  * @param name to distinguish: chord, lyric etc.
  * @param family font family
  * @param size in points
@@ -129,6 +130,7 @@ export const SmoScorePreferenceBools: SmoScorePreferenceBool[] = ['autoPlay', 'a
 export const SmoScorePreferenceNumbers: SmoScorePreferenceNumber[] = ['defaultDupleDuration', 'defaultTripleDuration'];
 /**
  * Global score/program behavior preferences, see below for parameters
+ * @category SmoObject
  */
 export interface SmoScorePreferencesParams {
   autoPlay: boolean;

@@ -9,33 +9,48 @@ import { SmoSelector } from '../xform/selections';
 import { SmoBarline } from '../data/measureModifiers';
 import { XmlTupletData } from './xmlState';
 
+/**
+ * @category serialization
+ */
 export interface XmlOrnamentData {
   ctor: string,
   params: Record<string, string>
 }
+/**
+ * @category serialization
+ */
 export interface XmlSmoMap {
   xml: string, smo: string
 }
+/**
+ * @category serialization
+ */
 export interface XmlDurationAlteration {
   noteCount: number, noteDuration: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlDuration {
   tickCount: number, duration: number, alteration: XmlDurationAlteration
 }
 /**
  * Store slur information when parsing xml
+ * @category serialization
  */
 export interface XmlSlurType {
   number: number, type: string, orientation: string, placement: string, controlX: number, controlY: number, selector: SmoSelector, yOffset: number
 }
 /**
  * Store tie  information when parsing xml
+ * @category serialization
  */
 export interface XmlTieType {
   number: number, type: string, orientation: string, selector: SmoSelector, pitchIndex: number
 }
 /**
  * Store tuplet information when parsing xml
+ * @category serialization
  */
 export interface XmlTupletType {
   number: number,
@@ -43,19 +58,26 @@ export interface XmlTupletType {
   data: XmlTupletData | null,
 }
 
+/**
+ * @category serialization
+ */
 export interface XmlTimeModificationType {
   actualNotes: number,
   normalNotes: number,
   normalType: number,
   //normalDot, todo: check if just bool or list of dots (probably list of dots)
 }
-
+/**
+ * @category serialization
+ */
 export interface XmlEndingData {
   numbers: number[], type: string
 }
 export type LyricSyllabic = 'begin' | 'end' | 'middle' | 'single';
+
 /**
  * Store lyric information when parsing xml
+ * @category serialization
  */
 export interface XmlLyricData {
   _text: string, verse: number | string, syllabic: LyricSyllabic
@@ -63,7 +85,7 @@ export interface XmlLyricData {
 /**
  * Utilities for parsing and serialzing musicXML.
  * @category serialization
- * */
+ */
 export class XmlHelpers {
   /**
    * mxml note 'types', really s/b stem types.

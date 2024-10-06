@@ -23,24 +23,42 @@ import {Clef} from '../data/common';
 import {SmoMusic} from '../data/music';
 import {SmoSelection, SmoSelector} from '../xform/selections';
 
+/**
+ * @category serialization
+ */
 export interface XmlClefInfo {
   clef: string, staffId: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlVoiceInfo {
   notes: SmoNote[],
   ticksUsed: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlStaffInfo {
   clefInfo: XmlClefInfo,
   measure: SmoMeasure | null,
   voices: Record<string | number, XmlVoiceInfo>
 }
+/**
+ * @category serialization
+ */
 export interface XmlBeamGroupInfo {
   ticks: number, notes: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlSystemInfo {
   startSelector: SmoSelector, endSelector: SmoSelector, leftConnector: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlStaffGroupInfo {
   start: number, length: number
 }
@@ -50,15 +68,27 @@ export interface XmlStaffGroupInfo {
 export interface XmlWedgeInfo {
   type: string
 }
+/**
+ * @category serialization
+ */
 export interface XmlWedgeState {
   type: string, start: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlHairpinInfo {
   type: string, start: number, end: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlDynamicInfo {
   dynamic: string, offset: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlCompletedTies {
   startSelector: SmoSelector,
   endSelector: SmoSelector,
@@ -66,6 +96,9 @@ export interface XmlCompletedTies {
   toPitch: number
 }
 
+/**
+ * @category serialization
+ */
 export interface XmlCompletedTuplet {
   tuplet: SmoTuplet,
   staffId: number,
@@ -83,27 +116,42 @@ export class XmlTupletStateTreeNode {
   }
 }
 
+/**
+ * @category serialization
+ */
 export interface XmlCompletedTupletState {
   tupletState: XmlTupletState,
   staffId: number,
   voiceId: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlTupletState {
   start: SmoSelector | null,
   end: SmoSelector | null,
   data: XmlTupletData | null,
 }
+/**
+ * @category serialization
+ */
 export interface XmlTupletData {
   numNotes: number,
   notesOccupied: number,
   stemTicks: number,
 }
 
+/**
+ * @category serialization
+ */
 export interface XmlEnding {
   start: number,
   end: number,
   number: number
 }
+/**
+ * @category serialization
+ */
 export interface XmlPartGroup {
   partNum: number,
   group: SmoSystemGroup,

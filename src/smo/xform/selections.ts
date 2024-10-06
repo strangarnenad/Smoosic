@@ -14,6 +14,7 @@ import { SvgBox, SvgPoint } from '../data/common';
 import { smoSerialize } from '../../common/serializationHelpers';
 /**
  * Modifier tab is a modifier and its bounding box, that can be tabbed to with the keyboard
+ * @category SmoTransform
  */
  export interface ModifierTab {
   modifier: SmoModifier,

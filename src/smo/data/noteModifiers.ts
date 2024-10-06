@@ -57,6 +57,9 @@ export function isClefChangeParamsSer(params: Partial<SmoClefChangeParamsSer>): 
   }
   return false;
 }
+/**
+ * @category SmoObject
+ */
 export interface SmoClefChangeParams  {
   clef: string
 }
@@ -246,7 +249,7 @@ export  const SmoArpeggioTypes = ['directionless', 'rasquedo_up', 'rasquedo_down
   'roll_up', 'roll_down', 'brush_up', 'brush_down', 'none'];
 
   /**
-   * @category SmoParameters
+   * @category SmoObject
    */
 export interface SmoArpeggioParams {
    type: SmoArpeggioType
@@ -706,7 +709,9 @@ export class SmoArticulation extends SmoNoteModifierBase {
     // this.selector = parameters.selector;
   }
 }
-
+/**
+ * @internal
+ */
 export interface VexAnnotationParams {
   glyph?: string,
   symbolModifier?: number,
@@ -1101,16 +1106,24 @@ export class SmoDynamicText extends SmoNoteModifierBase {
     }
   }
 }
-
+/**
+ * @category SmoObject
+ */
 export interface SmoTabBend {
   bendType: number,
   release: boolean,
   text: string
 }
+/**
+ * @category SmoObject
+ */
 export interface SmoFretPosition {
   string: number,
   fret: number
 }
+/**
+ * @category SmoObject
+ */
 export interface SmoTabNoteParams {
   positions: SmoFretPosition[]
   noteId: string,
@@ -1120,6 +1133,9 @@ export interface SmoTabNoteParams {
   isAssigned: boolean
 }
 
+/**
+ * @category serialization
+ */
 export interface SmoTabNoteParamsSer extends SmoTabNoteParams {
   ctor: string
 }

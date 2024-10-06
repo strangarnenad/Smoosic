@@ -12,7 +12,9 @@ import { getId, SmoAttrs, Clef } from './common';
 import {SmoMeasure, SmoVoice} from './measure';
 import {tuplets} from "vexflow_smoosic/build/esm/types/tests/formatter/tests";
 
-
+/**
+ * @category SmoObject
+ */
 export interface SmoTupletTreeParams {
   tuplet: SmoTuplet
 }

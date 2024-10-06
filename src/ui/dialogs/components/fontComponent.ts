@@ -10,7 +10,9 @@ import { SourceSerifProFont } from '../../../styles/font_metrics/ssp-serif-metri
 import { SourceSansProFont } from '../../../styles/font_metrics/ssp-sans-metrics';
 import { FontInfo } from '../../../common/vex';
 declare var $: any;
-
+/**
+ * @category SuiDialog
+ */
 export interface SuiFontComponentParams {
   id: string,
   classes: string,

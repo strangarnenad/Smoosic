@@ -19,6 +19,9 @@ import { XmlToSmo } from './xmlToSmo';
 import { SmoSystemGroup } from '../data/scoreModifiers';
 import { SuiSampleMedia } from '../../render/audio/samples';
 
+/**
+ * @category serialization
+ */
 export interface SlurXml {
   startSelector: SmoSelector,
   endSelector: SmoSelector,

@@ -15,6 +15,7 @@ import {SmoUnmakeTupletActor} from "./tickDuration";
 
 /**
  * Used to calculate the offset and transposition of a note to be pasted
+ * @category SmoTransform
  */
 export interface PasteNote {
   note: SmoNote,
@@ -26,6 +27,7 @@ export interface PasteNote {
 /**
  * Used when pasting staff modifiers like slurs to calculate the
  * offset
+ * @category SmoTransform
  */
 export interface ModifierPlacement {
   modifier: StaffModifierBase,

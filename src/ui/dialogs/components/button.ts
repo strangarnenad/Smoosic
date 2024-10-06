@@ -70,6 +70,7 @@ export class SuiButtonComponent extends SuiComponentBase {
 }
 
 /**
+ * @category SuiDialog
  */
 export interface SuiButtonCompositeParams {
   id: string,
@@ -83,7 +84,6 @@ export interface SuiButtonCompositeParams {
   icon: string,
   parentControl: SuiComponentParent
 }
-// ### SuiButtonComposite
 /**
  * Buttons that are part of a composite control
  * @category SuiDialog

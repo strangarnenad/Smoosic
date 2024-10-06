@@ -5,7 +5,7 @@ import { SmoLanguage } from './i18n/language';
 declare var $: any;
 
 /**
- * internal
+ * @internal
  */
 export interface HtmlHelpBlock {
   title: string,
@@ -14,7 +14,7 @@ export interface HtmlHelpBlock {
 }
 export type HelpMode = 'cards' | 'expand';
 /**
- * @category @SuiDialog
+ * @category SuiDialog
  */
 export class SuiHelp {
   static helpMode: HelpMode = 'cards';

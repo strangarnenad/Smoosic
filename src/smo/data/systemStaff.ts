@@ -22,6 +22,7 @@ import { FontInfo } from '../../common/vex';
 /**
  * indicate that we need to serialize the key signature, etc.
  * maps beause we are going to be deserializing again in a different score
+ * @category SmoObject
  */
 export interface SmoStaffSerializationOptions {
   skipMaps: boolean,

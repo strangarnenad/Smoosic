@@ -6,6 +6,7 @@ import { BrowserEventSource, EventHandler } from "../ui/eventSource";
 
 /**
  * A binding of a key to some action performed by a module
+ * @category SuiApplication
  */
 export interface KeyBinding {
     event: string,
