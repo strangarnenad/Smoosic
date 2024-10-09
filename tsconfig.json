@@ -4,8 +4,6 @@
     "module": "esnext",                           /* Specify module code generation: "none", "commonjs", "amd", "system", "umd", "es2015", "es2020", or "ESNext". */
     "allowJs": true,                                /* Allow javascript files to be compiled. */
     "sourceMap": true,
-    "declaration": false,
-    /* "declarationMap": true, */
     "moduleResolution": "node",
     "outDir": "./build",                            /* Redirect output structure to the directory. */
     "strict": true,                                 /* Enable all strict type-checking options. */

@@ -8,9 +8,9 @@
     "jquery": "^3.6.0",
     "ts-node": "^10.9.2",
     "webpack": "^5.89.0",
-    "webpack-cli": "^4.7.2",
-    "xsd-validator": "^1.1.1"
+    "webpack-cli": "^4.7.2"
   },
+  "types": "./types/src/application/exports.ts",
   "dependencies": {
     "midi-parser-js": "^4.0.4",
     "midi-writer-js": "^1.7.5",
@@ -20,14 +20,15 @@
     "vexflow_smoosic": "4.2.7",
     "xmldom": "^0.6.0"
   },
-  "description": "<sub>[Github site](https://github.com/AaronDavidNewman/smoosic) | [source documentation](https://aarondavidnewman.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://aarondavidnewman.github.io/Smoosic/release/html/smoosic.html)<sub>",
   "main": "build/smoosic.js",
+  "description": "<sub>[Github site](https://github.com/AaronDavidNewman/smoosic) | [source documentation](https://aarondavidnewman.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://aarondavidnewman.github.io/Smoosic/release/html/smoosic.html)<sub>",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "exit 0",
     "build": "node ./build/build.js",
+    "types": "node ./build/build.js types",
     "typedoc": "node ./node_modules/typedoc/bin/typedoc"
   },
   "repository": {
@@ -43,7 +44,7 @@
     "musicxml"
   ],
   "author": "Aaron D Newman",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/AaronDavidNewman/Smoosic/issues"
   },

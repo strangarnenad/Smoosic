@@ -27,12 +27,13 @@ module.exports = {
     usedExports: true
   },
   module: {      
-      rules: [{
+      rules: [ {
       test: /(\.ts?$|\.js?$)/,
       include: { or: [
         path.resolve(BASE_DIR, 'src'), path.resolve(BASE_DIR, 'tests')
       ]},
-      use: [{
+      use: [
+        {
         loader: 'ts-loader',
         options: {
           configFile: "tsconfig.json"

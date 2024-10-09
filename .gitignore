@@ -3,5 +3,5 @@ build/smoosic.js
 build/smoosic.js.map
 build/docs
 build/styles
-*.d.ts
-*.d.ts.map
+types/release/*
+types/tools/*

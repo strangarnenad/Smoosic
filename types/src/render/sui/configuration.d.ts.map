@@ -1,0 +1,1 @@
+{"version":3,"file":"configuration.d.ts","sourceRoot":"","sources":["../../../../src/render/sui/configuration.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,uBAAuB,EAAE,MAAM,sBAAsB,CAAC;AAE/D;;;;GAIG;AACH,MAAM,WAAW,sBAAsB;IACrC,aAAa,EAAE,MAAM,CAAC;IACtB,cAAc,EAAE,MAAM,CAAC;IACvB,iBAAiB,EAAE,MAAM,GAAG,WAAW,CAAC;IACxC,cAAc,EAAE,uBAAuB,CAAA;CACxC"}

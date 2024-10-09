@@ -1,0 +1,1 @@
+{"version":3,"file":"fileInput.d.ts","sourceRoot":"","sources":["../../../../src/ui/fileio/fileInput.ts"],"names":[],"mappings":"AAGA;;GAEG;AACH,qBAAa,YAAY;IACvB,UAAU,EAAE,OAAO,CAAS;IAC5B,MAAM,EAAE,OAAO,CAAS;IACxB,KAAK,EAAE,GAAG,CAAC;IACX,KAAK,EAAE,GAAG,CAAC;gBACC,GAAG,EAAE,GAAG;IAYpB,UAAU;IAcV,SAAS;CAyBV"}

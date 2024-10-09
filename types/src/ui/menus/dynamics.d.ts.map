@@ -1,0 +1,1 @@
+{"version":3,"file":"dynamics.d.ts","sourceRoot":"","sources":["../../../../src/ui/menus/dynamics.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,WAAW,EAAE,aAAa,EAAE,cAAc,EAAE,MAAM,QAAQ,CAAC;AAEpE;;GAEG;AACH,qBAAa,eAAgB,SAAQ,WAAW;gBAClC,MAAM,EAAE,aAAa;IAGjC,MAAM,CAAC,QAAQ,EAAE,cAAc,CAmC7B;IAEF,aAAa;IAIP,SAAS,CAAC,EAAE,EAAE,GAAG;IAQvB,OAAO;CACR"}

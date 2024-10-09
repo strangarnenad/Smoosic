@@ -1,0 +1,1 @@
+{"version":3,"file":"smoToMidi.d.ts","sourceRoot":"","sources":["../../../../src/smo/midi/smoToMidi.ts"],"names":[],"mappings":"AASA,OAAO,EAAE,QAAQ,EAAE,MAAM,eAAe,CAAC;AAoDzC;;GAEG;AACH,MAAM,WAAW,aAAa;IAC5B,KAAK,EAAE,GAAG,CAAC;IACX,WAAW,EAAE,MAAM,CAAA;CACpB;AAED;;;GAGG;AACH,qBAAa,SAAS;IACpB;;;OAGG;IACH,MAAM,CAAC,OAAO,CAAC,KAAK,EAAE,QAAQ;CA+D/B"}

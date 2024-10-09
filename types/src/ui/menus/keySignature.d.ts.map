@@ -1,0 +1,1 @@
+{"version":3,"file":"keySignature.d.ts","sourceRoot":"","sources":["../../../../src/ui/menus/keySignature.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,aAAa,EAAE,cAAc,EAAE,MAAM,QAAQ,CAAC;AAIpE;;;GAGG;AACH,qBAAa,mBAAoB,SAAQ,WAAW;gBACtC,MAAM,EAAE,aAAa;IAGjC,MAAM,KAAK,IAAI,WAEd;IACD,MAAM,CAAC,QAAQ,EAAE,cAAc,CA4D7B;IAEF,aAAa;IAGP,SAAS,CAAC,EAAE,EAAE,GAAG;IASvB,OAAO;CACR"}

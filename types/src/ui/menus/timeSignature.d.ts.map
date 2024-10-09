@@ -1,0 +1,1 @@
+{"version":3,"file":"timeSignature.d.ts","sourceRoot":"","sources":["../../../../src/ui/menus/timeSignature.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,WAAW,EAAE,aAAa,EAAE,cAAc,EAAE,MAAM,QAAQ,CAAC;AAOpE;;;GAGG;AACH,qBAAa,oBAAqB,SAAQ,WAAW;gBACvC,MAAM,EAAE,aAAa;IAGjC,MAAM,CAAC,QAAQ,EAAE,cAAc,CAuC7B;IAEF,aAAa;IAGP,SAAS,CAAC,EAAE,EAAE,GAAG;IAoBvB,OAAO;CACR"}
