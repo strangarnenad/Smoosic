@@ -2,6 +2,9 @@
  * definitions shared by all SMO types
  * @module /smo/data/common
  */
+export const SmoNamespace = {
+  value: 'globalThis.Smo'
+};
 /**
  * Same as attrs object in Vex objects.
  * @category SmoObject

@@ -4,7 +4,7 @@ import { SvgHelpers } from '../../render/sui/svgHelpers';
 import { buildDom, InputTrapper, draggable, createTopDomContainer } from '../../common/htmlHelpers';
 // import { SmoTranslator } from '../i18n/language';
 import { SmoModifier } from '../../smo/data/score';
-import { SvgBox } from '../../smo/data/common';
+import { SvgBox, SmoNamespace } from '../../smo/data/common';
 import { SuiTracker } from '../../render/sui/tracker';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { CompleteNotifier } from '../common';
@@ -127,7 +127,7 @@ export interface DialogDom {
   // print json with string labels to use as a translation file seed.
   static printTranslate(_class: string): DialogTranslation {
     const output: DialogTranslationElement[] = [];
-    const xx: any = eval('globalThis.Smo.' + _class);
+    const xx: any = eval(`${SmoNamespace.value}.${_class}`);
     xx.dialogElements.elements.forEach((element: DialogDefinitionElement) => {
       const component: Partial<DialogTranslationElement> = {};
       if (element.label) {
@@ -382,7 +382,7 @@ export interface DialogDom {
       if (typeof (de.control) === 'function') {
         ctor = de.control;
       } else {
-        ctor = eval('globalThis.Smo.' + de.control);
+        ctor = eval(`${SmoNamespace.value}.${de.control}`);
       }
       const classes = de.classes ? de.classes : '';
       const compParams: SuiBaseComponentParams = {

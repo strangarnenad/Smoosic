@@ -2,6 +2,9 @@
  * definitions shared by all SMO types
  * @module /smo/data/common
  */
+export declare const SmoNamespace: {
+    value: string;
+};
 /**
  * Same as attrs object in Vex objects.
  * @category SmoObject

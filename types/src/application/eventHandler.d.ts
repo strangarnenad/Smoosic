@@ -62,7 +62,7 @@ export declare class SuiEventHandler implements ModalEventHandler {
     handleScrollEvent(): void;
     createPiano(): void;
     resizeEvent(): void;
-    createModifierDialog(modifierSelection: ModifierTab): import("../../typedoc").SuiDialogBase | null;
+    createModifierDialog(modifierSelection: ModifierTab): import("./exports").SuiDialogBase | null;
     trackerModifierSelect(ev: KeyEvent): void;
     bindResize(): void;
     get renderElement(): Element;

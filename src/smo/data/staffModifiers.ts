@@ -9,10 +9,9 @@
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoSelector } from '../xform/selections';
 import { SmoNote } from './note';
-import { SmoAttrs, getId, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch } from './common';
+import { SmoAttrs, getId, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch, SmoNamespace } from './common';
 import { SmoTabNote, SmoFretPosition } from './noteModifiers';
 import { SmoMusic } from './music';
-import { SuiTimeSignatureMenu } from '../../../typedoc';
 /**
  * Base class that mostly standardizes the interface and deals with serialization.
  * @param ctor constructor for derived class
@@ -38,7 +37,7 @@ export abstract class StaffModifierBase implements SmoModifierBase {
     };
   }
   static deserialize(params: SmoObjectParams) {
-    const ctor = eval('globalThis.Smo.' + params.ctor);
+    const ctor = eval(`${SmoNamespace.value}.${params.ctor}`);
     const fixInstrument = params as any;
     if (fixInstrument.subFamily) {
       fixInstrument.instrument = fixInstrument.subFamily;

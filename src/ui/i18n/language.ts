@@ -5,6 +5,7 @@ import { smoLanguageStringDe } from './language_de';
 import { smoLanguageStringEn } from './language_en';
 import { MenuChoiceDefinition, MenuDefinition, MenuTranslation } from '../menus/menu';
 import { ButtonLabel } from '../buttons/button';
+import { SmoNamespace } from '../../smo/data/common';
 import { RibbonButtons } from '../buttons/ribbon';
 import { DialogTranslation } from '../dialogs/dialog';
 declare var $: any;
@@ -40,12 +41,12 @@ export class SmoTranslator {
     const menus: any[] = [];
     SmoTranslator.allDialogs.forEach((key) => {
       SmoTranslator.registerDialog(key);
-      const translatable: any = eval('globalThis.Smo.' + key);
+      const translatable: any = eval(`${SmoNamespace.value}.${key}`);
       dialogs.push(translatable.printTranslate(key));
     });
     SmoTranslator.allMenus.forEach((key) => {
       SmoTranslator.registerMenu(key);
-      const translatable: any = eval('globalThis.Smo.' + key);
+      const translatable: any = eval(`${SmoNamespace.value}.${key}`);
       menus.push(translatable.printTranslate(key));
     });
     const buttonText: any[] = JSON.parse(JSON.stringify(RibbonButtons.translateButtons));
@@ -121,7 +122,7 @@ export class SmoTranslator {
     const trans = (SmoLanguage as any)[language] as LanguageTranslation;
     // Set the text in all the menus
     SmoTranslator.allMenus.forEach((menuClass) => {
-      const _class = eval('globalThis.Smo.' + menuClass);
+      const _class = eval(`${SmoNamespace.value}.${menuClass}`);
       const menuStrings = trans.strings.menus.find((mm: MenuTranslation) => mm.ctor === menuClass);
       if (menuStrings) {
         SmoTranslator._updateMenu(menuStrings, _class, menuClass);
@@ -135,7 +136,7 @@ export class SmoTranslator {
     });
 
     SmoTranslator.allDialogs.forEach((dialogClass) => {
-      const _class = eval('globalThis.Smo.' + dialogClass);
+      const _class = eval(`${SmoNamespace.value}.${dialogClass}`);
       const dialogStrings = trans.strings.dialogs.find((mm: any) => mm.ctor === dialogClass);
       if (typeof (_class) === 'undefined') {
         console.log('no eval for class ' + dialogClass);
@@ -221,7 +222,7 @@ export class SmoTranslator {
 export class SmoLanguage {
   static getHelpFile(category: any) {
     // TODO: how to express language if it is not part of the config?
-    return eval('globalThis.Smo.' + category + 'En');
+    return eval(`${SmoNamespace.value}.${category}En`);
   }
   static get en(): LanguageTranslation {
     const strings: TranslationStrings = JSON.parse(smoLanguageStringEn) as TranslationStrings;

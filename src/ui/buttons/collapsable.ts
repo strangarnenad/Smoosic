@@ -3,8 +3,9 @@ import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { BrowserEventSource } from '../eventSource';
 import { SuiMenuManager } from '../menus/manager';
 import { CompleteNotifier } from '../common';
+import { SmoNamespace } from '../../smo/data/common';
 import { smoSerialize } from '../../common/serializationHelpers';
-import { SuiMenuParams } from '../menus/menu';
+
 declare var $: any;
 
 /**
@@ -75,7 +76,7 @@ export class CollapseRibbonControl extends SuiButton {
     $(this.buttonElement).closest('div').addClass('collapseContainer');
     this.eventSource.domClick(this.buttonElement, this, '_toggleExpand', null);
     this.childButtons.forEach((cb) => {
-      const ctor = eval('globalThis.Smo.' + cb.ctor);
+      const ctor = eval(`${SmoNamespace.value}.${cb.ctor}`);
       if ((typeof (ctor) === 'function') && this.completeNotifier) {
         const el = $('#' + cb.id);
         const params: SuiButtonParams = {

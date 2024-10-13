@@ -17,7 +17,7 @@ export declare class SuiKeyCommands {
     eventSource: BrowserEventSource;
     constructor(params: KeyCommandParams);
     tempoDialog(): void;
-    get score(): import("../../typedoc").SmoScore;
+    get score(): import("./exports").SmoScore;
     undo(): void;
     copy(): Promise<void>;
     paste(): Promise<void>;

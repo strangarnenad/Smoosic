@@ -41,7 +41,7 @@ export declare class SuiMenuManager {
     };
     get closeModalPromise(): Promise<void> | null;
     setController(c: CompleteNotifier): void;
-    get score(): import("../../../typedoc").SmoScore;
+    get score(): import("../../application/exports").SmoScore;
     static get menuKeyBindingDefaults(): KeyBinding[];
     get optionElements(): any;
     _advanceSelection(inc: number): void;

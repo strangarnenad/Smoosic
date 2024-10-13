@@ -13,6 +13,7 @@ import { BrowserEventSource, EventHandler } from '../eventSource';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { KeyBinding } from '../../application/common';
 import { Qwerty } from '../qwerty';
+import { SmoNamespace } from '../../smo/data/common';
 import { SuiMenuBase, SuiMenuParams, SuiConfiguredMenu, SuiConfiguredMenuOption } from './menu';
 declare var $: any;
 
@@ -257,7 +258,7 @@ export class SuiMenuManager {
         modifier: null
       });
     }
-    const ctor = eval('globalThis.Smo.' + action);
+    const ctor = eval(`${SmoNamespace.value}.${action}`);
     const params: SuiMenuParams = 
     {
       tracker: this.tracker,

@@ -5,7 +5,7 @@
  * **/
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMusic } from './music';
-import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase, getId } from './common';
+import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase, getId, SmoNamespace } from './common';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
 
@@ -26,7 +26,7 @@ export abstract class SmoMeasureModifierBase implements SmoModifierBase {
     };
   }
   static deserialize(jsonObj: SmoObjectParams) {
-    const ctor = eval('globalThis.Smo.' + jsonObj.ctor);
+    const ctor = eval(`${SmoNamespace.value}.${jsonObj.ctor}`);
     const rv = new ctor(jsonObj);
     return rv;
   }

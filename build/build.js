@@ -20,14 +20,16 @@ const webpackConfig = {
   resolve: {
     extensions: ['.ts', '.js', '.json']
   },
-  devtool: 'source-map',
+  devtool: 'eval-source-map',
   externals: {
     jszip: 'JSZip'
   },
   stats: {
     assets: true,
     modules: true,
-    outputPath: true,
+    loggingDebug: true,
+    colors: true,
+    reasons: true,
     usedExports: true
   },
   module: {      
@@ -36,17 +38,21 @@ const webpackConfig = {
       include: { or: [
         path.resolve(BASE_DIR, 'src'), path.resolve(BASE_DIR, 'tests')
       ]},
+      exclude: [/tools/],
       use: [
         {
         loader: 'ts-loader',
         options: {
           configFile: "tsconfig.json"
         }
-      }]
+      }
+       ]
+    }, {
+      test: /\.js$/,
+      include: [path.resolve(BASE_DIR, 'node_modules/vexflow_smoosic/build/cjs')],
+      enforce: 'pre',
+      use: ['source-map-loader']
     }]
-  },
-  stats: {
-    colors: true
   },
   plugins: [
     new CopyPlugin({

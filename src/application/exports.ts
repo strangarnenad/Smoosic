@@ -129,6 +129,7 @@ import { SuiSampleMedia } from '../render/audio/samples';
 
 
 // SMO object model
+import { SmoNamespace } from '../smo/data/common';
 import { SmoScore, engravingFontTypes, isEngravingFont } from '../smo/data/score';
 import { UndoBuffer } from '../smo/xform/undo';
 import { SmoNote } from '../smo/data/note';
@@ -165,103 +166,265 @@ import { SuiPitchAdapter, SuiPitchDialog, SuiLetterButtonComponent, SuiIntervalB
 const getClass = (jsonString: string) => {
     return eval('Smo.' + jsonString);
 };
+export * from './application';
+export * from './common';
+export * from './configuration';
+export * from './dom';
+export * from './eventHandler';
+export * from './exports';
+export * from './generateVexTests';
+export * from './keyCommands';
+export * from '../common/htmlHelpers';
+export * from '../common/promiseHelpers';
+export * from '../common/textformatter';
+export * from '../common/vex';
+export * from '../render/audio/musicCursor';
+export * from '../render/audio/oscillator';
+export * from '../render/audio/player';
+export * from '../render/audio/samples';
+export * from '../render/sui/configuration';
+export * from '../render/sui/formatter';
+export * from '../render/sui/layoutDebug';
+export * from '../render/sui/mapper';
+export * from '../render/sui/piano';
+export * from '../render/sui/renderState';
+export * from '../render/sui/scoreRender';
+export * from '../render/sui/scoreView';
+export * from '../render/sui/scoreViewOperations';
+export * from '../render/sui/scroller';
+export * from '../render/sui/svgHelpers';
+export * from '../render/sui/svgPageMap';
+export * from '../render/sui/textEdit';
+export * from '../render/sui/textRender';
+export * from '../render/sui/tracker';
+export * from '../render/vex/glyphDimensions';
+export * from '../render/vex/smoAdapter';
+export * from '../render/vex/toVex';
+export * from '../render/vex/vxMeasure';
+export * from '../render/vex/vxNote';
+export * from '../render/vex/vxSystem';
+export * from '../smo/data/common';
+export * from '../smo/data/measure';
+export * from '../smo/data/measureModifiers';
+export * from '../smo/data/music';
+export * from '../smo/data/note';
+export * from '../smo/data/noteModifiers';
+export * from '../smo/data/partInfo';
+export * from '../smo/data/score';
+export * from '../smo/data/scoreModifiers';
+export * from '../smo/data/scoreText';
+export * from '../smo/data/staffModifiers';
+export * from '../smo/data/systemStaff';
+export * from '../smo/data/tuplet';
+export * from '../smo/midi/midiToSmo';
+export * from '../smo/midi/smoToMidi';
+export * from '../smo/mxml/smoToXml';
+export * from '../smo/mxml/xmlHelpers';
+export * from '../smo/mxml/xmlState';
+export * from '../smo/mxml/xmlToSmo';
+export * from '../smo/xform/audioTrack';
+export * from '../smo/xform/beamers';
+export * from '../smo/xform/copypaste';
+export * from '../smo/xform/operations';
+export * from '../smo/xform/selections';
+export * from '../smo/xform/tickDuration';
+export * from '../smo/xform/tickMap';
+export * from '../smo/xform/undo';
+export * from '../ui/buttons/button';
+export * from '../ui/buttons/collapsable';
+export * from '../ui/buttons/display';
+export * from '../ui/buttons/ribbon';
+export * from '../ui/common';
+export * from '../ui/configuration';
+export * from '../ui/dialogs/adapter';
+export * from '../ui/dialogs/addMeasure';
+export * from '../ui/dialogs/arpeggio';
+export * from '../ui/dialogs/articulation';
+export * from '../ui/dialogs/audioSettings';
+export * from '../ui/dialogs/chordChange';
+export * from '../ui/dialogs/clefChange';
+export * from '../ui/dialogs/components/baseComponent';
+export * from '../ui/dialogs/components/button';
+export * from '../ui/dialogs/components/buttonArray';
+export * from '../ui/dialogs/components/checkdrop';
+export * from '../ui/dialogs/components/dragText';
+export * from '../ui/dialogs/components/dropdown';
+export * from '../ui/dialogs/components/fileDownload';
+export * from '../ui/dialogs/components/fontComponent';
+export * from '../ui/dialogs/components/noteText';
+export * from '../ui/dialogs/components/pitch';
+export * from '../ui/dialogs/components/rocker';
+export * from '../ui/dialogs/components/staffComponents';
+export * from '../ui/dialogs/components/textCheck';
+export * from '../ui/dialogs/components/textInPlace';
+export * from '../ui/dialogs/components/textInput';
+export * from '../ui/dialogs/components/tie';
+export * from '../ui/dialogs/components/toggle';
+export * from '../ui/dialogs/components/tree';
+export * from '../ui/dialogs/dialog';
+export * from '../ui/dialogs/durations';
+export * from '../ui/dialogs/dynamics';
+export * from '../ui/dialogs/endings';
+export * from '../ui/dialogs/factory';
+export * from '../ui/dialogs/fileDialogs';
+export * from '../ui/dialogs/fonts';
+export * from '../ui/dialogs/globalLayout';
+export * from '../ui/dialogs/gracenote';
+export * from '../ui/dialogs/hairpin';
+export * from '../ui/dialogs/instrument';
+export * from '../ui/dialogs/keySignature';
+export * from '../ui/dialogs/library';
+export * from '../ui/dialogs/lyric';
+export * from '../ui/dialogs/measureFormat';
+export * from '../ui/dialogs/microtones';
+export * from '../ui/dialogs/newPart';
+export * from '../ui/dialogs/noteHead';
+export * from '../ui/dialogs/ornament';
+export * from '../ui/dialogs/pageLayout';
+export * from '../ui/dialogs/partInfo';
+export * from '../ui/dialogs/pedalMarking';
+export * from '../ui/dialogs/pitch';
+export * from '../ui/dialogs/preferences';
+export * from '../ui/dialogs/scoreId';
+export * from '../ui/dialogs/scoreView';
+export * from '../ui/dialogs/slur';
+export * from '../ui/dialogs/staffGroup';
+export * from '../ui/dialogs/tabNote';
+export * from '../ui/dialogs/tabStave';
+export * from '../ui/dialogs/tempo';
+export * from '../ui/dialogs/textBlock';
+export * from '../ui/dialogs/textBracket';
+export * from '../ui/dialogs/tie';
+export * from '../ui/dialogs/timeSignature';
+export * from '../ui/dialogs/transposeScore';
+export * from '../ui/dialogs/volta';
+export * from '../ui/eventSource';
+export * from '../ui/exceptions';
+export * from '../ui/fileio/fileInput';
+export * from '../ui/fileio/library';
+export * from '../ui/fileio/xhrLoader';
+export * from '../ui/help';
+export * from '../ui/i18n/language';
+export * from '../ui/i18n/translationEditor';
+export * from '../ui/keyBindings/default/editorKeys';
+export * from '../ui/keyBindings/default/trackerKeys';
+export * from '../ui/menus/beams';
+export * from '../ui/menus/dynamics';
+export * from '../ui/menus/file';
+export * from '../ui/menus/keySignature';
+export * from '../ui/menus/language';
+export * from '../ui/menus/manager';
+export * from '../ui/menus/measure';
+export * from '../ui/menus/menu';
+export * from '../ui/menus/note';
+export * from '../ui/menus/parts';
+export * from '../ui/menus/partSelection';
+export * from '../ui/menus/score';
+export * from '../ui/menus/staffModifier';
+export * from '../ui/menus/text';
+export * from '../ui/menus/timeSignature';
+export * from '../ui/menus/voices';
+export * from '../ui/qwerty';
+export * from '../ui/ribbonLayout/default/defaultRibbon';
+export * from '../ui/ribbonLayout/default/tabletRibbon';
 export const Smo = {
-    // Application-level classes
-    SmoConfiguration,
-    SuiApplication,
-    SuiDom,  SuiEventHandler, SuiExceptionHandler,
-    Qwerty, SuiHelp, SmoTranslationEditor, ModalEventHandler,
-    // Ribbon buttons
-    simpleRibbonLayout,
-    RibbonButtons,
-    DisplaySettings,  ExtendedCollapseParent, CollapseRibbonControl,
-    // Menus
-    SuiMenuManager, SuiMenuBase, SuiScoreMenu, SuiFileMenu,
-    SuiDynamicsMenu, SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
-    SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
-    SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
-    // Dialogs
-    SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent,
-    SuiDurationAdapter, SuiDurationDialog, SuiDurationButtonComponent,
-    SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
-    SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
-    SuiScoreViewDialog, SuiGlobalLayoutDialog, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
-    SuiTransposeScoreDialog,
-    SuiScoreFontDialog, SuiPageLayoutDialog, SuiMeasureDialog, SuiInsertMeasures,
-    SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
-    SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
-    SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
-    SuiLoadFileDialog, SuiLoadMxmlDialog, SuiScorePreferencesDialog,
-    SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
-    SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
-    SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
-    SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
-    SuiEndingsAdapter, SuiEndingsDialog, 
-    SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
-    /* SuiLoadActionsDialog, SuiSaveActionsDialog, */
-    SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
-    SuiSaveMidiDialog, SuiDialogBase, 
-    SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
-    SuiTransposeButtonComponent,
-    // Dialog components
-    SuiTreeComponent,
-    SuiDropdownComponent,
-    SuiRockerComponent, SuiFileDownloadComponent, SuiButtonArrayComponent, SuiButtonArrayMSComponent,
-    SuiToggleComponent, SuiButtonComponent, SuiDropdownComposite,
-    SuiToggleComposite, SuiButtonComposite, SuiRockerComposite, SuiTextInputComposite,
-    SuiFontComponent, SuiTextInPlace, SuiLyricComponent, SuiChordComponent, SuiDragText,
-    SuiNoteTextComponent, SuiTextBlockComponent, SuiTextInputComponent, SuiReadOnlyTextComponent,
-    SuiDynamicModifierDialog, CheckboxDropdownComponent, TieMappingComponent, StaffAddRemoveComponent,
-    StaffCheckComponent, TextCheckComponent, SuiArpeggioDialog, SuiClefChangeDialog,
-    SuiPitchArrayComponent, SuiPitchArrayComponentTab, SuiPitchComponent,
+  // Application-level classes
+  SmoConfiguration,
+  SuiApplication,
+  SuiDom,  SuiEventHandler, SuiExceptionHandler,
+  Qwerty, SuiHelp, SmoTranslationEditor, ModalEventHandler,
+  // Ribbon buttons
+  simpleRibbonLayout,
+  RibbonButtons,
+  DisplaySettings,  ExtendedCollapseParent, CollapseRibbonControl,
+  // Menus
+  SuiMenuManager, SuiMenuBase, SuiScoreMenu, SuiFileMenu,
+  SuiDynamicsMenu, SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
+  SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
+  SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
+  // Dialogs
+  SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent,
+  SuiDurationAdapter, SuiDurationDialog, SuiDurationButtonComponent,
+  SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
+  SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
+  SuiScoreViewDialog, SuiGlobalLayoutDialog, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
+  SuiTransposeScoreDialog,
+  SuiScoreFontDialog, SuiPageLayoutDialog, SuiMeasureDialog, SuiInsertMeasures,
+  SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
+  SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
+  SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
+  SuiLoadFileDialog, SuiLoadMxmlDialog, SuiScorePreferencesDialog,
+  SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
+  SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
+  SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
+  SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
+  SuiEndingsAdapter, SuiEndingsDialog, 
+  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
+  /* SuiLoadActionsDialog, SuiSaveActionsDialog, */
+  SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
+  SuiSaveMidiDialog, SuiDialogBase, 
+  SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
+  SuiTransposeButtonComponent,
+  // Dialog components
+  SuiTreeComponent,
+  SuiDropdownComponent,
+  SuiRockerComponent, SuiFileDownloadComponent, SuiButtonArrayComponent, SuiButtonArrayMSComponent,
+  SuiToggleComponent, SuiButtonComponent, SuiDropdownComposite,
+  SuiToggleComposite, SuiButtonComposite, SuiRockerComposite, SuiTextInputComposite,
+  SuiFontComponent, SuiTextInPlace, SuiLyricComponent, SuiChordComponent, SuiDragText,
+  SuiNoteTextComponent, SuiTextBlockComponent, SuiTextInputComponent, SuiReadOnlyTextComponent,
+  SuiDynamicModifierDialog, CheckboxDropdownComponent, TieMappingComponent, StaffAddRemoveComponent,
+  StaffCheckComponent, TextCheckComponent, SuiArpeggioDialog, SuiClefChangeDialog,
+  SuiPitchArrayComponent, SuiPitchArrayComponentTab, SuiPitchComponent,
 
-  SuiPitchComposite, 
-    SuiXhrLoader,PromiseHelpers,
-    // Rendering components
-    SuiPiano, layoutDebug, SuiScoreView,SuiScroller, SvgHelpers, SuiMapper, SuiScoreRender,
-    SuiScoreViewOperations, TextFormatter, VexFlow,
+SuiPitchComposite, 
+  SuiXhrLoader,PromiseHelpers,
+  // Rendering components
+  SuiPiano, layoutDebug, SuiScoreView,SuiScroller, SvgHelpers, SuiMapper, SuiScoreRender,
+  SuiScoreViewOperations, TextFormatter, VexFlow,
 
-    // Audio components
-    SuiAudioPlayer, SuiOscillator, SuiSampleMedia, SuiSampler, SuiReverb,
+  // Audio components
+  SuiAudioPlayer, SuiOscillator, SuiSampleMedia, SuiSampler, SuiReverb,
 
-    // Smo Music Objects
-    SmoScore,
-    SmoScorePreferences, 
-    engravingFontTypes, isEngravingFont,
-    XmlToSmo,
-    SmoToXml,
-    MidiToSmo,
-    SmoToMidi,
-    SmoMusic,
-    SmoAudioPitch,
-    SmoMeasure,
-    SmoSystemStaff,
-    SmoNote,
-    // staff modifier
-    SmoStaffHairpin, StaffModifierBase,
-    SmoStaffTextBracket,
-    SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave,
-    // score modifiers
-    SmoSystemGroup, SmoAudioPlayerSettings, SmoTextGroup,
-    // measure modifiers
-    SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,
-    SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature,
-    // note modifiers
-    SmoOrnament,
-    SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric, SmoArpeggio, SmoClefChange,
-    // Smo Transformers
-    SmoSelection, SmoSelector, /*SmoDuration,*/ UndoBuffer, SmoToVex, SmoOperation,
-    // new score bootstrap
-    // help strings
-    cardKeysHtmlEn, cardNotesLetterHtmlEn, cardNotesChromaticHtmlEn, cardNotesChordsHtmlEn,
-      cardNotesRestsHtmlEn, cardDurationNotesHtmlEn, cardDurationTupletsHtmlEn,
-      cardSelectionsNotesHtmlEn, cardSelectionsModifiersHtmlEn, cardSelectionsNonSelectableHtmlEn, cardSelectionsSlashHtmlEn,
-      cardBeamsAndStemsDirectionHtmlEn, cardBeamsAndStemsGroupingHtmlEn,
-      cardMeasuresAddDeleteHtmlEn, cardVoicesCreateDeleteHtmlEn, cardPartAddDeleteHtmlEn,
-      getClass,
-    createLoadTests,
-    // utilities
-    buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer,
-    renderVexTests
+  // Smo Music Objects
+  SmoScore,
+  SmoScorePreferences, 
+  engravingFontTypes, isEngravingFont,
+  XmlToSmo,
+  SmoToXml,
+  MidiToSmo,
+  SmoToMidi,
+  SmoMusic,
+  SmoAudioPitch,
+  SmoMeasure,
+  SmoNamespace,
+  SmoSystemStaff,
+  SmoNote,
+  // staff modifier
+  SmoStaffHairpin, StaffModifierBase,
+  SmoStaffTextBracket,
+  SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave,
+  // score modifiers
+  SmoSystemGroup, SmoAudioPlayerSettings, SmoTextGroup,
+  // measure modifiers
+  SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,
+  SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature,
+  // note modifiers
+  SmoOrnament,
+  SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric, SmoArpeggio, SmoClefChange,
+  // Smo Transformers
+  SmoSelection, SmoSelector, /*SmoDuration,*/ UndoBuffer, SmoToVex, SmoOperation,
+  // new score bootstrap
+  // help strings
+  cardKeysHtmlEn, cardNotesLetterHtmlEn, cardNotesChromaticHtmlEn, cardNotesChordsHtmlEn,
+    cardNotesRestsHtmlEn, cardDurationNotesHtmlEn, cardDurationTupletsHtmlEn,
+    cardSelectionsNotesHtmlEn, cardSelectionsModifiersHtmlEn, cardSelectionsNonSelectableHtmlEn, cardSelectionsSlashHtmlEn,
+    cardBeamsAndStemsDirectionHtmlEn, cardBeamsAndStemsGroupingHtmlEn,
+    cardMeasuresAddDeleteHtmlEn, cardVoicesCreateDeleteHtmlEn, cardPartAddDeleteHtmlEn,
+    getClass,
+  createLoadTests,
+  // utilities
+  buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer,
+  renderVexTests
 }
 export default Smo;

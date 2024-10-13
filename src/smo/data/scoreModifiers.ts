@@ -8,7 +8,7 @@
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMeasureFormat, SmoMeasureFormatParamsSer } from './measureModifiers';
 import { SmoAttrs, getId, SmoModifierBase, SvgBox, 
-  createXmlAttribute } from './common';
+  SmoNamespace } from './common';
 import { SmoMeasure } from './measure';
 import { SmoSelector } from '../xform/selections';
 
@@ -48,7 +48,7 @@ export abstract class SmoScoreModifierBase implements SmoModifierBase {
   }
   abstract serialize(): any;
   static deserialize(jsonObj: any) {
-    const ctor = eval('globalThis.Smo.' + jsonObj.ctor);
+    const ctor = eval(`${SmoNamespace.value}.${jsonObj.ctor}`);
     const rv = new ctor(jsonObj);
     return rv;
   }

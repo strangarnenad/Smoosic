@@ -6,6 +6,7 @@ import { RibbonButtons } from "../buttons/ribbon";
 import { ButtonLabel } from "../buttons/button";
 import { DialogTranslation, DialogDefinition } from "../dialogs/dialog";
 import { DialogDefinitionElement, DialogDefinitionOption } from "../dialogs/components/baseComponent";
+import { SmoNamespace } from "../../smo/data/common";
 
 declare var $: any;
 
@@ -40,7 +41,7 @@ export class SmoTranslationEditor {
   // ### _getMenuTextDialogHtml
   // Get all the menu item labels for translation
   static _getMenuTextDialogHtml(menuCtor: string, enStrings: TranslationStrings, langStrings: TranslationStrings) {
-    const menuClass = eval('globalThis.Smo.' + menuCtor);
+    const menuClass = eval(`${SmoNamespace}.${menuCtor}`);
     const menuItems = menuClass['defaults'].menuItems;
     var enMenu = enStrings.menus.find((mn: any) => mn.ctor === menuCtor);
 
@@ -191,7 +192,7 @@ export class SmoTranslationEditor {
     var container: HTMLElement = b('div').classes('db-translate-container').attr('data-dbcontainer', dialogCtor)
       .append(b('button').classes('icon-plus trans-expander'))
       .append(b('span').classes('db-translate-title').text(dialogCtor)).dom() as HTMLElement;
-    var ctor = eval('globalThis.Smo.' + dialogCtor);
+    var ctor = eval(`${SmoNamespace.value}.${dialogCtor}`);
     if (!ctor) {
       console.warn('Bad dialog in translate: ' + dialogCtor);
       return;
