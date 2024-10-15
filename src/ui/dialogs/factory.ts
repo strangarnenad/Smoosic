@@ -38,6 +38,7 @@ import { SuiGraceNoteButtonsComponent } from './gracenote';
 import { SuiMicrotoneButtonComponent } from './microtones';
 import { SuiNoteHeadButtonComponent, SuiStemButtonComponent  } from './noteHead';
 import { SuiOrnamentButtonComponent } from './ornament';
+import { SuiIntervalButtonComponent, SuiTransposeButtonComponent, SuiLetterButtonComponent } from './pitch';
 
 export type ModifiersWithDialogs = 'SmoStaffHairpin' | 'SmoTie' | 'SmoSlur' | 
 'SmoDynamicText' | 'SmoVolta' | 'SmoScoreText' | 'SmoLoadScore' | 'SmoLyric' | 'SmoPedalMarking';
@@ -171,4 +172,10 @@ export const initDialogConstructors = () => {
   SmoDynamicComponentCtor['SuiOrnamentButtonComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiOrnamentButtonComponent(dialog, params);
 
+  SmoDynamicComponentCtor['SuiTransposeButtonComponent'] = 
+  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiTransposeButtonComponent(dialog, params);
+  SmoDynamicComponentCtor['SuiIntervalButtonComponent'] = 
+  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiIntervalButtonComponent(dialog, params);
+  SmoDynamicComponentCtor['SuiLetterButtonComponent'] = 
+  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiLetterButtonComponent(dialog, params);
 }

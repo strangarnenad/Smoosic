@@ -331,7 +331,7 @@ const letterButtonFactory: getButtonsFcn = () => {
    * @category SuiDialog
    */
   export class SuiIntervalButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn) {
+    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams) {
       super(dialog, parameter, intervalButtonFactory);
     }
   }  
@@ -339,7 +339,7 @@ const letterButtonFactory: getButtonsFcn = () => {
    * @category SuiDialog
    */
   export class SuiLetterButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn) {
+    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams) {
       super(dialog, parameter, letterButtonFactory);
     }
   }  

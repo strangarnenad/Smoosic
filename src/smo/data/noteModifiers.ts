@@ -42,8 +42,13 @@ export abstract class SmoNoteModifierBase implements SmoModifierBase {
     if (typeof (SmoDynamicCtor[jsonObj.ctor]) === 'undefined') {
       console.log('ouch bad ctor for ' + jsonObj.ctor);
     }
-    const rv = SmoDynamicCtor[jsonObj.ctor](jsonObj);
-    return rv;
+    try {
+      const rv = SmoDynamicCtor[jsonObj.ctor](jsonObj);
+      return rv;
+    } catch (exp) {
+      console.error('no ctor for ' + jsonObj.ctor);
+      throw(exp);
+    }
   }
   abstract serialize(): any;
 }
@@ -1195,8 +1200,10 @@ export const noteModifierDynamicCtorInit = () => {
   SmoDynamicCtor['SmoArpeggio'] = (params: SmoArpeggioParams) => new SmoArpeggio(params);
   SmoDynamicCtor['SmoMicrotone'] = (params: SmoMicrotoneParams) => new SmoMicrotone(params);
   SmoDynamicCtor['SmoOrnament'] = (params: SmoOrnamentParams) => new SmoOrnament(params);
+  SmoDynamicCtor['SmoGraceNote'] = (params: GraceNoteParams) => new SmoGraceNote(params);
   SmoDynamicCtor['SmoArticulation'] = (params: SmoArticulationParameters) => new SmoArticulation(params);
   SmoDynamicCtor['SmoLyric'] = (params: SmoLyricParams) => new SmoLyric(params);
   SmoDynamicCtor['SmoDynamicText'] = (params: SmoDynamicTextParams) => new SmoDynamicText(params);
   SmoDynamicCtor['SmoTabNote'] = (params: SmoTabNoteParams) => new SmoTabNote(params);
+  SmoDynamicCtor['SmoClefChange'] = (params: SmoClefChangeParams) => new SmoClefChange(params);
 }

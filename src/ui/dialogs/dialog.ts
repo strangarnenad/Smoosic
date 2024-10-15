@@ -382,10 +382,15 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
       const compParams: SuiBaseComponentParams = {
         classes, id: id + de.smoName, ...de
       }
-      const control: SuiComponentBase = SmoDynamicComponentCtor[de.control](this, compParams);
-      this.components.push(control);
-      this.cmap[de.smoName + 'Ctrl'] = control;
-      ctrl.append(control.html);
+      try {
+        const control: SuiComponentBase = SmoDynamicComponentCtor[de.control](this, compParams);
+        this.components.push(control);
+        this.cmap[de.smoName + 'Ctrl'] = control;
+        ctrl.append(control.html);
+      } catch (exp) {
+        console.error('bad ctor ' + de.smoName);
+        throw(exp);
+      }
     });
     r.append(ctrl);
     r.append(

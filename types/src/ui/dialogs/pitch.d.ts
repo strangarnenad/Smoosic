@@ -3,7 +3,7 @@ import { SuiButtonComposite } from './components/button';
 import { SuiComponentParent } from './components/baseComponent';
 import { DialogDefinition, SuiDialogParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { getButtonsFcn, SuiButtonArrayComponent } from './components/buttonArray';
+import { SuiButtonArrayComponent } from './components/buttonArray';
 import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComponent';
 /**
  * Pitch and chord manipulation components.
@@ -27,13 +27,13 @@ export declare class SuiTransposeButtonComponent extends SuiComponentParent {
  * @category SuiDialog
  */
 export declare class SuiIntervalButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn);
+    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams);
 }
 /**
  * @category SuiDialog
  */
 export declare class SuiLetterButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn);
+    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams);
 }
 /**
  * UI to manage SmoNote pitch arrays
