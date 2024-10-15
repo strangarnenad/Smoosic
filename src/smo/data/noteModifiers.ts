@@ -6,7 +6,7 @@
  * @module /smo/data/noteModifiers
  */
 import { SmoAttrs, Ticks, Pitch, getId, SmoObjectParams, Transposable, SvgBox, SmoModifierBase, 
-  Clef, IsClef, SmoNamespace } from './common';
+  Clef, IsClef, SmoDynamicCtor } from './common';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMusic } from './music';
 import { defaultNoteScale, FontInfo, getChordSymbolGlyphFromCode } from '../../common/vex';
@@ -30,7 +30,6 @@ export abstract class SmoNoteModifierBase implements SmoModifierBase {
     this.ctor = ctor;
   }
   static deserialize(jsonObj: SmoObjectParams) {
-    const ctor = eval(`${SmoNamespace.value}.${jsonObj.ctor}`);
     // Handle backwards-compatibility thing
     if (jsonObj.ctor === 'SmoMicrotone' && typeof ((jsonObj as any).pitch) === 'number') {
       (jsonObj as any).pitchIndex = (jsonObj as any).pitch;
@@ -40,10 +39,10 @@ export abstract class SmoNoteModifierBase implements SmoModifierBase {
         (jsonObj as any).text = (jsonObj as any)._text;
       }
     }
-    if (typeof (ctor) === 'undefined') {
+    if (typeof (SmoDynamicCtor[jsonObj.ctor]) === 'undefined') {
       console.log('ouch bad ctor for ' + jsonObj.ctor);
     }
-    const rv = new ctor(jsonObj);
+    const rv = SmoDynamicCtor[jsonObj.ctor](jsonObj);
     return rv;
   }
   abstract serialize(): any;
@@ -708,6 +707,7 @@ export class SmoArticulation extends SmoNoteModifierBase {
     // this.selector = parameters.selector;
   }
 }
+
 /**
  * @internal
  */
@@ -1105,6 +1105,7 @@ export class SmoDynamicText extends SmoNoteModifierBase {
     }
   }
 }
+
 /**
  * @category SmoObject
  */
@@ -1189,4 +1190,13 @@ export class SmoTabNote extends SmoNoteModifierBase {
     }
     return params;
   }
+}
+export const noteModifierDynamicCtorInit = () => {
+  SmoDynamicCtor['SmoArpeggio'] = (params: SmoArpeggioParams) => new SmoArpeggio(params);
+  SmoDynamicCtor['SmoMicrotone'] = (params: SmoMicrotoneParams) => new SmoMicrotone(params);
+  SmoDynamicCtor['SmoOrnament'] = (params: SmoOrnamentParams) => new SmoOrnament(params);
+  SmoDynamicCtor['SmoArticulation'] = (params: SmoArticulationParameters) => new SmoArticulation(params);
+  SmoDynamicCtor['SmoLyric'] = (params: SmoLyricParams) => new SmoLyric(params);
+  SmoDynamicCtor['SmoDynamicText'] = (params: SmoDynamicTextParams) => new SmoDynamicText(params);
+  SmoDynamicCtor['SmoTabNote'] = (params: SmoTabNoteParams) => new SmoTabNote(params);
 }

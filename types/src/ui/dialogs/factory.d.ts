@@ -11,4 +11,6 @@ export declare function isModifierWithDialog(modifier: SmoModifier): boolean;
 export declare class SuiModifierDialogFactory {
     static createModifierDialog(modifier: SmoModifier, parameters: SuiDialogParams): SuiDialogBase | null;
 }
+export declare const initDialogTranslationElements: () => void;
+export declare const initDialogConstructors: () => void;
 //# sourceMappingURL=factory.d.ts.map

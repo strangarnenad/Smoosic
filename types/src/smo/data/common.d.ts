@@ -5,6 +5,8 @@
 export declare const SmoNamespace: {
     value: string;
 };
+export type dynamicCtor = (params: any) => any;
+export declare const SmoDynamicCtor: Record<string, dynamicCtor>;
 /**
  * Same as attrs object in Vex objects.
  * @category SmoObject
@@ -15,7 +17,6 @@ export interface SmoAttrs {
     id: string;
     type: string;
 }
-export declare const smoXmlNs = "https://aarondavidnewman.github.io/Smoosic";
 /**
  * @internal
  */
@@ -159,7 +160,6 @@ export interface SmoModifierBase {
     attrs: SmoAttrs;
     serialize: () => any;
 }
-export declare function serializeXmlModifierArray(object: SmoXmlSerializable[], namespace: string, parentElement: Element, tag: string): Element;
 /**
  * Renderable is just a thing that has a bounding box
  * @internal

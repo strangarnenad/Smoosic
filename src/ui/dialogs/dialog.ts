@@ -4,14 +4,14 @@ import { SvgHelpers } from '../../render/sui/svgHelpers';
 import { buildDom, InputTrapper, draggable, createTopDomContainer } from '../../common/htmlHelpers';
 // import { SmoTranslator } from '../i18n/language';
 import { SmoModifier } from '../../smo/data/score';
-import { SvgBox, SmoNamespace } from '../../smo/data/common';
+import { SvgBox } from '../../smo/data/common';
 import { SuiTracker } from '../../render/sui/tracker';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { CompleteNotifier } from '../common';
 import { BrowserEventSource } from '../eventSource';
 import { UndoBuffer } from '../../smo/xform/undo';
 import { SuiDialogNotifier, DialogDefinitionElement, 
-  SuiComponentBase, DialogDefinitionOption, SuiBaseComponentParams } from './components/baseComponent';
+  SuiComponentBase, DialogDefinitionOption, SuiBaseComponentParams, SmoDynamicComponentCtor } from './components/baseComponent';
 import { SuiScroller } from '../../render/sui/scroller';
 import { SmoNote } from '../../smo/data/note';
 import { EventHandler } from '../eventSource';
@@ -60,6 +60,8 @@ export interface DialogTranslation {
   staticText: Record<string, string>
 }
 
+export const DialogTranslations: DialogTranslation[] = [];
+
 /**
  * Dialog params always contain basic information about the runtime
  * for modal functionality
@@ -106,7 +108,35 @@ export interface DialogDom {
   element: any,
   trapper: any
 }
+export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): DialogTranslation => {
+  const elements: DialogDefinitionElement[] = dialog.elements;
+  const output: DialogTranslationElement[] = [];
+  elements.forEach((element: DialogDefinitionElement) => {
+    const component: Partial<DialogTranslationElement> = {};
+    if (element.label) {
+      component.label = element.label ?? '';
+      component.id = element.smoName;
+      if (element.options) {
+        component.options = [];
 
+        element.options.forEach((option) => {
+          component.options!.push({ value: option.value, label: option.label, css: option.css });
+        });
+      }
+      output.push(component as DialogTranslationElement);
+    }
+  });
+  // convert static text from an array of name/value pairs to a record for translation
+  const staticText: Record<string, string> = {};
+  const dialogStaticText: Record<string, string>[] = dialog.staticText;
+  if (dialogStaticText) {
+    dialogStaticText.forEach((st) => {
+      const key = Object.keys(st)[0];
+      staticText[key]  = st[key];
+    });
+  }
+  return { ctor, label: dialog.label, dialogElements: output, staticText };
+}
 /**
  * Note: Most dialogs will inherit from SuiDialogAdapter, not SuiDialogBase.
  * You will only want to inherit from SuiDialogBase under 2 conditions:
@@ -122,38 +152,8 @@ export interface DialogDom {
       SELECTIONPOS: 'positionFromSelection', MODIFIERPOS: 'positionFromModifier',
       HIDEREMOVE: 'hideRemoveButton'
     };
-  }
-   // ### printXlate
-  // print json with string labels to use as a translation file seed.
-  static printTranslate(_class: string): DialogTranslation {
-    const output: DialogTranslationElement[] = [];
-    const xx: any = eval(`${SmoNamespace.value}.${_class}`);
-    xx.dialogElements.elements.forEach((element: DialogDefinitionElement) => {
-      const component: Partial<DialogTranslationElement> = {};
-      if (element.label) {
-        component.label = element.label ?? '';
-        component.id = element.smoName;
-        if (element.options) {
-          component.options = [];
+  }  
 
-          element.options.forEach((option) => {
-            component.options!.push({ value: option.value, label: option.label, css: option.css });
-          });
-        }
-        output.push(component as DialogTranslationElement);
-      }
-    });
-    // convert static text from an array of name/value pairs to a record for translation
-    const staticText: Record<string, string> = {};
-    const dialogStaticText: Record<string, string>[] = xx.dialogElements.staticText;
-    if (dialogStaticText) {
-      dialogStaticText.forEach((st) => {
-        const key = Object.keys(st)[0];
-        staticText[key]  = st[key];
-      });
-    }
-    return { ctor: xx.ctor, label: xx.dialogElements.label, dialogElements: output, staticText };
-  }
   static getStaticText(staticText: Record<string, string>[]) {
     const rv: Record<string, string> = {};
     staticText.forEach((st) => {
@@ -378,17 +378,11 @@ export interface DialogDom {
 
     var ctrl = b('div').classes('smoControlContainer');
     dialogElements.elements.filter((de) => de.control).forEach((de) => {
-      let ctor = null;
-      if (typeof (de.control) === 'function') {
-        ctor = de.control;
-      } else {
-        ctor = eval(`${SmoNamespace.value}.${de.control}`);
-      }
       const classes = de.classes ? de.classes : '';
       const compParams: SuiBaseComponentParams = {
         classes, id: id + de.smoName, ...de
       }
-      const control: SuiComponentBase = new ctor(this, compParams);
+      const control: SuiComponentBase = SmoDynamicComponentCtor[de.control](this, compParams);
       this.components.push(control);
       this.cmap[de.smoName + 'Ctrl'] = control;
       ctrl.append(control.html);

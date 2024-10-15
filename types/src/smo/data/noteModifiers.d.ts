@@ -563,4 +563,5 @@ export declare class SmoTabNote extends SmoNoteModifierBase {
     constructor(params: SmoTabNoteParams);
     serialize(): SmoTabNoteParamsSer;
 }
+export declare const noteModifierDynamicCtorInit: () => void;
 //# sourceMappingURL=noteModifiers.d.ts.map

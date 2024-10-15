@@ -8,9 +8,10 @@
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMeasureFormat, SmoMeasureFormatParamsSer } from './measureModifiers';
 import { SmoAttrs, getId, SmoModifierBase, SvgBox, 
-  SmoNamespace } from './common';
+  SmoDynamicCtor } from './common';
 import { SmoMeasure } from './measure';
 import { SmoSelector } from '../xform/selections';
+import { dynamicCtorInit } from '../../application/dynamicInit';
 
 /**
  * Base class for all {@link SmoScore} modifiers. 
@@ -48,8 +49,7 @@ export abstract class SmoScoreModifierBase implements SmoModifierBase {
   }
   abstract serialize(): any;
   static deserialize(jsonObj: any) {
-    const ctor = eval(`${SmoNamespace.value}.${jsonObj.ctor}`);
-    const rv = new ctor(jsonObj);
+    const rv = SmoDynamicCtor[jsonObj.ctor](jsonObj);
     return rv;
   }
 }
@@ -341,6 +341,8 @@ export class SmoAudioPlayerSettings extends SmoScoreModifierBase {
     return params;
   }
 }
+
+
 export type ScaledPageAttributes = 'leftMargin' | 'rightMargin' | 'topMargin' | 'bottomMargin' | 'interGap' | 'intraGap';
 /**
  * Constructor parameters for {@link SmoPageLayout}, part of {@link SmoLayoutManager}
@@ -396,6 +398,7 @@ export class SmoPageLayout extends SmoScoreModifierBase {
     return params;
   }
 }
+
 export type ScaledGlobalAttributes = 'pageWidth' | 'pageHeight';
 export type GlobalLayoutAttributes = 'pageWidth' | 'pageHeight' | 'noteSpacing' | 'svgScale' | 'zoomScale' | 'proportionality' | 'maxMeasureSystem';
 export const GlobalLayoutAttributesArray: GlobalLayoutAttributes[]  = ['pageWidth', 'pageHeight', 'noteSpacing', 'svgScale', 'zoomScale', 'proportionality', 'maxMeasureSystem'];
@@ -629,6 +632,7 @@ export class SmoLayoutManager extends SmoScoreModifierBase {
     }
   }
 }
+
 /**
  * constructor parameters for system groups (groupings of staves in the score)
  * @param leftConnector
@@ -750,4 +754,12 @@ export class SmoSystemGroup extends SmoScoreModifierBase {
     }
     return params;
   }
+}
+export const scoreModifierDynamicCtorInit = () => {
+  SmoDynamicCtor['SmoScorePreferences'] = (params: SmoScorePreferencesParams) => new SmoScorePreferences(params);
+  SmoDynamicCtor['SmoFormattingManager'] = (params: SmoFormattingManagerParams) => new SmoFormattingManager(params);
+  SmoDynamicCtor['SmoAudioPlayerSettings'] = (params: SmoAudioPlayerParameters) => new SmoAudioPlayerSettings(params);
+  SmoDynamicCtor['SmoPageLayout'] = (params: SmoPageLayoutParams) => new SmoPageLayout(params);
+  SmoDynamicCtor['SmoLayoutManager'] = (params: SmoLayoutManagerParams) => new SmoLayoutManager(params);
+  SmoDynamicCtor['SmoSystemGroup'] = (params: SmoSystemGroupParams) => new SmoSystemGroup(params);
 }

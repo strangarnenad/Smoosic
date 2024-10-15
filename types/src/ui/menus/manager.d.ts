@@ -54,4 +54,5 @@ export declare class SuiMenuManager {
     evKey(event: any): void;
     bindEvents(): void;
 }
+export declare const menuTranslationsInit: () => void;
 //# sourceMappingURL=manager.d.ts.map

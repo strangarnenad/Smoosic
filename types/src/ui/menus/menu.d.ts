@@ -36,6 +36,12 @@ export interface MenuTranslation {
     label: string;
     menuItems: MenuChoiceDefinition[];
 }
+export declare const MenuTranslations: MenuTranslation[];
+export declare const suiMenuTranslation: (menu: MenuDefinition, ctor: string) => {
+    ctor: string;
+    label: string;
+    menuItems: MenuChoiceDefinition[];
+};
 /**
  * All menus take the same options.  Menu choices can alter the score
  * directly, or call dialogs or even other menus
@@ -85,7 +91,6 @@ export declare abstract class SuiMenuBase {
      * add or remove options from the static list
      */
     preAttach(): void;
-    static printTranslate(_class: string): MenuTranslation;
     complete(): void;
     keydown(): void;
 }
@@ -109,6 +114,7 @@ export interface SuiConfiguredMenuOption {
     handler: SuiMenuHandler;
     display: SuiMenuShowOption;
 }
+export declare const suiConfiguredMenuTranslate: (options: SuiConfiguredMenuOption[], label: string, ctor: string) => MenuTranslation;
 /**
  * A menu of configured options.
  * @category SuiMenu

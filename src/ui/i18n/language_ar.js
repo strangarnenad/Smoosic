@@ -49,17 +49,6 @@ export const smoLanguageStringAr = `{
       "staticText": {}
      },
      {
-      "ctor": "SuiSaveActionsDialog",
-      "label": "Save Score",
-      "dialogElements": [
-       {
-        "label": "File Name",
-        "id": "saveFileName"
-       }
-      ],
-      "staticText": {}
-     },
-     {
       "ctor": "SuiLoadMxmlDialog",
       "label": "Load File",
       "dialogElements": [
@@ -71,20 +60,7 @@ export const smoLanguageStringAr = `{
        }
       ],
       "staticText": {}
-     },
-     {
-      "ctor": "SuiLoadActionsDialog",
-      "label": "Load Action File",
-      "dialogElements": [
-       {},
-       {
-        "staticText": {
-         "label": "Load Action File"
-        }
-       }
-      ],
-      "staticText": {}
-     },
+     },     
      {
       "ctor": "SuiMeasureDialog",
       "label": "Measure Properties",

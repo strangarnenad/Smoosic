@@ -433,6 +433,7 @@ export declare const Smo: {
     SuiReverb: typeof SuiReverb;
     SmoScore: typeof SmoScore;
     SmoScorePreferences: typeof SmoScorePreferences;
+    scoreModifierDynamicCtorInit: () => void;
     engravingFontTypes: import("./exports").engravingFontType[];
     isEngravingFont: typeof isEngravingFont;
     XmlToSmo: typeof XmlToSmo;
@@ -445,11 +446,13 @@ export declare const Smo: {
     SmoNamespace: {
         value: string;
     };
+    SmoDynamicCtor: Record<string, import("./exports").dynamicCtor>;
     SmoSystemStaff: typeof SmoSystemStaff;
     SmoNote: typeof SmoNote;
     SmoStaffHairpin: typeof SmoStaffHairpin;
     StaffModifierBase: typeof StaffModifierBase;
     SmoStaffTextBracket: typeof SmoStaffTextBracket;
+    staffModifierDynamicCtorInit: () => void;
     SmoInstrument: typeof SmoInstrument;
     SmoSlur: typeof SmoSlur;
     SmoPedalMarking: typeof SmoPedalMarking;
@@ -466,7 +469,9 @@ export declare const Smo: {
     SmoMeasureText: typeof SmoMeasureText;
     SmoTempoText: typeof SmoTempoText;
     TimeSignature: typeof TimeSignature;
+    measureModifierDynamicCtorInit: () => void;
     SmoOrnament: typeof SmoOrnament;
+    noteModifierDynamicCtorInit: () => void;
     SmoArticulation: typeof SmoArticulation;
     SmoDynamicText: typeof SmoDynamicText;
     SmoGraceNote: typeof SmoGraceNote;

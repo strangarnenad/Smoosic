@@ -13,8 +13,7 @@ import { SmoNoteModifierBase, SmoArticulation, SmoLyric, SmoGraceNote, SmoMicrot
   SmoTabNoteParams,
   SmoFretPosition} from './noteModifiers';
 import { SmoMusic } from './music';
-import { Ticks, Pitch, SmoAttrs, Transposable, PitchLetter, SvgBox, getId,
-  createXmlAttribute,  serializeXmlModifierArray} from './common';
+import { Ticks, Pitch, SmoAttrs, Transposable, PitchLetter, SvgBox, getId } from './common';
 import { FontInfo, vexCanonicalNotes } from '../../common/vex';
 import { SmoTupletParamsSer } from './tuplet';
 /**

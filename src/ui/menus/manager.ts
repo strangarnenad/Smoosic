@@ -3,7 +3,8 @@
 import { buildDom, createTopDomContainer } from '../../common/htmlHelpers';
 import { SvgBox } from '../../smo/data/common';
 import { UndoBuffer } from '../../smo/xform/undo';
-
+import { SuiDynamicsMenu } from './dynamics';
+import { SuiBeamMenu, SuiBeamMenuOptions } from './beams';
 import { layoutDebug } from '../../render/sui/layoutDebug';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { SuiKeySignatureDialog } from '../dialogs/keySignature';
@@ -13,8 +14,19 @@ import { BrowserEventSource, EventHandler } from '../eventSource';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { KeyBinding } from '../../application/common';
 import { Qwerty } from '../qwerty';
-import { SmoNamespace } from '../../smo/data/common';
-import { SuiMenuBase, SuiMenuParams, SuiConfiguredMenu, SuiConfiguredMenuOption } from './menu';
+import { SuiLanguageMenu } from './language';
+import { SuiFileMenu } from './file';
+
+import { SuiMenuBase, SuiMenuParams, suiMenuTranslation, 
+  MenuTranslations, suiConfiguredMenuTranslate } from './menu';
+import { SuiScoreMenu } from './score';
+import { SuiStaffModifierMenu } from './staffModifier';
+import { SuiMeasureMenu } from './measure';
+import { SuiVoiceMenu } from './voices';
+import { SuiNoteMenu } from './note';
+import { SuiTextMenu } from './text';
+import { SuiPartSelectionMenu } from './partSelection';
+import { SuiPartMenu } from './parts';
 declare var $: any;
 
 /**
@@ -257,20 +269,43 @@ export class SuiMenuManager {
         id: 'key-signature-dialog',
         modifier: null
       });
+    } else {
+      const params: SuiMenuParams = 
+      {
+        tracker: this.tracker,
+        score: this.score,
+        completeNotifier: this.completeNotifier,
+        closePromise: this.closeMenuPromise,
+        view: this.view,
+        eventSource: this.eventSource,
+        undoBuffer: this.undoBuffer,
+        ctor: action
+      };
+  
+      if (action === 'SuiLanguageMenu') {
+        this.displayMenu(new SuiLanguageMenu(params));
+      } else if (action === 'SuiFileMenu') {
+        this.displayMenu(new SuiFileMenu(params));
+      } else if (action === 'SuiScoreMenu') {
+        this.displayMenu(new SuiScoreMenu(params));
+      } else if (action === 'SuiPartSelectionMenu') {
+        this.displayMenu(new SuiPartSelectionMenu(params));
+      } else if (action === 'SuiPartMenu') {
+        this.displayMenu(new SuiPartMenu(params));
+      } else if (action === 'SuiStaffModifierMenu') {
+        this.displayMenu(new SuiStaffModifierMenu(params));
+      } else if (action === 'SuiMeasureMenu') {
+        this.displayMenu(new SuiMeasureMenu(params));
+      } else if (action === 'SuiVoiceMenu') {
+        this.displayMenu(new SuiVoiceMenu(params));
+      } else if (action === 'SuiBeamMenu') {
+        this.displayMenu(new SuiBeamMenu(params));
+      } else if (action === 'SuiNoteMenu') {
+        this.displayMenu(new SuiNoteMenu(params));
+      } else if (action === 'SuiTextMenu') {
+        this.displayMenu(new SuiTextMenu(params));
+      }
     }
-    const ctor = eval(`${SmoNamespace.value}.${action}`);
-    const params: SuiMenuParams = 
-    {
-      tracker: this.tracker,
-      score: this.score,
-      completeNotifier: this.completeNotifier,
-      closePromise: this.closeMenuPromise,
-      view: this.view,
-      eventSource: this.eventSource,
-      undoBuffer: this.undoBuffer,
-      ctor: action
-    };
-    this.displayMenu(new ctor(params));
   }
 
   // ### evKey
@@ -338,7 +373,10 @@ export class SuiMenuManager {
     });
   }
 }
-
+export const menuTranslationsInit = () => {
+  MenuTranslations.push(suiMenuTranslation(SuiDynamicsMenu.defaults, 'SuiDynamicsMenu'));
+  MenuTranslations.push(suiConfiguredMenuTranslate(SuiBeamMenuOptions, 'Beam', 'SuiBeamMenu'));
+}
 
 
 

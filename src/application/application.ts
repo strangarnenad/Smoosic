@@ -2,6 +2,7 @@
 // Copyright (c) Aaron David Newman 2021.
 import { smoSerialize } from '../common/serializationHelpers';
 import { _MidiWriter } from '../common/midiWriter';
+import { dynamicCtorInit } from './dynamicInit';
 
 import { SmoConfiguration, SmoConfigurationParams } from './configuration';
 import { SmoScore } from '../smo/data/score';
@@ -152,6 +153,7 @@ export class SuiApplication {
    * @returns 
    */
   initialize(): Promise<SuiApplication> {
+    dynamicCtorInit();
     const samplePromise: Promise<any> = SuiSampleMedia.samplePromise(SuiOscillator.audio);
 
     const self = this;    

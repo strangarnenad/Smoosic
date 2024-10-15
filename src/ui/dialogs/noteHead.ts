@@ -190,7 +190,7 @@ const noteHeadButtonFactory: getButtonsFcn = () => {
  * @category SuiDialog
  */
 export class SuiNoteHeadButtonComponent extends SuiButtonArrayComponent {
-  constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn) {
+  constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams) {
     super(dialog, parameter, noteHeadButtonFactory);
   }
 }
@@ -198,7 +198,7 @@ export class SuiNoteHeadButtonComponent extends SuiButtonArrayComponent {
  * @category SuiDialog
  */
 export class SuiStemButtonComponent extends SuiButtonArrayComponent {
-  constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn) {
+  constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams) {
     super(dialog, parameter, stemButtonFactory);
   }
 }

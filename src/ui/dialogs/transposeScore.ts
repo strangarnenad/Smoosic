@@ -52,7 +52,7 @@ export class SuiTransposeScoreDialog extends SuiDialogAdapterBase<SuiTransposeSc
       staticText: []
     };
   get dimensionControls() {
-    return [this.cmap.pageSizeCtrl, this.cmap.pageWidthCtrl, this.cmap.pageHeightCtrl];
+    return [this.cmap.offsetCtrl];
   }
   constructor(params: SuiDialogParams) {
     const adapter = new SuiTransposeScoreAdapter(params.view);

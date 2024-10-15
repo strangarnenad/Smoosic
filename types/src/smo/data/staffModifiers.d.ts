@@ -748,4 +748,5 @@ export declare class SmoPedalMarking extends StaffModifierBase {
     constructor(params: SmoPedalMarkingParams);
     serialize(): SmoPedalMarkingParamsSer;
 }
+export declare const staffModifierDynamicCtorInit: () => void;
 //# sourceMappingURL=staffModifiers.d.ts.map

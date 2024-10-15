@@ -64,7 +64,6 @@ import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
 import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
 import { SuiLoadMxmlDialog, SuiLoadFileDialog,
-    /* SuiLoadActionsDialog,  SuiSaveActionsDialog, */
     SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog,
     SuiSaveMidiDialog, SuiSaveVexDialog } from '../ui/dialogs/fileDialogs';
     // Dialog components
@@ -129,28 +128,28 @@ import { SuiSampleMedia } from '../render/audio/samples';
 
 
 // SMO object model
-import { SmoNamespace } from '../smo/data/common';
+import { SmoNamespace, SmoDynamicCtor } from '../smo/data/common';
 import { SmoScore, engravingFontTypes, isEngravingFont } from '../smo/data/score';
 import { UndoBuffer } from '../smo/xform/undo';
 import { SmoNote } from '../smo/data/note';
 // import { SmoDuration } from '../smo/xform/tickDuration';
 import { createLoadTests } from '../../tests/file-load';
 import { SmoStaffHairpin, StaffModifierBase, SmoInstrument, SmoSlur, SmoTie, SmoStaffTextBracket,
-  SmoTabStave, SmoPedalMarking
+  SmoTabStave, SmoPedalMarking, staffModifierDynamicCtorInit
  } from '../smo/data/staffModifiers';
 import { SmoMeasure } from '../smo/data/measure';
 import { SmoMusic } from '../smo/data/music';
 import { SmoAudioPitch } from '../smo/data/music';
 import { SmoSelection, SmoSelector } from '../smo/xform/selections';
 import { SmoOrnament, SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric,
-  SmoArpeggio, SmoClefChange } from '../smo/data/noteModifiers';
+  SmoArpeggio, SmoClefChange, noteModifierDynamicCtorInit } from '../smo/data/noteModifiers';
 import { SmoSystemStaff } from '../smo/data/systemStaff';
-import { SmoSystemGroup, SmoAudioPlayerSettings, SmoScorePreferences } from '../smo/data/scoreModifiers';
+import { SmoSystemGroup, SmoAudioPlayerSettings, SmoScorePreferences, scoreModifierDynamicCtorInit } from '../smo/data/scoreModifiers';
 import { SmoTextGroup, SmoTextGroupParams } from '../smo/data/scoreText';
 import { SmoOperation } from '../smo/xform/operations';
 import {
     SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,
-    SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature
+    SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature, measureModifierDynamicCtorInit
 } from '../smo/data/measureModifiers';
 import { SmoToXml } from '../smo/mxml/smoToXml';
 import { MidiToSmo } from '../smo/midi/midiToSmo';
@@ -327,6 +326,7 @@ export * from '../ui/menus/voices';
 export * from '../ui/qwerty';
 export * from '../ui/ribbonLayout/default/defaultRibbon';
 export * from '../ui/ribbonLayout/default/tabletRibbon';
+
 export const Smo = {
   // Application-level classes
   SmoConfiguration,
@@ -360,7 +360,6 @@ export const Smo = {
   SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
   SuiEndingsAdapter, SuiEndingsDialog, 
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
-  /* SuiLoadActionsDialog, SuiSaveActionsDialog, */
   SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
   SuiSaveMidiDialog, SuiDialogBase, 
   SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
@@ -387,30 +386,19 @@ SuiPitchComposite,
   SuiAudioPlayer, SuiOscillator, SuiSampleMedia, SuiSampler, SuiReverb,
 
   // Smo Music Objects
-  SmoScore,
-  SmoScorePreferences, 
-  engravingFontTypes, isEngravingFont,
-  XmlToSmo,
-  SmoToXml,
-  MidiToSmo,
-  SmoToMidi,
-  SmoMusic,
-  SmoAudioPitch,
-  SmoMeasure,
-  SmoNamespace,
-  SmoSystemStaff,
-  SmoNote,
+  SmoScore,  SmoScorePreferences, scoreModifierDynamicCtorInit,  engravingFontTypes, isEngravingFont,
+  XmlToSmo,  SmoToXml,  MidiToSmo,  SmoToMidi,  SmoMusic,  SmoAudioPitch,  SmoMeasure,  SmoNamespace, SmoDynamicCtor,
+  SmoSystemStaff,  SmoNote,
   // staff modifier
-  SmoStaffHairpin, StaffModifierBase,
-  SmoStaffTextBracket,
-  SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave,
+  SmoStaffHairpin, StaffModifierBase,  SmoStaffTextBracket, staffModifierDynamicCtorInit,
+  SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave, 
   // score modifiers
   SmoSystemGroup, SmoAudioPlayerSettings, SmoTextGroup,
   // measure modifiers
-  SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,
-  SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature,
+  SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,  SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature,
+  measureModifierDynamicCtorInit,
   // note modifiers
-  SmoOrnament,
+  SmoOrnament, noteModifierDynamicCtorInit,
   SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric, SmoArpeggio, SmoClefChange,
   // Smo Transformers
   SmoSelection, SmoSelector, /*SmoDuration,*/ UndoBuffer, SmoToVex, SmoOperation,

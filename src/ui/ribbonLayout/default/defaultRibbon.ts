@@ -10,7 +10,7 @@ import { RibbonLayout } from "../../common";
 export class defaultRibbonLayout {
   static get ribbons(): RibbonLayout {
     var left = defaultRibbonLayout.leftRibbonIds;
-    var top = defaultRibbonLayout.displayIds.concat(defaultRibbonLayout.debugIds);
+    var top = defaultRibbonLayout.displayIds;
 
     return {
       left: left,

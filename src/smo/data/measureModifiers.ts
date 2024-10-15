@@ -5,7 +5,8 @@
  * **/
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMusic } from './music';
-import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase, getId, SmoNamespace } from './common';
+import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase, getId, 
+  SmoDynamicCtor } from './common';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
 
@@ -26,8 +27,7 @@ export abstract class SmoMeasureModifierBase implements SmoModifierBase {
     };
   }
   static deserialize(jsonObj: SmoObjectParams) {
-    const ctor = eval(`${SmoNamespace.value}.${jsonObj.ctor}`);
-    const rv = new ctor(jsonObj);
+    const rv = SmoDynamicCtor[jsonObj.ctor](jsonObj);
     return rv;
   }
   abstract serialize(): any;
@@ -211,6 +211,7 @@ export class SmoMeasureFormat extends SmoMeasureModifierBase implements SmoMeasu
     return params;
   }
 }
+
 /**
  * Used to create a {@link SmoBarline}
  * @category SmoObject
@@ -475,6 +476,7 @@ export class SmoVolta extends SmoMeasureModifierBase {
     }));
   }
 }
+
 /**
  * Constructor parameters for {@link SmoMeasureText}
  * @category SmoObject
@@ -953,4 +955,13 @@ export class TimeSignature extends SmoMeasureModifierBase {
     this.displayString = params.displayString;
   }
 }
-
+export const measureModifierDynamicCtorInit = () => {
+  SmoDynamicCtor['SmoMeasureFormat'] = (params: SmoMeasureFormatParams) => new SmoMeasureFormat(params);
+  SmoDynamicCtor['SmoBarline'] = (params: SmoBarlineParams) => new SmoBarline(params);
+  SmoDynamicCtor['SmoRepeatSymbol'] = (params: SmoRepeatSymbolParams) => new SmoRepeatSymbol(params);
+  SmoDynamicCtor['SmoVolta'] = (params: SmoVoltaParams) => new SmoVolta(params);
+  SmoDynamicCtor['SmoMeasureText'] = (params: SmoMeasureTextParams) => new SmoMeasureText(params);
+  SmoDynamicCtor['SmoRehearsalMark'] = (params: SmoRehearsalMarkParams) => new SmoRehearsalMark(params);
+  SmoDynamicCtor['SmoTempoText'] = (params: SmoTempoTextParams) => new SmoTempoText(params);
+  SmoDynamicCtor['TimeSignature'] = (params: TimeSignatureParameters) => new TimeSignature(params);
+}

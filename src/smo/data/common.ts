@@ -5,6 +5,8 @@
 export const SmoNamespace = {
   value: 'globalThis.Smo'
 };
+export type dynamicCtor = (params: any) => any;
+export const SmoDynamicCtor: Record<string, dynamicCtor> = {};
 /**
  * Same as attrs object in Vex objects.
  * @category SmoObject
@@ -15,7 +17,6 @@ export interface SmoAttrs {
     id: string,
     type: string
 }
-export const smoXmlNs = 'https://aarondavidnewman.github.io/Smoosic';
 
 /**
  * @internal
@@ -187,22 +188,6 @@ export interface SmoModifierBase {
     logicalBox: SvgBox | null,
     attrs: SmoAttrs,
     serialize: () => any;
-}
-
-export function serializeXmlModifierArray(object: SmoXmlSerializable[], namespace: string, parentElement: Element, tag: string) {
-  if (object.length === 0) {
-    return parentElement;
-  }
-  const arEl = parentElement.ownerDocument.createElementNS(namespace, `${tag}-array`);
-  parentElement.appendChild(arEl);
-  createXmlAttribute(arEl, 'container', 'array');
-  createXmlAttribute(arEl, 'name', `${tag}`);
-  for (var j = 0; j < object.length; ++j) {
-    const instEl = parentElement.ownerDocument.createElementNS(namespace, `${tag}-instance`);
-    arEl.appendChild(instEl);
-    object[j].serializeXml(namespace, instEl, object[j].ctor);
-  }
-  return arEl;
 }
 
 /**

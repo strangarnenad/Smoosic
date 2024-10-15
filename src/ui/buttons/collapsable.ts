@@ -3,7 +3,8 @@ import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { BrowserEventSource } from '../eventSource';
 import { SuiMenuManager } from '../menus/manager';
 import { CompleteNotifier } from '../common';
-import { SmoNamespace } from '../../smo/data/common';
+import { SmoDynamicCtor } from '../../smo/data/common';
+import { DisplaySettings } from './display';
 import { smoSerialize } from '../../common/serializationHelpers';
 
 declare var $: any;
@@ -76,9 +77,8 @@ export class CollapseRibbonControl extends SuiButton {
     $(this.buttonElement).closest('div').addClass('collapseContainer');
     this.eventSource.domClick(this.buttonElement, this, '_toggleExpand', null);
     this.childButtons.forEach((cb) => {
-      const ctor = eval(`${SmoNamespace.value}.${cb.ctor}`);
-      if ((typeof (ctor) === 'function') && this.completeNotifier) {
-        const el = $('#' + cb.id);
+      const el = $('#' + cb.id);
+      if (this.completeNotifier) {
         const params: SuiButtonParams = {
           ctor: cb.ctor,
           buttonId: cb.id,
@@ -89,7 +89,7 @@ export class CollapseRibbonControl extends SuiButton {
           eventSource: this.eventSource,
           menus: this.menus
         }
-        const btn = new ctor(params);
+        const btn = SmoDynamicCtor[cb.ctor](params);
         if (typeof (btn.bind) === 'function') {
           btn.bind();
         }
@@ -111,4 +111,9 @@ export class ExtendedCollapseParent extends SuiButton {
       $(this.buttonElement).closest('.collapseContainer').toggleClass('expanded-more');
     });
   }
+}
+export const collapsableButtonInit = () => {
+  SmoDynamicCtor['ExtendedCollapseParent'] = (params: SuiButtonParams ) => new ExtendedCollapseParent(params);
+  SmoDynamicCtor['CollapseRibbonControl'] = (params: SuiCollapsableButtonParams ) => new CollapseRibbonControl(params);
+  SmoDynamicCtor['DisplaySettings'] = (params: SuiButtonParams ) => new DisplaySettings(params);
 }

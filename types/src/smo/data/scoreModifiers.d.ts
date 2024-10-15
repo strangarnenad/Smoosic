@@ -425,4 +425,5 @@ export declare class SmoSystemGroup extends SmoScoreModifierBase {
     overlaps(group: SmoSystemGroup): boolean;
     serialize(): SmoSystemGroupParamsSer;
 }
+export declare const scoreModifierDynamicCtorInit: () => void;
 //# sourceMappingURL=scoreModifiers.d.ts.map

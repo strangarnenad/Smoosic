@@ -9,7 +9,8 @@
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoSelector } from '../xform/selections';
 import { SmoNote } from './note';
-import { SmoAttrs, getId, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch, SmoNamespace } from './common';
+import { SmoAttrs, getId, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch, 
+  SmoDynamicCtor } from './common';
 import { SmoTabNote, SmoFretPosition } from './noteModifiers';
 import { SmoMusic } from './music';
 /**
@@ -37,12 +38,12 @@ export abstract class StaffModifierBase implements SmoModifierBase {
     };
   }
   static deserialize(params: SmoObjectParams) {
-    const ctor = eval(`${SmoNamespace.value}.${params.ctor}`);
+    
     const fixInstrument = params as any;
     if (fixInstrument.subFamily) {
       fixInstrument.instrument = fixInstrument.subFamily;
     }
-    const rv = new ctor(params);
+    const rv = SmoDynamicCtor[params.ctor](params);
     return rv;
   }
   serializeWithId() {
@@ -268,6 +269,7 @@ export class SmoInstrument extends StaffModifierBase {
     return rv;
   }
 }
+
 /**
  * @category SmoObject
  */
@@ -1238,4 +1240,14 @@ export class SmoPedalMarking extends StaffModifierBase {
     }
     return params;
   }
+}
+export const staffModifierDynamicCtorInit = () => {
+  SmoDynamicCtor['SmoInstrument'] = (params: SmoInstrumentParams) => new SmoInstrument(params);
+  SmoDynamicCtor['SmoStaffHairpin'] = (params: SmoStaffHairpinParams) => new SmoStaffHairpin(params);
+  SmoDynamicCtor['SmoStaffTextBracket'] = (params: SmoStaffTextBracketParams) => new SmoStaffTextBracket(params);
+  SmoDynamicCtor['SmoSlur'] = (params: SmoSlurParams) => new SmoSlur(params);
+  SmoDynamicCtor['SmoTie'] = (params: SmoTieParams) => new SmoTie(params);
+  SmoDynamicCtor['SmoTabStave'] = (params: SmoTabStaveParams) => new SmoTabStave(params);
+  SmoDynamicCtor['SmoTabTie'] = (params: SmoTabTieParams) => new SmoTabTie(params);
+  SmoDynamicCtor['SmoPedalMarking'] = (params: SmoPedalMarkingParams) => new SmoPedalMarking(params);
 }

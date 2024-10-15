@@ -39,4 +39,5 @@ export declare class ExtendedCollapseParent extends SuiButton {
     constructor(parameters: SuiButtonParams);
     bind(): void;
 }
+export declare const collapsableButtonInit: () => void;
 //# sourceMappingURL=collapsable.d.ts.map

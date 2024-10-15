@@ -504,4 +504,5 @@ export declare class TimeSignature extends SmoMeasureModifierBase {
     serialize(): TimeSignatureParametersSer;
     constructor(params: TimeSignatureParameters);
 }
+export declare const measureModifierDynamicCtorInit: () => void;
 //# sourceMappingURL=measureModifiers.d.ts.map

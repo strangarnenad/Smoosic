@@ -21,7 +21,7 @@
     "vexflow_smoosic": "../vexflow_smoosic"
   },
   "main": "build/smoosic.js",
-  "description": "<sub>[Github site](https://github.com/AaronDavidNewman/smoosic) | [source documentation](https://aarondavidnewman.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://aarondavidnewman.github.io/Smoosic/release/html/smoosic.html)<sub>",
+  "description": "<sub>[Github site](https://github.com/Smoosic/smoosic) | [source documentation](https://smoosic.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub>",
   "directories": {
     "test": "tests"
   },

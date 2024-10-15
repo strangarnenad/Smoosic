@@ -1,19 +1,19 @@
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { DialogDefinition, SuiDialogParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { getButtonsFcn, SuiButtonArrayComponent } from './components/buttonArray';
+import { SuiButtonArrayComponent } from './components/buttonArray';
 import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComponent';
 /**
  * @category SuiDialog
  */
 export declare class SuiNoteHeadButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn);
+    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams);
 }
 /**
  * @category SuiDialog
  */
 export declare class SuiStemButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams, buttonFactory: getButtonsFcn);
+    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams);
 }
 /**
  * @category SuiDialog

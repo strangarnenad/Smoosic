@@ -39,6 +39,15 @@ export interface MenuTranslation {
   label: string,
   menuItems: MenuChoiceDefinition[]
 }
+export const MenuTranslations: MenuTranslation[] = [];
+export const suiMenuTranslation = (menu: MenuDefinition, ctor: string) => {
+  const menuItems: MenuChoiceDefinition[] = menu.menuItems as MenuChoiceDefinition[];
+  const rvItems: MenuChoiceDefinition[] = [];
+  menuItems.forEach((item) => {
+    rvItems.push({ value: item.value, text: item.text, icon: '' });
+  });
+  return { ctor, label: menu.label, menuItems };
+}
 /**
  * All menus take the same options.  Menu choices can alter the score
  * directly, or call dialogs or even other menus
@@ -102,16 +111,6 @@ export abstract class SuiMenuBase {
    * add or remove options from the static list
    */
   preAttach() { }
-  static printTranslate(_class: string): MenuTranslation {
-    const xx: any = eval('Smo.' + _class);
-    const items: MenuChoiceDefinition[] = xx.defaults.menuItems as MenuChoiceDefinition[];
-    const rvItems: MenuChoiceDefinition[] = [];
-    items.forEach((item) => {
-      rvItems.push({ value: item.value, text: item.text, icon: '' });
-    });
-    return { ctor: _class, label: xx.defaults.label, menuItems: items };
-  }
-
   complete() {
     $('body').trigger('menuDismiss');
   }
@@ -153,6 +152,15 @@ const cancelOption: SuiConfiguredMenuOption = {
     text: 'Cancel',
     value: 'cancel'
   }
+}
+export const suiConfiguredMenuTranslate = (options: SuiConfiguredMenuOption[], label: string, ctor: string) => {
+  const tr: MenuTranslation = {
+    ctor, label, menuItems: []
+  };
+  options.forEach((option) => {
+    tr.menuItems.push(option.menuChoice);
+  });
+  return tr;
 }
 /**
  * A menu of configured options.

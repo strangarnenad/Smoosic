@@ -4,7 +4,6 @@ import { SuiButtonComposite } from './components/button';
 import { SuiComponentParent } from './components/baseComponent';
 import { DialogDefinition, SuiDialogParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { getButtonsFcn, SuiButtonArrayComponent, SuiButtonArrayParameters } from './components/buttonArray';
 import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComponent';
 
 /**

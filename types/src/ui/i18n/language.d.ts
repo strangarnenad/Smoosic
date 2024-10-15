@@ -20,7 +20,11 @@ export declare class SmoTranslator {
     static registerDialog(_class: any): void;
     static printLanguages(): void;
     static _updateDialog(dialogStrings: DialogTranslation, _dialogClass: any, dialogClass: string): void;
-    static _updateMenu(menuStrings: MenuTranslation, _menuClass: any, menuClass: string): void;
+    /**
+     * TODO: update this so that dynamic constructors aren't needed.
+     * @param language
+     * @returns
+     */
     static setLanguage(language: string): void;
     static get allMenus(): string[];
     static get allDialogs(): string[];

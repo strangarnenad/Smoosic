@@ -5,7 +5,7 @@
  * @module /smo/data/score
  */
 import { SmoMusic } from './music';
-import { Clef, SvgDimensions, smoXmlNs } from './common';
+import { Clef, SvgDimensions } from './common';
 import { SmoMeasure, SmoMeasureParams, ColumnMappedParams, SmoMeasureParamsSer } from './measure';
 import { SmoNoteModifierBase } from './noteModifiers';
 import {

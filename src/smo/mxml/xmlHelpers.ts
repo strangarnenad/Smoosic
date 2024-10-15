@@ -4,7 +4,7 @@ import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoArticulation, SmoNoteModifierBase, SmoOrnament } from '../data/noteModifiers';
 import { SmoMusic } from '../data/music';
 import { SmoNote } from '../data/note';
-import { Pitch, PitchLetter, createXmlAttributes, createXmlAttribute, SmoNamespace } from '../data/common';
+import { Pitch, PitchLetter, createXmlAttributes, createXmlAttribute, SmoDynamicCtor } from '../data/common';
 import { SmoSelector } from '../xform/selections';
 import { SmoBarline } from '../data/measureModifiers';
 import { XmlTupletData } from './xmlState';
@@ -526,8 +526,7 @@ export class XmlHelpers {
         articulations.forEach((articulation) => {
           Object.keys(XmlHelpers.ornamentXmlToSmoMap).forEach((key) => {
             if (articulation.getElementsByTagName(key).length) {
-              const ctor = eval(`${SmoNamespace.value}.${XmlHelpers.ornamentXmlToSmoMap[key].ctor}`);
-              rv.push(new ctor(XmlHelpers.ornamentXmlToSmoMap[key].params));
+              rv.push(SmoDynamicCtor[XmlHelpers.ornamentXmlToSmoMap[key].ctor](XmlHelpers.ornamentXmlToSmoMap[key]));
             }
           });
         });

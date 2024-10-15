@@ -190,4 +190,7 @@ export abstract class SuiCompositeBase extends SuiComponentBase {
     this.parentControl = params.parentComponent;
   }
 }
+export type dynamicComponentCtor = (arg1: SuiDialogNotifier, params: any) => any;
+export const SmoDynamicComponentCtor: Record<string, dynamicComponentCtor> = {};
+
 

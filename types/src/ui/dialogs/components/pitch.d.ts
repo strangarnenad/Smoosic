@@ -91,6 +91,6 @@ export declare class SuiPitchArrayComponent extends SuiComponentParent {
  * @category SuiDialog
  */
 export declare class SuiPitchArrayComponentTab extends SuiPitchArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameters: SuiBaseComponentParams, def: getDefaultPitchesFcn);
+    constructor(dialog: SuiDialogNotifier, parameters: SuiBaseComponentParams);
 }
 //# sourceMappingURL=pitch.d.ts.map

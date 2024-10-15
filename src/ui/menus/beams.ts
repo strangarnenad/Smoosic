@@ -226,7 +226,7 @@ const removeTupletMenuOption: SuiConfiguredMenuOption = {
  * Stuff you can do to beams
  * @category SuiMenu
  */
-const SuiBeamMenuOptions: SuiConfiguredMenuOption[] = [toggleBeamGroupMenuOption,
+export const SuiBeamMenuOptions: SuiConfiguredMenuOption[] = [toggleBeamGroupMenuOption,
   beamSelectionsMenuOption, toggleBeamDirectionMenuOption, tripletMenuOption, quintupletMenuOption,
   sevenTupletMenuOption, removeTupletMenuOption
 ];

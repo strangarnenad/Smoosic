@@ -301,7 +301,7 @@ export class SuiPitchArrayComponent extends SuiComponentParent {
  * @category SuiDialog
  */
 export class SuiPitchArrayComponentTab extends SuiPitchArrayComponent {
-  constructor(dialog: SuiDialogNotifier, parameters: SuiBaseComponentParams, def: getDefaultPitchesFcn) {
+  constructor(dialog: SuiDialogNotifier, parameters: SuiBaseComponentParams) {
     super(dialog, parameters, getTabNotePitchesFcn);
   }
 }

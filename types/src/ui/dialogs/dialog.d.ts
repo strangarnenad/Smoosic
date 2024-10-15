@@ -49,6 +49,7 @@ export interface DialogTranslation {
     dialogElements: DialogTranslationElement[];
     staticText: Record<string, string>;
 }
+export declare const DialogTranslations: DialogTranslation[];
 /**
  * Dialog params always contain basic information about the runtime
  * for modal functionality
@@ -93,6 +94,7 @@ export interface DialogDom {
     element: any;
     trapper: any;
 }
+export declare const suiDialogTranslate: (dialog: DialogDefinition, ctor: string) => DialogTranslation;
 /**
  * Note: Most dialogs will inherit from SuiDialogAdapter, not SuiDialogBase.
  * You will only want to inherit from SuiDialogBase under 2 conditions:
@@ -102,7 +104,6 @@ export interface DialogDom {
  */
 export declare abstract class SuiDialogBase extends SuiDialogNotifier {
     static get displayOptions(): Record<string, string>;
-    static printTranslate(_class: string): DialogTranslation;
     static getStaticText(staticText: Record<string, string>[]): Record<string, string>;
     id: string;
     ctor: string;
