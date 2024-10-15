@@ -183,7 +183,13 @@ body.showQwerty .keyContainer {
 	margin-left:7px;
 	margin-right:7px;
 }
-
+.attributeDialog .btn.dropdown-toggle {
+  margin-left: 5px;
+  margin-right: 5px;
+  --bs-btn-padding-x: 0.55rem;
+  --bs-btn-padding-y: 0.175rem;
+  font-size: 0.9em;
+}
 body.showAttributeDialog .attributeDialog {
 	display:block;
 	z-index:3;
@@ -306,21 +312,14 @@ button.nav-link {
     margin-left:64px;
     height:auto;
 }
-
-.smoControlContainer .text-input input {
-    margin-left:70px;
-}
 #attr-modal-dialog-dialog-tempo .smoControlContainer input.rockerInput,
 #attr-modal-dialog-dialog-measure .smoControlContainer input.rockerInput {
     width: 175px;
 }
-
-
 .attributeModal #dialog-layout-pageWidth,
 .attributeModal #dialog-layout-pageHeight {
 	display:none;
 }
-
 .attributeModal #dialog-layout-pageWidth,
 .attributeModal #dialog-layout-pageHeight {
 	display:none;
@@ -471,13 +470,22 @@ button.button-array.initial {
 }
 .attributeModal .smoControl {
   display:flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
 	margin-top:5px;
 	margin-bottom:5px;
 }
 
+.smoControl input[type="checkbox"], .smoControl input[type="text"] {
+  margin-right: 5px;
+  margin-left: 5px;
+  height: 1.5em;
+}
 .smoControl button, .smoControl input,.smoControl select {
 	border: 1px solid #52ba73;
+}
+.smoControl .btn.btn-secondary .icon-cancel-circle {
+  position:relative;
+  right: -10px;
 }
 .smoControl button.button-array {
   width: 35px;
@@ -524,6 +532,7 @@ button.button-array.initial {
 
 .rockerControl button {
 	width:32px;
+  height: 1.5em;
 }
 
 .rockerControl button.decrement {
