@@ -20,7 +20,8 @@ export type ConfigurationStringOption = 'language' | 'libraryUrl' | 'remoteScore
 
 export type ConfigurationNumberOption = 'demonPollTime' | 'idleRedrawTime';
 
-export var ConfigurationStringOptions: ConfigurationStringOption[] = ['language', 'libraryUrl', 'remoteScore'];
+export var ConfigurationStringOptions: ConfigurationStringOption[] = [
+  'language', 'libraryUrl', 'remoteScore'];
 
 export var ConfigurationNumberOptions: ConfigurationNumberOption[] = ['demonPollTime', 'idleRedrawTime'];
 
@@ -82,7 +83,9 @@ export interface SmoConfigurationParams {
     return {
       mode: 'application',
       language: 'en',
-      scoreDomContainer: 'boo',
+      leftControls: 'controls-left',
+      topControls: 'controls-top',
+      scoreDomContainer: 'smo-scroll-region',
       libraryUrl: 'https://aarondavidnewman.github.io/Smoosic/release/library/links/smoLibrary.json',
       demonPollTime: 50, // how often we poll the score to see if it changed
       idleRedrawTime: 1000, // maximum time between score modification and render
@@ -111,16 +114,14 @@ export interface SmoConfigurationParams {
       const sp: string | undefined = params[param] ?? defs[param];
       this[param] = sp ?? '';
     });
+    this.leftControls = params.leftControls ?? defs.leftControls;
+    this.topControls = params.topControls ?? defs.topControls;
     this.scoreDomContainer = params.scoreDomContainer ?? defs.scoreDomContainer;
     this.initialScore = params.initialScore ?? undefined;
     ConfigurationNumberOptions.forEach((param) => {
       this[param] = params[param] ?? defs[param];
     });
     this.mode = params.mode ?? defs.mode;
-    if (this.mode === 'application') {
-      this.leftControls = params.leftControls;
-      this.topControls = params.topControls;
-    }
     this.ribbonLayout = params.ribbonLayout ? params.ribbonLayout: defaultRibbonLayout.ribbons;
     this.buttonDefinition = params.buttonDefinition ? params.buttonDefinition : defaultRibbonLayout.ribbonButtons;
     if (!params.ribbonLayout) {

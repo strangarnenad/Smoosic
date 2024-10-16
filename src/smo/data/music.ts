@@ -1801,6 +1801,7 @@ export class SmoMusic {
       curPitch = SmoMusic.getLetterNotePitch(curPitch, letter as PitchLetter, keySignature);
       const defs = SmoNote.defaults;
       defs.ticks = { numerator: duration, denominator: 1, remainder: 0 };
+      defs.stemTicks = duration;  // this simple function assumes no tuplets
       defs.pitches = [curPitch];
       defs.clef = clef;
       rv.push(new SmoNote(defs));

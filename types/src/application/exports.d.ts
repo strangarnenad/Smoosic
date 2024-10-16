@@ -97,6 +97,7 @@ import { SvgHelpers } from '../render/sui/svgHelpers';
 import { SuiAudioPlayer } from '../render/audio/player';
 import { SuiOscillator, SuiSampler, SuiReverb } from '../render/audio/oscillator';
 import { SuiSampleMedia } from '../render/audio/samples';
+import { IsPitchLetter } from '../smo/data/common';
 import { SmoScore, isEngravingFont } from '../smo/data/score';
 import { UndoBuffer } from '../smo/xform/undo';
 import { SmoNote } from '../smo/data/note';
@@ -106,6 +107,7 @@ import { SmoMeasure } from '../smo/data/measure';
 import { SmoMusic } from '../smo/data/music';
 import { SmoAudioPitch } from '../smo/data/music';
 import { SmoSelection, SmoSelector } from '../smo/xform/selections';
+import { SmoBeamer } from '../smo/xform/beamers';
 import { SmoOrnament, SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric, SmoArpeggio, SmoClefChange } from '../smo/data/noteModifiers';
 import { SmoSystemStaff } from '../smo/data/systemStaff';
 import { SmoSystemGroup, SmoAudioPlayerSettings, SmoScorePreferences } from '../smo/data/scoreModifiers';
@@ -124,6 +126,7 @@ import { SuiPitchAdapter, SuiPitchDialog, SuiLetterButtonComponent, SuiIntervalB
 export * from './application';
 export * from './common';
 export * from './configuration';
+export * from './dynamicInit';
 export * from './dom';
 export * from './eventHandler';
 export * from './exports';
@@ -285,6 +288,7 @@ export * from '../ui/ribbonLayout/default/tabletRibbon';
 export declare const Smo: {
     SmoConfiguration: typeof SmoConfiguration;
     SuiApplication: typeof SuiApplication;
+    dynamicCtorInit: () => void;
     SuiDom: typeof SuiDom;
     SuiEventHandler: typeof SuiEventHandler;
     SuiExceptionHandler: typeof SuiExceptionHandler;
@@ -449,6 +453,7 @@ export declare const Smo: {
     SmoDynamicCtor: Record<string, import("./exports").dynamicCtor>;
     SmoSystemStaff: typeof SmoSystemStaff;
     SmoNote: typeof SmoNote;
+    IsPitchLetter: typeof IsPitchLetter;
     SmoStaffHairpin: typeof SmoStaffHairpin;
     StaffModifierBase: typeof StaffModifierBase;
     SmoStaffTextBracket: typeof SmoStaffTextBracket;
@@ -484,6 +489,7 @@ export declare const Smo: {
     UndoBuffer: typeof UndoBuffer;
     SmoToVex: typeof SmoToVex;
     SmoOperation: typeof SmoOperation;
+    SmoBeamer: typeof SmoBeamer;
     cardKeysHtmlEn: string;
     cardNotesLetterHtmlEn: string;
     cardNotesChromaticHtmlEn: string;

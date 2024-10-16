@@ -63,6 +63,7 @@ export declare class SuiApplication {
     constructor(config: SmoConfiguration);
     _getDomContainer(): HTMLElement;
     static instance: SuiInstance;
+    static initSync(): void;
     /**
     // Different applications can create their own key bindings, these are the defaults.
     // Many editor commands can be reached by a single keystroke.  For more advanced things there

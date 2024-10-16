@@ -5,14 +5,17 @@ import { scoreModifierDynamicCtorInit } from '../smo/data/scoreModifiers';
 import { collapsableButtonInit } from '../ui/buttons/collapsable';
 import { menuTranslationsInit } from '../ui/menus/manager';
 import { initDialogTranslationElements, initDialogConstructors } from '../ui/dialogs/factory';
-
+let dynamicCtorInitComplete = false;
 export const dynamicCtorInit = () => {
-  noteModifierDynamicCtorInit();
-  measureModifierDynamicCtorInit();
-  staffModifierDynamicCtorInit();
-  scoreModifierDynamicCtorInit();
-  collapsableButtonInit();
-  menuTranslationsInit();
-  initDialogTranslationElements();
-  initDialogConstructors();
+  if (!dynamicCtorInitComplete) {
+    noteModifierDynamicCtorInit();
+    measureModifierDynamicCtorInit();
+    staffModifierDynamicCtorInit();
+    scoreModifierDynamicCtorInit();
+    collapsableButtonInit();
+    menuTranslationsInit();
+    initDialogTranslationElements();
+    initDialogConstructors();
+  }
+  dynamicCtorInitComplete = true;
 }
