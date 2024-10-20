@@ -361,15 +361,16 @@ export class SmoTuplet {
 
   constructor(params: SmoTupletParams) {
     const defs = SmoTuplet.defaults;
-    this.numNotes = params.numNotes ? params.numNotes : defs.numNotes;
-    this.notesOccupied = params.notesOccupied ? params.notesOccupied : defs.notesOccupied;
-    this.stemTicks = params.stemTicks ? params.stemTicks : defs.stemTicks;
-    this.totalTicks = params.totalTicks ? params.totalTicks : defs.totalTicks;
-    this.bracketed = params.bracketed ? params.bracketed : defs.bracketed;
-    this.voice = params.voice ? params.voice : defs.voice;
-    this.ratioed = params.ratioed ? params.ratioed : defs.ratioed;
-    this.startIndex = params.startIndex ? params.startIndex : defs.startIndex;
-    this.endIndex = params.endIndex ? params.endIndex : defs.endIndex;
+    const mergedParams = { ...defs, ...params };
+    this.numNotes = mergedParams.numNotes;
+    this.notesOccupied = mergedParams.notesOccupied;
+    this.stemTicks = mergedParams.stemTicks;
+    this.totalTicks = mergedParams.totalTicks;
+    this.bracketed = mergedParams.bracketed;
+    this.voice = mergedParams.voice;
+    this.ratioed = mergedParams.ratioed;
+    this.startIndex = mergedParams.startIndex;
+    this.endIndex = mergedParams.endIndex;
     this.attrs = {
       id: getId().toString(),
       type: 'SmoTuplet'

@@ -25,7 +25,7 @@ export class defaultRibbonLayout {
   static get leftRibbonIds() {
     return ['helpDialog', 'languageMenu', 'fileMenu', 
     'scoreMenu', 'partMenu', 'staffModifierMenu', 'measureModal', 'voiceMenu', 'beamMenu',
-    'noteMenu', 'textMenu', 'libraryMenu',
+    'tupletMenu', 'noteMenu', 'textMenu', 'libraryMenu',
     ];
   }
   static get debugIds() {
@@ -245,6 +245,16 @@ export class defaultRibbonLayout {
       ctor: 'SuiBeamMenu',
       group: 'scoreEdit',
       id: 'beamMenu'
+    }, {
+      leftText: 'Tuplets',
+      rightText: '',
+      hotKey: '',
+      icon: '',
+      classes: 'icon nav-link link-body-emphasis hover-text',
+      action: 'menu',
+      ctor: 'SuiTupletMenu',
+      group: 'scoreEdit',
+      id: 'tupletMenu'
     }, {
       leftText: 'Notes',
       rightText: 'Alt-n',

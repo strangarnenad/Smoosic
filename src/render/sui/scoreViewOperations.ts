@@ -17,8 +17,9 @@ import { SmoDynamicText, SmoNoteModifierBase, SmoGraceNote, SmoArticulation,
 import { SmoTempoText, SmoVolta, SmoBarline, SmoRepeatSymbol, 
   SmoRehearsalMark, SmoMeasureFormat, TimeSignature } from '../../smo/data/measureModifiers';
 import { UndoBuffer } from '../../smo/xform/undo';
-import { SmoOperation, createStaffModifierType
- } from '../../smo/xform/operations';
+import {
+  SmoOperation, createStaffModifierType, MakeTupletOperation
+} from '../../smo/xform/operations';
 import { BatchSelectionOperation } from '../../smo/xform/operations';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { FontInfo } from '../../common/vex';
@@ -917,14 +918,14 @@ export class SuiScoreViewOperations extends SuiScoreView {
   }
   /**
    * convert non-tuplet not to a tuplet
-   * @param numNotes 3 means triplet, etc.
+   * @param params
    */
-  async makeTuplet(numNotes: number): Promise<void> {
+  async makeTuplet(params: MakeTupletOperation): Promise<void> {
     const selection = this.tracker.selections[0];
     const measureSelections = this.undoTrackerMeasureSelections('make tuplet');
-    SmoOperation.makeTuplet(selection, numNotes);
+    SmoOperation.makeTuplet(selection, params);
     const altSelection = this._getEquivalentSelection(selection!);
-    SmoOperation.makeTuplet(altSelection!, numNotes);
+    SmoOperation.makeTuplet(altSelection!, params);
     this._renderChangedMeasures(measureSelections);
     await this.renderer.updatePromise();
   }

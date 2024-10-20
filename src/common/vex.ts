@@ -118,6 +118,8 @@ export interface SmoVexTupletParams {
   vexNotes: Note[],
   numNotes: number,
   notesOccupied: number,
+  ratioed: boolean,
+  bracketed: boolean,
   location: number
 };
 
@@ -245,8 +247,8 @@ export function getVexTuplets(params: SmoVexTupletParams) {
   const vexTuplet = new VF.Tuplet(params.vexNotes, {
     num_notes: params.numNotes,
     notes_occupied: params.notesOccupied,
-    ratioed: false,
-    bracketed: true,
+    ratioed: params.ratioed,
+    bracketed: params.bracketed,
     location: params.location
   });
   return vexTuplet;

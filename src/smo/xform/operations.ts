@@ -28,6 +28,13 @@ import { SmoTupletTree } from '../data/tuplet';
 export type BatchSelectionOperation = 'dotDuration' | 'undotDuration' | 'doubleDuration' | 'halveDuration' |
   'doubleGraceNoteDuration' | 'halveGraceNoteDuration';
 
+export interface MakeTupletOperation {
+  numNotes: number,
+  notesOccupied: number,
+  ratioed: boolean,
+  bracketed: boolean,
+}
+
 export type createStaffModifierType<T> = (fromSelection: SmoSelection, toSelection: SmoSelection) => T;
 /**
  * SmoOperation is a collection of static methods that operate on/change/transform the music.  Most methods
@@ -197,10 +204,13 @@ export class SmoOperation {
   // ## makeTuplet
   // ## Description
   // Makes a non-tuplet into a tuplet of equal value.
-  static makeTuplet(selection: SmoSelection, numNotes: number) {
+  static makeTuplet(selection: SmoSelection, params: MakeTupletOperation) {
     SmoMakeTupletActor.apply({
       measure: selection.measure,
-      numNotes: numNotes,
+      numNotes: params.numNotes,
+      notesOccupied: params.notesOccupied,
+      bracketed: params.bracketed,
+      ratioed: params.ratioed,
       voice: selection.selector.voice,
       index: selection.selector.tick
     });

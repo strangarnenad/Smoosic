@@ -27,6 +27,7 @@ import { SuiNoteMenu } from './note';
 import { SuiTextMenu } from './text';
 import { SuiPartSelectionMenu } from './partSelection';
 import { SuiPartMenu } from './parts';
+import {SuiTupletMenu} from "./tuplets";
 declare var $: any;
 
 /**
@@ -300,6 +301,8 @@ export class SuiMenuManager {
         this.displayMenu(new SuiVoiceMenu(params));
       } else if (action === 'SuiBeamMenu') {
         this.displayMenu(new SuiBeamMenu(params));
+      } else if (action === 'SuiTupletMenu') {
+        this.displayMenu(new SuiTupletMenu(params));
       } else if (action === 'SuiNoteMenu') {
         this.displayMenu(new SuiNoteMenu(params));
       } else if (action === 'SuiTextMenu') {
