@@ -13,7 +13,7 @@ Smoosic is a music notation application that runs in a web browser.  It supports
 * library mode for custom applications
 
 Smoosic is highly dependent on the [Vexflow engraving library](https://github.com/0xfe/vexflow), although we currently use 
-[our own branch at ](https://github.com/Smoosic/vexflow_smoosic).
+[our own branch](https://github.com/Smoosic/vexflow_smoosic).
 
 See [changes](https://smoosic.github.io/Smoosic/changes.md) for changes, updates, initiatives etc.
 
