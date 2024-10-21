@@ -14,9 +14,9 @@ import { scoreChangeEvent } from '../render/sui/renderState';
  * @param method - the callback method on sink
  * @param symbol - used to distinguish handler instances of the same type
  */
+export type methodType = (ev: any) => Promise<any>;
 export interface EventHandler {
-  sink: any,
-  method: string,
+  method: methodType,
   symbol: Symbol
 }
 /**
@@ -63,44 +63,44 @@ export class BrowserEventSource {
     let i = 0;
     for (i = 0; i < this.keydownHandlers.length; ++i) {
       const handler = this.keydownHandlers[i]
-      await handler.sink[handler.method](event);
+      await handler.method(event);
     }
   }
   async keyUp(event: KeyEvent) {
     let i = 0;
     for (i = 0; i < this.keyupHandlers.length; ++i) {
       const handler = this.keyupHandlers[i]
-      await handler.sink[handler.method](event);
+      await handler.method(event);
     }
   }
   async evScoreChange(event: any) {
     let i = 0;
     for (i = 0; i < this.scoreChangeHandlers.length; ++i) {
       const handler = this.scoreChangeHandlers[i]
-      await handler.sink[handler.method](event);
+      await handler.method(event);
     }
   }
   mouseMove(event: any) {
     this.mouseMoveHandlers.forEach((handler) => {
-      handler.sink[handler.method](event);
+      handler.method(event);
     });
   }
 
   mouseClick(event: any) {
     this.mouseClickHandlers.forEach((handler) => {
-      handler.sink[handler.method](event);
+      handler.method(event);
     });
   }
 
   mouseDown(event: any) {
     this.mouseDownHandlers.forEach((handler) => {
-      handler.sink[handler.method](event);
+      handler.method(event);
     });
   }
 
   mouseUp(event: any) {
     this.mouseUpHandlers.forEach((handler) => {
-      handler.sink[handler.method](event);
+      handler.method(event);
     });
   }
 
@@ -159,49 +159,49 @@ export class BrowserEventSource {
 
   // ### bindKeydownHandler
   // add a handler for the evKey event, for keyboard data.
-  bindKeydownHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindKeydownHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.keydownHandlers.push(handler as EventHandler);
     return handler;
   }
-  bindKeyupHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindKeyupHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.keyupHandlers.push(handler as EventHandler);
     return handler;
   }
 
-  bindMouseMoveHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindMouseMoveHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.mouseMoveHandlers.push(handler as EventHandler);
     return handler;
   }
 
-  bindMouseUpHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindMouseUpHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.mouseUpHandlers.push(handler);
     return handler;
   }
-  bindScoreChangeHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindScoreChangeHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.scoreChangeHandlers.push(handler);
     return handler;
   }
 
-  bindMouseDownHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindMouseDownHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.mouseDownHandlers.push(handler);
     return handler;
   }
 
-  bindMouseClickHandler(sink: any, method: string) {
-    var handler: EventHandler = { symbol: Symbol(), sink, method };
+  bindMouseClickHandler(method: methodType) {
+    var handler: EventHandler = { symbol: Symbol(), method };
     this.mouseClickHandlers.push(handler);
     return handler;
   }
 
-  domClick(selector: string, sink: any, method: string, args: any) {
-    $(selector).off('click').on('click', function (ev: any) {
-      sink[method](ev, args);
+  domClick(selector: string, method: () => Promise<any>) {
+    $(selector).off('click').on('click', async function (ev: any) {
+      await method();
     });
   }
 }

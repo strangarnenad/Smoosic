@@ -28,7 +28,7 @@ export declare class CollapseRibbonControl extends SuiButton {
     static get paramArray(): string[];
     childButtons: ButtonDefinition[];
     constructor(parameters: SuiCollapsableButtonParams);
-    _toggleExpand(): void;
+    toggleExpand(): Promise<void>;
     bind(): void;
 }
 /**

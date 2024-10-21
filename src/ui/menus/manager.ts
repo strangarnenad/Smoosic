@@ -257,19 +257,7 @@ export class SuiMenuManager {
     // If we were called from the ribbon, we notify the controller that we are
     // taking over the keyboard.  If this was a key-based command we already did.
     layoutDebug.addDialogDebug('createMenu creating ' + action);
-    if (action === 'SuiKeySignatureMenu') {
-      // TODO: find a better way of handling slash menus from ribbon buttons
-      createAndDisplayDialog(SuiKeySignatureDialog, {
-        view: this.view,
-        completeNotifier: this.completeNotifier,
-        startPromise: null,
-        eventSource: this.eventSource,
-        tracker: this.view.tracker,
-        ctor: 'SuiKeySignatureDialog',
-        id: 'key-signature-dialog',
-        modifier: null
-      });
-    } else {
+
       const params: SuiMenuParams = 
       {
         tracker: this.tracker,
@@ -281,31 +269,30 @@ export class SuiMenuManager {
         undoBuffer: this.undoBuffer,
         ctor: action
       };
-  
-      if (action === 'SuiLanguageMenu') {
-        this.displayMenu(new SuiLanguageMenu(params));
-      } else if (action === 'SuiFileMenu') {
-        this.displayMenu(new SuiFileMenu(params));
-      } else if (action === 'SuiScoreMenu') {
-        this.displayMenu(new SuiScoreMenu(params));
-      } else if (action === 'SuiPartSelectionMenu') {
-        this.displayMenu(new SuiPartSelectionMenu(params));
-      } else if (action === 'SuiPartMenu') {
-        this.displayMenu(new SuiPartMenu(params));
-      } else if (action === 'SuiStaffModifierMenu') {
-        this.displayMenu(new SuiStaffModifierMenu(params));
-      } else if (action === 'SuiMeasureMenu') {
-        this.displayMenu(new SuiMeasureMenu(params));
-      } else if (action === 'SuiVoiceMenu') {
-        this.displayMenu(new SuiVoiceMenu(params));
-      } else if (action === 'SuiBeamMenu') {
-        this.displayMenu(new SuiBeamMenu(params));
-      } else if (action === 'SuiNoteMenu') {
-        this.displayMenu(new SuiNoteMenu(params));
-      } else if (action === 'SuiTextMenu') {
-        this.displayMenu(new SuiTextMenu(params));
-      }
-    }
+
+    if (action === 'SuiLanguageMenu') {
+      this.displayMenu(new SuiLanguageMenu(params));
+    } else if (action === 'SuiFileMenu') {
+      this.displayMenu(new SuiFileMenu(params));
+    } else if (action === 'SuiScoreMenu') {
+      this.displayMenu(new SuiScoreMenu(params));
+    } else if (action === 'SuiPartSelectionMenu') {
+      this.displayMenu(new SuiPartSelectionMenu(params));
+    } else if (action === 'SuiPartMenu') {
+      this.displayMenu(new SuiPartMenu(params));
+    } else if (action === 'SuiStaffModifierMenu') {
+      this.displayMenu(new SuiStaffModifierMenu(params));
+    } else if (action === 'SuiMeasureMenu') {
+      this.displayMenu(new SuiMeasureMenu(params));
+    } else if (action === 'SuiVoiceMenu') {
+      this.displayMenu(new SuiVoiceMenu(params));
+    } else if (action === 'SuiBeamMenu') {
+      this.displayMenu(new SuiBeamMenu(params));
+    } else if (action === 'SuiNoteMenu') {
+      this.displayMenu(new SuiNoteMenu(params));
+    } else if (action === 'SuiTextMenu') {
+      this.displayMenu(new SuiTextMenu(params));
+    }    
   }
 
   // ### evKey
@@ -361,7 +348,8 @@ export class SuiMenuManager {
     // We need to keep track of is bound, b/c the menu can be created from
     // different sources.
     if (!this.bound) {
-      this.keydownHandler = this.eventSource.bindKeydownHandler(this, 'evKey');
+      const evkey = async (ev: any) => { this.evKey(ev); }
+      this.keydownHandler = this.eventSource.bindKeydownHandler(evkey);
       this.bound = true;
     }
     $(this.menuContainer).find('a.dropdown-item').off('click').on('click', async (ev: any) => {

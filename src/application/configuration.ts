@@ -86,7 +86,7 @@ export interface SmoConfigurationParams {
       leftControls: 'controls-left',
       topControls: 'controls-top',
       scoreDomContainer: 'smo-scroll-region',
-      libraryUrl: 'https://aarondavidnewman.github.io/Smoosic/release/library/links/smoLibrary.json',
+      libraryUrl: 'https://smoosic.github.io/Smoosic/release/library/links/smoLibrary.json',
       demonPollTime: 50, // how often we poll the score to see if it changed
       idleRedrawTime: 1000, // maximum time between score modification and render
       ribbonLayout: defaultRibbonLayout.ribbons,

@@ -47,8 +47,8 @@ export interface SuiRibbonParams {
  */
 export declare class RibbonButtons {
     static get paramArray(): string[];
-    static _buttonHtml(containerClass: string, buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string): any;
-    static _buttonSidebarHtml(buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string): any;
+    static ribbonButtonHtml(containerClass: string, buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string): any;
+    static menuButtonHtml(buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string): any;
     static translateButtons: ButtonLabel[];
     controller: CompleteNotifier;
     config: SmoUiConfiguration;
@@ -60,18 +60,18 @@ export declare class RibbonButtons {
     collapsables: CollapseRibbonControl[];
     collapseChildren: any[];
     constructor(params: SuiRibbonParams);
-    _executeButtonModal(buttonElement: string, buttonData: ButtonDefinition): Promise<void>;
-    _executeButtonMenu(buttonElement: string, buttonData: ButtonDefinition): void;
-    _executeButton(buttonElement: string, buttonData: ButtonDefinition): Promise<void>;
-    _bindButton(buttonElement: string, buttonData: ButtonDefinition): void;
-    _createCollapsibleButtonGroups(selector: string | HTMLElement): void;
+    executeButtonModal(buttonElement: string, buttonData: ButtonDefinition): Promise<void>;
+    executeButtonMenu(buttonElement: string, buttonData: ButtonDefinition): void;
+    executeButton(buttonElement: string, buttonData: ButtonDefinition): Promise<void>;
+    bindButton(buttonElement: string, buttonData: ButtonDefinition): void;
+    createCollapsibleButtonGroups(selector: string | HTMLElement): void;
     _createSidebarButtonGroups(selector: string | HTMLElement): void;
     static isCollapsible(action: ButtonAction): boolean;
-    _createRibbonHtml(buttonAr: string[], selector: string | HTMLElement): void;
-    _createSidebarHtml(buttonAr: string[], selector: string | HTMLElement): void;
+    createRibbonHtml(buttonAr: string[], selector: string | HTMLElement): void;
+    createSidebarMenuHtml(buttonAr: string[], selector: string | HTMLElement): void;
     createRibbon(buttonDataArray: string[], parentElement: string | HTMLElement): void;
     createSidebarRibbon(buttonDataArray: string[], parentElement: string | HTMLElement, containerClasses: string): void;
-    handleKeyDown(ev: KeyEvent): void;
+    handleKeyDown(ev: KeyEvent): Promise<void>;
     display(): void;
 }
 //# sourceMappingURL=ribbon.d.ts.map

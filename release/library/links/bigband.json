@@ -20,6 +20,16 @@
 					"smoosic","arrangments","bigband"
 				]
 			},
+			"url": "https://smoosic.github.io/Smoosic/release/library/bigband/child who drums.json"
+		}	, {
+			"format": "smoosic",
+			"metadata": {
+				"name": "Child Who Drums",
+				"composer": "Aaron Newman",
+				"tags": [
+					"smoosic","arrangments","bigband", "Christmas"
+				]
+			},
 			"url": "https://smoosic.github.io/Smoosic/release/library/bigband/Plena.json"
 		}	,
 		{
