@@ -69,12 +69,14 @@ export class SuiCustomTupletDialog extends SuiDialogAdapterBase<SuiCustomTupletA
                     smoName: 'numNotes',
                     control: 'SuiRockerComponent',
                     label: 'Num of notes',
-                    dataType: 'int'
+                    dataType: 'int',
+                    min: 1,
                 }, {
                     smoName: 'notesOccupied',
                     control: 'SuiRockerComponent',
                     label: 'Notes occupied',
-                    dataType: 'int'
+                    dataType: 'int',
+                    min: 1,
                 }, {
                     smoName: 'ratioed',
                     control: 'SuiToggleComponent',
