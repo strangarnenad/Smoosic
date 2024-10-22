@@ -50,7 +50,7 @@ export class CollapseRibbonControl extends SuiButton {
       buttonIsCollapsible(cb.action)
     );
   }
-  _toggleExpand() {
+  async toggleExpand() {
     this.childButtons.forEach((cb) => {
       const el = $('#' + cb.id);
       $(el).toggleClass('collapsed');
@@ -75,7 +75,10 @@ export class CollapseRibbonControl extends SuiButton {
   }
   bind() {
     $(this.buttonElement).closest('div').addClass('collapseContainer');
-    this.eventSource.domClick(this.buttonElement, this, '_toggleExpand', null);
+    const cb = async () => {
+      await this.toggleExpand();
+    }
+    this.eventSource.domClick(this.buttonElement, cb);
     this.childButtons.forEach((cb) => {
       const el = $('#' + cb.id);
       if (this.completeNotifier) {

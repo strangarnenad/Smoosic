@@ -130,6 +130,11 @@ export class SuiApplication {
     return el;
   }
   static instance: SuiInstance;
+  // Init for applications that create a score but don't create the application right away.
+  // we need to create the dynamic constructors
+  static initSync() {
+    dynamicCtorInit();
+  }
   /** 
   // Different applications can create their own key bindings, these are the defaults.
   // Many editor commands can be reached by a single keystroke.  For more advanced things there

@@ -1,11 +1,9 @@
 <sub>[Github site](https://github.com/Smoosic/smoosic) | [change notes](https://smoosic.github.io/Smoosic/changes.html) | [application](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub> 
-
-![](https://imgur.com/jJ5utJm.gif)
-# Build from source
-To build, use `npm run build`.  Grunt is no longer required.
-
+# Welcome to Smoosic
+The free music notation app that runs in your browser.
+![](https://imgur.com/nUIRh31.png)
 # What is Smoosic?
-Smoosic is a music notation that runs in a web browser.  It supports the following features.
+Smoosic is a music notation application that runs in a web browser.  It supports the following features.
 
 * scores with part extraction
 * playback with instruments and samples
@@ -15,7 +13,7 @@ Smoosic is a music notation that runs in a web browser.  It supports the followi
 * library mode for custom applications
 
 Smoosic is highly dependent on the [Vexflow engraving library](https://github.com/0xfe/vexflow), although we currently use 
-[our own branch at ](https://github.com/Smoosic/vexflow_smoosic).
+[our own branch](https://github.com/Smoosic/vexflow_smoosic).
 
 See [changes](https://smoosic.github.io/Smoosic/changes.md) for changes, updates, initiatives etc.
 
@@ -26,10 +24,10 @@ This is a completely new Github project.  It contains 5 repositories (so far):
 
 1. [vexflow_smoosic](https://github.com/Smoosic/vexflow_smoosic) repository contains the vexflow engraving library described above.
 2. [SmoSounds](https://github.com/Smoosic/SmoSounds) library contains .mp3 samples used for audio playback.
-3. [Smoosic](https://github.com/Smoosic/Smoosic) library is the source code for the application and associated library.
+3. [Smoosic](https://github.com/Smoosic/Smoosic) library is the source code for the application and associated library, and is the main Smoosic project repository.
 4. [SmoSchema](https://github.com/Smoosic/SmoSchema) contains the definition of the Serializable Music Objects that Smoosic 
 uses to persist files. 
-5. [Demos](https://github.com/Smoosic/Demos) is currently empty, but will contain libraries that show how to use Smoosic as a dependency for your own projects, and will also contain unit test files. 
+5. [Demos](https://github.com/Smoosic/Demos) It contains test and demo applications.  If you want to use Smoosic as a library in your own applications, you can use this as a model. 
 
 ## I'd like to help
 I'd appreciate it!  Even if you are not a programmer, if you are interested in music and this project, you can contribute.

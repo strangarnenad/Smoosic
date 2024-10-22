@@ -350,7 +350,7 @@ export class SuiTracker extends SuiMapper {
   }
 
   // if we are being moved right programmatically, avoid playing the selected note.
-  moveSelectionRight(score: SmoScore, evKey: KeyEvent | null, skipPlay: boolean) {
+  moveSelectionRight(skipPlay: boolean) {
     if (this.selections.length === 0 || this.score === null) {
       return;
     }

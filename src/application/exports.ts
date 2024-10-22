@@ -25,7 +25,7 @@ import { cardKeysHtmlEn, cardNotesLetterHtmlEn, cardNotesChromaticHtmlEn, cardNo
   cardBeamsAndStemsDirectionHtmlEn, cardBeamsAndStemsGroupingHtmlEn,
   cardMeasuresAddDeleteHtmlEn, cardVoicesCreateDeleteHtmlEn, cardPartAddDeleteHtmlEn
 } from '../ui/i18n/language_en';
-
+import { dynamicCtorInit } from './dynamicInit';
 // ui dialogs and menus
 // Dialogs
 import { SuiDialogBase } from '../ui/dialogs/dialog';
@@ -128,7 +128,7 @@ import { SuiSampleMedia } from '../render/audio/samples';
 
 
 // SMO object model
-import { SmoNamespace, SmoDynamicCtor } from '../smo/data/common';
+import { SmoNamespace, SmoDynamicCtor, IsPitchLetter } from '../smo/data/common';
 import { SmoScore, engravingFontTypes, isEngravingFont } from '../smo/data/score';
 import { UndoBuffer } from '../smo/xform/undo';
 import { SmoNote } from '../smo/data/note';
@@ -141,6 +141,7 @@ import { SmoMeasure } from '../smo/data/measure';
 import { SmoMusic } from '../smo/data/music';
 import { SmoAudioPitch } from '../smo/data/music';
 import { SmoSelection, SmoSelector } from '../smo/xform/selections';
+import { SmoBeamer } from '../smo/xform/beamers';
 import { SmoOrnament, SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric,
   SmoArpeggio, SmoClefChange, noteModifierDynamicCtorInit } from '../smo/data/noteModifiers';
 import { SmoSystemStaff } from '../smo/data/systemStaff';
@@ -168,6 +169,7 @@ const getClass = (jsonString: string) => {
 export * from './application';
 export * from './common';
 export * from './configuration';
+export * from './dynamicInit';
 export * from './dom';
 export * from './eventHandler';
 export * from './exports';
@@ -331,6 +333,7 @@ export const Smo = {
   // Application-level classes
   SmoConfiguration,
   SuiApplication,
+  dynamicCtorInit,
   SuiDom,  SuiEventHandler, SuiExceptionHandler,
   Qwerty, SuiHelp, SmoTranslationEditor, ModalEventHandler,
   // Ribbon buttons
@@ -388,7 +391,7 @@ SuiPitchComposite,
   // Smo Music Objects
   SmoScore,  SmoScorePreferences, scoreModifierDynamicCtorInit,  engravingFontTypes, isEngravingFont,
   XmlToSmo,  SmoToXml,  MidiToSmo,  SmoToMidi,  SmoMusic,  SmoAudioPitch,  SmoMeasure,  SmoNamespace, SmoDynamicCtor,
-  SmoSystemStaff,  SmoNote,
+  SmoSystemStaff,  SmoNote, IsPitchLetter,
   // staff modifier
   SmoStaffHairpin, StaffModifierBase,  SmoStaffTextBracket, staffModifierDynamicCtorInit,
   SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave, 
@@ -401,7 +404,7 @@ SuiPitchComposite,
   SmoOrnament, noteModifierDynamicCtorInit,
   SmoArticulation, SmoDynamicText, SmoGraceNote, SmoMicrotone, SmoLyric, SmoArpeggio, SmoClefChange,
   // Smo Transformers
-  SmoSelection, SmoSelector, /*SmoDuration,*/ UndoBuffer, SmoToVex, SmoOperation,
+  SmoSelection, SmoSelector, /*SmoDuration,*/ UndoBuffer, SmoToVex, SmoOperation, SmoBeamer,
   // new score bootstrap
   // help strings
   cardKeysHtmlEn, cardNotesLetterHtmlEn, cardNotesChromaticHtmlEn, cardNotesChordsHtmlEn,

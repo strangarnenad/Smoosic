@@ -546,7 +546,7 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * @param ev
      * @returns
      */
-    moveSelectionRight(ev: KeyEvent): Promise<any>;
+    moveSelectionRight(toPlay?: boolean): Promise<any>;
     /**
      * Advance cursor backwards, if possible
      * @param ev

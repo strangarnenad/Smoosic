@@ -8,9 +8,9 @@ import { KeyEvent } from '../smo/data/common';
  * @param method - the callback method on sink
  * @param symbol - used to distinguish handler instances of the same type
  */
+export type methodType = (ev: any) => Promise<any>;
 export interface EventHandler {
-    sink: any;
-    method: string;
+    method: methodType;
     symbol: Symbol;
 }
 /**
@@ -52,13 +52,13 @@ export declare class BrowserEventSource {
     unbindMouseClickHandler(handler: EventHandler): void;
     unbindKeydownHandler(handler: EventHandler): void;
     unbindKeyupHandler(handler: EventHandler): void;
-    bindKeydownHandler(sink: any, method: string): EventHandler;
-    bindKeyupHandler(sink: any, method: string): EventHandler;
-    bindMouseMoveHandler(sink: any, method: string): EventHandler;
-    bindMouseUpHandler(sink: any, method: string): EventHandler;
-    bindScoreChangeHandler(sink: any, method: string): EventHandler;
-    bindMouseDownHandler(sink: any, method: string): EventHandler;
-    bindMouseClickHandler(sink: any, method: string): EventHandler;
-    domClick(selector: string, sink: any, method: string, args: any): void;
+    bindKeydownHandler(method: methodType): EventHandler;
+    bindKeyupHandler(method: methodType): EventHandler;
+    bindMouseMoveHandler(method: methodType): EventHandler;
+    bindMouseUpHandler(method: methodType): EventHandler;
+    bindScoreChangeHandler(method: methodType): EventHandler;
+    bindMouseDownHandler(method: methodType): EventHandler;
+    bindMouseClickHandler(method: methodType): EventHandler;
+    domClick(selector: string, method: () => Promise<any>): void;
 }
 //# sourceMappingURL=eventSource.d.ts.map

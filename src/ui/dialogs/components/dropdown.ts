@@ -61,7 +61,7 @@ export class SuiDropdownComponent extends SuiComponentBase {
     this.optionIds = [];
     const menuId = `${id}-menu`;
     const r = b('div').classes(this.makeClasses('dropdownControl smoControl')).attr('id', id).attr('data-param', this.smoName)
-      .append(b('button').classes('btn dropdown-toggle btn-primary').text(label));
+      .append(b('button').classes('btn dropdown-toggle').text(label));
     const s = b('ul').attr('role', 'menu').classes('dropdown-menu rounded-3 shadow w-220px').attr('id', menuId);
     this.checkDefault(s, b);
     this.options.forEach((option, ix) => {
