@@ -167,7 +167,7 @@ export class SuiKeyCommands {
   }
 
   async makeTupletCommand(numNotes: number) {
-    await this.view.makeTuplet(numNotes);
+    await this.view.makeTuplet({numNotes: numNotes, notesOccupied: 2, bracketed: true, ratioed: false});
   }
   async makeTuplet(keyEvent: KeyEvent) {
     const numNotes = parseInt(keyEvent.key, 10);

@@ -19,7 +19,9 @@ export interface SuiRockerComponentParams {
   increment?: number,
   label: string,
   smoName: string,
-  control: string
+  control: string,
+  min?: number,
+  max?: number,
 }
 
 /**
@@ -40,6 +42,8 @@ export class SuiRockerComponent extends SuiComponentBase {
   dataType: string;
   increment: number = 1;
   parser: string;
+  min: number | undefined;
+  max: number | undefined;
   constructor(dialog: SuiDialogNotifier, params: SuiRockerComponentParams) {
     super(dialog, params);
     this.dataType = params.dataType ?? 'int';
@@ -51,6 +55,8 @@ export class SuiRockerComponent extends SuiComponentBase {
       throw new Error('int component with decimal increment');
     }
     this.parser = SuiRockerComponent.parsers[this.dataType];
+    this.min = params.min;
+    this.max = params.max;
     this.dialog = dialog;
   }
 
@@ -88,7 +94,11 @@ export class SuiRockerComponent extends SuiComponentBase {
         if (this.dataType === 'percent') {
           val = 100 * val;
         }
-        $(input).val(val + this.increment);
+        val += this.increment;
+        if (this.max != undefined && val > this.max) {
+          val = this.max;
+        }
+        $(input).val(val);
         this.handleChanged();
       }
     );
@@ -98,7 +108,11 @@ export class SuiRockerComponent extends SuiComponentBase {
         if (this.dataType === 'percent') {
           val = 100 * val;
         }
-        $(input).val(val - this.increment);
+        val -= this.increment;
+        if (this.min != undefined && val < this.min) {
+          val = this.min;
+        }
+        $(input).val(val);
         this.handleChanged();
       }
     );
@@ -106,7 +120,13 @@ export class SuiRockerComponent extends SuiComponentBase {
       () => {
         val = (this as any)[this.parser]();
         if (val !== this.initialValue) {
+          if (this.min != undefined && val < this.min) {
+            val = this.min;
+          } else if (this.max != undefined && val > this.max) {
+            val = this.max;
+          }
           this.initialValue = val;
+          $(input).val(val);
           this.handleChanged();
         }
       }

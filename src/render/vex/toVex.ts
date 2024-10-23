@@ -445,8 +445,8 @@ function createTuplets(smoMeasure: SmoMeasure, strs: string[]) {
         const tpParams: TupletOptions = {
           num_notes: parentTuplet.numNotes,
           notes_occupied: parentTuplet.notesOccupied,
-          ratioed: false,
-          bracketed: true,
+          ratioed: parentTuplet.ratioed,
+          bracketed: parentTuplet.bracketed,
           location: direction
         };
         const tpParamString = JSON.stringify(tpParams);

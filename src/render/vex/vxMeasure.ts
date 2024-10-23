@@ -388,6 +388,8 @@ export class VxMeasure implements VxMeasureIf {
           vexNotes,
           numNotes: parentTuplet.numNotes,
           notesOccupied: parentTuplet.notesOccupied,
+          ratioed: parentTuplet.ratioed,
+          bracketed: parentTuplet.bracketed,
           location
         }
         const vexTuplet = getVexTuplets(smoTupletParams);

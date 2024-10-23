@@ -27,6 +27,7 @@ import { SuiNoteMenu } from './note';
 import { SuiTextMenu } from './text';
 import { SuiPartSelectionMenu } from './partSelection';
 import { SuiPartMenu } from './parts';
+import {SuiTupletMenu} from "./tuplets";
 declare var $: any;
 
 /**
@@ -258,18 +259,18 @@ export class SuiMenuManager {
     // taking over the keyboard.  If this was a key-based command we already did.
     layoutDebug.addDialogDebug('createMenu creating ' + action);
 
-      const params: SuiMenuParams = 
-      {
-        tracker: this.tracker,
-        score: this.score,
-        completeNotifier: this.completeNotifier,
-        closePromise: this.closeMenuPromise,
-        view: this.view,
-        eventSource: this.eventSource,
-        undoBuffer: this.undoBuffer,
-        ctor: action
-      };
-
+    const params: SuiMenuParams = 
+    {
+      tracker: this.tracker,
+      score: this.score,
+      completeNotifier: this.completeNotifier,
+      closePromise: this.closeMenuPromise,
+      view: this.view,
+      eventSource: this.eventSource,
+      undoBuffer: this.undoBuffer,
+      ctor: action
+    };
+  
     if (action === 'SuiLanguageMenu') {
       this.displayMenu(new SuiLanguageMenu(params));
     } else if (action === 'SuiFileMenu') {
@@ -288,13 +289,14 @@ export class SuiMenuManager {
       this.displayMenu(new SuiVoiceMenu(params));
     } else if (action === 'SuiBeamMenu') {
       this.displayMenu(new SuiBeamMenu(params));
+    } else if (action === 'SuiTupletMenu') {
+      this.displayMenu(new SuiTupletMenu(params));
     } else if (action === 'SuiNoteMenu') {
       this.displayMenu(new SuiNoteMenu(params));
     } else if (action === 'SuiTextMenu') {
       this.displayMenu(new SuiTextMenu(params));
-    }    
+    }
   }
-
   // ### evKey
   // We have taken over menu commands from controller.  If there is a menu active, send the key
   // to it.  If there is not, see if the keystroke creates one.  If neither, dismissi the menu.

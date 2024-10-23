@@ -297,6 +297,9 @@ export class SmoStretchNoteActor extends TickIteratorBase {
 export interface SmoMakeTupletParams {
   measure: SmoMeasure,
   numNotes: number,
+  notesOccupied: number,
+  ratioed: boolean,
+  bracketed: boolean,
   voice: number,
   index: number
 }
@@ -310,6 +313,9 @@ export class SmoMakeTupletActor extends TickIteratorBase {
   numNotes: number;
   voice: number;
   index: number;
+  notesOccupied: number;
+  ratioed: boolean;
+  bracketed: boolean;
   
   constructor(params: SmoMakeTupletParams) {
     super();
@@ -317,6 +323,10 @@ export class SmoMakeTupletActor extends TickIteratorBase {
     this.index = params.index;
     this.voice = params.voice;
     this.numNotes = params.numNotes;
+    this.notesOccupied = params.notesOccupied;
+    this.ratioed = params.ratioed;
+    this.bracketed = params.bracketed;
+
   }
   static apply(params: SmoMakeTupletParams) {
     const actor = new SmoMakeTupletActor(params);
@@ -330,18 +340,20 @@ export class SmoMakeTupletActor extends TickIteratorBase {
     if (index !== this.index) {
       return null;
     }
+    const stemTicks = note.stemTicks / this.notesOccupied
+    if (!(stemTicks in SmoMusic.validDurations)) {
+      return null;
+    }
 
     this.measure.clearBeamGroups();
-    const stemTicks = SmoTuplet.calculateStemTicks(note.stemTicks, this.numNotes);
-    const notesOccupied = note.stemTicks / stemTicks;
 
     const tuplet = new SmoTuplet({
       numNotes: this.numNotes,
-      notesOccupied: notesOccupied,
+      notesOccupied: this.notesOccupied,
       stemTicks: stemTicks,
       totalTicks: note.tickCount,
-      ratioed: false,
-      bracketed: true,
+      ratioed: this.ratioed,
+      bracketed: this.bracketed,
       voice: this.voice,
       startIndex: this.index,
       endIndex: this.index,
