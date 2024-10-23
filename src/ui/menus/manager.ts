@@ -259,46 +259,44 @@ export class SuiMenuManager {
     // taking over the keyboard.  If this was a key-based command we already did.
     layoutDebug.addDialogDebug('createMenu creating ' + action);
 
-      const params: SuiMenuParams = 
-      {
-        tracker: this.tracker,
-        score: this.score,
-        completeNotifier: this.completeNotifier,
-        closePromise: this.closeMenuPromise,
-        view: this.view,
-        eventSource: this.eventSource,
-        undoBuffer: this.undoBuffer,
-        ctor: action
-      };
-    
-      if (action === 'SuiLanguageMenu') {
-        this.displayMenu(new SuiLanguageMenu(params));
-      } else if (action === 'SuiFileMenu') {
-        this.displayMenu(new SuiFileMenu(params));
-      } else if (action === 'SuiScoreMenu') {
-        this.displayMenu(new SuiScoreMenu(params));
-      } else if (action === 'SuiPartSelectionMenu') {
-        this.displayMenu(new SuiPartSelectionMenu(params));
-      } else if (action === 'SuiPartMenu') {
-        this.displayMenu(new SuiPartMenu(params));
-      } else if (action === 'SuiStaffModifierMenu') {
-        this.displayMenu(new SuiStaffModifierMenu(params));
-      } else if (action === 'SuiMeasureMenu') {
-        this.displayMenu(new SuiMeasureMenu(params));
-      } else if (action === 'SuiVoiceMenu') {
-        this.displayMenu(new SuiVoiceMenu(params));
-      } else if (action === 'SuiBeamMenu') {
-        this.displayMenu(new SuiBeamMenu(params));
-      } else if (action === 'SuiTupletMenu') {
-        this.displayMenu(new SuiTupletMenu(params));
-      } else if (action === 'SuiNoteMenu') {
-        this.displayMenu(new SuiNoteMenu(params));
-      } else if (action === 'SuiTextMenu') {
-        this.displayMenu(new SuiTextMenu(params));
-      }
+    const params: SuiMenuParams = 
+    {
+      tracker: this.tracker,
+      score: this.score,
+      completeNotifier: this.completeNotifier,
+      closePromise: this.closeMenuPromise,
+      view: this.view,
+      eventSource: this.eventSource,
+      undoBuffer: this.undoBuffer,
+      ctor: action
+    };
+  
+    if (action === 'SuiLanguageMenu') {
+      this.displayMenu(new SuiLanguageMenu(params));
+    } else if (action === 'SuiFileMenu') {
+      this.displayMenu(new SuiFileMenu(params));
+    } else if (action === 'SuiScoreMenu') {
+      this.displayMenu(new SuiScoreMenu(params));
+    } else if (action === 'SuiPartSelectionMenu') {
+      this.displayMenu(new SuiPartSelectionMenu(params));
+    } else if (action === 'SuiPartMenu') {
+      this.displayMenu(new SuiPartMenu(params));
+    } else if (action === 'SuiStaffModifierMenu') {
+      this.displayMenu(new SuiStaffModifierMenu(params));
+    } else if (action === 'SuiMeasureMenu') {
+      this.displayMenu(new SuiMeasureMenu(params));
+    } else if (action === 'SuiVoiceMenu') {
+      this.displayMenu(new SuiVoiceMenu(params));
+    } else if (action === 'SuiBeamMenu') {
+      this.displayMenu(new SuiBeamMenu(params));
+    } else if (action === 'SuiTupletMenu') {
+      this.displayMenu(new SuiTupletMenu(params));
+    } else if (action === 'SuiNoteMenu') {
+      this.displayMenu(new SuiNoteMenu(params));
+    } else if (action === 'SuiTextMenu') {
+      this.displayMenu(new SuiTextMenu(params));
     }
   }
-
   // ### evKey
   // We have taken over menu commands from controller.  If there is a menu active, send the key
   // to it.  If there is not, see if the keystroke creates one.  If neither, dismissi the menu.
