@@ -62,7 +62,7 @@ export class RibbonButtons {
   static get paramArray() {
     return ['ribbonButtons', 'ribbons', 'keyCommands', 'controller', 'menus', 'eventSource', 'view'];
   }
-  static _buttonHtml(containerClass: string, buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string) {
+  static ribbonButtonHtml(containerClass: string, buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string) {
     const b = buildDom;
     const r = b('div').classes(containerClass).append(b('button').attr('id', buttonId).classes(buttonClass).append(
       b('span').classes('left-text').append(
@@ -71,7 +71,7 @@ export class RibbonButtons {
           b('span').classes('ribbon-button-hotkey').text(buttonKey)));
     return r.dom();
   }
-  static _buttonSidebarHtml(buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string) {
+  static menuButtonHtml(buttonId: string, buttonClass: string, buttonText: string, buttonIcon: string, buttonKey: string) {
     const b = buildDom;
     const r = b('li').classes('nav-item')
     .append(b('button').classes(buttonClass).attr('id', buttonId).classes('nav-link').append(
@@ -103,7 +103,7 @@ export class RibbonButtons {
     this.collapsables = [];
     this.collapseChildren = [];
   }
-  async _executeButtonModal(buttonElement: string, buttonData: ButtonDefinition) {
+  async executeButtonModal(buttonElement: string, buttonData: ButtonDefinition) {
    if (isModalButtonType(buttonData.ctor)) {
       const params = {
         eventSource: this.eventSource,
@@ -123,24 +123,27 @@ export class RibbonButtons {
       SuiHelp.displayHelp();
     }
   }
-  _executeButtonMenu(buttonElement: string, buttonData: ButtonDefinition) {
+  executeButtonMenu(buttonElement: string, buttonData: ButtonDefinition) {
     this.menus.createMenu(buttonData.ctor, this.controller);
   }
 
-  async _executeButton(buttonElement: string, buttonData: ButtonDefinition) {
+  async executeButton(buttonElement: string, buttonData: ButtonDefinition) {
     if (buttonData.action === 'modal') {
-      this._executeButtonModal(buttonElement, buttonData);
+      await this.executeButtonModal(buttonElement, buttonData);
       return;
     }
     if (buttonData.action === 'menu' || buttonData.action === 'collapseChildMenu') {
-      this._executeButtonMenu(buttonElement, buttonData);
+      this.executeButtonMenu(buttonElement, buttonData);
     }
   }
 
-  _bindButton(buttonElement: string, buttonData: ButtonDefinition) {
-    this.eventSource.domClick(buttonElement, this, '_executeButton', buttonData);
+  bindButton(buttonElement: string, buttonData: ButtonDefinition) {
+    const cb = async () => {
+      await this.executeButton(buttonElement, buttonData);
+    };
+    this.eventSource.domClick(buttonElement, cb);
   }
-  _createCollapsibleButtonGroups(selector: string | HTMLElement) {
+  createCollapsibleButtonGroups(selector: string | HTMLElement) {
     let containerClass: string = '';
     // Now all the button elements have been bound.  Join child and parent buttons
     // For all the children of a button group, add it to the parent group
@@ -149,7 +152,37 @@ export class RibbonButtons {
       if (b.action === 'collapseGrandchild') {
         containerClass = 'ribbonButtonContainerMore';
       }
-      const buttonHtml = RibbonButtons._buttonHtml(
+      const buttonHtml = RibbonButtons.ribbonButtonHtml(
+        containerClass, b.id, b.classes, b.leftText, b.icon, b.rightText);
+        if (b.dataElements) {
+          const bkeys = Object.keys(b.dataElements);
+          bkeys.forEach((bkey) => {
+            var de = b.dataElements[bkey];
+            $(buttonHtml).find('button').attr('data-' + bkey, de);
+          });
+        }
+        // Bind the child button actions
+        const parent = $(selector).find('.collapseContainer[data-group="' + b.group + '"]');
+        $(parent).append(buttonHtml);
+        const el = $(selector).find('#' + b.id);
+        this.bindButton(el, b);
+      });
+  
+      this.collapsables.forEach((cb) => {
+        // Bind the events of the parent button
+        cb.bind();
+      });
+    }
+    _createSidebarButtonGroups(selector: string | HTMLElement) {
+      let containerClass: string = '';
+      // Now all the button elements have been bound.  Join child and parent buttons
+      // For all the children of a button group, add it to the parent group
+      this.collapseChildren.forEach((b) => {
+        containerClass = 'ribbonButtonContainer';
+        if (b.action === 'collapseGrandchild') {
+          containerClass = 'ribbonButtonContainerMore';
+        }
+        const buttonHtml = RibbonButtons.ribbonButtonHtml(
         containerClass, b.id, b.classes, b.leftText, b.icon, b.rightText);
       if (b.dataElements) {
         const bkeys = Object.keys(b.dataElements);
@@ -162,37 +195,7 @@ export class RibbonButtons {
       const parent = $(selector).find('.collapseContainer[data-group="' + b.group + '"]');
       $(parent).append(buttonHtml);
       const el = $(selector).find('#' + b.id);
-      this._bindButton(el, b);
-    });
-
-    this.collapsables.forEach((cb) => {
-      // Bind the events of the parent button
-      cb.bind();
-    });
-  }
-  _createSidebarButtonGroups(selector: string | HTMLElement) {
-    let containerClass: string = '';
-    // Now all the button elements have been bound.  Join child and parent buttons
-    // For all the children of a button group, add it to the parent group
-    this.collapseChildren.forEach((b) => {
-      containerClass = 'ribbonButtonContainer';
-      if (b.action === 'collapseGrandchild') {
-        containerClass = 'ribbonButtonContainerMore';
-      }
-      const buttonHtml = RibbonButtons._buttonHtml(
-        containerClass, b.id, b.classes, b.leftText, b.icon, b.rightText);
-      if (b.dataElements) {
-        const bkeys = Object.keys(b.dataElements);
-        bkeys.forEach((bkey) => {
-          var de = b.dataElements[bkey];
-          $(buttonHtml).find('button').attr('data-' + bkey, de);
-        });
-      }
-      // Bind the child button actions
-      const parent = $(selector).find('.collapseContainer[data-group="' + b.group + '"]');
-      $(parent).append(buttonHtml);
-      const el = $(selector).find('#' + b.id);
-      this._bindButton(el, b);
+      this.bindButton(el, b);
     });
 
     this.collapsables.forEach((cb) => {
@@ -207,7 +210,7 @@ export class RibbonButtons {
   // ### _createButtonHtml
   // For each button, create the html and bind the events based on
   // the button's configured action.
-  _createRibbonHtml(buttonAr: string[], selector: string | HTMLElement) {
+  createRibbonHtml(buttonAr: string[], selector: string | HTMLElement) {
     let buttonClass = '';
     buttonAr.forEach((buttonId) => {
       const buttonData = this.ribbonButtons.find((e) =>
@@ -228,7 +231,7 @@ export class RibbonButtons {
           if (buttonData.action === 'menu' || buttonData.action === 'modal') {
             buttonClass += ' ' + buttonData.ctor;
           }
-          const buttonHtml = RibbonButtons._buttonHtml('ribbonButtonContainer',
+          const buttonHtml = RibbonButtons.ribbonButtonHtml('ribbonButtonContainer',
             buttonData.id, buttonClass, buttonData.leftText, buttonData.icon, buttonData.rightText);
           $(buttonHtml).attr('data-group', buttonData.group);
           $(selector).append(buttonHtml);
@@ -249,7 +252,10 @@ export class RibbonButtons {
               buttonData
             }));
           } else {
-            this.eventSource.domClick(buttonElement, this, '_executeButton', buttonData);
+            const cb = async () => {
+              await this.executeButton(buttonElement, buttonData);
+            };        
+            this.eventSource.domClick(buttonElement, cb);
           }
         }
       }
@@ -258,7 +264,7 @@ export class RibbonButtons {
   // ### _createButtonHtml
   // For each button, create the html and bind the events based on
   // the button's configured action.
-  _createSidebarHtml(buttonAr: string[], selector: string | HTMLElement) {
+  createSidebarMenuHtml(buttonAr: string[], selector: string | HTMLElement) {
     let buttonClass = '';
     buttonAr.forEach((buttonId) => {
       const buttonData = this.ribbonButtons.find((e) =>
@@ -279,7 +285,7 @@ export class RibbonButtons {
           if (buttonData.action === 'menu' || buttonData.action === 'modal') {
             buttonClass += ' ' + buttonData.ctor;
           }
-          const buttonHtml = RibbonButtons._buttonSidebarHtml(
+          const buttonHtml = RibbonButtons.menuButtonHtml(
             buttonData.id, buttonClass, buttonData.leftText, buttonData.icon, buttonData.rightText);
           $(buttonHtml).attr('data-group', buttonData.group);
           $(selector).append(buttonHtml);
@@ -300,26 +306,29 @@ export class RibbonButtons {
               buttonData
             }));
           } else {
-            this.eventSource.domClick(buttonElement, this, '_executeButton', buttonData);
+            const cb = async () => {
+              await this.executeButton(buttonElement, buttonData);
+            };        
+            this.eventSource.domClick(buttonElement, cb);
           }
         }
       }
     });
   }
   createRibbon(buttonDataArray: string[], parentElement: string | HTMLElement) {
-    this._createRibbonHtml(buttonDataArray, parentElement);
-    this._createCollapsibleButtonGroups(parentElement);
+    this.createRibbonHtml(buttonDataArray, parentElement);
+    this.createCollapsibleButtonGroups(parentElement);
   }
   createSidebarRibbon(buttonDataArray: string[], parentElement: string | HTMLElement, containerClasses: string) {
-    this._createSidebarHtml(buttonDataArray, parentElement);
-    this._createCollapsibleButtonGroups(parentElement);
+    this.createSidebarMenuHtml(buttonDataArray, parentElement);
+    // this._createCollapsibleButtonGroups(parentElement); needed?
   }
-  handleKeyDown(ev: KeyEvent) {
+  async handleKeyDown(ev: KeyEvent) {
     if (ev.altKey) {
       const keyButton = this.ribbonButtons.find((bb) => bb.hotKey && bb.hotKey === ev.key);
       if (keyButton) {
         const element = '#' + keyButton.id;
-        this._executeButton(element, keyButton);
+        await this.executeButton(element, keyButton);
       }
     }
   }
@@ -339,7 +348,8 @@ export class RibbonButtons {
         this.createRibbon(tbuttons, topControl);    
       }
     }
-    this.eventSource.bindKeydownHandler(this, 'handleKeyDown');
+    const kd = async (ev: any) => { this.handleKeyDown(ev); }
+    this.eventSource.bindKeydownHandler(kd);
   }
 }
 

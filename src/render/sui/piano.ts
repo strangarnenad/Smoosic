@@ -123,7 +123,7 @@ export class SuiPiano {
       this.view.tracker.moveSelectionLeft();
     });
     $('button.jsRight').off('click').on('click', () => {
-      this.view.tracker.moveSelectionRight(this.view.score, null, false);
+      this.view.tracker.moveSelectionRight(false);
     });
     $('button.jsGrowDuration').off('click').on('click', () => {
       this.view.batchDurationOperation('doubleDuration');

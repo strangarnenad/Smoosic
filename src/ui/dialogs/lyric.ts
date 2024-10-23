@@ -112,8 +112,10 @@ export class SuiLyricDialog extends SuiDialogBase {
         $(ctrl).addClass('fold-textedit');
       }
     });
-    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(this, 'mouseMove');
-    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(this, 'mouseClick');
+    const mousemove = async (ev: any) => { this.mouseMove(ev); }
+    const mouseclick = async (ev: any) => { this.mouseClick(ev); }
+    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(mousemove);
+    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(mouseclick);
 
     if (this.lyricEditorCtrl.session && this.lyricEditorCtrl.session.lyric) {
       const lyric = this.lyricEditorCtrl.session.lyric;

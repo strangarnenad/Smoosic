@@ -1182,7 +1182,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
       const altSel = this._getEquivalentSelection(selected);
       SmoOperation.setPitch(altSel!, [pitch]);
       if (this.score.preferences.autoAdvance) {
-        this.tracker.moveSelectionRight(this.score, null, true);
+        this.tracker.moveSelectionRight(true);
       }
     });
     if (selections.length === 1 && this.score.preferences.autoPlay) {
@@ -1989,8 +1989,8 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @param ev 
    * @returns 
    */
-  async moveSelectionRight(ev: KeyEvent): Promise<any> {
-    this.tracker.moveSelectionRight(this.score, ev, true);
+  async moveSelectionRight(toPlay: boolean = true): Promise<any> {
+    this.tracker.moveSelectionRight(toPlay);
     await this.renderer.updatePromise();
   }
   /**

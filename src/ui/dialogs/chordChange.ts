@@ -183,8 +183,10 @@ export class SuiChordChangeDialog extends SuiDialogBase {
 
   display() {
     super.display();
-    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(this, 'mouseMove');
-    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(this, 'mouseClick');
+    const mousemove = async (ev: any) => { this.mouseMove(ev); }
+    const mouseclick = async (ev: any) => { this.mouseClick(ev); }    
+    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(mousemove);
+    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(mouseclick);
     if (this.chordEditorCtrl && this.chordEditorCtrl.session && this.chordEditorCtrl.session.lyric) {
       const lyric = this.chordEditorCtrl.session.lyric;
       this.adjustWidthCtrl.setValue(lyric.adjustNoteWidthChord);

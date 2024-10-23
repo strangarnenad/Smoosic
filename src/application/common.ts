@@ -91,10 +91,14 @@ export class ModalEventHandlerProxy {
     }
   }
   bindEvents() {
-    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(this, 'mouseMove');
-    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(this, 'mouseClick');
-    this.keydownHandler = this.eventSource.bindKeydownHandler(this, 'evKey');
-    this.keyupHandler = this.eventSource.bindKeyupHandler(this, 'keyUp');
+    const mousemove = async (ev: any) => { this.mouseMove(ev); }
+    const mouseclick = async (ev: any) => { this.mouseClick(ev); }
+    const keydown = async (ev: any) => { this.evKey(ev); }
+    const keyup = async (ev: any) => { this.keyUp(ev); }
+    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(mousemove);
+    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(mouseclick);
+    this.keydownHandler = this.eventSource.bindKeydownHandler(keydown);
+    this.keyupHandler = this.eventSource.bindKeyupHandler(keyup);
   }
 
   unbindKeyboardForModal(dialog: ModalComponent) {

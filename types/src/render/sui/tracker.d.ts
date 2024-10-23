@@ -36,7 +36,7 @@ export declare class SuiTracker extends SuiMapper {
     moveEnd(score: SmoScore, evKey: KeyEvent): void;
     growSelectionRightMeasure(): void;
     growSelectionLeft(): number;
-    moveSelectionRight(score: SmoScore, evKey: KeyEvent | null, skipPlay: boolean): void;
+    moveSelectionRight(skipPlay: boolean): void;
     moveSelectionLeft(): void;
     moveSelectionLeftMeasure(): void;
     moveSelectionRightMeasure(): void;

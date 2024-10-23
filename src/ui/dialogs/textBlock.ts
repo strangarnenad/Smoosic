@@ -252,10 +252,22 @@ export class SuiTextBlockDialog extends SuiDialogBase {
       this.unrenderOriginal();
       this.textEditorCtrl.startEditSession();
     }
-    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(this, 'mouseMove');
-    this.mouseUpHandler = this.eventSource.bindMouseUpHandler(this, 'mouseUp');
-    this.mouseDownHandler = this.eventSource.bindMouseDownHandler(this, 'mouseDown');
-    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(this, 'mouseClick');
+    const mousemove = async (ev: any) => {
+      this.mouseMove(ev);
+    }
+    const mouseup = async (ev: any) => {
+      this.mouseUp();
+    }
+    const mousedown = async (ev: any) => {
+      this.mouseDown(ev);
+    }
+    const mouseclick = async (ev: any) => {
+      this.mouseClick(ev);
+    }
+    this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(mousemove);
+    this.mouseUpHandler = this.eventSource.bindMouseUpHandler(mouseup);
+    this.mouseDownHandler = this.eventSource.bindMouseDownHandler(mousedown);
+    this.mouseClickHandler = this.eventSource.bindMouseClickHandler(mouseclick);
   }
   _resetAttachToSelector() {
     this.modifier.attachToSelector = false;

@@ -16,11 +16,13 @@ export class DisplaySettings extends SuiButton {
     super(parameters);
     this.hotKey = parameters.buttonData.hotKey;
     if (this.buttonData.id === 'selectPart') {
-      this.eventSource.bindScoreChangeHandler(this, 'handleScoreChange');
+      const scorechange = async (ev: any) => { this.handleScoreChange(ev); }
+      this.eventSource.bindScoreChangeHandler(scorechange);
       this.enablePartSelection();
     }
     if (this.hotKey) {
-      this.eventSource.bindKeydownHandler(this, 'handleKeyDown');
+      const kd = async (ev: any) => { this.handleKeyDown(ev); }
+      this.eventSource.bindKeydownHandler(kd);
     }
   }
   handleKeyDown(ev: KeyEvent) {
@@ -118,6 +120,10 @@ export class DisplaySettings extends SuiButton {
     this.menus.createMenu('SuiPartSelectionMenu', this.completeNotifier);
   }
   bind() {
-    this.eventSource.domClick(this.buttonElement, this, this.buttonData.id, null);
+    const cb = async () => {
+      await (this as any)[this.buttonData.id]();
+    };
+
+    this.eventSource.domClick(this.buttonElement, cb);
   }
 }
