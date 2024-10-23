@@ -11,7 +11,7 @@ import { SuiPitchDialog } from '../dialogs/pitch';
 import { SmoPedalMarking } from '../../smo/data/staffModifiers';
 import { SmoSelector } from '../../smo/xform/selections';
 import { SuiMenuBase, SuiMenuParams, MenuDefinition, SuiMenuHandler, SuiMenuShowOption, 
-  SuiConfiguredMenuOption, SuiConfiguredMenu } from './menu';
+  SuiConfiguredMenuOption, SuiConfiguredMenu, customizeMenuOptionsFcn } from './menu';
   import { addOrReplacePedalMarking } from './staffModifier';
 declare var $: any;
 /**

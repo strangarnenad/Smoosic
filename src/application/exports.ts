@@ -28,7 +28,8 @@ import { cardKeysHtmlEn, cardNotesLetterHtmlEn, cardNotesChromaticHtmlEn, cardNo
 import { dynamicCtorInit } from './dynamicInit';
 // ui dialogs and menus
 // Dialogs
-import { SuiDialogBase } from '../ui/dialogs/dialog';
+import { SuiDialogBase, createAndDisplayDialog } from '../ui/dialogs/dialog';
+import { SuiComponentAdapter, SuiDialogAdapterBase } from '../ui/dialogs/adapter';
 import { SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
 import { SuiTransposeScoreDialog, SuiTransposeScoreAdapter } from '../ui/dialogs/transposeScore';
@@ -94,7 +95,7 @@ import { SuiKeySignatureDialog, SuiKeySignatureAdapter } from '../ui/dialogs/key
 import { TextCheckComponent } from '../ui/dialogs/components/textCheck';
 // menus
 import { SuiMenuManager} from '../ui/menus/manager';
-import { SuiMenuBase } from '../ui/menus/menu';
+import { SuiMenuBase, SuiMenuCustomizer } from '../ui/menus/menu';
 import { SuiScoreMenu } from '../ui/menus/score';
 import { SuiTextMenu } from '../ui/menus/text';
 import { SuiPartMenu } from '../ui/menus/parts';
@@ -341,13 +342,14 @@ export const Smo = {
   RibbonButtons,
   DisplaySettings,  ExtendedCollapseParent, CollapseRibbonControl,
   // Menus
-  SuiMenuManager, SuiMenuBase, SuiScoreMenu, SuiFileMenu,
+  SuiMenuManager, SuiMenuBase, SuiMenuCustomizer, SuiScoreMenu, SuiFileMenu,
   SuiDynamicsMenu, SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
   SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
   SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
   // Dialogs
   SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent,
   SuiDurationAdapter, SuiDurationDialog, SuiDurationButtonComponent,
+  SuiComponentAdapter, SuiDialogAdapterBase,
   SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
   SuiScoreViewDialog, SuiGlobalLayoutDialog, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
@@ -364,7 +366,7 @@ export const Smo = {
   SuiEndingsAdapter, SuiEndingsDialog, 
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
   SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
-  SuiSaveMidiDialog, SuiDialogBase, 
+  SuiSaveMidiDialog, SuiDialogBase, createAndDisplayDialog, 
   SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
   SuiTransposeButtonComponent,
   // Dialog components

@@ -115,11 +115,13 @@ export interface SuiConfiguredMenuOption {
     display: SuiMenuShowOption;
 }
 export declare const suiConfiguredMenuTranslate: (options: SuiConfiguredMenuOption[], label: string, ctor: string) => MenuTranslation;
+export type customizeMenuOptionsFcn = (menu: SuiConfiguredMenu) => void;
 /**
  * A menu of configured options.
  * @category SuiMenu
  */
 export declare class SuiConfiguredMenu extends SuiMenuBase {
+    static menuCustomizations: Record<string, customizeMenuOptionsFcn | undefined>;
     menuOptions: SuiConfiguredMenuOption[];
     label: string;
     constructor(params: SuiMenuParams, label: string, options: SuiConfiguredMenuOption[]);
@@ -131,4 +133,5 @@ export declare class SuiConfiguredMenu extends SuiMenuBase {
     getDefinition(): MenuDefinition;
     preAttach(): void;
 }
+export declare const SuiMenuCustomizer: (fcn: customizeMenuOptionsFcn, ctor: string) => void;
 //# sourceMappingURL=menu.d.ts.map

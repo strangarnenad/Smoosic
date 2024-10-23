@@ -17,13 +17,13 @@ export declare function VexTabNotePositions(stave: SmoTabStave, tabNote: SmoTabN
  * @param {SmoSystemGroup} athis
  * @return {*}
  */
-export declare function leftConnectorVx(athis: SmoSystemGroup): 0 | 1 | 2 | 3 | 6 | 8 | 5 | 7 | 4;
+export declare function leftConnectorVx(athis: SmoSystemGroup): 0 | 1 | 7 | 2 | 3 | 6 | 8 | 5 | 4;
 /**
  * convert from a SmoSystemGroup connector to Vex enumeration
  * @param athis
  * @returns
  */
-export declare function rightConnectorVx(athis: SmoSystemGroup): 0 | 1 | 2 | 3 | 6 | 8 | 5 | 7 | 4;
+export declare function rightConnectorVx(athis: SmoSystemGroup): 0 | 1 | 7 | 2 | 3 | 6 | 8 | 5 | 4;
 export declare const vexBarlineType: import("vexflow_smoosic").BarlineType[];
 export declare const vexBarlinePosition: import("vexflow_smoosic").StaveModifierPosition[];
 export declare function toVexBarlineType(athis: SmoBarline): number;

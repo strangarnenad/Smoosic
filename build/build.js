@@ -47,11 +47,6 @@ const webpackConfig = {
         }
       }
        ]
-    }, {
-      test: /\.js$/,
-      include: [path.resolve(BASE_DIR, 'node_modules/vexflow_smoosic/build/cjs')],
-      enforce: 'pre',
-      use: ['source-map-loader']
     }]
   },
   plugins: [

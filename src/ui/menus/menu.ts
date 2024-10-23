@@ -162,11 +162,13 @@ export const suiConfiguredMenuTranslate = (options: SuiConfiguredMenuOption[], l
   });
   return tr;
 }
+export type customizeMenuOptionsFcn = (menu: SuiConfiguredMenu) => void;
 /**
  * A menu of configured options.
  * @category SuiMenu
  */
 export class SuiConfiguredMenu extends SuiMenuBase {
+  static menuCustomizations: Record<string, customizeMenuOptionsFcn | undefined> = {};
   menuOptions: SuiConfiguredMenuOption[] = [];
   label: string = '';
   constructor(params: SuiMenuParams, label: string, options: SuiConfiguredMenuOption[]) {
@@ -209,6 +211,14 @@ export class SuiConfiguredMenu extends SuiMenuBase {
       if (option.display(this)) {
         this.menuItems.push(option.menuChoice);
       }
-   });
+    });
+    const customize = SuiConfiguredMenu.menuCustomizations[this.ctor];
+    if (customize) {
+      customize(this);
+    }
   }
+}
+
+export const SuiMenuCustomizer = (fcn: customizeMenuOptionsFcn, ctor: string) => {
+  SuiConfiguredMenu.menuCustomizations[ctor] = fcn;
 }
