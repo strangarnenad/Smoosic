@@ -13,7 +13,8 @@ import { SmoConfiguration } from './configuration';
 import { RibbonButtons } from '../ui/buttons/ribbon';
 import { simpleRibbonLayout } from '../ui/ribbonLayout/default/tabletRibbon';
 import { ModalEventHandler } from './common';
-import { SuiDialogBase } from '../ui/dialogs/dialog';
+import { SuiDialogBase, createAndDisplayDialog } from '../ui/dialogs/dialog';
+import { SuiComponentAdapter, SuiDialogAdapterBase } from '../ui/dialogs/adapter';
 import { SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
 import { SuiTransposeScoreDialog, SuiTransposeScoreAdapter } from '../ui/dialogs/transposeScore';
@@ -303,6 +304,7 @@ export declare const Smo: {
     CollapseRibbonControl: typeof CollapseRibbonControl;
     SuiMenuManager: typeof SuiMenuManager;
     SuiMenuBase: typeof SuiMenuBase;
+    SuiMenuCustomizer: (fcn: import("./exports").customizeMenuOptionsFcn, ctor: string) => void;
     SuiScoreMenu: typeof SuiScoreMenu;
     SuiFileMenu: typeof SuiFileMenu;
     SuiDynamicsMenu: typeof SuiDynamicsMenu;
@@ -325,6 +327,8 @@ export declare const Smo: {
     SuiDurationAdapter: typeof SuiDurationAdapter;
     SuiDurationDialog: typeof SuiDurationDialog;
     SuiDurationButtonComponent: typeof SuiDurationButtonComponent;
+    SuiComponentAdapter: typeof SuiComponentAdapter;
+    SuiDialogAdapterBase: typeof SuiDialogAdapterBase;
     SuiTempoDialog: typeof SuiTempoDialog;
     SuiInstrumentDialog: typeof SuiInstrumentDialog;
     SuiModifierDialogFactory: typeof SuiModifierDialogFactory;
@@ -379,6 +383,7 @@ export declare const Smo: {
     SuiSaveVexDialog: typeof SuiSaveVexDialog;
     SuiSaveMidiDialog: typeof SuiSaveMidiDialog;
     SuiDialogBase: typeof SuiDialogBase;
+    createAndDisplayDialog: typeof createAndDisplayDialog;
     SuiPitchDialog: typeof SuiPitchDialog;
     SuiPitchAdapter: typeof SuiPitchAdapter;
     SuiIntervalButtonComponent: typeof SuiIntervalButtonComponent;

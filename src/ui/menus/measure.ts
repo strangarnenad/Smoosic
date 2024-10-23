@@ -1,4 +1,5 @@
-import { SuiMenuBase, SuiMenuParams, MenuDefinition,  SuiConfiguredMenuOption, SuiConfiguredMenu } from './menu';
+import { SuiMenuBase, SuiMenuParams, MenuDefinition,  SuiConfiguredMenuOption, 
+  customizeMenuOptionsFcn, SuiConfiguredMenu } from './menu';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiEndingsDialog } from '../dialogs/endings';
 import { SuiInsertMeasures } from '../dialogs/addMeasure';

@@ -1,5 +1,5 @@
 import { SuiMenuBase, SuiMenuParams, MenuDefinition, SuiMenuHandler, SuiMenuShowOption, 
-  SuiConfiguredMenuOption, SuiConfiguredMenu } from './menu';
+  SuiConfiguredMenuOption, SuiConfiguredMenu, customizeMenuOptionsFcn } from './menu';
 
   declare var $: any;
 /**
