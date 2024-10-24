@@ -29,5 +29,6 @@
       "categoryOrder": ["serialization", "SmoObject", "SmoModifier", "SmoParameters", "*"],
       "excludeNotDocumented": false,
       "entryPoints": ["./typedoc.ts"],
-  }
+  },
+  "exclude": ["node_modules/**/*"]
 } 

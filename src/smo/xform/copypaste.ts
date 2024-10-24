@@ -12,6 +12,7 @@ import { TickMap } from './tickMap';
 import { SmoSystemStaff } from '../data/systemStaff';
 import { getId } from '../data/common';
 import {SmoUnmakeTupletActor} from "./tickDuration";
+import { SmoTempoText, TimeSignature } from '../data/measureModifiers';
 
 /**
  * Used to calculate the offset and transposition of a note to be pasted
@@ -175,8 +176,13 @@ export class PasteBuffer {
     this._alignVoices(measure, selector.voice);
     this.measures = [];
     this.staffSelectors = [];
-    const clonedMeasure = SmoMeasure.clone(measureSelection.measure);
+    const clonedMeasure = SmoMeasure.cloneForPasteOrUndo(measureSelection.measure);
     clonedMeasure.svg = measureSelection.measure.svg;
+    // Ordinarily, the key/tempo/time is mapped to the stave, but since we are pasting measure-by
+    // measure here, we want to preserve it.
+    clonedMeasure.keySignature = measureSelection.measure.keySignature;
+    clonedMeasure.timeSignature = new TimeSignature(measureSelection.measure.timeSignature);
+    clonedMeasure.tempo = new SmoTempoText(measureSelection.measure.tempo);
     this.measures.push(clonedMeasure);
 
     const firstMeasure = this.measures[0];
@@ -206,7 +212,7 @@ export class PasteBuffer {
 
         // If the paste buffer overlaps the end of the score, we can't paste (TODO:  add a measure in this case)
         if (measureSelection != null) {
-          const clonedMeasure = SmoMeasure.clone(measureSelection.measure);
+          const clonedMeasure = SmoMeasure.cloneForPasteOrUndo(measureSelection.measure);
           clonedMeasure.svg = measureSelection.measure.svg;
           this.measures.push(clonedMeasure);
           // firstMeasureTickmap = measureSelection.measure.tickmapForVoice(selector.voice);
@@ -481,7 +487,7 @@ export class PasteBuffer {
     }
     SmoTupletTree.adjustTupletIndexes(measure.tupletTrees, voiceIndex, startIndexToAdjustRemainingTuplets, diffToAdjustRemainingTuplets);
 
-    for (let i = existingIndex; i < measure.voices[voiceIndex].notes.length - 1; i++) {
+    for (let i = existingIndex + 1; i < measure.voices[voiceIndex].notes.length; i++) {
       voice.notes.push(SmoNote.clone(measure.voices[voiceIndex].notes[i]));
     }
   }
@@ -543,7 +549,6 @@ export class PasteBuffer {
       const measure: SmoMeasure = this.measures[i];
       const nvoice: SmoVoice = voices[i];
       const ser: any = measure.serialize();
-      // Make sure the key is concert pitch, it is what measure constructor expects
       ser.transposeIndex = measure.transposeIndex; // default values are undefined, make sure the transpose is valid
       ser.keySignature = SmoMusic.vexKeySigWithOffset(measure.keySignature, -1 * measure.transposeIndex);
       ser.timeSignature = measure.timeSignature.serialize();

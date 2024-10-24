@@ -527,8 +527,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
       keySignature: this.keySignature,
       tempo: this.tempo
     };
-  }
-
+  }  
   /**
    * Convert this measure object to a JSON object, recursively serializing all the notes,
    * note modifiers, etc.
@@ -715,6 +714,16 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
 
   static clone(measure: SmoMeasure): SmoMeasure {
     return SmoMeasure.deserialize(measure.serialize());
+  }
+  static cloneForPasteOrUndo(measure: SmoMeasure) {
+    const clonedMeasure = SmoMeasure.clone(measure);
+    clonedMeasure.svg = measure.svg;
+    // Ordinarily, the key/tempo/time is mapped to the stave, but since we are pasting measure-by
+    // measure here, we want to preserve it.
+    clonedMeasure.keySignature = measure.keySignature;
+    clonedMeasure.timeSignature = new TimeSignature(measure.timeSignature);
+    clonedMeasure.tempo = new SmoTempoText(measure.tempo);
+    return clonedMeasure;
   }
 
   /**

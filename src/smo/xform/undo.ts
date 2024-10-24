@@ -387,6 +387,9 @@ export class UndoBuffer {
         smoSerialize.serializedMerge(SmoScore.preferences, buf.json, score);
       } else if (buf.type === UndoBuffer.bufferTypes.COLUMN) {
         for (let j = 0; j < score.staves.length; ++j) {
+          // convert to concert key, which is how measures are serialized.
+          buf.json.measures[j].keySignature = 
+            SmoMusic.vexKeySigWithOffset((buf.json.measures[j].keySignature ?? 'c'), -1 * (buf.json.measures[j].transposeIndex ?? 0))
           const measure = SmoMeasure.deserialize(buf.json.measures[j]);
           const selector = SmoSelector.default;
           if (typeof(staffMap[j]) === 'number') {
