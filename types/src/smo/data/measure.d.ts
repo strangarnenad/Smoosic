@@ -286,6 +286,7 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
      */
     static deserialize(jsonObj: SmoMeasureParamsSer): SmoMeasure;
     static clone(measure: SmoMeasure): SmoMeasure;
+    static cloneForPasteOrUndo(measure: SmoMeasure): SmoMeasure;
     /**
      * When creating a new measure, the 'default' settings can vary depending on
      * what comes before/after the measure.  This determines the default pitch

@@ -104,6 +104,9 @@ export declare class SmoStretchNoteActor extends TickIteratorBase {
 export interface SmoMakeTupletParams {
     measure: SmoMeasure;
     numNotes: number;
+    notesOccupied: number;
+    ratioed: boolean;
+    bracketed: boolean;
     voice: number;
     index: number;
 }
@@ -117,6 +120,9 @@ export declare class SmoMakeTupletActor extends TickIteratorBase {
     numNotes: number;
     voice: number;
     index: number;
+    notesOccupied: number;
+    ratioed: boolean;
+    bracketed: boolean;
     constructor(params: SmoMakeTupletParams);
     static apply(params: SmoMakeTupletParams): void;
     iterateOverTick(note: SmoNote, tickmap: TickMap, index: number): SmoNote[] | null;

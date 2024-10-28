@@ -1,4 +1,5 @@
 import { TextFormatter } from '../common/textformatter';
+import { parseMidi } from '../common/midi-parser';
 import { SuiApplication } from './application';
 import { SuiEventHandler } from './eventHandler';
 import { SuiExceptionHandler } from '../ui/exceptions';
@@ -102,7 +103,6 @@ import { IsPitchLetter } from '../smo/data/common';
 import { SmoScore, isEngravingFont } from '../smo/data/score';
 import { UndoBuffer } from '../smo/xform/undo';
 import { SmoNote } from '../smo/data/note';
-import { createLoadTests } from '../../tests/file-load';
 import { SmoStaffHairpin, StaffModifierBase, SmoInstrument, SmoSlur, SmoTie, SmoStaffTextBracket, SmoTabStave, SmoPedalMarking } from '../smo/data/staffModifiers';
 import { SmoMeasure } from '../smo/data/measure';
 import { SmoMusic } from '../smo/data/music';
@@ -131,6 +131,7 @@ export * from './dynamicInit';
 export * from './dom';
 export * from './eventHandler';
 export * from './exports';
+export * from '../common/midi-parser';
 export * from './generateVexTests';
 export * from './keyCommands';
 export * from '../common/htmlHelpers';
@@ -290,6 +291,7 @@ export declare const Smo: {
     SmoConfiguration: typeof SmoConfiguration;
     SuiApplication: typeof SuiApplication;
     dynamicCtorInit: () => void;
+    parseMidi: typeof parseMidi;
     SuiDom: typeof SuiDom;
     SuiEventHandler: typeof SuiEventHandler;
     SuiExceptionHandler: typeof SuiExceptionHandler;
@@ -512,7 +514,6 @@ export declare const Smo: {
     cardVoicesCreateDeleteHtmlEn: string;
     cardPartAddDeleteHtmlEn: string;
     getClass: (jsonString: string) => any;
-    createLoadTests: typeof createLoadTests;
     buildDom: typeof buildDom;
     addFileLink: typeof addFileLink;
     InputTrapper: typeof InputTrapper;

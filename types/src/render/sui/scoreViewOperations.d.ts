@@ -8,7 +8,7 @@ import { SmoSystemGroup, SmoPageLayout, SmoGlobalLayout, SmoAudioPlayerSettings,
 import { SmoTextGroup } from '../../smo/data/scoreText';
 import { SmoDynamicText, SmoArticulation, SmoOrnament, SmoLyric, SmoArpeggioType, SmoClefChange, SmoTabNote } from '../../smo/data/noteModifiers';
 import { SmoTempoText, SmoVolta, SmoMeasureFormat, TimeSignature } from '../../smo/data/measureModifiers';
-import { createStaffModifierType } from '../../smo/xform/operations';
+import { createStaffModifierType, MakeTupletOperation } from '../../smo/xform/operations';
 import { BatchSelectionOperation } from '../../smo/xform/operations';
 import { FontInfo } from '../../common/vex';
 import { SmoSelection, SmoSelector } from '../../smo/xform/selections';
@@ -233,9 +233,9 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
     setOrnament(modifier: SmoOrnament, set: boolean): Promise<void>;
     /**
      * convert non-tuplet not to a tuplet
-     * @param numNotes 3 means triplet, etc.
+     * @param params
      */
-    makeTuplet(numNotes: number): Promise<void>;
+    makeTuplet(params: MakeTupletOperation): Promise<void>;
     /**
      * Convert selected tuplet to a single (if possible) non-tuplet
      */

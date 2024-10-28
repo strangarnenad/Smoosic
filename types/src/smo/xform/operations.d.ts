@@ -12,6 +12,12 @@ import { SmoSelection, SmoSelector, ModifierTab } from './selections';
  * supported operations for  {@link SmoOperation.batchSelectionOperation} to change a note's duration
  */
 export type BatchSelectionOperation = 'dotDuration' | 'undotDuration' | 'doubleDuration' | 'halveDuration' | 'doubleGraceNoteDuration' | 'halveGraceNoteDuration';
+export interface MakeTupletOperation {
+    numNotes: number;
+    notesOccupied: number;
+    ratioed: boolean;
+    bracketed: boolean;
+}
 export type createStaffModifierType<T> = (fromSelection: SmoSelection, toSelection: SmoSelection) => T;
 /**
  * SmoOperation is a collection of static methods that operate on/change/transform the music.  Most methods
@@ -33,7 +39,7 @@ export declare class SmoOperation {
     static batchSelectionOperation(score: SmoScore, selections: SmoSelection[], operation: BatchSelectionOperation): void;
     static doubleDuration(selection: SmoSelection): boolean;
     static halveDuration(selection: SmoSelection): boolean;
-    static makeTuplet(selection: SmoSelection, numNotes: number): void;
+    static makeTuplet(selection: SmoSelection, params: MakeTupletOperation): void;
     static addStaffModifier(selection: SmoSelection, modifier: StaffModifierBase): void;
     static toggleRest(selection: SmoSelection): void;
     static toggleSlash(selection: SmoSelection): void;

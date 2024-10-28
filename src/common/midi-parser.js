@@ -2,7 +2,7 @@
 // Copyright (c) 2010, Matt Westcott & Ben Firshman
 // https://github.com/NHQ/midi-file-parser/
 
-function parseMidi(data) {
+export function parseMidi(data) {
   var p = new Parser(data)
 
   var headerChunk = p.readChunk()

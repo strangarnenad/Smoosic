@@ -4,6 +4,7 @@
 // vexflow interface
 import { TextFormatter } from '../common/textformatter';
 import { VexFlow } from '../common/vex';
+import { parseMidi } from '../common/midi-parser';
 import { SuiApplication } from './application';
 import { SuiEventHandler } from './eventHandler';
 import { SuiExceptionHandler } from '../ui/exceptions';
@@ -134,7 +135,6 @@ import { SmoScore, engravingFontTypes, isEngravingFont } from '../smo/data/score
 import { UndoBuffer } from '../smo/xform/undo';
 import { SmoNote } from '../smo/data/note';
 // import { SmoDuration } from '../smo/xform/tickDuration';
-import { createLoadTests } from '../../tests/file-load';
 import { SmoStaffHairpin, StaffModifierBase, SmoInstrument, SmoSlur, SmoTie, SmoStaffTextBracket,
   SmoTabStave, SmoPedalMarking, staffModifierDynamicCtorInit
  } from '../smo/data/staffModifiers';
@@ -174,6 +174,7 @@ export * from './dynamicInit';
 export * from './dom';
 export * from './eventHandler';
 export * from './exports';
+export * from '../common/midi-parser';
 export * from './generateVexTests';
 export * from './keyCommands';
 export * from '../common/htmlHelpers';
@@ -335,6 +336,7 @@ export const Smo = {
   SmoConfiguration,
   SuiApplication,
   dynamicCtorInit,
+  parseMidi,
   SuiDom,  SuiEventHandler, SuiExceptionHandler,
   Qwerty, SuiHelp, SmoTranslationEditor, ModalEventHandler,
   // Ribbon buttons
@@ -415,7 +417,6 @@ SuiPitchComposite,
     cardBeamsAndStemsDirectionHtmlEn, cardBeamsAndStemsGroupingHtmlEn,
     cardMeasuresAddDeleteHtmlEn, cardVoicesCreateDeleteHtmlEn, cardPartAddDeleteHtmlEn,
     getClass,
-  createLoadTests,
   // utilities
   buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer,
   renderVexTests

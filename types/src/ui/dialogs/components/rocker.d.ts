@@ -11,6 +11,8 @@ export interface SuiRockerComponentParams {
     label: string;
     smoName: string;
     control: string;
+    min?: number;
+    max?: number;
 }
 /**
  * A numeric input box with +- buttons.   Adjustable type and scale
@@ -24,6 +26,8 @@ export declare class SuiRockerComponent extends SuiComponentBase {
     dataType: string;
     increment: number;
     parser: string;
+    min: number | undefined;
+    max: number | undefined;
     constructor(dialog: SuiDialogNotifier, params: SuiRockerComponentParams);
     get html(): import("../../../common/htmlHelpers").DomBuilder;
     get parameterId(): string;

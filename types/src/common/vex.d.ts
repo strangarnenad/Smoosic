@@ -61,6 +61,8 @@ export interface SmoVexTupletParams {
     vexNotes: Note[];
     numNotes: number;
     notesOccupied: number;
+    ratioed: boolean;
+    bracketed: boolean;
     location: number;
 }
 export declare function chordSubscriptOffset(): number;

@@ -21,6 +21,8 @@ export interface DialogDefinitionOption {
  * @param {defaultValue} - thinking of removing this
  * @param {dataType} - used to narrow the type by some components
  * @param {classes} - can be used in rendering
+ * @param {min}  - used by components that have number
+ * @param {max}  - used by components that have number
  * @category SuiDialog
  */
 export interface DialogDefinitionElement {
@@ -33,6 +35,8 @@ export interface DialogDefinitionElement {
     defaultValue?: number | string;
     dataType?: string;
     classes?: string;
+    min?: number;
+    max?: number;
 }
 /**
  * for base component constructors

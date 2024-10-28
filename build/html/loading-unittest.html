@@ -12,15 +12,11 @@
   <link href="../styles/piano.css" rel="stylesheet">
   <link href="../styles/tree.css" rel="stylesheet">
   <link href="../qunit.css" rel="stylesheet">
-  <script type="text/javascript"
-    src="https://aarondavidnewman.github.io/vexflow_smoosic/releases/vexflow-debug.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.6.0/jszip.min.js"
     integrity="sha512-uVSVjE7zYsGz4ag0HEzfugJ78oHCI1KhdkivjQro8ABL/PRiEO4ROwvrolYAcZnky0Fl/baWKYilQfWvESliRA=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <!-- script type="text/javascript" src="../../../vex_smoosic/vexflow_smoosic/build/vexflow-debug.js"></script  -->
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.slim.js"></script>
-  <script type="text/javascript" src="../midi-parser.js"></script>
-  <script type="text/javascript" src="../qunit.js"></script>
   <script type="text/javascript" src="../smoosic.js"></script>
   <script type="text/javascript">
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -31,12 +27,14 @@
 
 <body>
   <div id="qunit"></div>
+  <div id="qunit-fixture"></div>
   <!-- audio crossOrigin="anonymous" id="sample" src="https://aarondavidnewman.github.io/Smoosic/build/sound/piano_middle_C.mp3" / -->
   <div id="outer-container" style="overflow:auto">
     <div id="container1">
 
     </div>
   </div>
+
 </body>
 
 </html>
