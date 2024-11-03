@@ -1118,6 +1118,7 @@ export class SmoScore {
       // Need to do this since score serialization doesn't include TS in each measure
       jsonObj.timeSignature = measure.timeSignature.serialize();
       jsonObj.tempo = measure.tempo.serialize();
+      jsonObj.tupletTrees = []; // assume no tuplets in a prototype measure
       let newMeasure = SmoMeasure.deserialize(jsonObj);
       newMeasure.measureNumber = measure.measureNumber;
       newMeasure.clef = parameters.measureInstrumentMap[0].clef as Clef;

@@ -667,7 +667,12 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
         let startIndex: number | null = null;
         params.voices.forEach((voice) => {
           voice.notes.forEach((note, index) => {
-            if (note.isTuplet && note.tupletId === tupJson.attrs.id) {
+            // backwards-compatibiliity, some scores don't have attrs on tuplet
+            if (typeof(tupJson.id) === 'string') {
+              tupJson.attrs = { type: 'SmoTuplet', id: tupJson.id };
+            }
+            const id = tupJson.attrs.id;
+            if (note.isTuplet && note.tupletId === id) {
               tupletNotes.push(note);
               //we cannot trust startIndex coming from legacy json
               //we need to count index of the first note in the tuplet
@@ -1562,8 +1567,8 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
   }
 
   addNthEnding(ending: SmoVolta) {
-    const mods = [];
-    this.modifiers.forEach((modifier) => {
+    const mods: SmoMeasureModifierBase[] = [];
+    this.modifiers.forEach((modifier: SmoMeasureModifierBase) => {
       if (modifier.ctor !== 'SmoVolta' || (modifier as SmoVolta).startBar !== ending.startBar ||
         (modifier as SmoVolta).endBar !== ending.endBar) {
         mods.push(modifier);

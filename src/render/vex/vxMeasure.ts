@@ -378,7 +378,7 @@ export class VxMeasure implements VxMeasureIf {
         continue;
       }
       const traverseTupletTree = ( parentTuplet: SmoTuplet): void => {
-        const vexNotes = [];
+        const vexNotes: Note[] = [];
         for (let smoNote of this.smoMeasure.tupletNotes(parentTuplet)) {
           vexNotes.push(this.noteToVexMap[smoNote.attrs.id]);
         }

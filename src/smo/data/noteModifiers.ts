@@ -973,9 +973,9 @@ export class SmoLyric extends SmoNoteModifierBase {
     // var str = this._text;
     const reg = /^([A-Z|a-z|0-9|]+)/g;
     let mmm = str.match(reg);
-    let tokeType = '';
-    let toke = '';
-    const tokens = [];
+    let tokeType: string = '';
+    let toke: string = '';
+    const tokens: string[] = [];
     while (str.length) {
       if (!mmm) {
         tokeType = str[0];
