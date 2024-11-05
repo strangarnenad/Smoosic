@@ -726,7 +726,7 @@ export abstract class SuiScoreView {
         // If this is a tranposed score, the displayed score needs to be in 'C'.
         // We do this step last since serialize/unserialize work in a pitch transposed
         // for the instrument
-        if (this.score.preferences.transposingScore) {
+        if (this.score.preferences.transposingScore && !this.score.isPartExposed()) {
           rmeasure.transposeToOffset(-1 * xpose, 'c');
           rmeasure.keySignature = 'c';
           rmeasure.transposeIndex = 0;
