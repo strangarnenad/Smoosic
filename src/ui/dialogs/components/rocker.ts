@@ -126,7 +126,6 @@ export class SuiRockerComponent extends SuiComponentBase {
             val = this.max;
           }
           this.initialValue = val;
-          $(input).val(val);
           this.handleChanged();
         }
       }
