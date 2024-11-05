@@ -667,6 +667,11 @@ export class SmoScore {
       params.audioSettings = SmoScoreModifierBase.deserialize(jsonObj.audioSettings);
     }
     params.preferences.transposingScore = params.preferences.transposingScore ?? false;
+    if (jsonObj.staves && jsonObj.staves.length === 1) {
+      // Ignore serialized tranpose of score if there is only a single part.
+      params.preferences.transposingScore = false; 
+    }
+
     params.preferences.hideEmptyLines = params.preferences.hideEmptyLines ?? false;
     let renumberingMap: Record<number, number> = { 0: 0 };
     if (jsonObj.columnAttributeMap && jsonObj.columnAttributeMap.renumberingMap) {

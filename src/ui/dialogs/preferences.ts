@@ -16,10 +16,12 @@ const deepCopy = (x: any) => JSON.parse(JSON.stringify(x));
 export class SuiScorePreferencesAdapter extends SuiComponentAdapter {
   preferences: SmoScorePreferences;
   backup: SmoScorePreferences;
+  originalTransposeScore: boolean;
   constructor(view: SuiScoreViewOperations) {
     super(view);
     this.preferences = new SmoScorePreferences(view.score.preferences);
     this.backup = JSON.parse(JSON.stringify(this.preferences));
+    this.originalTransposeScore = this.preferences.transposingScore;
   }
   get autoAdvance(): boolean {
     return this.preferences.autoAdvance;
@@ -77,8 +79,12 @@ export class SuiScorePreferencesAdapter extends SuiComponentAdapter {
       await this.view.updateScorePreferences(this.backup);
     }
   }
-  commit() {
-    return PromiseHelpers.emptyPromise();
+  async commit() {
+    if (this.originalTransposeScore !== this.preferences.transposingScore) {
+      await this.view.refreshViewport();
+      return;
+    }
+    return;
   }
 }
 /**
