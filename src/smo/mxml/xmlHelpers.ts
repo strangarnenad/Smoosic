@@ -114,7 +114,14 @@ export class XmlHelpers {
   // smo infers the stem type from the duration, but other applications don't
   static closestStemType(ticks: number) {
     const nticks = SmoMusic.closestDurationTickLtEq(ticks);
-    return XmlHelpers.ticksToNoteTypeMap[nticks];
+    // closestBeamDuration returns the rounded-up beam length for dotted rhythm and tuplets, 
+    // we want the actual stem that's used so cut it in 1/2
+    const beamDuration = SmoMusic.closestBeamDuration(nticks);
+    if (beamDuration.ticks === nticks) {
+      return XmlHelpers.ticksToNoteTypeMap[beamDuration.ticks];
+    } else {
+      return XmlHelpers.ticksToNoteTypeMap[beamDuration.ticks / 2];
+    }
   }
   static get beamStates(): Record<string, number> {
     return {
