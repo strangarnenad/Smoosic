@@ -144,6 +144,30 @@ export class SmoTupletTree {
     }
   }
 
+  /**
+   * Determines whether two notes are part of the same tuplet.
+   *
+   * - Returns `true` if neither `noteOne` nor `noteTwo` is part of a tuplet.
+   * - Returns `true` if both notes are part of a tuplet and share the same `tupletId`.
+   * - Returns `false` otherwise.
+   *
+   * @param noteOne
+   * @param noteTwo
+   */
+  static areNotesPartOfTheSameTuplet(noteOne: SmoNote, noteTwo: SmoNote): boolean {
+    if (typeof(noteOne.tupletId) === 'undefined' && typeof(noteTwo.tupletId) === 'undefined') {
+      return true;
+    }
+    if (noteOne.tupletId === null && noteTwo.tupletId === null) {
+      return true;
+    }
+    if (noteOne.isTuplet && noteTwo.isTuplet && noteOne.tupletId == noteTwo.tupletId) {
+      return true;
+    }
+
+    return false;
+  }
+
   serialize(): SmoTupletTreeParamsSer {
     const params = {
       ctor: 'SmoTupletTree',

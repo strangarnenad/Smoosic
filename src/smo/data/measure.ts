@@ -64,6 +64,7 @@ export interface MeasureTick {
  */
 export interface ISmoBeamGroup {
   notes: SmoNote[],
+  secondaryBeamBreaks: number[],
   voice: number,
   attrs: SmoAttrs
 }

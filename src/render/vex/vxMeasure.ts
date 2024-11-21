@@ -364,6 +364,7 @@ export class VxMeasure implements VxMeasureIf {
         vexNotes.push(vexNote);  
       }
       const vexBeam = new VF.Beam(vexNotes);
+      vexBeam.breakSecondaryAt(bg.secondaryBeamBreaks);
       this.beamToVexMap[bg.attrs.id] = vexBeam;
       this.vexBeamGroups.push(vexBeam);
     }
