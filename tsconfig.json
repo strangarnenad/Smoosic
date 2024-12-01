@@ -30,5 +30,5 @@
       "excludeNotDocumented": false,
       "entryPoints": ["./typedoc.ts"],
   },
-  "exclude": ["node_modules/**/*"]
+  "exclude": ["./node_modules", "./tools", "./types", "./build", "./.github", "./git", "./release"]
 } 

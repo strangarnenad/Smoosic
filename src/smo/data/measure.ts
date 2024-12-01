@@ -1248,6 +1248,19 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
   }
 
   /**
+   * For pasting, paste into the target measure if the voice exists, else paste into
+   * voice 0
+   * @param voiceIndex 
+   * @returns 
+   */
+  getTicksFromThisOrAnyVoice(voiceIndex: number): number {
+    if (this.voices.length > voiceIndex) {
+      return this.getTicksFromVoice(voiceIndex);
+    } else {
+      return this.getTicksFromVoice(0);
+    }
+  }
+  /**
    * Count the number of ticks in a specific voice
    * @param voiceIndex 
    * @returns 

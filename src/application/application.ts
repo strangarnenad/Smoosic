@@ -32,7 +32,7 @@ import { PromiseHelpers } from '../common/promiseHelpers';
 import { SuiDom } from './dom';
 import { SuiKeyCommands } from './keyCommands';
 import { SuiEventHandler } from './eventHandler';
-import { KeyBinding, ModalEventHandlerProxy } from './common';
+import { KeyBinding, ModalEventHandlerProxy, isTrackerKeyAction, isEditorKeyAction } from './common';
 import { SmoMeasure } from '../smo/data/measure';
 import { getDomContainer } from '../common/htmlHelpers';
 import { SuiHelp } from '../ui/help';
@@ -142,13 +142,25 @@ export class SuiApplication {
   */
   static get keyBindingDefaults(): KeyBinding[] {
     var editorKeys = SuiEventHandler.editorKeyBindingDefaults;
+    let unknownKeyAction: boolean = false;
     editorKeys.forEach((key) => {
-      key.module = 'keyCommands'
+      key.module = 'keyCommands';
+      if (!isEditorKeyAction(key.action)) {
+        console.error(`unknown key action ${key.action} in configuration`);
+        unknownKeyAction = true;
+      }
     });
     var trackerKeys = SuiEventHandler.trackerKeyBindingDefaults;
     trackerKeys.forEach((key) => {
       key.module = 'tracker'
+      if (!isTrackerKeyAction(key.action)) {
+        console.error(`unknown key action ${key.action} in configuration`);
+        unknownKeyAction = true;
+      }
     });
+    if (unknownKeyAction) {
+      throw(`unknown key action in configuration`);
+    }
     return trackerKeys.concat(editorKeys);
   }
   /**

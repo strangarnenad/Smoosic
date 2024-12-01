@@ -9,14 +9,41 @@ import { BrowserEventSource } from '../ui/eventSource';
 import { SuiTracker } from '../render/sui/tracker';
 import { KeyCommandParams } from './common';
 import { CompleteNotifier } from '../ui/common';
-import { PitchLetter, IsPitchLetter, KeyEvent } from '../smo/data/common';
+import { PitchLetter, IsPitchLetter, KeyEvent, keyHandler, defaultKeyEvent } from '../smo/data/common';
 
+export interface EditorKeyHandler {
+  transposeUp: keyHandler,
+  transposeDown: keyHandler,
+  upOctave: keyHandler,
+  toggleCourtesyAccidental: keyHandler,
+  toggleEnharmonic: keyHandler,
+  doubleDuration: keyHandler,
+  halveDuration: keyHandler,
+  dotDuration: keyHandler,
+  undotDuration: keyHandler,
+  setPitch: keyHandler,
+  slashGraceNotes: keyHandler,
+  addGraceNote: keyHandler,
+  removeGraceNote: keyHandler, 
+  playScore: keyHandler, 
+  stopPlayer: keyHandler,
+  makeTuplet: keyHandler,
+  interval: keyHandler, 
+  unmakeTuplet: keyHandler,
+  addMeasure: keyHandler, 
+  deleteNote: keyHandler, 
+  toggleBeamGroup: keyHandler,
+  beamSelections: keyHandler, 
+  addRemoveAccent: keyHandler,
+  addRemoveTenuto: keyHandler,
+  addRemoveStaccato: keyHandler
+}
 /**
- * KeyCommands object handles key events and converts them into commands, updating the score and
+ * KeyCommands object handles key events and converts them into commands: keyHandler, updating the score and
  * display
  * @category SuiApplication
  * */
-export class SuiKeyCommands {
+export class SuiKeyCommands implements EditorKeyHandler {
   view: SuiScoreViewOperations;
   slashMode: boolean = false;
   completeNotifier: CompleteNotifier;
@@ -97,8 +124,9 @@ export class SuiKeyCommands {
     await this.view.setInterval(direction * interval);
   }
 
-  async  interval(keyEvent: KeyEvent) {
+  async interval(ev?: KeyEvent) {
     // code='Digit3'
+    const keyEvent = ev ?? defaultKeyEvent();
     var interval = parseInt(keyEvent.keyCode.toString(), 10) - 49;  // 48 === '0', 0 indexed
     if (isNaN(interval) || interval < 1 || interval > 7) {
       return;
@@ -129,7 +157,8 @@ export class SuiKeyCommands {
     await this.view.setPitch(letter);
   }
 
-  async setPitch(keyEvent: KeyEvent) {
+  async setPitch(ev?: KeyEvent) {
+    const keyEvent = ev ?? defaultKeyEvent();
     const letter = keyEvent.key.toLowerCase();
     if (IsPitchLetter(letter)) {
       await this.setPitchCommand(letter);
@@ -152,8 +181,8 @@ export class SuiKeyCommands {
     await this.view.batchDurationOperation('halveDuration');
   }
 
-  async addMeasure(keyEvent: KeyEvent) {
-    await this.view.addMeasure(keyEvent.shiftKey);
+  async addMeasure(keyEvent?: KeyEvent) {
+    await this.view.addMeasure(false);
   }
   async deleteNote() {
     await this.view.deleteNote();
@@ -167,9 +196,12 @@ export class SuiKeyCommands {
   }
 
   async makeTupletCommand(numNotes: number) {
-    await this.view.makeTuplet({numNotes: numNotes, notesOccupied: 2, bracketed: true, ratioed: false});
+    await this.view.makeTuplet({ numNotes: numNotes, notesOccupied: 2, bracketed: true, ratioed: false });
   }
-  async makeTuplet(keyEvent: KeyEvent) {
+  async makeTuplet(keyEvent?: KeyEvent) {
+    if (!keyEvent) {
+      return;
+    }
     const numNotes = parseInt(keyEvent.key, 10);
     await this.makeTupletCommand(numNotes);
   }

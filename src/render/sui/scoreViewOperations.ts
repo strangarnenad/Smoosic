@@ -1182,7 +1182,9 @@ export class SuiScoreViewOperations extends SuiScoreView {
       const altSel = this._getEquivalentSelection(selected);
       SmoOperation.setPitch(altSel!, [pitch]);
       if (this.score.preferences.autoAdvance) {
-        this.tracker.moveSelectionRight(true);
+        // Don't play the next note and the added pitch at the same time.
+        this.tracker.deferNextAutoPlay();
+        this.tracker.moveSelectionRight();
       }
     });
     if (selections.length === 1 && this.score.preferences.autoPlay) {
@@ -1936,7 +1938,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @returns 
    */
   async moveHome(ev: KeyEvent): Promise<any> {
-    this.tracker.moveHome(this.score, ev);
+    this.tracker.moveHome(ev);
     await this.renderer.updatePromise();
   }
   /**
@@ -1946,7 +1948,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @returns 
    */
    async moveEnd(ev: KeyEvent): Promise<any> {
-    this.tracker.moveEnd(this.score, ev);
+    this.tracker.moveEnd(ev);
     await this.renderer.updatePromise();
   }
   /**
@@ -1973,7 +1975,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @returns 
    */
   async advanceModifierSelection(keyEv: KeyEvent): Promise<any> {
-    this.tracker.advanceModifierSelection(this.score, keyEv);
+    this.tracker.advanceModifierSelection(keyEv);
     await this.renderer.updatePromise();
   }
   /**
@@ -1989,8 +1991,8 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @param ev 
    * @returns 
    */
-  async moveSelectionRight(toPlay: boolean = true): Promise<any> {
-    this.tracker.moveSelectionRight(toPlay);
+  async moveSelectionRight(): Promise<any> {
+    this.tracker.moveSelectionRight();
     await this.renderer.updatePromise();
   }
   /**
@@ -2054,7 +2056,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @returns 
    */
    async selectSuggestion(evData: KeyEvent): Promise<any> {
-    this.tracker.selectSuggestion(this.score, evData);
+    this.tracker.selectSuggestion(evData);
     await this.renderer.updatePromise();
   }
   /**
