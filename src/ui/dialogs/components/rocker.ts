@@ -120,12 +120,16 @@ export class SuiRockerComponent extends SuiComponentBase {
       () => {
         val = (this as any)[this.parser]();
         if (val !== this.initialValue) {
+          this.initialValue = val;
+          if (this.dataType === 'percent') {
+            val = 100 * val;
+          }
           if (this.min != undefined && val < this.min) {
             val = this.min;
           } else if (this.max != undefined && val > this.max) {
             val = this.max;
           }
-          this.initialValue = val;
+          $(input).val(val);
           this.handleChanged();
         }
       }

@@ -220,53 +220,91 @@ export class SmoStretchNoteActor extends TickIteratorBase {
     this.notes = this.measure.voices[this.voice].notes;
 
     const originalNote: SmoNote = this.notes[this.startIndex];
-    let newTicks: Ticks = { numerator: this.newStemTicks, denominator: 1, remainder: 0 };
     const multiplier = originalNote.tickCount / originalNote.stemTicks;
-    if (originalNote.isTuplet) {
-      const numerator = this.newStemTicks * multiplier;
-      newTicks = { numerator: Math.floor(numerator), denominator: 1, remainder: numerator % 1 };
-    } 
+
+    const newTicks = this.calculateNewTicks(originalNote, multiplier);
 
     const replacingNote = SmoNote.cloneWithDuration(originalNote, newTicks, this.newStemTicks);
 
+    const {stemTicksUsed, crossedTupletBoundary} = this.determineNotesToDelete(originalNote);
+
+    // if crossing a tuplet boundary, abort stretching
+    if (crossedTupletBoundary) {
+      this.numberOfNotesToDelete = 0;
+    } else {
+      this.prepareNotesToInsert(originalNote, replacingNote, stemTicksUsed, multiplier);
+    }
+  }
+
+  private calculateNewTicks(originalNote: SmoNote, multiplier: number): Ticks {
+    if (originalNote.isTuplet) {
+      const numerator = this.newStemTicks * multiplier
+      return { numerator: Math.floor(numerator), denominator: 1, remainder: numerator % 1};
+    } else {
+      return { numerator: this.newStemTicks, denominator: 1, remainder: 0};
+    }
+  }
+
+  private determineNotesToDelete(originalNote: SmoNote) {
+    let crossedTupletBoundary = false;
     let stemTicksUsed = originalNote.stemTicks;
+
     for (let i = this.startIndex + 1; i < this.notes.length; ++i) {
-      const nnote = this.notes[i];
-      //in case notes are part of the tuplet they need to belong to the same tuplet
-      //this check is only temporarely here, it should never come to this
-      if (nnote.isTuplet && !this.areNotesInSameTuplet(originalNote, nnote)) {
+      const nextNote = this.notes[i];
+
+      const areTupletsBothNull = SmoTupletTree.areTupletsBothNull(originalNote, nextNote);
+      const areNotesPartOfTheSmeTuplet = SmoTupletTree.areNotesPartOfTheSameTuplet(originalNote, nextNote);
+
+      if (!areTupletsBothNull && !areNotesPartOfTheSmeTuplet) {
+        crossedTupletBoundary = true;
         break;
       }
-      stemTicksUsed += nnote.stemTicks;
+
+      stemTicksUsed += nextNote.stemTicks;
       ++this.numberOfNotesToDelete;
+
       if (stemTicksUsed >= this.newStemTicks) {
         break;
       }
     }
-    const remainingAmount = stemTicksUsed - this.newStemTicks;
-    if (remainingAmount >= 0) {
+
+    return {stemTicksUsed, crossedTupletBoundary};
+  }
+
+  private prepareNotesToInsert(
+      originalNote: SmoNote,
+      replacingNote: SmoNote,
+      stemTicksUsed: number,
+      multiplier: number
+  ) {
+    const remainingTicks = stemTicksUsed - this.newStemTicks;
+
+    if (remainingTicks >= 0) {
       this.notesToInsert.push(replacingNote);
-      const lmap = SmoMusic.gcdMap(remainingAmount);
-      lmap.forEach((stemTick) => {
+
+      const tickMap = SmoMusic.gcdMap(remainingTicks);
+      tickMap.forEach((stemTick) => {
         const numerator = stemTick * multiplier;
-        const nnote = SmoNote.cloneWithDuration(originalNote, {numerator: Math.floor(numerator), denominator: 1, remainder: numerator % 1}, stemTick)
-        this.notesToInsert.push(nnote);
+        const newNote = SmoNote.cloneWithDuration(originalNote, {numerator: Math.floor(numerator), denominator: 1, remainder: numerator % 1}, stemTick)
+        this.notesToInsert.push(newNote);
       });
+
+      // Adjust tuplet indexes due to note insertion/deletion
       const noteCountDiff = (this.notesToInsert.length - this.numberOfNotesToDelete) - 1;
       SmoTupletTree.adjustTupletIndexes(this.measure.tupletTrees, this.voice, this.startIndex, noteCountDiff);
 
       //accumulate all remainders in the first note
-      let remainder: number = 0;
+      let totalRemainder: number = 0;
       this.notesToInsert.forEach((note: SmoNote) => {
         if (note.ticks.remainder > 0) {
-          remainder += note.ticks.remainder;
+          totalRemainder += note.ticks.remainder;
           note.ticks.remainder = 0;
         }
       });
-      this.notesToInsert[0].ticks.numerator += Math.round(remainder);
-
+      this.notesToInsert[0].ticks.numerator += Math.round(totalRemainder);
     }
   }
+
   static apply(params: SmoStretchNoteParams) {
     const actor = new SmoStretchNoteActor(params);
     SmoTickIterator.iterateOverTicks(actor.measure, actor, actor.voice);
@@ -279,13 +317,6 @@ export class SmoStretchNoteActor extends TickIteratorBase {
       return [];
     } 
     return null;
-  }
-
-  private areNotesInSameTuplet(noteOne: SmoNote, noteTwo: SmoNote): boolean {
-    if (noteOne.isTuplet && noteTwo.isTuplet && noteOne.tupletId == noteTwo.tupletId) {
-      return true;
-    }
-    return false;
   }
 }
 
