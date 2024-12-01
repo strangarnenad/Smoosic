@@ -146,13 +146,6 @@ export class defaultEditorKeys {
         action: "makeRest"
       }, {
         event: "keydown",
-        key: "r",
-        ctrlKey: false,
-        altKey: true,
-        shiftKey: false,
-        action: "rerender"
-      }, {
-        event: "keydown",
         key: "p",
         ctrlKey: false,
         altKey: false,

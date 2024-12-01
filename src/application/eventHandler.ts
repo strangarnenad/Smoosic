@@ -165,10 +165,10 @@ export class SuiEventHandler implements ModalEventHandler {
         return;
         // this.unbindKeyboardForModal(dialog);
       } else {
-        this.view.tracker.advanceModifierSelection(this.view.score, ev);
+        this.view.tracker.advanceModifierSelection(ev);
       }
     } else {
-      this.view.tracker.selectSuggestion(this.view.score, ev);
+      this.view.tracker.selectSuggestion(ev);
     }
     return;
   }
@@ -254,7 +254,7 @@ export class SuiEventHandler implements ModalEventHandler {
     }
   }
 
-  evKey(evdata: any) {
+  async evKey(evdata: any) {
     if ($('body').hasClass('translation-mode')) {
       return;
     }
@@ -270,34 +270,33 @@ export class SuiEventHandler implements ModalEventHandler {
       Qwerty.handleKeyEvent(evdata);
     }
     const dataCopy = SuiTracker.serializeEvent(evdata);
-    this.view.renderer.updatePromise().then(() => {
-      if (dataCopy.key == '?') {
-        SuiHelp.displayHelp();
-      }
-      if (dataCopy.key == 'Enter') {
-        this.trackerModifierSelect(dataCopy);
-      }
+    await this.view.renderer.updatePromise();
+    if (dataCopy.key == '?') {
+      SuiHelp.displayHelp();
+    }
+    if (dataCopy.key == 'Enter') {
+      this.trackerModifierSelect(dataCopy);
+    }
 
-      var binding: KeyBinding | undefined = this.keyBind.find((ev: KeyBinding) =>
-        ev.event === 'keydown' && ev.key === dataCopy.key &&
-        ev.ctrlKey === dataCopy.ctrlKey &&
-        ev.altKey === dataCopy.altKey && dataCopy.shiftKey === ev.shiftKey);
+    var binding: KeyBinding | undefined = this.keyBind.find((ev: KeyBinding) =>
+      ev.event === 'keydown' && ev.key === dataCopy.key &&
+      ev.ctrlKey === dataCopy.ctrlKey &&
+      ev.altKey === dataCopy.altKey && dataCopy.shiftKey === ev.shiftKey);
 
-      if (binding) {
-        try {
-          if (binding.module === 'tracker') {
-            (this.tracker as any)[binding.action](this.view.score, dataCopy);
-          } else {
-            (this.keyCommands as any)[binding.action](dataCopy);
-          }
-        } catch (e) {
-          if (typeof (e) === 'string') {
-            console.error(e);
-          }
-          this.exhandler.exceptionHandler(e);
+    if (binding) {
+      try {
+        if (binding.module === 'tracker') {
+          (this.tracker as any)[binding.action](dataCopy);
+        } else {
+          (this.keyCommands as any)[binding.action](dataCopy);
         }
+      } catch (e) {
+        if (typeof (e) === 'string') {
+          console.error(e);
+        }
+        this.exhandler.exceptionHandler(e);
       }
-    });
+    }
   }
 
   mouseMove(ev: any) {
@@ -310,7 +309,7 @@ export class SuiEventHandler implements ModalEventHandler {
   mouseClick(ev: any) {
     const dataCopy = SuiTracker.serializeEvent(ev);
     this.view.renderer.updatePromise().then(() => {
-      this.view.tracker.selectSuggestion(this.view.score, dataCopy);
+      this.view.tracker.selectSuggestion(dataCopy);
       var modifier = this.view.tracker.getSelectedModifier();
       if (modifier) {
         this.createModifierDialog(modifier);

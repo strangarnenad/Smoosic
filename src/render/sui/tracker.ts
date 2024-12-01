@@ -6,7 +6,7 @@ import { SmoSelection, SmoSelector, ModifierTab } from '../../smo/xform/selectio
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SuiOscillator } from '../audio/oscillator';
 import { SmoScore } from '../../smo/data/score';
-import { SvgBox, KeyEvent } from '../../smo/data/common';
+import { SvgBox, KeyEvent, defaultKeyEvent, keyHandler } from '../../smo/data/common';
 import { SuiScroller } from './scroller';
 import { PasteBuffer } from '../../smo/xform/copypaste';
 import { SmoNote } from '../../smo/data/note';
@@ -14,15 +14,31 @@ import { SmoMeasure } from '../../smo/data/measure';
 import { layoutDebug } from './layoutDebug';
 declare var $: any;
 
+export interface TrackerKeyHandler {
+  moveHome : keyHandler, 
+  moveEnd : keyHandler, 
+  moveSelectionRight : keyHandler,
+  moveSelectionLeft : keyHandler, 
+  moveSelectionUp : keyHandler,
+  moveSelectionDown : keyHandler,
+  moveSelectionRightMeasure : keyHandler,
+  moveSelectionLeftMeasure : keyHandler,
+  advanceModifierSelection : keyHandler,
+  growSelectionRight : keyHandler,
+  growSelectionLeft : keyHandler, 
+  moveSelectionPitchUp : keyHandler,
+  moveSelectionPitchDown: keyHandler
+}
 /**
  * SuiTracker
  * A tracker maps the UI elements to the logical elements ,and allows the user to
  *  move through the score and make selections, for navigation and editing.
  * @category SuiRender
  */
-export class SuiTracker extends SuiMapper {
+export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
   idleTimer: number = Date.now();
   musicCursorGlyph: SVGSVGElement | null = null;
+  deferPlayAdvance: boolean = false;
   static get strokes(): Record<string, StrokeInfo> {
     return {
       suggestion: {
@@ -75,6 +91,21 @@ export class SuiTracker extends SuiMapper {
   getIdleTime(): number {
     return this.idleTimer;
   }
+  playSelection(artifact: SmoSelection) {
+    if (!this.deferPlayAdvance && this.score) {
+      SuiOscillator.playSelectionNow(artifact, this.score, 1);
+    } else {
+      this.deferPlayAdvance = false;
+    }
+  }
+  deferNextAutoPlay() {
+    if (this.score) {
+      // don't play on advance if we've just added a note and played it because they overlap
+      if (this.score.preferences.autoAdvance && this.score.preferences.autoPlay) {
+        this.deferPlayAdvance = true;
+      }
+    }
+  }
 
   getSelectedModifier() {
     if (this.modifierSelections.length) {
@@ -96,7 +127,7 @@ export class SuiTracker extends SuiMapper {
     return rv;
   }
 
-  advanceModifierSelection(score: SmoScore, keyEv: KeyEvent | null) {
+  advanceModifierSelection(keyEv?: KeyEvent) {
     if (!keyEv) {
       return;
     }
@@ -220,14 +251,15 @@ export class SuiTracker extends SuiMapper {
       return 0;
     }
     if (!this.mapping && this.autoPlay && skipPlay === false && this.score) {
-      SuiOscillator.playSelectionNow(artifact, this.score, 1);
+      this.playSelection(artifact);
     }
     this.selections.push(artifact);
     this.deferHighlight();
     this._createLocalModifiersList();
     return (artifact.note as SmoNote).tickCount;
   }
-  moveHome(score: SmoScore, evKey: KeyEvent) {
+  moveHome(keyEvent?: KeyEvent) {
+    const evKey = keyEvent ?? defaultKeyEvent();
     this.idleTimer = Date.now();
     const ls = this.selections[0].staff;
     if (evKey.ctrlKey) {
@@ -235,7 +267,7 @@ export class SuiTracker extends SuiMapper {
       const homeSel = this._getClosestTick({ staff: ls.staffId,
         measure: 0, voice: mm.getActiveVoice(), tick: 0, pitches: [] });
       if (evKey.shiftKey) {
-        this._selectBetweenSelections(score, this.selections[0], homeSel);
+        this._selectBetweenSelections(this.selections[0], homeSel);
       } else {
         this.selections = [homeSel];
         this.deferHighlight();
@@ -253,7 +285,7 @@ export class SuiTracker extends SuiMapper {
         measure: mm.measureNumber.measureIndex, voice: mm.getActiveVoice(),
         tick: 0, pitches: [] });
       if (evKey.shiftKey) {
-        this._selectBetweenSelections(score, this.selections[0], homeSel);
+        this._selectBetweenSelections(this.selections[0], homeSel);
       } else if (homeSel?.measure?.svg?.logicalBox) {
         this.selections = [homeSel];
         this.scroller.scrollVisibleBox(homeSel.measure.svg.logicalBox);
@@ -262,9 +294,10 @@ export class SuiTracker extends SuiMapper {
       }
     }
   }
-  moveEnd(score: SmoScore, evKey: KeyEvent) {
+  moveEnd(keyEvent?: KeyEvent) {
     this.idleTimer = Date.now();
     const ls = this.selections[0].staff;
+    const evKey = keyEvent ?? defaultKeyEvent();
     if (evKey.ctrlKey) {
       const lm = ls.measures[ls.measures.length - 1];
       const voiceIx = lm.getActiveVoice();
@@ -272,7 +305,7 @@ export class SuiTracker extends SuiMapper {
       const endSel = this._getClosestTick({ staff: ls.staffId,
         measure: ls.measures.length - 1, voice: voiceIx, tick: voice.notes.length - 1, pitches: [] });
       if (evKey.shiftKey) {
-        this._selectBetweenSelections(score, this.selections[0], endSel);
+        this._selectBetweenSelections(this.selections[0], endSel);
       } else {
         this.selections = [endSel];
         this.deferHighlight();
@@ -292,7 +325,7 @@ export class SuiTracker extends SuiMapper {
       const endSel = this._getClosestTick({ staff: ls.staffId,
         measure: lm.measureNumber.measureIndex, voice: lm.getActiveVoice(), tick: ticks - 1, pitches: [] });
       if (evKey.shiftKey) {
-        this._selectBetweenSelections(score, this.selections[0], endSel);
+        this._selectBetweenSelections(this.selections[0], endSel);
       } else {
         this.selections = [endSel];
         this.deferHighlight();
@@ -342,7 +375,7 @@ export class SuiTracker extends SuiMapper {
     artifact.measure.setActiveVoice(nselect.voice);
     this.selections.push(artifact);
     if (this.autoPlay && this.score) {
-      SuiOscillator.playSelectionNow(artifact, this.score, 1);
+      this.playSelection(artifact);
     }
     this.deferHighlight();
     this._createLocalModifiersList();
@@ -350,10 +383,11 @@ export class SuiTracker extends SuiMapper {
   }
 
   // if we are being moved right programmatically, avoid playing the selected note.
-  moveSelectionRight(skipPlay: boolean) {
+  moveSelectionRight() {
     if (this.selections.length === 0 || this.score === null) {
       return;
     }
+    const skipPlay = !this.score.preferences.autoPlay;
     // const original = JSON.parse(JSON.stringify(this.getExtremeSelection(-1).selector));
     const nselect = this._getOffsetSelection(1);
     // skip any measures that are not displayed due to rest or repetition
@@ -479,7 +513,8 @@ export class SuiTracker extends SuiMapper {
       artifact = SmoSelection.noteSelection(this.score, 0, 0, 0, 0);
     }
     if (!skipPlay && this.autoPlay && artifact) {
-      SuiOscillator.playSelectionNow(artifact, this.score, 1);
+      this.playSelection(artifact);
+
     }
     if (!artifact) {
       return;
@@ -538,7 +573,7 @@ export class SuiTracker extends SuiMapper {
       SmoSelector.neq(sel.selector, selection.selector)
     );
     if (this.autoPlay && this.score) {
-      SuiOscillator.playSelectionNow(selection, this.score, 1);
+      this.playSelection(selection);
     }
     ar.push(selection);
     this.selections = ar;
@@ -565,7 +600,11 @@ export class SuiTracker extends SuiMapper {
     }
     this.idleTimer = Date.now();
   }
-  _selectBetweenSelections(score: SmoScore, s1: SmoSelection, s2: SmoSelection) {
+  _selectBetweenSelections(s1: SmoSelection, s2: SmoSelection) {
+    const score = this.renderer.score ?? null;
+    if (!score) {
+      return;
+    }
     const min = SmoSelector.gt(s1.selector, s2.selector) ? s2 : s1;
     const max = SmoSelector.lt(min.selector, s2.selector) ? s2 : s1;
     this._selectFromToInStaff(score, min, max);
@@ -573,7 +612,7 @@ export class SuiTracker extends SuiMapper {
     this.highlightQueue.selectionCount = this.selections.length;
     this.deferHighlight();
   }
-  selectSuggestion(score: SmoScore,ev: KeyEvent) {
+  selectSuggestion(ev: KeyEvent) {
     if (!this.suggestion || !this.suggestion.measure || this.score === null) {
       return;
     }
@@ -596,7 +635,7 @@ export class SuiTracker extends SuiMapper {
     if (ev.shiftKey) {
       const sel1 = this.getExtremeSelection(-1);
       if (sel1.selector.staff === this.suggestion.selector.staff) {
-        this._selectBetweenSelections(score, sel1, this.suggestion);
+        this._selectBetweenSelections(sel1, this.suggestion);
         return;
       }
     }
@@ -608,7 +647,7 @@ export class SuiTracker extends SuiMapper {
       return;
     }
     if (this.autoPlay) {
-      SuiOscillator.playSelectionNow(this.suggestion, this.score, 1);
+      this.playSelection(this.suggestion);
     }
 
     const preselected = this.selections[0] ?

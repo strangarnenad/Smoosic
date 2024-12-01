@@ -2,7 +2,42 @@ import { SuiScoreViewOperations } from "../render/sui/scoreViewOperations";
 import { SuiTracker } from "../render/sui/tracker";
 import { CompleteNotifier } from "../ui/common";
 import { ModalComponent } from "../ui/common";
+import { KeyEvent } from "../smo/data/common";
 import { BrowserEventSource, EventHandler } from "../ui/eventSource";
+
+export type trackerKeyAction = "moveHome" | "moveEnd" | "moveSelectionRight" | "moveSelectionLeft" | 
+   "moveSelectionUp" | "moveSelectionDown" | "moveSelectionRightMeasure" | "moveSelectionLeftMeasure" |
+   "advanceModifierSelection" | "growSelectionRight" | "growSelectionLeft" | 
+   "growSelectionRightMeasure" | "growSelectionRightMeasure" |
+   "moveSelectionPitchUp" | "moveSelectionPitchDown";
+export const trackerKeyActions = ["moveHome" , "moveEnd" , "moveSelectionRight" , "moveSelectionLeft" , 
+   "moveSelectionUp" , "moveSelectionDown" , "moveSelectionRightMeasure" , "moveSelectionLeftMeasure" ,
+   "advanceModifierSelection" , "growSelectionRight" , "growSelectionLeft" , "growSelectionRightMeasure",
+   "moveSelectionPitchUp" , "moveSelectionPitchDown"];   
+export type editorKeyAction = "transposeUp" | "transposeDown" | "upOctave" | "downOctave" | 
+  "toggleCourtesyAccidental" | "toggleEnharmonic"  | 
+    "doubleDuration" | "halveDuration" | "dotDuration" | "undotDuration" | "setPitch" | 
+    "slashGraceNotes" | "addGraceNote" | "removeGraceNote" | 
+    "playScore" | "stopPlayer" | "pausePlayer" | "togglePlayer" |
+    "undo" | "copy" | "paste" |
+    "makeTuplet" | "interval" | "unmakeTuplet" | "addMeasure" | "deleteNote" | "makeRest"| 
+    "toggleBeamGroup" | "beamSelections" | "toggleBeamDirection" |
+    "addRemoveAccent" | "addRemoveTenuto" | "addRemoveStaccato" | 
+    "addRemovePizzicato" | "addRemoveMarcato";
+export const editorKeyActions = ["transposeUp" , "transposeDown" , "upOctave" , "downOctave" , 
+    "toggleCourtesyAccidental" , "toggleEnharmonic", 
+      "doubleDuration" , "halveDuration" , "dotDuration" , "undotDuration" , "setPitch" , 
+      "slashGraceNotes" , "addGraceNote" , "removeGraceNote" , 
+      "playScore" , "stopPlayer" , "pausePlayer", "togglePlayer",
+      "undo", "copy", "paste",
+      "makeTuplet" , "interval" , "unmakeTuplet" , "addMeasure" , "deleteNote" , "makeRest", 
+      "toggleBeamGroup" , "beamSelections" , "toggleBeamDirection",
+      "addRemoveAccent" , "addRemoveTenuto" , "addRemoveStaccato",
+      "addRemovePizzicato", "addRemoveMarcato"
+    ]; 
+
+export function isEditorKeyAction(action: string) { return editorKeyActions.indexOf(action) >= 0 };
+export function isTrackerKeyAction(action: string) { return trackerKeyActions.indexOf(action) >= 0 };
 
 /**
  * A binding of a key to some action performed by a module
@@ -43,7 +78,7 @@ export interface KeyCommandParams {
 export abstract class ModalEventHandler {
   abstract mouseMove(ev: any): void;
   abstract mouseClick(ev: any): void;
-  abstract evKey(evdata: any): void;
+  abstract evKey(evdata: any): Promise<void>;
   abstract keyUp(evdata: any): void;
 }
 export type handler = (ev: any) => void;
@@ -69,9 +104,9 @@ export class ModalEventHandlerProxy {
     this._handler = value;
     this.unbound = false;
   }
-  evKey(ev: any) {
+  async evKey(ev: any) {
     if (this._handler) {
-      this._handler.evKey(ev);
+      await this._handler.evKey(ev);
     }
   }
   keyUp(ev: any) {

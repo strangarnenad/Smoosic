@@ -237,6 +237,7 @@ export function keyEventMatch(ev1: KeyEvent, ev2: KeyEvent): boolean {
   ev1.ctrlKey === ev2.ctrlKey &&
   ev1.altKey === ev2.altKey && ev1.shiftKey === ev2.shiftKey
 }
+export type keyHandler = (key?: KeyEvent) => void;
 /**
  * @internal
  */
