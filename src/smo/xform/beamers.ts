@@ -159,8 +159,13 @@ export class SmoBeamer {
       return;
     }
 
-    if (this.currentGroup.length > 0 && !SmoTupletTree.areNotesPartOfTheSameTuplet(tickmap.notes[index - 1], tickmap.notes[index])) {
-      this.secondaryBeamBreaks.push(this.currentGroup.length - 1);
+    if (this.currentGroup.length > 0) {
+      const areTupletsBothNull = SmoTupletTree.areTupletsBothNull(tickmap.notes[index - 1], tickmap.notes[index]);
+      const areNotesPartOfTheSameTuplet = SmoTupletTree.areNotesPartOfTheSameTuplet(tickmap.notes[index - 1], tickmap.notes[index]);
+
+      if (!areTupletsBothNull && !areNotesPartOfTheSameTuplet) {
+        this.secondaryBeamBreaks.push(this.currentGroup.length - 1);
+      }
     }
 
     // beam tuplets

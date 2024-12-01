@@ -252,7 +252,10 @@ export class SmoStretchNoteActor extends TickIteratorBase {
     for (let i = this.startIndex + 1; i < this.notes.length; ++i) {
       const nextNote = this.notes[i];
 
-      if (!SmoTupletTree.areNotesPartOfTheSameTuplet(originalNote, nextNote)) {
+      const areTupletsBothNull = SmoTupletTree.areTupletsBothNull(originalNote, nextNote);
+      const areNotesPartOfTheSmeTuplet = SmoTupletTree.areNotesPartOfTheSameTuplet(originalNote, nextNote);
+
+      if (!areTupletsBothNull && !areNotesPartOfTheSmeTuplet) {
         crossedTupletBoundary = true;
         break;
       }
