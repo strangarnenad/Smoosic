@@ -105,8 +105,16 @@ export class PasteBuffer {
   _populateSelectArray(selections: SmoSelection[]) {
     let selector: SmoSelector = SmoSelector.default;
     this.modifiers = [];
+    let maxSelector = selections[0].selector;
+    let minSelector = selections[0].selector;
     selections.forEach((selection) => {
       selector = JSON.parse(JSON.stringify(selection.selector));
+      if (SmoSelector.gt(selector, maxSelector)) {
+        maxSelector = selector;
+      }
+      if (SmoSelector.lt(selector, minSelector)) {
+        minSelector = selector;
+      }
       const mod: StaffModifierBase[] = selection.staff.getModifiersAt(selector);
       if (mod.length) {
         mod.forEach((modifier: StaffModifierBase) => {

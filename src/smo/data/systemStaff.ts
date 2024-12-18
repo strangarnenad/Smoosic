@@ -777,17 +777,35 @@ export class SmoSystemStaff implements SmoObjectParams {
    */
   syncStaffModifiers(measureIndex: number, ostaff: SmoSystemStaff) {
     const mods: StaffModifierBase[] = [];
+    // remove any modifiers in the stored score that aren't in the view score
     this.modifiers.forEach((modifier) => {
       if (modifier.startSelector.measure !== measureIndex) {
         mods.push(modifier);
       } else {
         const omod = ostaff.modifiers.find((mm) => mm.attrs.id === modifier.attrs.id);
         if (omod) {
-          mods.push(modifier);
+          mods.push(omod);
         }
       }
     });
     this.modifiers = mods;
+    const measureSelectors = ostaff.modifiers.filter((mm) => mm.startSelector.measure === measureIndex);
+    // Add any new modifiers from a copy operation
+    measureSelectors.forEach((modifier) => {
+      const dup = this.modifiers.find((mm) => 
+        mm.startSelector.measure === modifier.startSelector.measure &&
+        mm.endSelector.measure === modifier.endSelector.measure &&
+        mm.ctor === modifier.ctor);
+      if (dup ?? null === null) {
+        const ser = StaffModifierBase.cloneWithId(modifier);
+        const des = StaffModifierBase.deserialize(ser);
+        des.attrs = JSON.parse(JSON.stringify(ser.attrs));
+        des.startSelector.staff = this.staffId;
+        des.endSelector.staff = this.staffId;
+        this.modifiers.push(des);
+      }
+    });
+
   }
   // ### deleteMeasure
   // delete the measure, and any staff modifiers that start/end there.

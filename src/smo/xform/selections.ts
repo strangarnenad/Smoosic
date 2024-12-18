@@ -73,7 +73,10 @@ export class SmoSelector {
     (sel1.measure === sel2.measure && sel1.tick > sel2.tick);
   }
 
-  // ## return true if sel1 > sel2.
+  
+  /**
+   * return true if sel1 > sel2
+   */
   static gt(sel1: SmoSelector, sel2: SmoSelector): boolean {
     // Note: voice is not considered b/c it's more of a vertical component
     // Note further: sometimes we need to consider voice
@@ -90,13 +93,22 @@ export class SmoSelector {
     return !(SmoSelector.eq(sel1, sel2));
   }
 
+  /**
+   * return true if sel1 < sel2
+   */
   static lt(sel1: SmoSelector, sel2: SmoSelector): boolean {
     return SmoSelector.gt(sel2, sel1);
   }
 
+  /**
+   * return true if sel1 >= sel2
+   */
   static gteq(sel1: SmoSelector, sel2: SmoSelector): boolean {
     return SmoSelector.gt(sel1, sel2) || SmoSelector.eq(sel1, sel2);
   }
+  /**
+   * return true if sel1 <= sel2
+   */
   static lteq(sel1: SmoSelector, sel2: SmoSelector): boolean {
     return SmoSelector.lt(sel1, sel2) || SmoSelector.eq(sel1, sel2);
   }
