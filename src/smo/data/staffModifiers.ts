@@ -46,6 +46,12 @@ export abstract class StaffModifierBase implements SmoModifierBase {
     const rv = SmoDynamicCtor[params.ctor](params);
     return rv;
   }
+  static cloneWithId(o: StaffModifierBase) {
+    const ser = o.serializeWithId();
+    const des = StaffModifierBase.deserialize(ser);
+    des.attrs = JSON.parse(JSON.stringify(o.attrs));
+    return des;
+  }
   serializeWithId() {
     const ser = this.serialize();
     ser.attrs = JSON.parse(JSON.stringify(this.attrs));
@@ -866,8 +872,8 @@ export class SmoTie extends StaffModifierBase {
   invert: boolean = false;
   cp1: number = 8;
   cp2: number = 12;
-  first_x_shift: number = 0;
-  last_x_shift: number = 0;
+  first_x_shift: number = -5;
+  last_x_shift: number = 5;
   y_shift: number = 7;
   tie_spacing: number = 0;
   lines: TieLine[] = [];
@@ -879,8 +885,8 @@ export class SmoTie extends StaffModifierBase {
       cp1: 8,
       cp2: 12,
       y_shift: 7,
-      first_x_shift: 0,
-      last_x_shift: 0,
+      first_x_shift: -5,
+      last_x_shift: 5,
       lines: [],
       startSelector: SmoSelector.default,
       endSelector: SmoSelector.default
