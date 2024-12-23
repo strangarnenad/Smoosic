@@ -349,7 +349,7 @@ function isSmoMicrotoneParamsSer(params: Partial<SmoMicrotoneParamsSer>): params
  * @category SmoObject
 */
 export class SmoMicrotone extends SmoNoteModifierBase {
-  tone: string;
+  tone: string = 'flat75sz';
   pitchIndex: number = 0;
 
   // This is how VexFlow notates them
@@ -385,10 +385,12 @@ export class SmoMicrotone extends SmoNoteModifierBase {
   get toVex(): string {
     return SmoMicrotone.smoToVex[this.tone];
   }
-  static readonly defaults: SmoMicrotoneParams = {
-    ctor: 'SmoMicrotone',
-    tone: 'flat25sz',
-    pitch: 0
+  static get defaults(): SmoMicrotoneParams  {
+    return JSON.parse(JSON.stringify({
+      ctor: 'SmoMicrotone',
+      tone: 'flat25sz',
+      pitch: 0
+    }));
   }
   static get parameterArray() {
     const rv: string[] = [];
@@ -409,8 +411,8 @@ export class SmoMicrotone extends SmoNoteModifierBase {
   }
   constructor(parameters: SmoMicrotoneParams) {
     super(parameters.ctor);
-    this.pitchIndex = parameters.pitch;
-    this.tone = parameters.tone;
+    smoSerialize.serializedMerge(SmoMicrotone.parameterArray, SmoMicrotone.defaults, this);
+    smoSerialize.serializedMerge(SmoMicrotone.parameterArray, parameters, this);
   }
 }
 
