@@ -39,7 +39,21 @@
 				"composer": "Oscar Peterson"
 			},
 			"url": "https://smoosic.github.io/Smoosic/release/library/trumpet/HymnFreedom.json"
-		},{
+		}, {
+			"format": "smoosic",
+			"metadata": {
+				"name": "Duet in Mambo Style",
+				"composer": "Newman"
+			},
+			"url": "https://smoosic.github.io/Smoosic/release/library/trumpet/Duet-mambo.json"
+		}, {
+			"format": "smoosic",
+			"metadata": {
+				"name": "Duet in a Classical Style",
+				"composer": "Newman"
+			},
+			"url": "https://smoosic.github.io/Smoosic/release/library/trumpet/duet-neoclassical.json"
+		}, {
 			"format": "smoosic",
 			"metadata": {
 				"name": "Sonata 3rd mvmt",
