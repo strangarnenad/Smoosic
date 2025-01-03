@@ -28,6 +28,7 @@ This is a completely new Github project.  It contains 5 repositories (so far):
 4. [SmoSchema](https://github.com/Smoosic/SmoSchema) contains the definition of the Serializable Music Objects that Smoosic 
 uses to persist files. 
 5. [Demos](https://github.com/Smoosic/Demos) It contains test and demo applications.  If you want to use Smoosic as a library in your own applications, you can use this as a model. 
+6. [SmoScores](https://github.com/Smoosic/SmoScores)  The repository for music written in SMO, or for the SMO application.  Contributions and fixes to the default library are welcome.
 
 ## I'd like to help
 I'd appreciate it!  Even if you are not a programmer, if you are interested in music and this project, you can contribute.
