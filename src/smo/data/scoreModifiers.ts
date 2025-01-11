@@ -124,9 +124,10 @@ export interface SmoScoreInfo {
 }
 
 
-export type SmoScorePreferenceBool = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'transposingScore';
+export type SmoScorePreferenceBool = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'transposingScore' | 'autoScrollPlayback';
 export type SmoScorePreferenceNumber = 'defaultDupleDuration' | 'defaultTripleDuration';
-export const SmoScorePreferenceBools: SmoScorePreferenceBool[] = ['autoPlay', 'autoAdvance', 'showPiano', 'hideEmptyLines', 'transposingScore'];
+export const SmoScorePreferenceBools: SmoScorePreferenceBool[] = ['autoPlay', 'autoAdvance', 'showPiano', 'hideEmptyLines', 
+  'transposingScore', 'autoScrollPlayback'];
 export const SmoScorePreferenceNumbers: SmoScorePreferenceNumber[] = ['defaultDupleDuration', 'defaultTripleDuration'];
 /**
  * Global score/program behavior preferences, see below for parameters
@@ -135,6 +136,7 @@ export const SmoScorePreferenceNumbers: SmoScorePreferenceNumber[] = ['defaultDu
 export interface SmoScorePreferencesParams {
   autoPlay: boolean;
   autoAdvance: boolean;
+  autoScrollPlayback: boolean;
   defaultDupleDuration: number;
   defaultTripleDuration: number;
   showPiano: boolean;
@@ -159,6 +161,7 @@ export class SmoScorePreferences {
   defaultTripleDuration: number = 6144;
   showPiano: boolean = false;
   hideEmptyLines: boolean = false;
+  autoScrollPlayback: boolean = true;
   transposingScore: boolean = false;
   static get defaults(): SmoScorePreferencesParams {
     return {
@@ -166,13 +169,14 @@ export class SmoScorePreferences {
       autoAdvance: true,
       defaultDupleDuration: 4096,
       defaultTripleDuration: 6144,
+      autoScrollPlayback: true,
       showPiano: false,
       hideEmptyLines: false,
       transposingScore: false
     };
   }
   constructor(params: SmoScorePreferencesParams) {
-    if (params) {
+    if (params) {      
       SmoScorePreferenceBools.forEach((bb) => {
         this[bb] = params[bb];
       });

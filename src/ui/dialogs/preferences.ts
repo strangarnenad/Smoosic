@@ -44,6 +44,13 @@ export class SuiScorePreferencesAdapter extends SuiComponentAdapter {
     this.preferences.showPiano = value;
     this.view.updateScorePreferences(this.preferences);
   }
+  get autoScrollPlayback(): boolean {
+    return this.preferences.autoScrollPlayback;
+  }
+  set autoScrollPlayback(value: boolean) {
+    this.preferences.autoScrollPlayback = value;
+    this.view.updateScorePreferences(this.preferences);
+  }
   get hideEmptyLines(): boolean {
     return this.preferences.hideEmptyLines;
   }
@@ -102,6 +109,10 @@ export class SuiScorePreferencesDialog extends SuiDialogAdapterBase<SuiScorePref
         smoName: 'autoPlay',
         control: 'SuiToggleComponent',
         label: 'Auto-play sounds for note entry'
+      }, {
+        smoName: 'autoScrollPlayback',
+        control: 'SuiToggleComponent',
+        label: 'Auto-Scroll Playback'
       }, {
         smoName: 'showPiano',
         control: 'SuiToggleComponent',
