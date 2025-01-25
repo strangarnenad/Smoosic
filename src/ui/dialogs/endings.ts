@@ -13,7 +13,7 @@ import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComp
  * Buttons with ending or repeat functions
  * @returns SuiButtonArrayParameters
  */
-const endingsButtonFactory: getButtonsFcn = () => {
+export const endingsButtonFactory: getButtonsFcn = () => {
   const params: SuiButtonArrayParameters = {
     label: 'Measure Endings',
     rows: [{

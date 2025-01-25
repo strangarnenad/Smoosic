@@ -183,6 +183,10 @@ export class SmoScorePreferences {
       SmoScorePreferenceNumbers.forEach((nn) => {
         this[nn] = params[nn];
       });
+      // legacy, added later
+      if (typeof(params.autoScrollPlayback) === 'undefined') {
+        this.autoScrollPlayback = true;
+      }
     }
   }
   serialize(): SmoScorePreferencesParams {

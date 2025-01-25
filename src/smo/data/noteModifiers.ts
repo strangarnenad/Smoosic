@@ -1022,7 +1022,49 @@ export class SmoLyric extends SmoNoteModifierBase {
     }
   }
 }
+/**
+ * Used to create a {@link SmoBarline}
+ * @category SmoObject
+ */
 
+export interface SmoNoteBarParams {
+  barline: number
+}
+
+export interface SmoNoteBarParamsSer extends SmoNoteBarParams {
+  ctor: string,
+  barline: number
+}
+
+export class SmoNoteBar extends SmoNoteModifierBase {
+  barline: number = SmoNoteBar.defaults.barline;
+  static get defaults(): SmoNoteBarParams {
+    return { barline: SmoNoteBar.barlines.noBar }
+  }
+  static get parameterArray() {
+    return ['barline'];
+  }
+  static readonly barlines: Record<string, number> = {
+    singleBar: 0,
+    doubleBar: 1,
+    endBar: 2,
+    startRepeat: 3,
+    endRepeat: 4,
+    noBar: 5
+  }
+  constructor(parameters: SmoNoteBarParams) {
+    super('SmoNoteBar');
+    smoSerialize.serializedMerge(SmoNoteBar.parameterArray, SmoNoteBar.defaults, this);
+    smoSerialize.serializedMerge(SmoLyric.parameterArray, parameters, this);
+  }
+  serialize(): SmoNoteBarParamsSer {
+    const parameters: Partial<SmoNoteBarParamsSer> = {};
+    smoSerialize.serializedMergeNonDefault(SmoNoteBar.defaults,
+      SmoNoteBar.parameterArray, this, parameters);
+    parameters.ctor = 'SmoNoteBar';
+    return parameters as SmoNoteBarParamsSer;
+  }
+}
 /**
  * The persisted bits of {@link SmoDynamicTextParams}
  * @category serialization
@@ -1205,6 +1247,7 @@ export const noteModifierDynamicCtorInit = () => {
   SmoDynamicCtor['SmoGraceNote'] = (params: GraceNoteParams) => new SmoGraceNote(params);
   SmoDynamicCtor['SmoArticulation'] = (params: SmoArticulationParameters) => new SmoArticulation(params);
   SmoDynamicCtor['SmoLyric'] = (params: SmoLyricParams) => new SmoLyric(params);
+  SmoDynamicCtor['SmoNoteBar'] = (params: SmoNoteBarParams) => new SmoNoteBar(params);
   SmoDynamicCtor['SmoDynamicText'] = (params: SmoDynamicTextParams) => new SmoDynamicText(params);
   SmoDynamicCtor['SmoTabNote'] = (params: SmoTabNoteParams) => new SmoTabNote(params);
   SmoDynamicCtor['SmoClefChange'] = (params: SmoClefChangeParams) => new SmoClefChange(params);

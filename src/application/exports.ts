@@ -40,7 +40,7 @@ import { SuiInstrumentDialog } from '../ui/dialogs/instrument';
 import { SuiTimeSignatureDialog } from '../ui/dialogs/timeSignature';
 import { SuiTempoDialog } from '../ui/dialogs/tempo';
 import { SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiNoteHeadButtonComponent, SuiStemButtonComponent } from '../ui/dialogs/noteHead';
-import { SuiEndingsAdapter, SuiEndingsDialog, 
+import { SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from '../ui/dialogs/endings';
 import { SuiScoreIdentificationDialog } from '../ui/dialogs/scoreId';
 import { SuiScorePreferencesDialog } from '../ui/dialogs/preferences';
@@ -365,7 +365,7 @@ export const Smo = {
   SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
   SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
   SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
-  SuiEndingsAdapter, SuiEndingsDialog, 
+  SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
   SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
   SuiSaveMidiDialog, SuiDialogBase, createAndDisplayDialog, 
