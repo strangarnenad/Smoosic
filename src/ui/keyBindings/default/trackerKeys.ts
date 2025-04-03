@@ -45,7 +45,7 @@ export class defaultTrackerKeys {
         ctrlKey: false,
         altKey: false,
         shiftKey: true,
-        action: "moveHome"
+        action: "moveEnd"
       }, {
         event: "keydown",
         key: "End",

@@ -23,7 +23,7 @@ export class defaultRibbonLayout {
   }
 
   static get leftRibbonIds() {
-    return ['helpDialog', 'languageMenu', 'fileMenu', 
+    return ['helpDialog', 'languageMenu', 'fileMenu', 'editMenu',
     'scoreMenu', 'partMenu', 'staffModifierMenu', 'measureModal', 'voiceMenu', 'beamMenu',
     'tupletMenu', 'noteMenu', 'textMenu', 'libraryMenu',
     ];
@@ -175,10 +175,20 @@ export class defaultRibbonLayout {
       group: 'scoreEdit',
       id: 'languageMenu'
     }, {
+      leftText: 'Edit',
+      rightText: 'Alt-e',
+      hotKey: 'e',
+      icon: '',
+      classes: 'file-modify nav-link link-body-emphasis hover-text',
+      action: 'menu',
+      ctor: 'SuiEditMenu',
+      group: 'scoreEdit',
+      id: 'editMenu'
+    }, {
       leftText: 'File',
       rightText: 'Alt-f',
       hotKey: 'f',
-      icon: '',
+      icon: 'icon-clipboard',
       classes: 'file-modify nav-link link-body-emphasis hover-text',
       action: 'menu',
       ctor: 'SuiFileMenu',

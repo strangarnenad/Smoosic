@@ -861,6 +861,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     // The measure expects to get concert KS in constructor and adjust for instrument.  So do the
     // opposite.
     obj.keySignature = SmoMusic.vexKeySigWithOffset(obj.keySignature, -1 * obj.transposeIndex);
+    obj.lines = params.lines;
     // Don't redisplay tempo for a new measure
     const rv = new SmoMeasure(obj);
     if (rv.tempo && rv.tempo.display) {

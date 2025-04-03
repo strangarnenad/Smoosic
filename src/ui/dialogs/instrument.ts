@@ -38,7 +38,12 @@ export class SuiInstrumentAdapter extends SuiComponentAdapter {
     this.view.changeInstrument(this.instrument, this.selections);
     this.instrument = new SmoInstrument(this.instrument);
   }
-
+  get lines() {
+    return this.instrument.lines;
+  }
+  set lines(value: number) {
+    this.writeNumParam('lines', value);
+  }
   get transposeIndex() {
     return this.instrument.keyOffset;
   }
@@ -108,6 +113,11 @@ export class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrumentAdapt
         label: 'Instrument Properties',
         elements:
           [{
+            smoName: 'lines',
+            defaultValue: 5,
+            control: 'SuiRockerComponent',
+            label: 'Staff lines (1-5)'
+          }, {
             smoName: 'transposeIndex',
             defaultValue: 0,
             control: 'SuiRockerComponent',

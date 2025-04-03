@@ -98,6 +98,7 @@ import { TextCheckComponent } from '../ui/dialogs/components/textCheck';
 import { SuiMenuManager} from '../ui/menus/manager';
 import { SuiMenuBase, SuiMenuCustomizer } from '../ui/menus/menu';
 import { SuiScoreMenu } from '../ui/menus/score';
+import { SuiEditMenu } from '../ui/menus/edit';
 import { SuiTextMenu } from '../ui/menus/text';
 import { SuiPartMenu } from '../ui/menus/parts';
 import { SuiVoiceMenu } from '../ui/menus/voices';
@@ -346,7 +347,7 @@ export const Smo = {
   // Menus
   SuiMenuManager, SuiMenuBase, SuiMenuCustomizer, SuiScoreMenu, SuiFileMenu,
   SuiDynamicsMenu, SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
-  SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
+  SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SuiEditMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
   SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
   // Dialogs
   SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent,

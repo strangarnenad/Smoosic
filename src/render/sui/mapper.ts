@@ -395,8 +395,10 @@ export abstract class SuiMapper {
     }
     return true;    
   }
-  // ### updateMeasure
-  // A measure has changed.  Update the music geometry for it
+
+  /**
+   * This is the logic that stores the screen location of music after it's rendered
+   */
   mapMeasure(staff: SmoSystemStaff, measure: SmoMeasure, printing: boolean) {
     let voiceIx = 0;
     let selectedTicks = 0;
@@ -433,8 +435,12 @@ export abstract class SuiMapper {
           tick,
           pitches: []
         };
-        if (typeof(note.logicalBox) === 'undefined') {
-          console.warn('note has no box');
+        if (measure.repeatSymbol) {
+          // Some measures have a symbol that replaces the notes.  This allows us to select
+          // the measure
+          const x = measure.svg.logicalBox.x + (measure.svg.logicalBox.width / voice.notes.length) * tick;
+          const width = measure.svg.logicalBox.width / voice.notes.length;
+          note.logicalBox = { x, y: measure.svg.logicalBox.y, width, height: measure.svg.logicalBox.height };
         }
         // create a selection for the newly rendered note
         const selection = new SmoSelection({

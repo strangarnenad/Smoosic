@@ -4,6 +4,7 @@ import { SmoSelection, SmoSelector } from './selections';
 import { SmoNote } from '../data/note';
 import { SmoMeasure, SmoVoice } from '../data/measure';
 import { StaffModifierBase } from '../data/staffModifiers';
+import { SmoLyric } from '../data/noteModifiers';
 import {SmoTuplet, SmoTupletTree, SmoTupletTreeParams} from '../data/tuplet';
 import { SmoMusic } from '../data/music';
 import { SvgHelpers } from '../../render/sui/svgHelpers';
@@ -131,6 +132,14 @@ export class PasteBuffer {
         const keyOffset = -1 * selection.measure.transposeIndex;
         const destKey = SmoMusic.vexKeySignatureTranspose(originalKey, keyOffset).toLocaleLowerCase();
         const note = SmoNote.transpose(SmoNote.clone(selection.note),[], keyOffset, selection.measure.keySignature, destKey) as SmoNote;
+        const chords: SmoLyric[] = note.getChords();
+        chords.forEach((chord) => {
+          note.removeLyric(chord);
+        });
+        chords.forEach((chord) => {
+          const nchord = SmoLyric.transposeChordToKey(chord, keyOffset, selection.measure.keySignature, destKey);
+          note.addLyric(nchord);
+        });
         const pasteNote: PasteNote = {
           selector,
           note,
@@ -517,7 +526,47 @@ export class PasteBuffer {
     }
     serializedMeasure.voices = voices;
   }
-
+  pasteChords(selector: SmoSelector) {
+    if (this.notes.length < 1) {
+      return;
+    }
+    if (!this.score) {
+      return;
+    }
+    let srcTick = 0;
+    let destTick = 0;
+    let srcIndex = 0;
+    let selection = SmoSelection.noteSelection(this.score!, selector.staff, selector.measure, selector.voice, selector.tick);   
+    while (selection && selection.note && srcIndex < this.notes.length) {
+      const srcNote = this.notes[srcIndex].note;
+      const chords = srcNote.getChords();
+      if (selection && selection.note) {
+        const destNote = selection.note;
+        if (chords.length) {
+          chords.forEach((chord) => {
+            destNote.removeLyric(chord);
+          });
+          chords.forEach((chord) => {
+            if (selection) {
+            const nchord = SmoLyric.transposeChordToKey(
+              chord, selection.measure.transposeIndex,this.notes[srcIndex].originalKey, selection.measure.keySignature);
+              destNote.addLyric(nchord);
+            }
+          });
+        }
+        srcTick += srcNote.tickCount;
+        while (selection && selection.note && destTick < srcTick) {
+          destTick += selection.note.tickCount;
+          if (selection && selection.note) {
+            const curSelector = selection.selector;
+            selection = SmoSelection.nextNoteSelection(this.score, 
+              curSelector.staff, curSelector.measure, curSelector.voice, curSelector.tick);
+          }
+        }
+        srcIndex += 1;
+      }
+    }
+  }
   pasteSelections(selector: SmoSelector) {
     let i = 0;
     if (this.notes.length < 1) {

@@ -1236,6 +1236,32 @@ export class SuiScoreViewOperations extends SuiScoreView {
     await this.renderer.updatePromise();
   }
   /**
+   * Paste only the chords.
+   */
+  async pasteChords(): Promise<void> {
+        // We undo the whole score on a paste, since we don't yet know the
+    // extent of the overlap
+    this.renderer.preserveScroll();
+    const selections: SmoSelection[]  = this.getPasteMeasureList();
+    const firstSelection = selections[0];
+    const measureEnd = selections[selections.length - 1].selector.measure;
+    const measureRange = [firstSelection.selector.measure, measureEnd];
+    this.storeUndo.grouping = true;
+    // Undo the paste by selecting all the affected measures
+    for (let i = measureRange[0]; i <= measureRange[1]; ++i) {
+      this._undoColumn('paste', i);
+      this.renderer.unrenderColumn(this.score.staves[0].measures[i]);
+    }
+    this.storeUndo.grouping = false;
+    const altSelection = this._getEquivalentSelection(firstSelection);
+    const altTarget = altSelection!.selector;
+    altTarget.tick = this.tracker.selections[0].selector.tick;
+    this.storePaste.pasteChords(altTarget);
+    // Refresh those measures.
+    this.replaceMeasureView(measureRange);
+    await this.renderer.updatePromise();
+  }
+  /**
    * specify a note head other than the default for the duration
    * @param head 
    */

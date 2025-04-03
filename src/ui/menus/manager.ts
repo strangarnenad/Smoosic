@@ -24,6 +24,7 @@ import { SuiStaffModifierMenu } from './staffModifier';
 import { SuiMeasureMenu } from './measure';
 import { SuiVoiceMenu } from './voices';
 import { SuiNoteMenu } from './note';
+import { SuiEditMenu } from './edit';
 import { SuiTextMenu } from './text';
 import { SuiPartSelectionMenu } from './partSelection';
 import { SuiPartMenu } from './parts';
@@ -275,6 +276,8 @@ export class SuiMenuManager {
       this.displayMenu(new SuiLanguageMenu(params));
     } else if (action === 'SuiFileMenu') {
       this.displayMenu(new SuiFileMenu(params));
+    } else if (action === 'SuiEditMenu') {
+      this.displayMenu(new SuiEditMenu(params));
     } else if (action === 'SuiScoreMenu') {
       this.displayMenu(new SuiScoreMenu(params));
     } else if (action === 'SuiPartSelectionMenu') {

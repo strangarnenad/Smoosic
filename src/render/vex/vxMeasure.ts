@@ -505,6 +505,7 @@ export class VxMeasure implements VxMeasureIf {
       canceledKey,
       startX: this.smoMeasure.svg.maxColumnStartX,
       adjX: this.smoMeasure.svg.adjX,
+      lines: this.smoMeasure.lines,
       context: this.context.getContext()
     }
     this.stave = createStave(smoVexStaveParams);

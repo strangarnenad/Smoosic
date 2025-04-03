@@ -86,6 +86,8 @@ export type TabNotePosition = VexTabNotePosition;
 // @internal
 export type TabNoteStruct = VexTabNoteStruct;
 
+const lineDefaults = [4, 2, 0, 1, 3];    // lines to turn off if there are less than 5
+
 /**
  * @internal
  */
@@ -163,6 +165,7 @@ export interface SmoVexStaveParams {
   canceledKey: string | null,
   startX: number,
   adjX: number,
+  lines: number,
   context: any
 }
 export function createTabStave(box: SvgBox, spacing: number, numLines: number): TabStave {
@@ -223,6 +226,14 @@ export function createStave(params: SmoVexStaveParams) {
       params.context.rect(params.staffX, params.y, params.padLeft, 50, {
         fill: 'none', 'stroke-width': 1, stroke: 'white'
     });
+  }
+  if (params.lines < 5) {
+    const linesAr = [];
+    for (let i = 0; i < lineDefaults.length; ++i) {
+      const visible = lineDefaults[i] < params.lines;
+      linesAr.push({ visible });
+    }
+    stave.setConfigForLines(linesAr);
   }
   // stave.options.spaceAboveStaffLn = 0; // don't let vex place the staff, we want to.
   stave.options.space_above_staff_ln = 0; // don't let vex place the staff, we want to.

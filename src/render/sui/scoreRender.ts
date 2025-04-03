@@ -107,7 +107,11 @@ export class SuiScoreRender {
       // If this text is attached to the measure, base the block location on the rendered measure location.
       if (newGroup.attachToSelector) {
         // If this text is attached to a staff that is not visible, don't draw it.
-        const mappedStaff = this.score!.staves.find((staff) => staff.staffId === newGroup.selector!.staff);
+        let mappedStaff = this.score!.staves.find((staff) => staff.staffId === newGroup.selector!.staff);
+        if (this.score?.isPartExposed() && this.score.staves[0].partInfo.preserveTextGroups) {
+          mappedStaff = this.score!.staves.find((staff) => 
+            staff.getMappedStaffId() === newGroup.selector!.staff);
+        }
         if (!mappedStaff) {
           return;
         }

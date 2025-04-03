@@ -380,6 +380,7 @@ export class SmoSystemStaff implements SmoObjectParams {
         curInstrumentIndex += 1;
       }
       measure.transposeIndex = instrumentAr[curInstrumentIndex].instrument.keyOffset;
+      measure.lines = instrumentAr[curInstrumentIndex].instrument.lines;
       params.measures.push(measure);
     });
     if (jsonObj.modifiers) {
@@ -408,6 +409,15 @@ export class SmoSystemStaff implements SmoObjectParams {
       return;
     }
     this.modifiers.forEach((mod) => {
+      if (mod.startSelector.staff === from) {
+        mod.startSelector.staff = to;
+      }
+      if (mod.endSelector.staff === from) {
+        mod.endSelector.staff = to;
+      }
+      mod.associatedStaff = to; // this.staffId will remap to 'to' value
+    });
+    this.textBrackets.forEach((mod: SmoStaffTextBracket) => {
       if (mod.startSelector.staff === from) {
         mod.startSelector.staff = to;
       }
@@ -453,6 +463,7 @@ export class SmoSystemStaff implements SmoObjectParams {
         const tabStave: SmoTabStave | undefined = this.getTabStaveForMeasure(SmoSelector.fromMeasure(measure));
         measure.transposeToOffset(entry.instrument.keyOffset, targetKey, entry.instrument.clef);
         measure.transposeIndex = entry.instrument.keyOffset;
+        measure.lines = entry.instrument.lines;
         measure.keySignature = targetKey;
         measure.setClef(entry.instrument.clef);
       }

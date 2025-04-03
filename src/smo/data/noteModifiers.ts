@@ -6,7 +6,8 @@
  * @module /smo/data/noteModifiers
  */
 import { SmoAttrs, Ticks, Pitch, getId, SmoObjectParams, Transposable, SvgBox, SmoModifierBase, 
-  Clef, IsClef, SmoDynamicCtor } from './common';
+  Clef, IsClef, SmoDynamicCtor, 
+  IsPitchLetter} from './common';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMusic } from './music';
 import { defaultNoteScale, FontInfo, getChordSymbolGlyphFromCode } from '../../common/vex';
@@ -930,6 +931,46 @@ export class SmoLyric extends SmoNoteModifierBase {
     } else {
       this.adjustNoteWidthChord = val;
     }
+  }
+  static transposeChordToKey(chord: SmoLyric, offset: number, srcKey: string, destKey: string): SmoLyric {
+    if (chord.parser !== SmoLyric.parsers.chord || offset === 0) {
+      return new SmoLyric(chord);
+    }
+    const nchord = new SmoLyric(chord);
+    let srcIx = 0;
+    const maxLen = chord.text.length - 1;
+    let destString = '';
+    while (srcIx < chord.text.length) {
+      let symbolBlock = false;
+      const nchar = chord.text[srcIx];
+      let lk = srcIx < maxLen ? chord.text[srcIx + 1] : null;
+      // make sure this chord start witha VEX pitch letter (A-G upper case)
+      if (IsPitchLetter(nchar.toLowerCase()) && nchar == nchar.toUpperCase()) {
+        if (lk === '@') {
+          symbolBlock = true;
+          srcIx += 1;
+          lk = srcIx < maxLen ? chord.text[srcIx + 1] : null;
+        }
+        const pitch: Pitch = {letter: nchar.toLowerCase() as any, accidental: 'n', octave: 4 };
+        if (lk !== null && (lk === 'b' || lk === '#')) {
+          pitch.accidental = lk;
+          srcIx += 1;
+        }
+        const npitch = SmoMusic.transposePitchForKey(pitch, srcKey, destKey, offset);
+        destString += npitch.letter.toUpperCase();
+        if (symbolBlock) {
+          destString += '@';
+        }
+        if (npitch.accidental !== 'n') {
+          destString += npitch.accidental;
+        }
+      } else {
+        destString += nchar;
+      }
+      srcIx += 1;
+    }
+    nchord.text = destString;
+    return nchord;
   }
 
   // ### getClassSelector

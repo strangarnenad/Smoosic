@@ -722,6 +722,12 @@ export class SmoScore {
     if (!isSmoScoreParams(params)) {
       throw 'Bad score, missing params: ' + JSON.stringify(params, null, ' ');
     }
+    if (params.staves.length === 1) {
+      const part = params.staves[0].partInfo;
+      if (part) {
+        part.expandMultimeasureRests = true;
+      }
+    }
     const score = new SmoScore(params);
     score.textGroups = textGroups;
     score.systemGroups = systemGroups;
@@ -950,8 +956,12 @@ export class SmoScore {
     // immediately preceeding or post-ceding measure if it exists.
     if (measureIndex < staff.measures.length) {
       protomeasure = staff.measures[measureIndex];
+      const instrument = staff.getStaffInstrument(measureIndex);
+      protomeasure.lines = instrument.lines;
     } else if (staff.measures.length) {
       protomeasure = staff.measures[staff.measures.length - 1];
+      const instrument = staff.getStaffInstrument(staff.measures.length - 1);
+      protomeasure.lines = instrument.lines;
     } else {
       protomeasure = SmoMeasure.defaults;
     }

@@ -382,14 +382,14 @@ export class SuiSampleMedia {
       sample: 'sample-asax-a3',
       family: 'wind',
       instrument: 'tenorSax',
-      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'a', accidental: 'n', octave: 3 }, 24, null),
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'a', accidental: 'n', octave: 3 }, 12, null),
     });
     SuiSampleMedia.insertIntoMap({
       sustain: 'sustained',
       sample: 'sample-asax-c4',
       family: 'wind',
       instrument: 'tenorSax',
-      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'c', accidental: 'n', octave: 4 }, 24, null),
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'c', accidental: 'n', octave: 4 }, 12, null),
     });
     SuiSampleMedia.insertIntoMap({
       sustain: 'sustained',

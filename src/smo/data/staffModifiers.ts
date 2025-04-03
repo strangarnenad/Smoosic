@@ -158,7 +158,8 @@ export interface SmoInstrumentParams {
   /**
    * future, can be used to set sample
    */
-  mutes?: string,  
+  mutes?: string,
+  lines: number
 }
 
 /**
@@ -174,8 +175,8 @@ export interface SmoInstrumentParamsSer extends SmoInstrumentParams {
 function isSmoInstrumentParamsSer(params: Partial<SmoInstrumentParamsSer>): params is SmoInstrumentParamsSer {
   return params?.ctor === 'SmoInstrument';
 }
-export type SmoInstrumentNumParamType = 'keyOffset' | 'midichannel' | 'midiport' | 'midiInstrument';
-export const SmoInstrumentNumParams: SmoInstrumentNumParamType[] = ['keyOffset', 'midichannel', 'midiport', 'midiInstrument'];
+export type SmoInstrumentNumParamType = 'keyOffset' | 'midichannel' | 'midiport' | 'midiInstrument' | 'lines';
+export const SmoInstrumentNumParams: SmoInstrumentNumParamType[] = ['keyOffset', 'midichannel', 'midiport', 'midiInstrument', 'lines'];
 export type SmoInstrumentStringParamType = 'instrumentName' | 'abbreviation' | 'family' | 'instrument';
 export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instrumentName', 'abbreviation', 'family', 'instrument'];
 /**
@@ -187,7 +188,8 @@ export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instr
  */
 export class SmoInstrument extends StaffModifierBase {
   static get attributes() {
-    return ['startSelector', 'endSelector', 'keyOffset', 'midichannel', 'midiport', 'instrumentName', 'abbreviation', 'instrument', 'family'];
+    return ['startSelector', 'endSelector', 
+      'keyOffset', 'midichannel', 'midiport', 'instrumentName', 'abbreviation', 'instrument', 'family', 'lines'];
   }
   startSelector: SmoSelector;
   endSelector: SmoSelector;
@@ -196,6 +198,7 @@ export class SmoInstrument extends StaffModifierBase {
   keyOffset: number = 0;
   clef: Clef = 'treble';
   midiInstrument: number = 1;
+  lines: number = 5;
   midichannel: number;
   midiport: number;
   family: string;
@@ -214,7 +217,8 @@ export class SmoInstrument extends StaffModifierBase {
       midiInstrument: 1,
       midiport: 0,
       startSelector: SmoSelector.default,
-      endSelector: SmoSelector.default
+      endSelector: SmoSelector.default,
+      lines: 5
     }));
   }
   static get defaultOscillatorParam(): SmoOscillatorInfo {
@@ -240,6 +244,11 @@ export class SmoInstrument extends StaffModifierBase {
       name = params.instrumentName;
     } else {
       name = (params as any).instrument;
+    }
+    if (typeof ((params as any).lines) === 'undefined') {
+      this.lines = 5;
+    } else {
+      this.lines = params.lines;
     }
     this.instrumentName = name;
     this.family = params.family;

@@ -87,11 +87,26 @@ export class SmoOperation {
       });
     });
   }
+  /**
+   * Move a single stave up or down one.  If last down, move to first.
+   * If first up, move to last
+   * @param score 
+   * @param selection 
+   * @param index 
+   */
   static moveStaffUpDown(score: SmoScore, selection: SmoSelection, index: number) {
     const index1 = selection.selector.staff;
     const index2 = selection.selector.staff + index;
     if (index2 < score.staves.length && index2 >= 0) {
       score.swapStaves(index1, index2);
+    } else if (index2 === score.staves.length) {
+      for (let i = 0; i < (score.staves.length - 1); ++i) {
+        score.swapStaves((score.staves.length - 1) - i, (score.staves.length - 1) - (i + 1));
+      }
+    } else if (index2 < 0) {
+      for (let i = 0; i < (score.staves.length - 1); ++i) {
+        score.swapStaves(i, i + 1);
+      }
     }
   }
 
