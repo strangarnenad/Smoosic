@@ -416,8 +416,9 @@ export class SmoMakeTupletActor extends TickIteratorBase {
       note.tupletId = tuplet.attrs.id;
       tupletNotes.push(note);
     }
-    if (numerator % 1) {
-      tupletNotes[0].ticks.numerator += 1;
+    const tickSum = tupletNotes.map((x) => x.tickCount).reduce((a,b) => a + b);
+    if (tuplet.totalTicks > tickSum) {
+      tupletNotes[0].ticks.numerator += tuplet.totalTicks - tickSum;
     }
     return tupletNotes;
   }

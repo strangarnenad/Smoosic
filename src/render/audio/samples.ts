@@ -278,13 +278,85 @@ export class SuiSampleMedia {
       instrument: 'cello',
       nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'c', accidental: 'n', octave: 4 }, 0, null),
     });
+
     SuiSampleMedia.insertIntoMap({
       sustain: 'sustained',
-      sample: 'trumpet-g5-sso',
+      sample: 'trumpet-db5-sso',
       family: 'brass',
       instrument: 'trumpet',
-      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'g', accidental: 'n', octave: 5 }, 0, null),
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'd', accidental: 'b', octave: 5 }, 0, null),
     });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-e6-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'e', accidental: 'n', octave: 6 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-g3-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'g', accidental: 'n', octave: 3 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-db4-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'd', accidental: 'b', octave: 4 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-e3-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'e', accidental: 'n', octave: 3 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-g4-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'g', accidental: 'n', octave: 4 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-bb3-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'b', accidental: 'b', octave: 3 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-bb4-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'b', accidental: 'b', octave: 4 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-bb5-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'b', accidental: 'b', octave: 5 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-db6-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'd', accidental: 'b', octave: 6 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trumpet-e5-sso',
+      family: 'brass',
+      instrument: 'trumpet',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'e', accidental: 'n', octave: 5 }, 0, null),
+    });
+
     SuiSampleMedia.insertIntoMap({
       sustain: 'sustained',
       sample: 'trumpet-e4-sso',
@@ -307,6 +379,58 @@ export class SuiSampleMedia {
       instrument: 'horn',
       nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'g', accidental: 'n', octave: 3 }, 0, null),
     });
+
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-c#3-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'c', accidental: '#', octave: 3 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-c#4-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'c', accidental: '#', octave: 4 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-a#3-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'a', accidental: '#', octave: 3 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-a#4-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'a', accidental: '#', octave: 4 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-e3-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'e', accidental: 'n', octave: 3 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-e4-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'e', accidental: 'n', octave: 4 }, 0, null),
+    });
+    SuiSampleMedia.insertIntoMap({
+      sustain: 'sustained',
+      sample: 'trombone-g2-sso',
+      family: 'brass',
+      instrument: 'trombone',
+      nativeFrequency: SmoAudioPitch.smoPitchToFrequency({ letter: 'g', accidental: 'n', octave: 2 }, 0, null),
+    });
+
+
     SuiSampleMedia.insertIntoMap({
       sustain: 'sustained',
       sample: 'trombone-g3-sso',
@@ -471,6 +595,23 @@ export class SuiSampleMedia {
     });
     SuiSampleMedia.instrumentChooser['violin'].sampleChooser = sampleFromMinDuration;
     SuiSampleMedia.instrumentChooser['percussion'].sampleChooser = sampleForPercussion;
+  }
+  static printAudioElementTags() {
+    const sampleKeys = Object.keys(SuiSampleMedia.sampleOscMap);
+    let sampleStrings = '';
+    sampleKeys.forEach((sk) => {
+      const samples = SuiSampleMedia.sampleOscMap[sk];
+      samples.forEach((sample) => {
+        const enc = encodeURIComponent(sample.sample ?? '');
+        let freq = SmoAudioPitch.frequencyToVexPitch(sample.nativeFrequency);
+        sampleStrings += '<div>\n';
+        sampleStrings += 
+          `<audio crossOrigin="anonymous" id="${sample.sample}" data-pitch="${freq}" data-patch="${sample.instrument}" \n`;
+        sampleStrings += `src="https://smoosic.github.io/SmoSounds/${sample.family}/${enc}.mp3">\n`;
+        sampleStrings += '</audio></div>\n';
+      });
+    });
+    console.log(sampleStrings);
   }
   static getSmoOscillatorInfo(instrument: string) {
     if (!SuiSampleMedia.sampleOscMap[instrument]) {

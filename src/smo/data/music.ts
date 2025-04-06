@@ -64,6 +64,21 @@ export class SmoAudioPitch {
 
     return SmoAudioPitch.frequencies;
   }
+  static frequencyToVexPitch(freq: number): string {
+    const keys = Object.keys(SmoAudioPitch.pitchFrequencyMap);
+    const strs: string[] = keys.filter((k) => Math.abs(SmoAudioPitch.pitchFrequencyMap[k] - freq) < 1);
+    if (!strs.length) {
+      return Math.floor(freq).toString();
+    }
+    for (let i = 0; i < strs.length; ++i) {
+      const vexPitch = strs[i];
+      if (vexPitch.length === 3 && 
+        (vexPitch[1] === 'n' || vexPitch[1] === '#' || vexPitch[1] === 'b')) {
+        return vexPitch;
+      }
+    }
+    return Math.floor(freq).toString();
+  }
 
   static _rawPitchToFrequency(smoPitch: Pitch, offset: number): number {
     const npitch = SmoMusic.smoIntToPitch(SmoMusic.smoPitchToInt(smoPitch) + offset);

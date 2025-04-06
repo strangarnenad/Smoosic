@@ -43,7 +43,6 @@ export interface ModifierPlacement {
  */
 export class PasteBuffer {
   notes: PasteNote[];
-  totalDuration: number;
   noteIndex: number;
   measures: SmoMeasure[];
   measureIndex: number;
@@ -56,7 +55,6 @@ export class PasteBuffer {
   staffSelectors: SmoSelector[] = [];
   constructor() {
     this.notes = [];
-    this.totalDuration = 0;
     this.noteIndex = 0;
     this.measures = [];
     this.measureIndex = -1;
@@ -155,7 +153,6 @@ export class PasteBuffer {
         }
 
         this.notes.push(pasteNote);
-        this.totalDuration += note.tickCount;
       }
     });
     this.notes.sort((a, b) =>

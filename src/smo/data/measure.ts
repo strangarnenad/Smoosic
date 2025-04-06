@@ -587,6 +587,26 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     return params;
   }
   /**
+   * Due to a bug, some tuplets have incorrect ticks.  Fix it when we are deserializing the measure
+   * @param voices 
+   * @param tupletTree 
+   */
+  static fixTupletLengths(voices: SmoVoice[], tupletTree: SmoTupletTree) {
+    const voice = voices[tupletTree.voice];
+    const notear = [];
+    for (let i = tupletTree.startIndex; i <= tupletTree.endIndex; ++i) {
+      if (voice.notes.length > i) {
+        notear.push(voice.notes[i]);
+      }
+    }
+    if (notear.length === (tupletTree.endIndex - tupletTree.startIndex + 1)) {
+      const tickSum = notear.map((x) => x.tickCount).reduce((a,b) => a + b);
+      if (tupletTree.totalTicks > tickSum) {
+        notear[0].ticks.numerator += tupletTree.totalTicks - tickSum;
+      }
+    }
+  }
+  /**
    * restore a serialized measure object.  Usually called as part of deserializing a score,
    * but can also be used to restore a measure due to an undo operation.  Recursively
    * deserialize all the notes and modifiers to construct a new measure.
@@ -651,6 +671,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
         const tupletTreeJson = jsonObj.tupletTrees[j];
         const tupletTree = SmoTupletTree.deserialize(tupletTreeJson);
         params.tupletTrees.push(tupletTree);
+        SmoMeasure.fixTupletLengths(voices, tupletTree);
       }
     }
     //deserialization of a legacy tuplets
