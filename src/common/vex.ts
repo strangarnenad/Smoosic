@@ -110,7 +110,8 @@ export interface CreateVexNoteParams {
   clef: string,
   stemTicks: string,
   keys: string[],
-  noteType: string
+  noteType: string,
+  isCue?: boolean
 }; 
 
 /**
@@ -269,12 +270,14 @@ export function getVexNoteParameters(params: CreateVexNoteParams): { noteParams:
     if (typeof (duration) === 'undefined') {
       console.warn('bad duration in measure ' + params.measureIndex);
       duration = '8';
-    }  
+    }
+    const scale = params.isCue ? defaultCueScale: vexNoteScale;
     // transpose for instrument-specific keys
     const noteParams: StaveNoteStruct = {
       clef: params.clef,
       keys: params.keys,
-      duration: duration + params.noteType
+      duration: duration + params.noteType,
+      glyph_font_scale: scale
     };
     return { noteParams, duration };
 }
@@ -392,6 +395,7 @@ export function createTie(params: SmoVexTieParams): StaveTie {
   smoSerialize.vexMerge(tie.render_options, params.vexOptions);
   return tie;
 }
+export const vexNoteScale: number = 39;
 export const defaultNoteScale: number = 30;
 export const defaultCueScale: number = 19.8;
 

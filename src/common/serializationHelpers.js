@@ -286,7 +286,14 @@ export class smoSerialize {
       "vh": "tupletId",
       "wh": "metadata",
       "xh": "tupletTrees",
-      "yh": "displayString"   }`;
+      "yh": "displayString",
+       "zh": "childrenTuplets",
+      "ai": "endIndex",
+      "bi": "repeatSymbol",
+      "ci": "repeatCount",
+      "di": "isCue",
+      "ei": "autoScrollPlayback"   
+      }`;
     return JSON.parse(_tm);
   }
 

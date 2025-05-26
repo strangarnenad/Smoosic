@@ -190,7 +190,8 @@ export class SuiAudioPlayer {
           let ties: SmoTie[] = [];
           const tieIx = '' + staffIx + '-' + measureIndex + '-' + voiceIx;
           const prevMeasureIx = '' + staffIx + '-' + (measureIndex - 1) + '-' + voiceIx;
-          if (smoNote.noteType === 'n' && !smoNote.isHidden()) {
+          const silent = instrument.instrument === 'none';
+          if (smoNote.noteType === 'n' && !smoNote.isHidden() && !silent) {
             ties = staff.getTiesStartingAt(selector);
             smoNote.pitches.forEach((pitch, pitchIx) => {
               const freq = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, smoNote.getMicrotone(pitchIx) ?? null);

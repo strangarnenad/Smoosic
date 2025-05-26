@@ -166,7 +166,8 @@ export class VxMeasure implements VxMeasureIf {
       clef: smoNote.clef,
       stemTicks,
       keys,
-      noteType: smoNote.noteType
+      noteType: smoNote.noteType,
+      isCue: smoNote.isCue
     };
     const { noteParams, duration } = getVexNoteParameters(smoNoteParams);
     if (this.tabStave && this.smoTabStave) {

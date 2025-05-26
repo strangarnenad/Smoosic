@@ -582,10 +582,13 @@ export class SuiLayoutFormatter {
     });
     return rv;
   }
-
   /**
-   * A system has gone beyond the page width.  Lop the last measure off the end and move it to the first measure of the
-   * next system.  Then seal the last system by justifying the measures vertically and horinzontally
+   * Format a full system:
+   * 1.  Lop the last measure off the end and move it to the first measure of the
+   * next system, if it doesn't fit
+   * 2. Justify the measures vertically
+   * 3. Justify the columns horizontally
+   * 4. Hide lines if they don't contain music
    * @param scoreLayout 
    * @param measureEstimate 
    * @param currentLine 
@@ -593,17 +596,17 @@ export class SuiLayoutFormatter {
    * @param lastSystem 
    */
   justifyY(scoreLayout: ScaledPageLayout, rowCount: number, currentLine: SmoMeasure[], lastSystem: boolean) {
-    let i = 0;
     const sh = SvgHelpers;
     // If there are fewer measures in the system than the max, don't justify.
     // We estimate the staves at the same absolute y value.
     // Now, move them down so the top of the staves align for all measures in a  row.
     const measuresToHide: SmoMeasure[] = [];
+    const rows: Array<SmoMeasure[]> = [];
     let anyNotes = false;
-    for (i = 0; i < rowCount; ++i) {
+    for (let i = 0; i < rowCount; ++i) {
       // lowest staff has greatest staffY value.
       const rowAdj = currentLine.filter((mm) => mm.svg.rowInSystem === i);
-      
+      rows.push(rowAdj);
       let lowestTabStaff = rowAdj.reduce((a, b) => 
         a.svg.tabStaveBox && b.svg.tabStaveBox && 
           a.svg.tabStaveBox.y + a.svg.tabStaveBox.height > b.svg.tabStaveBox.y + b.svg.tabStaveBox.height ?
@@ -659,21 +662,39 @@ export class SuiLayoutFormatter {
         justOffset += justifyX;
       });
     }
+    // If a full line doesn't contain any music, hide it.
     if (this.score.preferences.hideEmptyLines && anyNotes) {
       let adjY = 0;
-      for (i = 0; i < rowCount; ++i) {
+      for (let i = 0; i < rowCount; ++i) {
         const rowAdj = measuresToHide.filter((mm) => mm.svg.rowInSystem === i);
         if (rowAdj.length) {
           adjY += rowAdj[0].svg.logicalBox.height;
           rowAdj.forEach((mm) => {
             mm.svg.logicalBox.height = 0;
-            mm.svg.hideEmptyMeasure = true;
+            mm.svg.hideEmptyMeasure = true;            
           });
         } else {
           const rowAdj = currentLine.filter((mm) => mm.svg.rowInSystem === i);
           rowAdj.forEach((row) => {
             row.setY(row.svg.staffY - adjY, 'format-hide');
           });
+        }
+      }
+    }
+    // If a hidden measure has tempo or time signature, move it to the
+    // first visible measure
+    for (let i = 0; i < rowCount; ++i) {
+      const row = rows[i];
+      if (!row[0].svg.hideEmptyMeasure) {
+        break;
+      }
+      for (let j = 0; j < row.length; ++j) {
+        const mm: SmoMeasure = row[j];
+        if (mm.svg.hideEmptyMeasure && rows.length > i) {
+          const nextmm = rows[i + 1][j];
+          nextmm.svg.forceTimeSignature = mm.svg.forceTimeSignature;
+          nextmm.svg.forceKeySignature = mm.svg.forceKeySignature;
+          nextmm.svg.forceTempo = mm.svg.forceKeySignature;
         }
       }
     }
