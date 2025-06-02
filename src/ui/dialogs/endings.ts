@@ -241,6 +241,9 @@ export class SuiEndingsAdapter extends SuiComponentAdapter {
   }
   set repeatSymbolComponent(value: string) {
     this.repeatSymbolCode = value;
+    if (value.length === 0) {
+      this.view.setRepeatSymbol(SmoRepeatSymbol.positions.end, SmoRepeatSymbol.symbols.None);
+    }
     if (SmoRepeatSymbol.symbols[value] === SmoRepeatSymbol.symbols.Coda) {
       this.view.setRepeatSymbol(SmoRepeatSymbol.positions.end, SmoRepeatSymbol.symbols.Coda);
     }

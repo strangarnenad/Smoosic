@@ -1539,6 +1539,10 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     if (exSymbol && exSymbol.symbol === rs.symbol) {
       toAdd = false;
     }
+    // Adding 'None' means remove
+    if (rs.symbol === SmoRepeatSymbol.symbols['None']) {
+      toAdd = false;
+    }
     this.modifiers.forEach((modifier) => {
       if (modifier.ctor !== 'SmoRepeatSymbol') {
         ar.push(modifier);
@@ -1555,6 +1559,56 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
       return rv[0] as SmoRepeatSymbol;
     }
     return null;
+  }
+  get isToDc(): boolean {
+    const rs = this.getRepeatSymbol();
+    if (rs && 
+      (rs.symbol === SmoRepeatSymbol.symbols['DcAlCoda'] ||
+       rs.symbol === SmoRepeatSymbol.symbols['DcAlFine'])) {
+      return true;
+    }
+    return false;
+  }
+  get isToDs(): boolean {
+    const rs = this.getRepeatSymbol();
+    if (rs && 
+      (rs.symbol === SmoRepeatSymbol.symbols['DsAlFine'] ||
+       rs.symbol === SmoRepeatSymbol.symbols['DsAlCoda'])) {
+      return true;
+    }
+    return false;
+  }
+  get isSegno(): boolean {
+    const rs = this.getRepeatSymbol();
+    if (rs && 
+      (rs.symbol === SmoRepeatSymbol.symbols['Segno'])) {
+      return true;
+    }
+    return false;
+  }
+  get isCoda(): boolean {
+    const rs = this.getRepeatSymbol();
+    if (rs && 
+      (rs.symbol === SmoRepeatSymbol.symbols['Coda'])) {
+      return true;
+    }
+    return false;
+  }
+  get isToCoda(): boolean {
+    const rs = this.getRepeatSymbol();
+    if (rs && 
+      (rs.symbol === SmoRepeatSymbol.symbols['toCoda'])) {
+      return true;
+    }
+    return false;
+  }
+   get isFine(): boolean {
+    const rs = this.getRepeatSymbol();
+    if (rs && 
+      (rs.symbol === SmoRepeatSymbol.symbols['Fine'])) {
+      return true;
+    }
+    return false;
   }
   clearRepeatSymbols() {
     const ar: SmoMeasureModifierBase[] = [];

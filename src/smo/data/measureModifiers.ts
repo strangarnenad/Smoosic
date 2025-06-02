@@ -328,23 +328,20 @@ export class SmoRepeatSymbol extends SmoMeasureModifierBase {
     None: 0,
     Coda: 1,
     Segno: 2,
-    Dc: 3,
     ToCoda: 10,
     DcAlCoda: 4,
     DcAlFine: 5,
-    Ds: 6,
     DsAlCoda: 7,
     DsAlFine: 8,
     Fine: 9
   }
-  static readonly _repeatSymbolStrings = ['None', 'Coda', 'Segno', 'Dc', 'ToCoda', 'DcAlCode', 'DcAlFine',
-    'Ds', 'DsAlCoda', 'DsAlFine', 'Fine'
-  ];
+  static readonly _repeatSymbolStrings: Record<number, string> = {
+    0: 'None', 1: 'Coda', 2: 'Segno', 10: 'ToCoda', 4: 'DcAlCoda', 5: 'DcAlFine',
+    7: 'DsAlCoda', 8: 'DsAlFine', 9: 'Fine'
+  };
   static repeatSymbolString(symbol: SmoRepeatSymbol): string {
     return SmoRepeatSymbol._repeatSymbolStrings[symbol.symbol];
   }
-  static readonly defaultXOffset: number[] = [0, 0, 0, -20, -60, -60, -50, -60, -50, -40]
-  
   static readonly positions: Record<string, number> = {
     start: 0,
     end: 1
@@ -376,11 +373,10 @@ export class SmoRepeatSymbol extends SmoMeasureModifierBase {
   }
   constructor(parameters: SmoRepeatSymbolParams) {
     super('SmoRepeatSymbol');
-    if (!parameters.symbol) {
+    if (typeof(parameters.symbol) !== 'number') {
       parameters.symbol = SmoRepeatSymbol.symbols.Coda;
     }
     smoSerialize.serializedMerge(SmoRepeatSymbol.attributes, SmoRepeatSymbol.defaults, this);
-    this.xOffset = SmoRepeatSymbol.defaultXOffset[parameters.symbol];
     smoSerialize.serializedMerge(SmoRepeatSymbol.attributes, parameters, this);
   }
 }

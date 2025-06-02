@@ -64,7 +64,7 @@ export function toVexBarlinePosition(athis: SmoBarline): number {
 
 export const vexSymbol = [VF.Repetition.type.NONE, VF.Repetition.type.CODA_LEFT, VF.Repetition.type.SEGNO_LEFT, VF.Repetition.type.DC,
   VF.Repetition.type.DC_AL_CODA, VF.Repetition.type.DC_AL_FINE, VF.Repetition.type.DS,
-  VF.Repetition.type.DS_AL_CODA, VF.Repetition.type.DS_AL_FINE, VF.Repetition.type.FINE];
+  VF.Repetition.type.DS_AL_CODA, VF.Repetition.type.DS_AL_FINE, VF.Repetition.type.FINE, VF.Repetition.type.TO_CODA];
 
 export function toVexSymbol(athis: SmoRepeatSymbol) {
     return vexSymbol[athis.symbol];

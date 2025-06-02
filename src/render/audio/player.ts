@@ -8,6 +8,7 @@ import { SmoSelector } from '../../smo/xform/selections';
 import { SmoTie } from '../../smo/data/staffModifiers';
 import { SmoAudioPitch } from '../../smo/data/music';
 import { SuiAudioAnimationParams } from './musicCursor';
+import { ScoreRoadMapBuilder } from './roadmap';
 
 /**
  * Create audio player for the score from the start point
@@ -40,6 +41,7 @@ export interface SoundParams {
  export interface SoundParamMeasureLink {
   soundParams: Record<number, SoundParams[]>,
   endTicks: number,
+  measureIndex: number,
   next: SoundParamMeasureLink | null
 }
 /**
@@ -55,6 +57,7 @@ export interface CuedAudioContext {
   durationPct: number,
   selector: SmoSelector
 }
+
 /**
  * A list of oscillators.  We keep them in a list until played so we 
  * can GC them if playing is cancelled
@@ -76,8 +79,6 @@ export class CuedAudioContexts {
   paramLinkTail: SoundParamMeasureLink | null = null;
   soundListLength = 0;
   playWaitTimer = 0;  
-  playMeasureIndex: number = 0; // index of the measure we are playing
-  cueMeasureIndex: number = 0; // measure index we are populating
   complete: boolean = false;
   addToTail(cuedSound: CuedAudioContext) {
     const tail = { sound: cuedSound, next: null };
@@ -109,8 +110,6 @@ export class CuedAudioContexts {
     this.paramLinkTail = null;
     this.soundListLength = 0;
     this.playWaitTimer = 0;
-    this.playMeasureIndex = 0;
-    this.cueMeasureIndex = 0;
     this.complete = false;
   }
 }
@@ -263,6 +262,9 @@ export class SuiAudioPlayer {
   createCuedSound(measureIndex: number) {
     let i = 0;
     let j = 0;
+    const roadmap = new ScoreRoadMapBuilder(this.score);
+    roadmap.populate(measureIndex);
+    console.log(JSON.stringify(roadmap.jumpQueue, null, ' '));
     let measureBeat = 0;
     if (!SuiAudioPlayer.playing || this.cuedSounds.paramLinkHead === null) {
       return;
@@ -335,9 +337,8 @@ export class SuiAudioPlayer {
           const diff = (keys[j + 1] - keys[j]);
           cuedSound.waitTime = diff * timeRatio;
           measureBeat += diff;
-        } else if (measureIndex + 1 < maxMeasures) {
+        } else if (!roadmap.isDone) {
           // If the next measure, calculate the frequencies for the next track.
-          this.cuedSounds.cueMeasureIndex += 1;
           cuedSound.waitTime = endTicks * timeRatio;
         } else {
           this.cuedSounds.complete = true;
@@ -370,11 +371,9 @@ export class SuiAudioPlayer {
       }
       draining = false;
       this.createCuedSound(measureIndex);
-      measureIndex += 1;
     }, interval);
   }
   playSounds() {
-    this.cuedSounds.playMeasureIndex = 0;
     this.cuedSounds.playWaitTimer = 0;
     let previousDuration = 0;
     const timer = () => {
@@ -390,7 +389,6 @@ export class SuiAudioPlayer {
           return;
         }
         if (cuedSound.oscs.length === 0) {
-          this.cuedSounds.playMeasureIndex += 1;
           this.cuedSounds.playWaitTimer = cuedSound.waitTime;
           console.warn('empty oscs in playback');
           timer();            
@@ -400,7 +398,6 @@ export class SuiAudioPlayer {
         SuiAudioPlayer._playChord(cuedSound.oscs);
         this.audioAnimation.audioAnimationHandler(this.view, cuedSound.selector,
           cuedSound.offsetPct, cuedSound.durationPct);
-        this.cuedSounds.playMeasureIndex += 1;
         this.cuedSounds.playWaitTimer = cuedSound.waitTime;
         timer();
       }, this.cuedSounds.playWaitTimer);
@@ -415,17 +412,17 @@ export class SuiAudioPlayer {
   startPlayer(measureIndex: number) {
     this.openTies = {};
     this.cuedSounds.reset();
-    this.cuedSounds.cueMeasureIndex = measureIndex;
-    this.cuedSounds.playMeasureIndex = this.cuedSounds.cueMeasureIndex;
     this.cuedSounds.paramLinkHead = null;
     this.cuedSounds.paramLinkTail = null;
-    const endMeasure = this.score.staves[0].measures.length;
-    let i = 0;
-    for (i = this.cuedSounds.cueMeasureIndex; i < endMeasure; ++i) {
-      const { endTicks, measureNotes } = this.getNoteSoundData(i);
+    const roadmap = new ScoreRoadMapBuilder(this.score);
+    roadmap.populate(measureIndex);
+    while (!roadmap.isDone) {
+      const nextMeasure = roadmap.getAndAdvance();
+      const { endTicks, measureNotes } = this.getNoteSoundData(nextMeasure);
       const node = {
         soundParams: measureNotes,
         endTicks,
+        measureIndex: nextMeasure,
         next: null
       };
       if (this.cuedSounds.paramLinkHead === null) {
@@ -436,6 +433,7 @@ export class SuiAudioPlayer {
         this.cuedSounds.paramLinkTail = this.cuedSounds.paramLinkTail!.next;
       }
     }
+
     setTimeout(() => {
       this.populateSounds(measureIndex);
     }, 1);
