@@ -1,6 +1,6 @@
 {
   "name": "smoosic",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
     "jquery": "^3.6.0",

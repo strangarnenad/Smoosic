@@ -244,16 +244,18 @@ export class ScoreRoadMapBuilder {
           }
         }
         // Done with repeats and voltas.  Continue with the score from after the last volta
-        skipTo = currentJump.endMeasure + 1;
-        this.lastSkip = skipTo;
-        currentJump = {
-          startMeasure: skipTo,
-          endMeasure,
-          startReason: 'startRepeat',
-          endReason: 'scoreEnd',
-          ending: -1
+        if (currentJump.endMeasure < endMeasure) {
+          skipTo = currentJump.endMeasure + 1;
+          this.lastSkip = skipTo;
+          currentJump = {
+            startMeasure: skipTo,
+            endMeasure,
+            startReason: 'startRepeat',
+            endReason: 'scoreEnd',
+            ending: -1
+          }
+          this.jumpQueue.push(currentJump);
         }
-        this.jumpQueue.push(currentJump);
       }
     }
   }
