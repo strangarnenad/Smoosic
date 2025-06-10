@@ -384,6 +384,10 @@ export class VxMeasure implements VxMeasureIf {
         for (let smoNote of this.smoMeasure.tupletNotes(parentTuplet)) {
           vexNotes.push(this.noteToVexMap[smoNote.attrs.id]);
         }
+        // If the tuplet has been deleted, the measure might not be updated.
+        if (vexNotes.length < 2) {
+          return;
+        }
         const location = this.smoMeasure.getStemDirectionForTuplet(parentTuplet) === SmoNote.flagStates.up ?
           VF.Tuplet.LOCATION_TOP : VF.Tuplet.LOCATION_BOTTOM;
         const smoTupletParams = {

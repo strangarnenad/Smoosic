@@ -38,12 +38,14 @@ export class SuiKeySignatureAdapter extends SuiComponentAdapter {
   async apply() {
     let minSel = this.view.tracker.getExtremeSelection(-1).selector.measure;
     let maxSel = minSel;
-    const maxMeasure = this.view.score.staves[0].measures.length - 1;
+    let maxMeasure = this.view.score.staves[0].measures.length - 1;
     if (this.applyToAll) {
       minSel = 0;
       maxSel = maxMeasure;
     } else if (this.applyToRemaining) {
       maxSel = maxMeasure;
+    } else {
+      maxSel = this.view.tracker.getExtremeSelection(1).selector.measure;
     }
     const selections = SmoSelection.getMeasuresBetween(this.view.score, 
       SmoSelector.measureSelector(0, minSel), SmoSelector.measureSelector(0, maxSel));
