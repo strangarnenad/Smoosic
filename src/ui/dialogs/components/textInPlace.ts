@@ -1,5 +1,5 @@
 import { SmoScoreText, SmoTextGroup } from '../../../smo/data/scoreText';
-import { KeyEvent } from '../../../smo/data/common';
+import { KeyEvent, ElementLike, RemoveElementLike } from '../../../smo/data/common';
 import { SuiTextSession } from '../../../render/sui/textEdit';
 import { SuiScroller } from '../../../render/sui/scroller';
 import { SuiScoreViewOperations } from '../../../render/sui/scoreViewOperations';
@@ -143,8 +143,8 @@ export class SuiTextInPlace extends SuiComponentBase {
     $(button).find('span.icon').removeClass('icon-pencil').addClass('icon-checkmark');
     // Erase the original since we are going to edit it now.
     if (this.value) {
-      this.value.elements.forEach((el) => {
-        el.remove();
+      this.value.elements.forEach((el: ElementLike) => {
+        RemoveElementLike(el);
       });
       this.value.elements = [];
     }

@@ -7,7 +7,7 @@
  */
 import { SmoAttrs, Ticks, Pitch, getId, SmoObjectParams, Transposable, SvgBox, SmoModifierBase, 
   Clef, IsClef, SmoDynamicCtor, 
-  IsPitchLetter} from './common';
+  IsPitchLetter, ElementLike} from './common';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMusic } from './music';
 import { defaultNoteScale, FontInfo, getChordSymbolGlyphFromCode } from '../../common/vex';
@@ -22,7 +22,7 @@ export abstract class SmoNoteModifierBase implements SmoModifierBase {
   attrs: SmoAttrs;
   ctor: string;
   logicalBox: SvgBox | null = null;
-  element: SVGSVGElement | null = null;
+  element: ElementLike = null;
   constructor(ctor: string) {
     this.attrs = {
       id: getId().toString(),

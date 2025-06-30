@@ -166,9 +166,9 @@ export class defaultRibbonLayout {
       id: 'helpDialog'
     }, {
       leftText: 'Language',
-      rightText: 'Alt-g',
+      rightText: 'Alt-u',
       icon: '',
-      hotKey: 'g',
+      hotKey: 'u',
       classes: 'language-select nav-link link-body-emphasis hover-text',
       action: 'menu',
       ctor: 'SuiLanguageMenu',

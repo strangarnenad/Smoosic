@@ -716,6 +716,7 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     if (!this.modifierSelections.length) {
       return;
     }
+    this.removeModifierSelectionBox();
     this.modifierSelections.forEach((artifact) => {
       if (box === null) {
         box = artifact.modifier.logicalBox ?? null;

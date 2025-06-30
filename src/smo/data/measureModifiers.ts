@@ -6,7 +6,7 @@
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoMusic } from './music';
 import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase, getId, 
-  SmoDynamicCtor } from './common';
+  SmoDynamicCtor, ElementLike } from './common';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
 
@@ -436,7 +436,7 @@ export class SmoVolta extends SmoMeasureModifierBase {
   endingId: string | null = null;
   startSelector: SmoSelector | null = null;
   endSelector: SmoSelector | null = null;
-  elements: SVGSVGElement[] = [];
+  elements: ElementLike[] = [];
   constructor(parameters: SmoVoltaParams) {
     super('SmoVolta');
     smoSerialize.serializedMerge(SmoVolta.attributes, SmoVolta.defaults, this);

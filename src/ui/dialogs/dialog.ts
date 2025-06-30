@@ -464,7 +464,9 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
   // ### bindKeyboard
   // generic logic to grab keyboard elements for modal
   bindKeyboard() {
-    const evkey = async (ev: any) => { this.evKey(ev); }
+    const evkey = async (ev: any) => {
+      this.evKey(ev); 
+    }
     this.boundKeyboard = true;
     this.keydownHandler = this.eventSource.bindKeydownHandler(evkey);
   }

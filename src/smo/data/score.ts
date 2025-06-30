@@ -372,6 +372,10 @@ export class SmoScore {
         tempo[0] = current.tempo;
         timeSignature[0] = current.timeSignature;
         renumberingMap[0] = 0;
+        // Even measure 0 can remap to a different number
+        if (typeof (this.renumberingMap[measure.measureNumber.measureIndex]) === 'number') {
+          renumberingMap[0] = this.renumberingMap[measure.measureNumber.measureIndex];
+        }
         previous = current;
       } else {
         if (typeof (this.renumberingMap[measure.measureNumber.measureIndex]) === 'number') {
@@ -722,12 +726,6 @@ export class SmoScore {
     if (!isSmoScoreParams(params)) {
       throw 'Bad score, missing params: ' + JSON.stringify(params, null, ' ');
     }
-    if (params.staves.length === 1) {
-      const part = params.staves[0].partInfo;
-      if (part) {
-        part.expandMultimeasureRests = true;
-      }
-    }
     const score = new SmoScore(params);
     score.textGroups = textGroups;
     score.systemGroups = systemGroups;
@@ -758,7 +756,7 @@ export class SmoScore {
   }
 
   /**
-   * Return a default score with no notes or staves
+   * Return a default score with all default setting and one measure of notes
    * @param scoreDefaults 
    * @param measureDefaults 
    * @returns 
@@ -773,6 +771,9 @@ export class SmoScore {
     measure.voices.push({
       notes: SmoMeasure.getDefaultNotes(measureDefaults as SmoMeasureParams)
     });
+    // Since this is a new score, a part and the score are the same.  So make sure 
+    // we don't multi-measure rest the entire score.
+    score.staves[0].partInfo.expandMultimeasureRests = true;
     return score;
   }
 

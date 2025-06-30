@@ -169,16 +169,18 @@ export abstract class SuiMapper {
       this.deferHighlight();
     }
   }
+  removeModifierSelectionBox() {
+    if (this.outlines['staffModifier'] && this.outlines['staffModifier'].element) {
+      this.outlines['staffModifier'].element.remove();
+      this.outlines['staffModifier'].element = undefined;
+    }
+  }
   // used by remove dialogs to clear removed thing
   clearModifierSelections() {
     this.modifierSelections = [];
     this._createLocalModifiersList();
     this.modifierIndex = -1;
-    if (this.outlines['staffModifier'] && this.outlines['staffModifier'].element) {
-      this.outlines['staffModifier'].element.remove();
-      this.outlines['staffModifier'].element = undefined;
-    }
-    // this.eraseRect('staffModifier');  not sure where this should go
+    this.removeModifierSelectionBox();
   }
   // ### loadScore
   // We are loading a new score.  clear the maps so we can rebuild them after

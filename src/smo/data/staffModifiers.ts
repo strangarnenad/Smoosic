@@ -10,7 +10,7 @@ import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoSelector } from '../xform/selections';
 import { SmoNote } from './note';
 import { SmoAttrs, getId, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch, 
-  SmoDynamicCtor } from './common';
+  SmoDynamicCtor, ElementLike } from './common';
 import { SmoTabNote, SmoFretPosition } from './noteModifiers';
 import { SmoMusic } from './music';
 /**
@@ -29,7 +29,7 @@ export abstract class StaffModifierBase implements SmoModifierBase {
   startSelector: SmoSelector = SmoSelector.default;
   endSelector: SmoSelector = SmoSelector.default;
   logicalBox: SvgBox | null = null;
-  element: SVGSVGElement | null = null;
+  element: ElementLike  = null;
   constructor(ctor: string) {
     this.ctor = ctor;
     this.attrs = {

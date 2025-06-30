@@ -9,7 +9,7 @@ import { SmoScore } from '../../smo/data/score';
 import { SmoMusic } from '../../smo/data/music';
 import { leftConnectorVx, rightConnectorVx } from './smoAdapter';
 import { SmoMeasure, SmoVoice } from '../../smo/data/measure';
-import { SvgBox, Pitch, Clef } from '../../smo/data/common';
+import { SvgBox, ElementLike, RemoveElementLike } from '../../smo/data/common';
 import { SmoNote } from '../../smo/data/note';
 import { SmoSystemStaff } from '../../smo/data/systemStaff';
 import { SmoVolta } from '../../smo/data/measureModifiers';
@@ -526,8 +526,8 @@ export class VxSystem {
     }
     const voltas = this.staves[0].getVoltaMap(this.minMeasureIndex, this.maxMeasureIndex);
     voltas.forEach((ending) => {
-      ending.elements.forEach((element: SVGSVGElement) => {
-        element.remove();
+      ending.elements.forEach((element: ElementLike) => {
+        RemoveElementLike(element);
       });
       ending.elements = [];
     });
@@ -544,9 +544,9 @@ export class VxSystem {
         const ending = voltas[i];
         const mix = smoMeasure.measureNumber.measureIndex;
         if ((ending.startBar <= mix) && (ending.endBar >= mix) && vxMeasure.stave !== null) {
-          const group = this.context.getContext().openGroup(null, ending.attrs.id);
+          const group = this.context.getContext().openGroup(undefined, ending.attrs.id);
           group.classList.add(ending.attrs.id);
-          group.classList.add(ending.endingId);
+          group.classList.add(ending.endingId ?? '');
           ending.elements.push(group);
           const vtype = toVexVolta(ending, smoMeasure.measureNumber.measureIndex);
           const vxVolta = new VF.Volta(vtype, ending.number.toString(), smoMeasure.staffX + ending.xOffsetStart, ending.yOffset);
@@ -672,7 +672,7 @@ export class VxSystem {
     if (systemIndex === 0 && lastStaff) {
       if (staff.bracketMap[this.lineIndex]) {
         staff.bracketMap[this.lineIndex].forEach((element) => {
-          element.remove();
+          RemoveElementLike(element);
         });
       }
       staff.bracketMap[this.lineIndex] = [];
@@ -724,7 +724,7 @@ export class VxSystem {
           vv.selection.selector.measure === vxMeasure.selection.selector.measure && 
           vv.smoMeasure.svg.hideEmptyMeasure === false);
         if (endMeasure && endMeasure.stave && startMeasure && startMeasure.stave) {
-          const group = this.context.getContext().openGroup();
+          const group: ElementLike = this.context.getContext().openGroup();
           group.classList.add('endBracket-' + this.lineIndex);
           group.classList.add('endBracket');
           staff.bracketMap[this.lineIndex].push(group);

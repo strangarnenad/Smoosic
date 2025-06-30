@@ -29,7 +29,9 @@ export class layoutDebug {
       mouseDebug: 64,
       dragDebug: 128,
       dialogEvents: 256,
-      cursor: 512
+      cursor: 512,
+      text: 1024,
+      page: 2048
     };
   }
 
@@ -43,10 +45,13 @@ export class layoutDebug {
       32: 'measure-adjustHeight-dbg',
       64: 'mouse-debug',
       128: 'drag-debug',
-      256: '',
+      256: 'dialog-events',
       512: 'cursor-adj-dbg',
+      1024: 'text-debug',
+      2048: 'page-debug'
     };
   }
+  // for profiling render performance
   static get codeRegions(): Record<string, number> {
     return {
       COMPUTE: 0,
@@ -104,10 +109,10 @@ export class layoutDebug {
     layoutDebug.mask = 0;
   }
   static setAll() {
-    layoutDebug.mask = 1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256;
+    layoutDebug.mask = 1 + 2 + 4 + 8 + 16 + 32 + 64 + 128 + 256 + 1024 + 2048;
   }
   static setRenderFlags() {
-    layoutDebug.mask = 1 + 2 + 4 + 8 + 16 + 32;
+    layoutDebug.mask = 1 + 2 + 4 + 8 + 16 + 32 + 1024 + 2048;
   }
   static clearDebugBoxes(value: number) {
     if (layoutDebug.flagSet(value)) {

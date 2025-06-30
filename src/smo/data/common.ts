@@ -63,7 +63,12 @@ export interface Ticks {
     denominator: number,
     remainder: number
 }
-
+export type ElementLike = SVGSVGElement | SVGGElement | SVGGraphicsElement | null;
+export const RemoveElementLike = (e: ElementLike) => {
+  if (e !== null) {
+    e.remove();
+  }
+}
 /**
  * constraint for SmoPitch.letter value, in lower case
  */

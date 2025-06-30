@@ -10,12 +10,12 @@ import { SmoMusic } from '../../smo/data/music';
 import { layoutDebug } from '../sui/layoutDebug';
 import { SmoRepeatSymbol, SmoMeasureText, SmoBarline, SmoMeasureModifierBase, SmoRehearsalMark } from '../../smo/data/measureModifiers';
 import { SourceSerifProFont } from '../../styles/font_metrics/ssp-serif-metrics';
-import { SmoOrnament, SmoArticulation, SmoDynamicText, SmoLyric, 
-  SmoArpeggio, SmoNoteModifierBase, VexAnnotationParams, SmoTabNote } from '../../smo/data/noteModifiers';
+import { SmoOrnament, SmoDynamicText, 
+  SmoNoteModifierBase, SmoTabNote } from '../../smo/data/noteModifiers';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoMeasure, MeasureTickmaps } from '../../smo/data/measure';
 import { SvgHelpers } from '../sui/svgHelpers';
-import { Clef, IsClef } from '../../smo/data/common';
+import { Clef, IsClef, ElementLike } from '../../smo/data/common';
 import { SvgPage } from '../sui/svgPageMap';
 import { SmoTabStave } from '../../smo/data/staffModifiers';
 import { toVexBarlineType, vexBarlineType, vexBarlinePosition, toVexBarlinePosition, toVexSymbol,
@@ -250,7 +250,7 @@ export class VxMeasure implements VxMeasureIf {
     var y = this.stave!.getYForLine(textObj.yOffsetLine - 3) + textObj.yOffsetPixels;
     let maxh = 0;
     const minx = x;
-    var group = this.context.getContext().openGroup();
+    var group: ElementLike = this.context.getContext().openGroup();
     group.classList.add(textObj.attrs.id + '-' + smoNote.attrs.id);
     group.classList.add(textObj.attrs.id);
     // const duration = SmoMusic.closestVexDuration(smoNote.tickCount);

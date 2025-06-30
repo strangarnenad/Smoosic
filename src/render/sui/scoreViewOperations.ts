@@ -6,7 +6,7 @@ import { SmoSystemStaffParams, SmoSystemStaff } from '../../smo/data/systemStaff
 import { SmoPartInfo } from '../../smo/data/partInfo';
 import { SmoMeasure } from '../../smo/data/measure';
 import { SmoNote } from '../../smo/data/note';
-import { KeyEvent, SvgBox, Pitch, PitchLetter } from '../../smo/data/common';
+import { KeyEvent, SvgBox, Pitch, PitchLetter, RemoveElementLike, ElementLike } from '../../smo/data/common';
 import { SmoRenderConfiguration } from './configuration';
 import { SmoSystemGroup, SmoPageLayout, SmoGlobalLayout, SmoLayoutManager, SmoAudioPlayerSettings,
   SmoScorePreferences, SmoScoreInfo } from '../../smo/data/scoreModifiers';
@@ -106,7 +106,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this.storeUndo.addBuffer('remove text group', bufType,
       selector, ogText, UndoBuffer.bufferSubtypes.REMOVE);
     const altGroup = SmoTextGroup.deserializePreserveId(textGroup.serialize());
-    textGroup.elements.forEach((el) => el.remove());
+    textGroup.elements.forEach((el: ElementLike) => RemoveElementLike(el));
     textGroup.elements = [];
     if (isPartExposed && partInfo.preserveTextGroups) {
       partInfo.updateTextGroup(textGroup, false);
@@ -344,8 +344,10 @@ export class SuiScoreViewOperations extends SuiScoreView {
           sel.note.makeHidden(true);
           altSel!.note!.makeHidden(true);
         } else {
+          sel.note.clearArticulations();
           sel.note.makeRest();
           altSel!.note!.makeRest();
+          altSel!.note!.clearArticulations();
           sel.note.makeHidden(false);
           altSel!.note!.makeHidden(false);
         }

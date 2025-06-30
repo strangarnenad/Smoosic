@@ -1,5 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
+import { ElementLike, RemoveElementLike } from '../../smo/data/common';
 import { SmoScoreText, SmoTextGroup } from '../../smo/data/scoreText';
 
 import { closeDialogPromise } from '../../common/htmlHelpers';
@@ -220,8 +221,8 @@ export class SuiTextBlockDialog extends SuiDialogBase {
     this.highlightActiveRegion();
   }
   static unrenderTextGroup(tg: SmoTextGroup) {
-    tg.elements.forEach((el) => {
-      el.remove();
+    tg.elements.forEach((el: ElementLike)  => {
+      RemoveElementLike(el);
     });
     tg.elements = [];
 
@@ -450,8 +451,8 @@ export class SuiTextBlockDialog extends SuiDialogBase {
 
     $(dgDom.element).find('.cancel-button').off('click').on('click', () => {
       if (this.edited) {
-        this.modifier.elements.forEach((element) => {
-          element.remove();
+        this.modifier.elements.forEach((element: ElementLike) => {
+          RemoveElementLike(element);
         });
         this.modifier.elements = [];
         this.view.undo();

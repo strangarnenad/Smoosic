@@ -6,7 +6,7 @@
  * @module /smo/data/systemStaff
  * **/
 import { SmoObjectParams, SmoAttrs, MeasureNumber, getId, 
-   createXmlAttribute } from './common';
+   ElementLike } from './common';
 import { SmoMusic } from './music';
 import { SmoMeasure, SmoMeasureParamsSer } from './measure';
 import { SmoMeasureFormat, SmoRehearsalMark, SmoRehearsalMarkParams, SmoTempoTextParams, SmoVolta, SmoBarline } from './measureModifiers';
@@ -173,7 +173,7 @@ export class SmoSystemStaff implements SmoObjectParams {
   measures: SmoMeasure[] = [];
   modifiers: StaffModifierBase[] = [];
   textBrackets: SmoStaffTextBracket[] = [];
-  bracketMap: Record<number, SVGSVGElement[]> = {};
+  bracketMap: Record<number, ElementLike[]> = {};
   tabStaves: SmoTabStave[] = [];
   attrs: SmoAttrs = {
     id: '',

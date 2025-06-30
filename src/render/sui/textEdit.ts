@@ -9,7 +9,7 @@ import { OutlineInfo, StrokeInfo, SvgHelpers } from './svgHelpers';
 import { SmoScoreText, SmoTextGroup } from '../../smo/data/scoreText';
 import { SmoLyric } from '../../smo/data/noteModifiers';
 import { SmoSelector } from '../../smo/xform/selections';
-import { SvgBox, KeyEvent } from '../../smo/data/common';
+import { SvgBox, KeyEvent, RemoveElementLike, ElementLike } from '../../smo/data/common';
 import { SmoNote } from '../../smo/data/note';
 import { SmoScore } from '../../smo/data/score';
 import { SmoSelection } from '../../smo/xform/selections';
@@ -590,7 +590,7 @@ export class SuiTextBlockEditor extends SuiTextEditor {
     return '';
   }
 
-  async evKey(evdata: KeyEvent): Promise<boolean> {
+  async evKey(evdata: any): Promise<boolean> {
     if (evdata.key.charCodeAt(0) === 32) {
       if (this.empty) {
         this.svgText?.removeBlockAt(0);
@@ -608,8 +608,9 @@ export class SuiTextBlockEditor extends SuiTextEditor {
         def.textType = this.textType;
         this.svgText?.addTextBlockAt(this.textPos, def);
         this.setTextPos(this.textPos + 1);
-      }
+      }      
       this.rerender();
+      evdata.preventDefault(); // prevent browser scroll
       return true;
     }
     const rv = super.evKey(evdata);
@@ -918,8 +919,8 @@ export class SuiDragSession {
     SvgHelpers.outlineRect(this.outlineRect);
   }
   unrender() {
-    this.textGroup.elements.forEach((el) => {
-      el.remove();
+    this.textGroup.elements.forEach((el: ElementLike) => {
+      RemoveElementLike(el);
     });
     this.textGroup.elements = [];
     this.textObject.unrender();

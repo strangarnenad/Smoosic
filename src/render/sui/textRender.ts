@@ -4,7 +4,7 @@ import { SvgHelpers, OutlineInfo } from './svgHelpers';
 import { SmoTextGroup, SmoScoreText } from '../../smo/data/scoreText';
 import { SuiTextEditor } from './textEdit';
 import { SuiScroller } from './scroller';
-import { SmoAttrs, SvgBox, getId } from '../../smo/data/common';
+import { SmoAttrs, SvgBox, getId, ElementLike } from '../../smo/data/common';
 import { SvgPage, SvgPageMap } from './svgPageMap';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { VexFlow,
@@ -165,7 +165,7 @@ export class SuiInlineText {
   scroller: SuiScroller;
   artifacts: SuiInlineArtifact[] = [];
   logicalBox: SvgBox = SvgBox.default;
-  element: SVGSVGElement | null = null;
+  element: ElementLike = null;
 
   updateFontInfo(): TextFormatter {
     const tf = TextFormatter.create({

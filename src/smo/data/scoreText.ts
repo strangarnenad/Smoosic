@@ -8,10 +8,11 @@
  */
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoScoreModifierBase, ScaledPageLayout } from './scoreModifiers';
-import { SmoAttrs, SmoModifierBase } from './common';
+import { SmoAttrs, SmoModifierBase, ElementLike } from './common';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
 import { TextFormatter } from '../../common/textformatter';
+
 
 /**
  * Parameters for a single text block.  Text blocks make up a text group.
@@ -501,7 +502,7 @@ export class SmoTextGroup extends SmoScoreModifierBase {
   selector?: SmoSelector;
   musicXOffset: number = 0;
   musicYOffset: number = 0;
-  elements: SVGSVGElement[] = [];
+  elements: ElementLike[] = [];
   textBlocks: SmoTextBlock[] = [];
   edited: boolean = false;  // indicates not edited this session
   skipRender: boolean = false; // don't render if it is being edited  

@@ -1,7 +1,7 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
 
-import { Transposable, SvgBox, SvgPoint } from '../../smo/data/common';
+import { Transposable, SvgBox, SvgPoint, ElementLike } from '../../smo/data/common';
 import { SvgPage } from './svgPageMap';
 
 declare var $: any;
@@ -28,7 +28,7 @@ export interface OutlineInfo {
   context: SvgPage,
   timeOff: number,
   timer?: number,
-  element?: SVGSVGElement
+  element?: ElementLike
 }
 
 /**
@@ -148,7 +148,10 @@ export class SvgHelpers {
     svg.appendChild(e);
   }
 
-  static renderCursor(svg: SVGSVGElement, x: number, y: number, height: number) {
+  static renderCursor(svg: ElementLike, x: number, y: number, height: number) {
+    if (svg === null) {
+      throw("invalid svg in renderCursor");
+    }
     var ns = SvgHelpers.namespace;
     const width = height * 0.4;
     x = x - (width / 2);
@@ -187,7 +190,7 @@ export class SvgHelpers {
   // ### boxNote
   // update the note geometry based on current viewbox conditions.
   // This may not be the appropriate place for this...maybe in layout
-  static updateArtifactBox(context: SvgPage, element: SVGSVGElement | undefined, artifact: Transposable) {
+  static updateArtifactBox(context: SvgPage, element: ElementLike, artifact: Transposable) {
     if (!element) {
       console.log('updateArtifactBox: undefined element!');
       return;
@@ -241,8 +244,8 @@ export class SvgHelpers {
         } */
         context.getContext().rect(box.x - margin, box.y - margin, box.width + margin * 2, box.height + margin * 2, strokeObj);
       }
-    });
-    context.getContext().closeGroup(grp);
+    });    
+    context.getContext().closeGroup();
   }
 
   static setSvgStyle(element: Element, attrs: StrokeInfo) {

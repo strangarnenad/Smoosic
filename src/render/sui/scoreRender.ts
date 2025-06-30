@@ -1,6 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-import { SvgBox, SvgPoint } from '../../smo/data/common';
+import { RemoveElementLike, SvgBox, SvgPoint } from '../../smo/data/common';
 import { SmoMeasure, SmoVoice } from '../../smo/data/measure';
 import { SmoScore } from '../../smo/data/score';
 import { SmoTextGroup } from '../../smo/data/scoreText';
@@ -87,7 +87,7 @@ export class SuiScoreRender {
       return;
     }
     gg.elements.forEach((element) => {
-      element.remove();
+      RemoveElementLike(element);
     });
     gg.elements = [];
     const layoutManager = this.score!.layoutManager!;
@@ -210,7 +210,7 @@ export class SuiScoreRender {
       for (var i = 0; i < this.score!.textGroups.length; ++i) {
         const tg = this.score!.textGroups[i];
         tg.elements.forEach((element) => {
-          element.remove();
+          RemoveElementLike(element);
         });
         tg.elements = [];
       }

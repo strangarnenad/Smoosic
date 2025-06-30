@@ -9,7 +9,8 @@ TupletOptions as VexTupletOptions, Curve as VexCurve, StaveTie as VexStaveTie,
 ClefNote as VexClefNote,
  Music as VexMusic, ChordSymbol as VexChordSymbol, ChordSymbolBlock as VexChordSymbolBlock,
 TabStave as VexTabStave, TabNote as VexTabNote, TabSlide as VexTabSlide, TabNotePosition as VexTabNotePosition, 
-TabNoteStruct as VexTabNoteStruct, PedalMarking as VexPedalMarking, Stem as VexStem
+TabNoteStruct as VexTabNoteStruct, PedalMarking as VexPedalMarking, Stem as VexStem,
+Renderer as VexRenderer, RenderContext as VexRenderContext, SVGContext as VexSVGContext
   } from "vexflow_smoosic";
 
  /**
@@ -85,6 +86,12 @@ export type TabSlide = VexTabSlide;
 export type TabNotePosition = VexTabNotePosition;
 // @internal
 export type TabNoteStruct = VexTabNoteStruct;
+// @internal
+export type Renderer = VexRenderer;
+// @internal
+export type RenderContext = VexRenderContext;
+// @internal
+export type SVGContext = VexSVGContext;
 
 const lineDefaults = [4, 2, 0, 1, 3];    // lines to turn off if there are less than 5
 

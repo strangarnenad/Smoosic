@@ -172,9 +172,14 @@ h1 {
     stroke-width: 1px;
     opacity: 0.3;
 }
+.page-dbg.svg-debug-box {
+	fill:#eea;
+  stroke: #ee9;
+  stroke-dasharray: 4 1;
+}
 .measure-place-dbg.svg-debug-box {
 	fill:#99e;
-    stroke: #77e;
+  stroke: #77e;
 }
 .measure-adjust-dbg.svg-debug-box {
 	fill:#492;

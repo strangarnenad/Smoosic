@@ -237,7 +237,7 @@ export class VxNote {
   addArticulations() {
     const smoNote = this.noteData.smoNote;
     smoNote.articulations.forEach((art) => {
-      if (smoNote.noteType === 'n') {
+      if (smoNote.noteType === 'n' || smoNote.noteType === 'r') {
         const vx = this.noteData.staveNote;
         let smoPosition = art.position;
         if (art.position === SmoArticulation.positions.auto) {

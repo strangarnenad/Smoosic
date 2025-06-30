@@ -409,6 +409,9 @@ export class SmoNote implements Transposable {
     }
     this.articulations = tms;
   }
+  clearArticulations() {
+    this.articulations = [];
+  }
   getArticulations() {
     return this.articulations;
   }

@@ -1,11 +1,11 @@
 import { SvgHelpers, StrokeInfo } from "./svgHelpers";
-import { SvgPoint, SvgBox, Renderable } from '../../smo/data/common';
+import { SvgPoint, SvgBox, Renderable, ElementLike, RemoveElementLike } from '../../smo/data/common';
 import { layoutDebug } from './layoutDebug';
 import { SmoGlobalLayout, SmoPageLayout } from '../../smo/data/scoreModifiers';
 import { SmoTextGroup } from '../../smo/data/scoreText';
 import { SmoSelection, SmoSelector } from '../../smo/xform/selections';
 import { ModifierTab } from '../../smo/xform/selections';
-import { VexFlow } from '../../common/vex';
+import { VexFlow, Renderer, SVGContext } from '../../common/vex';
 
 const VF = VexFlow;
 /**
@@ -187,7 +187,7 @@ export class MappedSystems extends SelectionMap<MappedMeasures, number> {
  * @category SuiRender
  */
 export class SvgPage {
-  _renderer: any;
+  _renderer: Renderer;
   pageNumber: number;
   box: SvgBox;
   systemMap: MappedSystems = new MappedSystems();
@@ -210,13 +210,13 @@ export class SvgPage {
    * This is the VextFlow renderer context (SVGContext)
    * @returns 
    */
-  getContext(): any {
-    return this._renderer.getContext();
+  getContext(): SVGContext {
+    return this._renderer.getContext() as SVGContext;
   }
   get divSize(): number {
     return this.box.height / SvgPage.modifierDivs;
   }
-  constructor(renderer: any, pageNumber: number, box: SvgBox) {
+  constructor(renderer: Renderer, pageNumber: number, box: SvgBox) {
     this._renderer = renderer;
     this.pageNumber = pageNumber;
     this.box = box;
@@ -316,7 +316,7 @@ export class SvgPage {
       modifiers.forEach((mod) => {
         if (mod instanceof SmoTextGroup) {
           (mod as SmoTextGroup).elements.forEach((element) => {
-            element.remove();
+            RemoveElementLike(element);
           });
           (mod as SmoTextGroup).elements = [];
         }
@@ -331,7 +331,10 @@ export class SvgPage {
    * @param element 
    * @returns 
    */
-  offsetBbox(element: SVGSVGElement): SvgBox {
+  offsetBbox(element: ElementLike): SvgBox {
+    if (element === null) {
+      throw('invalidBBox in offsetBbox');
+    }
     const yoff = this.box.y;
     const xoff = this.box.x;
     const lbox = element.getBBox();
@@ -462,7 +465,17 @@ export class SvgPageMap {
       SvgHelpers.svgViewport(svg, 0, 0, this.pageDivWidth, this.pageDivHeight, this.renderScale * this.zoomScale);
       const topY = this.pageHeight * ix;
       const box = SvgHelpers.boxPoints(0, topY, this.pageWidth, this.pageHeight);
-      this.vfRenderers.push(new SvgPage(vexRenderer, ix, box));
+      const page = new SvgPage(vexRenderer, ix, box);
+      this.vfRenderers.push(page);
+      if (layoutDebug.mask & layoutDebug.values.page) {
+        const dbgBox = JSON.parse(JSON.stringify(box));
+        const dims = this.pageLayouts[ix];
+        dbgBox.x += dims.leftMargin;
+        dbgBox.width -= (dims.leftMargin + dims.rightMargin);
+        dbgBox.y += dims.topMargin - topY;
+        dbgBox.height -= (dims.topMargin + dims.bottomMargin);
+        SvgHelpers.debugBox(page.svg, dbgBox, layoutDebug.classes[layoutDebug.values.page], 0);
+      }      
     }
     updateZoom(zoomScale: number) {
       this.layout.zoomScale = zoomScale;
