@@ -173,6 +173,13 @@ export class defaultEditorKeys {
         altKey: false,
         shiftKey: false,
         action: "stopPlayer"
+      },{
+        event: "keydown",
+        key: "2",
+        ctrlKey: true,
+        altKey: false,
+        shiftKey: false,
+        action: "makeTuplet"
       },
       {
         event: "keydown",
@@ -184,6 +191,13 @@ export class defaultEditorKeys {
       }, {
         event: "keydown",
         key: "5",
+        ctrlKey: true,
+        altKey: false,
+        shiftKey: false,
+        action: "makeTuplet"
+      }, {
+        event: "keydown",
+        key: "6",
         ctrlKey: true,
         altKey: false,
         shiftKey: false,

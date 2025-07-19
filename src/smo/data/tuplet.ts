@@ -373,6 +373,9 @@ export class SmoTuplet {
     while (stemValue < stemTicks) {
       stemTicks = stemTicks / 2;
     }
+    if (numNotes === 2) {
+      return stemTicks;
+    }
     return stemTicks * 2;
   }
 
@@ -392,6 +395,7 @@ export class SmoTuplet {
       id: getId().toString(),
       type: 'SmoTuplet'
     };
+    this.stemTicks = SmoTuplet.calculateStemTicks(this.totalTicks, this.numNotes);
   }
 
   static get longestTuplet() {

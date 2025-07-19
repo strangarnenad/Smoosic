@@ -390,7 +390,7 @@ export class SmoMakeTupletActor extends TickIteratorBase {
       endIndex: this.index,
     });
 
-    const tupletNotes = this._generateNotesForTuplet(tuplet, note, stemTicks);
+    const tupletNotes = this._generateNotesForTuplet(tuplet, note, tuplet.stemTicks);
     tuplet.endIndex += tupletNotes.length - 1;
 
     SmoTupletTree.adjustTupletIndexes(this.measure.tupletTrees, this.voice, index, tupletNotes.length - 1);
