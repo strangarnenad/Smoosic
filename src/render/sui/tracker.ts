@@ -14,6 +14,48 @@ import { SmoMeasure } from '../../smo/data/measure';
 import { layoutDebug } from './layoutDebug';
 declare var $: any;
 
+export class NoteEntryCaret {
+
+  x: number = 0;
+  y: number = 0;
+  width: number = 0;
+  height: number = 0;
+
+  selection: SmoSelection | undefined;
+
+  constructor() {}
+
+  setSmoSelection(selection: SmoSelection): void {
+    this.selection = selection;
+    this.adjustCoordinates();
+  }
+
+  adjustCoordinates(): void {
+    if (this.selection === undefined) {
+      return;
+    }
+
+    this.selection.note
+  }
+
+  containsPoint(ev: any): boolean {
+    return false;
+  }
+
+  handleMouseUp(): void {
+
+  }
+
+  handleMouseDown(): void {
+
+  }
+
+  handleMouseClick(): void {
+
+  }
+
+}
+
 export interface TrackerKeyHandler {
   moveHome : keyHandler, 
   moveEnd : keyHandler, 
@@ -38,6 +80,7 @@ export interface TrackerKeyHandler {
 export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
   idleTimer: number = Date.now();
   musicCursorGlyph: SVGSVGElement | null = null;
+  noteEntryCaret: NoteEntryCaret | undefined;
   deferPlayAdvance: boolean = false;
   static get strokes(): Record<string, StrokeInfo> {
     return {
@@ -86,6 +129,13 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
 
   get score(): SmoScore | null {
     return this.renderer.score;
+  }
+
+  getNoteEntryCaret(): NoteEntryCaret {
+    if (this.noteEntryCaret === undefined) {
+      return new NoteEntryCaret();
+    }
+    return this.noteEntryCaret;
   }
 
   getIdleTime(): number {
@@ -709,8 +759,11 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     this.modifierSuggestion = null;
 
     this.suggestion = artifact;
+    // console.log(artifact.box);
+    // artifact.box.height = 60;
     this._drawRect(artifact.box, 'suggestion');
   }
+
   _highlightModifier() {
     let box: SvgBox | null = null;
     if (!this.modifierSelections.length) {
@@ -892,4 +945,7 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
       }
     });
   }
+
+
+
 }

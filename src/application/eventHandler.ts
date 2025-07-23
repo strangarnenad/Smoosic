@@ -300,6 +300,7 @@ export class SuiEventHandler implements ModalEventHandler {
   }
 
   mouseMove(ev: any) {
+    console.log('mouse MOVE!!!');
     this.view.tracker.intersectingArtifact(SvgHelpers.smoBox({
       x: ev.clientX,
       y: ev.clientY
@@ -307,15 +308,31 @@ export class SuiEventHandler implements ModalEventHandler {
   }
 
   mouseClick(ev: any) {
+    console.log('mouse CLICK!!!');
     const dataCopy = SuiTracker.serializeEvent(ev);
     this.view.renderer.updatePromise().then(() => {
       this.view.tracker.selectSuggestion(dataCopy);
-      var modifier = this.view.tracker.getSelectedModifier();
-      if (modifier) {
-        this.createModifierDialog(modifier);
-      }
+      // var modifier = this.view.tracker.getSelectedModifier();
+      // if (modifier) {
+      //   this.createModifierDialog(modifier);
+      // }
     });
   }
+
+  mouseUp(ev: any) {
+    console.log('mouse UP!!!');
+    if (this.view.tracker.noteEntryCaret != null) {
+
+    }
+  }
+
+  mouseDown(ev: any) {
+    console.log("mouse DOWN!!!");
+    if (this.view.tracker.noteEntryCaret != null) {
+
+    }
+  }
+
   bindEvents() {
     const self = this;
     const tracker = this.view.tracker;

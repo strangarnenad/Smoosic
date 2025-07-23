@@ -64,7 +64,7 @@ export class layoutDebug {
   static get codeRegionStrings(): string[] {
     return ['COMPUTE', 'PREFORMATA', 'PREFORMATB', 'PREFORMATC', 'FORMAT', 'RENDER', 'UPDATE_MAP', 'POST_RENDER', 'MAP'];
   }
-  static mask: number = 0;
+  static mask: number = 4;
   static _textDebug: number[] = [];
   static timestampHash: Record<number, number> = {};
   static _dialogEvents: string[] = [];

@@ -643,6 +643,11 @@ export abstract class SuiMapper {
       }
       const artifact = artifacts[0];
       this.eraseMousePositionBox();
+      //test
+      // @ts-ignore
+      // artifact.box?.height = 60;
+      // @ts-ignore
+      // artifact.box?.y -= 1;
       this._setArtifactAsSuggestion(artifact);
     }
   }
