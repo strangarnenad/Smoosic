@@ -74,12 +74,6 @@ export class SmoOperation {
       score.addOrReplaceSystemGroup(new SmoSystemGroup(parameters));
     }
   }
-  static toggleBeamGroup(noteSelection: SmoSelection) {
-    if (!noteSelection.note) {
-      return;
-    }
-    noteSelection.note.endBeam = !(noteSelection.note.endBeam);
-  }
   static setActiveVoice(score: SmoScore, voiceIx: number) {
     score.staves.forEach((staff) => {
       staff.measures.forEach((measure) => {
@@ -595,6 +589,12 @@ export class SmoOperation {
     (selection.note as SmoNote).removeDynamic(dynamic);
   }
 
+  static unbeamSelections(noteSelection: SmoSelection) {
+    if (!noteSelection.note) {
+      return;
+    }
+    noteSelection.note.beamState = SmoNote.beamStates.end;
+  }
   static beamSelections(score: SmoScore, selections: SmoSelection[]) {
     const start = selections[0].selector;
     let cur = selections[0].selector;
@@ -613,16 +613,19 @@ export class SmoOperation {
     if (beamGroup.length) {
       beamGroup.forEach((note) => {
         note.beamBeats = ticks;
-        note.endBeam = false;
+        if (note.beamState !== SmoNote.beamStates.continue) {
+          note.beamState = SmoNote.beamStates.auto;
+        }
       });
-      beamGroup[beamGroup.length - 1].endBeam = true;
+      const sn = beamGroup[beamGroup.length - 1];
+      sn.beamState = SmoNote.beamStates.end;
       // Make sure the last note of the previous beam is the end of this beam group.
       if (selections[0].selector.tick > 0) {
         const ps = JSON.parse(JSON.stringify(selections[0].selector));
         ps.tick -= 1;
         const previous: SmoSelection | null = SmoSelection.noteFromSelector(score, ps);
         if (previous?.note && previous.note.tickCount < 4096) {
-          previous.note.endBeam = true;
+          previous.note.beamState = SmoNote.beamStates.end;
         }
       }
     }
@@ -646,7 +649,7 @@ export class SmoOperation {
         const triple = ss.measure.timeSignature.actualBeats % 3 === 0;
         const note = ss.note;
         note.beamBeats = triple ? score.preferences.defaultTripleDuration : score.preferences.defaultDupleDuration;
-        note.endBeam = false;
+        note.beamState = SmoNote.beamStates.end;
       }
     });
   }
@@ -1006,6 +1009,7 @@ export class SmoOperation {
    * @param selections
    */
   static changeInstrument(instrument: SmoInstrument, selections: SmoSelection[]) {
+    selections[0].staff.consolidateInstruments();
     const measureSel = SmoSelection.getMeasureList(selections);
     const measureIndex = measureSel[0].selector.measure;
     const measureEnd = measureIndex + (measureSel.length - 1);

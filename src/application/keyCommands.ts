@@ -32,7 +32,7 @@ export interface EditorKeyHandler {
   unmakeTuplet: keyHandler,
   addMeasure: keyHandler, 
   deleteNote: keyHandler, 
-  toggleBeamGroup: keyHandler,
+  unbeamSelections: keyHandler,
   beamSelections: keyHandler, 
   addRemoveAccent: keyHandler,
   addRemoveTenuto: keyHandler,
@@ -87,8 +87,8 @@ export class SuiKeyCommands implements EditorKeyHandler {
   async paste() {
     await this.view.paste();
   }
-  async toggleBeamGroup() {
-    await this.view.toggleBeamGroup();
+  async unbeamSelections() {
+    await this.view.unbeamSelections();
   }
 
   async beamSelections() {

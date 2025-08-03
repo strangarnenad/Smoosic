@@ -409,7 +409,11 @@ export class XmlState {
         console.warn('no note for beam group');
         return;
       }
-      note.endBeam = i === 0;
+      if (i === 0) {
+        note.beamState = SmoNote.beamStates.end
+      } else {
+        note.beamState = SmoNote.beamStates.auto;
+      }
       note.beamBeats = beamGroup.ticks;
     }
   }

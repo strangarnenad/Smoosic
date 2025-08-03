@@ -844,7 +844,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
       let ix = 0;
       pnotes.forEach((pnote) => {
         if ((ix + 1) % 3 === 0) {
-          pnote.endBeam = true;
+          pnote.beamState = SmoNote.beamStates.end;
         }
         pnote.beamBeats = 2048 * 3;
         ix += 1;

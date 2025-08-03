@@ -15,9 +15,9 @@ export class SuiBeamMenu extends SuiConfiguredMenu {
 /**
  * @category SuiMenu
  */
-const toggleBeamGroupMenuOption: SuiConfiguredMenuOption = {
+const unbeamSelectionsMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    menu.view.toggleBeamGroup();
+    menu.view.unbeamSelections();
   }, display: (menu: SuiMenuBase) => {
     for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
       const mm = menu.view.tracker.selections[i].measure;
@@ -37,7 +37,7 @@ const toggleBeamGroupMenuOption: SuiConfiguredMenuOption = {
   },
   menuChoice: {
     icon: 'icon smo-icon icon-beamBreak',
-    text: 'Toggle Beam Group',
+    text: 'Unbeam Selections',
     hotkey: 'x',
     value: 'toggleBeamMenuOption'
   }
@@ -107,6 +107,6 @@ const toggleBeamDirectionMenuOption: SuiConfiguredMenuOption = {
  * Stuff you can do to beams
  * @category SuiMenu
  */
-export const SuiBeamMenuOptions: SuiConfiguredMenuOption[] = [toggleBeamGroupMenuOption,
+export const SuiBeamMenuOptions: SuiConfiguredMenuOption[] = [unbeamSelectionsMenuOption,
   beamSelectionsMenuOption, toggleBeamDirectionMenuOption
 ];

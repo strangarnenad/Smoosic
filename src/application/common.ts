@@ -21,7 +21,7 @@ export type editorKeyAction = "transposeUp" | "transposeDown" | "upOctave" | "do
     "playScore" | "stopPlayer" | "pausePlayer" | "togglePlayer" |
     "undo" | "copy" | "paste" |
     "makeTuplet" | "interval" | "unmakeTuplet" | "addMeasure" | "deleteNote" | "makeRest"| 
-    "toggleBeamGroup" | "beamSelections" | "toggleBeamDirection" |
+    "unbeamSelections" | "beamSelections" | "toggleBeamDirection" |
     "addRemoveAccent" | "addRemoveTenuto" | "addRemoveStaccato" | 
     "addRemovePizzicato" | "addRemoveMarcato";
 export const editorKeyActions = ["transposeUp" , "transposeDown" , "upOctave" , "downOctave" , 
@@ -31,7 +31,7 @@ export const editorKeyActions = ["transposeUp" , "transposeDown" , "upOctave" , 
       "playScore" , "stopPlayer" , "pausePlayer", "togglePlayer",
       "undo", "copy", "paste",
       "makeTuplet" , "interval" , "unmakeTuplet" , "addMeasure" , "deleteNote" , "makeRest", 
-      "toggleBeamGroup" , "beamSelections" , "toggleBeamDirection",
+      "unbeamSelections" , "beamSelections" , "toggleBeamDirection",
       "addRemoveAccent" , "addRemoveTenuto" , "addRemoveStaccato",
       "addRemovePizzicato", "addRemoveMarcato"
     ]; 

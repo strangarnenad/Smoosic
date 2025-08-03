@@ -224,6 +224,9 @@ export class VxMeasure implements VxMeasureIf {
         vexNote.setStyle({ fillStyle: "#ffffff00" });
       }
       smoNote.renderId = 'vf-' + vexNote.getAttribute('id'); // where does 'vf' come from?
+      if (this.stave) {
+        vexNote.setStave(this.stave);
+      }
     }
     const noteData: VexNoteModifierIf = {
       smoMeasure: this.smoMeasure,

@@ -459,7 +459,8 @@ export class SuiLayoutFormatter {
         // TODO: Consider engraving font and adjust grace note size?
         noteWidth += (headWidth + vexGlyph.dimensions.noteHead.spacingRight) * note.graceNotes.length;
         noteWidth += dotWidth * dots + vexGlyph.dimensions.dot.spacingRight * dots;
-        if (!note.isRest() && note.endBeam) {
+        // This could be better if we actually did the beaming before formatting
+        if (!note.isRest() && note.beamState === SmoNote.beamStates.end) {
           noteWidth += vexGlyph.dimensions.flag.width;
         }
         note.pitches.forEach((pitch) => {
@@ -469,6 +470,12 @@ export class SuiLayoutFormatter {
           const acLen = accidentals.length;
           const declared = acLen > 0 ?
             accidentals[acLen - 1].pitches[pitch.letter].pitch.accidental : keyAccidental;
+          const ornaments = note.getOrnaments();
+          // Allocate extra space if there are ornaments, which tend to be larger than the note width
+          // or offset
+          if (ornaments.length) {
+            noteWidth += headWidth;
+          }
           if (declared !== pitch.accidental || pitch.cautionary) {
             noteWidth += vexGlyph.accidentalWidth(pitch.accidental) * 2;
           }

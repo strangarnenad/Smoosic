@@ -177,8 +177,8 @@ function isSmoInstrumentParamsSer(params: Partial<SmoInstrumentParamsSer>): para
 }
 export type SmoInstrumentNumParamType = 'keyOffset' | 'midichannel' | 'midiport' | 'midiInstrument' | 'lines';
 export const SmoInstrumentNumParams: SmoInstrumentNumParamType[] = ['keyOffset', 'midichannel', 'midiport', 'midiInstrument', 'lines'];
-export type SmoInstrumentStringParamType = 'instrumentName' | 'abbreviation' | 'family' | 'instrument';
-export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instrumentName', 'abbreviation', 'family', 'instrument'];
+export type SmoInstrumentStringParamType = 'instrumentName' | 'abbreviation' | 'family' | 'instrument' | 'clef';
+export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instrumentName', 'abbreviation', 'family', 'instrument', 'clef'];
 /**
  * Define an instrument.  An instrument is associated with a part, but a part can have instrument changes
  * and thus contain multiple instruments at different points in the score.
@@ -188,7 +188,7 @@ export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instr
  */
 export class SmoInstrument extends StaffModifierBase {
   static get attributes() {
-    return ['startSelector', 'endSelector', 
+    return ['startSelector', 'endSelector', 'clef',
       'keyOffset', 'midichannel', 'midiport', 'instrumentName', 'abbreviation', 'instrument', 'family', 'lines'];
   }
   startSelector: SmoSelector;
@@ -262,7 +262,10 @@ export class SmoInstrument extends StaffModifierBase {
   }
   serialize(): SmoInstrumentParamsSer {
     const params: Partial<SmoInstrumentParamsSer> = {};
-    smoSerialize.serializedMergeNonDefault(SmoInstrument.defaults, SmoInstrument.attributes, this, params);
+    smoSerialize.serializedMergeNonDefault(SmoInstrument.defaults, SmoInstrumentStringParams, this, params);
+    smoSerialize.serializedMergeNonDefault(SmoInstrument.defaults, SmoInstrumentNumParams, this, params);
+    params.startSelector = this.startSelector;
+    params.endSelector = this.endSelector;
     params.ctor = 'SmoInstrument';
     if (!isSmoInstrumentParamsSer(params)) {
       throw ('bad instrument ' + JSON.stringify(params));

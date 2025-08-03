@@ -1,6 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-import { Clef } from '../../smo/data/common';
+import { Clef, IsClef } from '../../smo/data/common';
 import { SmoInstrument, SmoInstrumentNumParamType, SmoInstrumentStringParamType } from '../../smo/data/staffModifiers';
 import { SmoSelection, SmoSelector } from '../../smo/xform/selections';
 
@@ -34,7 +34,7 @@ export class SuiInstrumentAdapter extends SuiComponentAdapter {
     this.instrument = new SmoInstrument(this.instrument);
   }
   writeStringParam(paramName: SmoInstrumentStringParamType, value: string) {
-    this.instrument[paramName] = value;
+    this.instrument[paramName] = value as any;
     this.view.changeInstrument(this.instrument, this.selections);
     this.instrument = new SmoInstrument(this.instrument);
   }

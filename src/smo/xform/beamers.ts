@@ -196,7 +196,7 @@ export class SmoBeamer {
 
     this.currentGroup.push(note);
 
-    if (note.endBeam) {
+    if (note.beamState === SmoNote.beamStates.end) {
       this._completeGroup(tickmap.voice);
       this._advanceGroup();
     }
@@ -216,7 +216,10 @@ export class SmoBeamer {
       }
     }
     // If we are aligned to a beat on the measure, and we are in common time
-    if (this.currentGroup.length > 1 && this.measure.timeSignature.beatDuration === 4 && this.measureDuration % 4096 === 0) {
+    if (this.currentGroup.length > 1 
+      && this.measure.timeSignature.beatDuration === 4 
+      && this.measureDuration % 4096 === 0 &&
+         note.beamState !== SmoNote.beamStates.continue) {
         this._completeGroup(tickmap.voice);
         this._advanceGroup();
         return;

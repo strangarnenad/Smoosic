@@ -1030,13 +1030,13 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * toggle the 'end beam' flag for selected notes
    * @returns 
    */
-  async toggleBeamGroup(): Promise<void> {
+  async unbeamSelections(): Promise<void> {
     const selections = this.tracker.selections;
     const measureSelections = this.undoTrackerMeasureSelections('toggle beam group');
     selections.forEach((selection) => {
-      SmoOperation.toggleBeamGroup(selection);
+      SmoOperation.unbeamSelections(selection);
       const altSel = this._getEquivalentSelection(selection);
-      SmoOperation.toggleBeamGroup(altSel!);
+      SmoOperation.unbeamSelections(altSel!);
     });
     this._renderChangedMeasures(measureSelections);
     await this.renderer.updatePromise();

@@ -392,7 +392,7 @@ export class defaultEditorKeys {
         ctrlKey: false,
         altKey: false,
         shiftKey: false,
-        action: "toggleBeamGroup"
+        action: "unbeamSelections"
       }, {
         event: "keydown",
         key: "X",

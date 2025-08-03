@@ -27,7 +27,7 @@ export class SuiNewPartAdapter extends SuiComponentAdapter {
     this.instrument[paramName] = value;
   }
   writeStringParam(paramName: SmoInstrumentStringParamType, value: string) {
-    this.instrument[paramName] = value;
+    this.instrument[paramName] = value as any; // as any for 'clef'
   }
   get transposeIndex() {
     return this.instrument.keyOffset;

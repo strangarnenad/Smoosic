@@ -587,7 +587,7 @@ export class SmoToXml {
     let toBeam = SmoToXml.beamStates.none;
     if (note.tickCount <= 2048 && !exceedTicks) {
       // Explicit end beam, or no more notes to beam, so stop beam
-      if (note.endBeam || nextNote === null) {
+      if (note.beamState === SmoNote.beamStates.end || nextNote === null) {
         if (smoState.beamState !== SmoToXml.beamStates.none) {
           toBeam = SmoToXml.beamStates.stop;
         }

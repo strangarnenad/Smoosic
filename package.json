@@ -1,6 +1,6 @@
 {
   "name": "smoosic",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
     "jquery": "^3.6.0",
@@ -16,7 +16,7 @@
     "ts-loader": "^9.2.5",
     "typedoc": "^0.25.0",
     "typescript": "^5.2.2",
-    "vexflow_smoosic": "4.2.9"
+    "vexflow_smoosic": "4.2.11"
   },
   "main": "build/smoosic.js",
   "description": "<sub>[Github site](https://github.com/Smoosic/smoosic) | [source documentation](https://smoosic.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub>",

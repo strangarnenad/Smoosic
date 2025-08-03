@@ -210,6 +210,12 @@ export class SmoSystemStaff implements SmoObjectParams {
     this.textBrackets = params.textBrackets ?? [];
     this.renumberingMap = params.renumberingMap;
     this.tabStaves = params.tabStaves;
+    if (!params.measureInstrumentMap) {
+        params.measureInstrumentMap = {};
+        const defs = SmoInstrument.defaults;
+        const ii: SmoInstrument = new SmoInstrument(defs);
+        params.measureInstrumentMap[0] = ii;
+    }
     if (Object.keys(params.measureInstrumentMap).length === 0) {
       const instrument = new SmoInstrument(SmoInstrument.defaults);
       instrument.startSelector.staff = instrument.endSelector.staff = this.staffId;
@@ -229,6 +235,7 @@ export class SmoSystemStaff implements SmoObjectParams {
         this.measureInstrumentMap[pnum] = instrument;
       });
     }
+    this.consolidateInstruments();
     if (this.measures.length) {
       this.numberMeasures();
     }
@@ -354,7 +361,7 @@ export class SmoSystemStaff implements SmoObjectParams {
         const defs = SmoInstrument.defaults;
         SmoInstrumentStringParams.forEach((str) => {
           if (typeof(inst[str]) === 'string') {
-            defs[str] = inst[str];
+            defs[str] = inst[str] as any;
           }
         });
         SmoInstrumentNumParams.forEach((str) => {
@@ -451,6 +458,39 @@ export class SmoSystemStaff implements SmoObjectParams {
       rv.push(this.getStaffInstrument(parseInt(key)));
     });
     return rv;
+  }
+  consolidateInstruments() {
+    const keys = Object.keys(this.measureInstrumentMap);
+    const nrec:Record<number, SmoInstrument> = {};
+    let prevInst: SmoInstrument | null = null;
+    for (let i = 0;i < this.measures.length; ++i) {
+      if (this.measureInstrumentMap[i]) {
+        const cur = this.measureInstrumentMap[i];
+        if (prevInst !== null) {
+          const inst: SmoInstrument = prevInst;
+          if (inst.eq(cur)) {
+            nrec[inst.startSelector.measure] = inst;
+            inst.endSelector.measure = Math.max(inst.endSelector.measure, cur.endSelector.measure);            
+          } else {
+            const inst: SmoInstrument = prevInst;
+            inst.endSelector.measure = Math.max(i - 1, 0);
+            nrec[inst.startSelector.measure] = inst;
+            prevInst = cur;
+            nrec[cur.startSelector.measure] = cur;
+          }
+        } else {
+          prevInst = cur;
+        }
+      }
+    }
+    // If there are no measures, and we never populated any records.  Happens for new scores.
+    if (prevInst) {
+      const inst: SmoInstrument = prevInst;
+      nrec[inst.startSelector.measure] = inst;
+    } else {
+      return;
+    }
+    this.measureInstrumentMap = nrec;
   }
   updateInstrumentOffsets() {
     const ar = SmoSystemStaff.getStaffInstrumentArray(this.measureInstrumentMap);
