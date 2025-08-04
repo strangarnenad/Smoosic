@@ -29,6 +29,7 @@ import { SuiTextMenu } from './text';
 import { SuiPartSelectionMenu } from './partSelection';
 import { SuiPartMenu } from './parts';
 import {SuiTupletMenu} from "./tuplets";
+import { NoteEntryMenu } from './noteEntry';
 declare var $: any;
 
 /**
@@ -365,6 +366,50 @@ export class SuiMenuManager {
       await this.menu!.selection(ev);
     });
   }
+
+
+
+
+
+  createNoteEntryMenu(): void {
+    const menuItems = NoteEntryMenu.menuItems;
+    const caret = this.tracker.getNoteEntryCaret();
+    
+    // Create toggle button for note entry mode
+    const toggleButton = this.createToggleButton(
+      menuItems.noteEntryToggle,
+      () => caret.isNoteEntryMode(),
+      () => caret.toggleNoteEntryMode()
+    );
+    
+    // Create radio buttons for note/rest mode
+    const noteButton = this.createRadioButton(
+      menuItems.noteMode,
+      () => caret.getMode() === 'note',
+      () => caret.setMode('note')
+    );
+    
+    const restButton = this.createRadioButton(
+      menuItems.restMode,
+      () => caret.getMode() === 'rest',
+      () => caret.setMode('rest')
+    );
+    
+    // Create duration buttons
+    const durationButtons = Object.values(menuItems)
+      .filter(item => item.action === 'setDuration')
+      .map(item => this.createButton(
+        item,
+        () => caret.setDuration(item.duration)
+      ));
+    
+    // Add to toolbar
+    this.addToToolbar([toggleButton, noteButton, restButton, ...durationButtons]);
+  }
+
+
+
+
 }
 export const menuTranslationsInit = () => {
   MenuTranslations.push(suiMenuTranslation(SuiDynamicsMenu.defaults, 'SuiDynamicsMenu'));

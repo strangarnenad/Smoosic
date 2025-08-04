@@ -300,11 +300,17 @@ export class SuiEventHandler implements ModalEventHandler {
   }
 
   mouseMove(ev: any) {
-    console.log('mouse MOVE!!!');
-    this.view.tracker.intersectingArtifact(SvgHelpers.smoBox({
+    const selection = this.view.tracker.intersectingArtifact(SvgHelpers.smoBox({
       x: ev.clientX,
       y: ev.clientY
     }));
+
+    // If in note entry mode, update the note entry caret
+    const caret = this.view.tracker.getNoteEntryCaret();
+    if (caret.isNoteEntryMode()) {
+      caret.setSmoSelection(selection);
+      caret.show();
+    }
   }
 
   mouseClick(ev: any) {

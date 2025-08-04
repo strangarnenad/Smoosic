@@ -6,7 +6,7 @@ import { SmoSelection, SmoSelector, ModifierTab } from '../../smo/xform/selectio
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SuiOscillator } from '../audio/oscillator';
 import { SmoScore } from '../../smo/data/score';
-import { SvgBox, KeyEvent, defaultKeyEvent, keyHandler } from '../../smo/data/common';
+import { SvgBox, KeyEvent, defaultKeyEvent, keyHandler, Ticks } from '../../smo/data/common';
 import { SuiScroller } from './scroller';
 import { PasteBuffer } from '../../smo/xform/copypaste';
 import { SmoNote } from '../../smo/data/note';
@@ -15,15 +15,73 @@ import { layoutDebug } from './layoutDebug';
 declare var $: any;
 
 export class NoteEntryCaret {
+  // Constants for caret dimensions and positioning
+  static readonly CARET_WIDTH = 20;
+  static readonly STAFF_LINE_HEIGHT = 10;
+  static readonly STAFF_LINES_COUNT = 5;
+  static readonly STAFF_HEIGHT = NoteEntryCaret.STAFF_LINE_HEIGHT * NoteEntryCaret.STAFF_LINES_COUNT; // 50
 
-  x: number = 0;
-  y: number = 0;
-  width: number = 0;
-  height: number = 0;
+  // Hardcoded ledger line coverage for all clefs
+  static readonly LEDGER_LINES_ABOVE = 3;
+  static readonly LEDGER_LINES_BELOW = 3;
 
+  // Total height calculation
+  static readonly CARET_HEIGHT = NoteEntryCaret.STAFF_HEIGHT + 
+    (NoteEntryCaret.LEDGER_LINES_ABOVE * NoteEntryCaret.STAFF_LINE_HEIGHT) + 
+    (NoteEntryCaret.LEDGER_LINES_BELOW * NoteEntryCaret.STAFF_LINE_HEIGHT); // 50 + 30 + 30 = 110
+  
+  // Constants for note entry mode
+  static readonly DEFAULT_NOTE_DURATION: Ticks = { numerator: 4096, denominator: 1, remainder: 0 };
+  static readonly DEFAULT_NOTE_MODE: 'note' | 'rest' = 'note';
+
+  box: SvgBox;
   selection: SmoSelection | undefined;
 
-  constructor() {}
+  // Note entry mode and status - encapsulated within the caret
+  isEnabled: boolean = false;
+  mode: 'note' | 'rest' = NoteEntryCaret.DEFAULT_NOTE_MODE;
+  duration: Ticks = NoteEntryCaret.DEFAULT_NOTE_DURATION;
+  isVisible: boolean = false;
+  previewElement: SVGSVGElement | null = null;
+
+  constructor() {
+    this.box = SvgHelpers.boxPoints(0, 0, NoteEntryCaret.CARET_WIDTH, NoteEntryCaret.CARET_HEIGHT);
+  }
+
+  isNoteEntryMode(): boolean {
+    return this.isEnabled;
+  }
+  
+  setNoteEntryMode(enabled: boolean): void {
+    this.isEnabled = enabled;
+    if (enabled) {
+      this.show();
+    } else {
+      this.hide();
+    }
+  }
+  
+  toggleNoteEntryMode(): void {
+    this.setNoteEntryMode(!this.isEnabled);
+  }
+
+  setMode(mode: 'note' | 'rest'): void {
+    this.mode = mode;
+    this.updatePreview();
+  }
+  
+  setDuration(duration: Ticks): void {
+    this.duration = duration;
+    this.updatePreview();
+  }
+  
+  getMode(): 'note' | 'rest' {
+    return this.mode;
+  }
+  
+  getDuration(): Ticks {
+    return this.duration;
+  }
 
   setSmoSelection(selection: SmoSelection): void {
     this.selection = selection;
@@ -31,27 +89,100 @@ export class NoteEntryCaret {
   }
 
   adjustCoordinates(): void {
-    if (this.selection === undefined) {
-      return;
+    if (!this.selection?.note) return;
+    
+    const note = this.selection.note;
+    const measure = this.selection.measure;
+    
+    const staffY = measure.staffY;
+    
+    // Calculate top Y: staff Y minus ledger lines above
+    const y = staffY - (NoteEntryCaret.LEDGER_LINES_ABOVE * NoteEntryCaret.STAFF_LINE_HEIGHT);
+    
+    // X position based on note's logical position
+    let x = 0;
+    if (note.logicalBox) {
+      x = note.logicalBox.x;
     }
-
-    this.selection.note
+    
+    // Update the SvgBox
+    this.box = SvgHelpers.boxPoints(
+      x, 
+      y, 
+      NoteEntryCaret.CARET_WIDTH, 
+      NoteEntryCaret.CARET_HEIGHT
+    );
   }
 
   containsPoint(ev: any): boolean {
-    return false;
+    const point = SvgHelpers.smoBox({
+      x: ev.clientX,
+      y: ev.clientY
+    });
+    
+    return SvgHelpers.doesBox1ContainBox2(this.box, point);
   }
 
   handleMouseUp(): void {
-
+    // Handle note entry completion
   }
-
+  
   handleMouseDown(): void {
-
+    // Handle note entry initiation
+  }
+  
+  handleMouseClick(): void {
+    // Handle note entry confirmation
   }
 
-  handleMouseClick(): void {
+  // Preview and rendering methods
+  updatePreview(): void {
+    // Update note previews on staff lines and ledger lines
+    this.createPreviewElement();
+  }
+  
+  createPreviewElement(): void {
+    // Create SVG preview of the note/rest that would be entered
+    // This should show on staff lines and ledger lines
+  }
 
+  show(): void {
+    this.isVisible = true;
+    this.render();
+  }
+  
+  hide(): void {
+    this.isVisible = false;
+    this.unrender();
+  }
+  
+  render(): void {
+    // Render the caret rectangle and preview using this.box
+    if (!this.isVisible) return;
+    
+    // Use this.box for rendering the caret rectangle
+    // Example: draw a rectangle at this.box coordinates
+  }
+
+  unrender(): void {
+    // Remove caret from display
+  }
+
+  // Getters for compatibility with existing code
+  get x(): number {
+    return this.box.x;
+  }
+  
+  get y(): number {
+    return this.box.y;
+  }
+  
+  get width(): number {
+    return this.box.width;
+  }
+  
+  get height(): number {
+    return this.box.height;
   }
 
 }
@@ -131,9 +262,13 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     return this.renderer.score;
   }
 
+  isNoteEntryMode(): boolean {
+    return this.noteEntryCaret?.isNoteEntryMode() || false;
+  }
+  
   getNoteEntryCaret(): NoteEntryCaret {
-    if (this.noteEntryCaret === undefined) {
-      return new NoteEntryCaret();
+    if (!this.noteEntryCaret) {
+      this.noteEntryCaret = new NoteEntryCaret();
     }
     return this.noteEntryCaret;
   }
