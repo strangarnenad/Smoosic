@@ -496,7 +496,6 @@ export class SvgPageMap {
       const x = (box.x - this.containerOffset.x) / cof;
       const y = (box.y - this.containerOffset.y) / cof;
       const logicalBox = SvgHelpers.boxPoints(x, y, Math.max(box.width / cof, 1), Math.max(box.height / cof, 1));
-      logicalBox.y -= Math.round(logicalBox.y / this.layout.pageHeight) / this.layout.svgScale;
       if (layoutDebug.mask | layoutDebug.values['mouseDebug']) {
         layoutDebug.updateMouseDebug(box, logicalBox, this.containerOffset);
       }
