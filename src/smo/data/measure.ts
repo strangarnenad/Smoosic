@@ -1193,7 +1193,32 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
       this.activeVoice = vix;
     }
   }
-
+  getSwapVoicePairs() {
+    const rv = [];
+    for (let i = 0; i < this.voices.length; ++i) {
+      for (let j = i + 1; j < this.voices.length; ++j) {
+        rv.push([i, j]);
+      }
+    }
+    return rv;
+  }
+  swapVoices(voice1: number, voice2: number) {
+    if (this.voices.length > voice1 && this.voices.length > voice2) {
+      const v1 = this.voices[voice1];
+      const v2 = this.voices[voice2];
+      const nvoices: SmoVoice[] = [];
+      for (let i = 0; i < this.voices.length; ++i) {
+        if (i === voice1) {
+          nvoices.push(v2);
+        } else if (i === voice2) {
+          nvoices.push(v1);
+        } else {
+          nvoices.push(this.voices[i]);
+        }
+      }
+      this.voices = nvoices;
+    }
+  }
   tickmapForVoice(voiceIx: number) {
     return new TickMap(this, voiceIx);
   }

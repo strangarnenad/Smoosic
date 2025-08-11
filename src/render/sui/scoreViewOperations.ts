@@ -455,6 +455,13 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this._renderChangedMeasures(measuresToAdd);
     await this.renderer.updatePromise();
   }
+  async swapVoices(voice1: number, voice2: number): Promise<void> {
+    const selections = this.tracker.getSelectedMeasures();
+    const altSelections = this._getEquivalentSelections(selections);
+    SmoOperation.swapVoice(selections, voice1, voice2);
+    SmoOperation.swapVoice(altSelections, voice1, voice2);
+    this._renderChangedMeasures(selections);
+  }
   /**
    * Assign an instrument to a set of measures
    * @param instrument the instrument to assign to the selections

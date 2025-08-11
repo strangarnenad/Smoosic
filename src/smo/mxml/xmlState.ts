@@ -732,8 +732,11 @@ export class XmlState {
       smoTupletParams.startIndex = xmlTupletState.start!.tick;
       smoTupletParams.endIndex = xmlTupletState.end!.tick;
       for (let i = smoTupletParams.startIndex; i <= smoTupletParams.endIndex; i++) {
-        smoTupletParams.totalTicks += notes[i].tickCount;
+        smoTupletParams.totalTicks += Math.floor(notes[i].tickCount);
       }
+      // Normalize to an allowed note length, because MusicXML durations do not add up
+      smoTupletParams.totalTicks = SmoMusic.closestSimpleDurationFromTicks(smoTupletParams.totalTicks);
+      
       smoTupletParams.voice = xmlTupletState.start!.voice;
       const smoTuplet = new SmoTuplet(smoTupletParams);
       for (let i = 0; i < xmlTupletStateTreeNode.children.length; i++) {

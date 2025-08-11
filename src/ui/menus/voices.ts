@@ -1,5 +1,5 @@
 import { SuiMenuBase, SuiMenuParams, MenuDefinition, SuiMenuHandler, SuiMenuShowOption, 
-  SuiConfiguredMenuOption, SuiConfiguredMenu, customizeMenuOptionsFcn } from './menu';
+  SuiConfiguredMenuOption, SuiConfiguredMenu, MenuChoiceDefinition } from './menu';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 
 declare var $: any;
@@ -10,9 +10,41 @@ declare var $: any;
 export class SuiVoiceMenu extends SuiConfiguredMenu {
   constructor(params: SuiMenuParams) {
     super(params, 'Voices', SuiVoiceMenuOptions);
-  }  
+    const measures = this.view.tracker.getSelectedMeasures();
+    if (measures.length > 0) {
+      const sel = measures[0];
+      const swaps = sel.measure.getSwapVoicePairs();
+      swaps.forEach((pair: number[]) => {
+        this.menuOptions.push(new voiceSwapperMenuOption(pair[0], pair[1]));
+      });
+    }
+  }
 }
-
+class voiceSwapperMenuOption implements SuiConfiguredMenuOption {
+  voice1: number;
+  voice2: number;
+  cmd: string;
+  label: string;
+  get menuChoice(): MenuChoiceDefinition  {
+    return {
+      icon: '',
+      text: this.label,
+      value: this.cmd
+    }
+  }
+  constructor(voice1: number, voice2: number) {
+    this.voice1 = voice1;
+    this.voice2 = voice2;
+    this.label = `Swap ${voice1} and ${voice2}`;
+    this.cmd = `${voice1}To${voice2}`;
+  }
+  async handler(menu: SuiMenuBase) {
+    menu.view.swapVoices(this.voice1, this.voice2);
+  }
+  display() {
+    return true;
+  }
+}
 /**
  * @category SuiMenu
  */

@@ -124,6 +124,12 @@ export class SmoOperation {
   static populateVoice(selection: SmoSelection, voiceIx: number) {
     selection.measure.populateVoice(voiceIx);
   }
+  static swapVoice(selections: SmoSelection[], voice1: number, voice2: number) {
+    const measures = SmoSelection.getMeasureList(selections);
+    measures.forEach((ss) => {
+      ss.measure.swapVoices(voice1, voice2);
+    });
+  }
 
   static setTabStave(score: SmoScore, tabStave: SmoTabStave) {
     score.staves[tabStave.startSelector.staff].updateTabStave(tabStave);

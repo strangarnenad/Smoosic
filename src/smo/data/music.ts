@@ -1534,7 +1534,7 @@ export class SmoMusic {
     return SmoMusic._validDurations;
   }
   /**
-   * Get the closest duration from ticks
+   * Get the closest valid duration for this number of ticks, but not going over
    * @param ticks 
    * @returns 
    */
@@ -1548,6 +1548,15 @@ export class SmoMusic {
       }
     }
     return null;
+  }
+  static closestSimpleDurationFromTicks(ticks: number): number {
+    let closest = SmoMusic.durationsDescending[0];
+    for (let i = 0; i < SmoMusic.durationsDescending.length; ++i) {
+      if (Math.abs(SmoMusic.durationsDescending[i] - ticks) < closest) {
+        closest = i;
+      }
+    }
+    return closest;
   }
   static _ticksToDuration: Record<string, string> = {};
 
