@@ -10,14 +10,6 @@ declare var $: any;
 export class SuiVoiceMenu extends SuiConfiguredMenu {
   constructor(params: SuiMenuParams) {
     super(params, 'Voices', SuiVoiceMenuOptions);
-    const measures = this.view.tracker.getSelectedMeasures();
-    if (measures.length > 0) {
-      const sel = measures[0];
-      const swaps = sel.measure.getSwapVoicePairs();
-      swaps.forEach((pair: number[]) => {
-        this.menuOptions.push(new voiceSwapperMenuOption(pair[0], pair[1]));
-      });
-    }
   }
 }
 class voiceSwapperMenuOption implements SuiConfiguredMenuOption {
@@ -35,14 +27,57 @@ class voiceSwapperMenuOption implements SuiConfiguredMenuOption {
   constructor(voice1: number, voice2: number) {
     this.voice1 = voice1;
     this.voice2 = voice2;
-    this.label = `Swap ${voice1} and ${voice2}`;
+    this.label = `Swap ${voice1 + 1} and ${voice2 + 1}`;
     this.cmd = `${voice1}To${voice2}`;
   }
   async handler(menu: SuiMenuBase) {
     menu.view.swapVoices(this.voice1, this.voice2);
   }
-  display() {
-    return true;
+  display(menu: SuiMenuBase) {
+    const measures = menu.view.tracker.getSelectedMeasures();
+    if (measures.length > 0) {
+        const sel = measures[0];
+        const swaps = sel.measure.getSwapVoicePairs();
+        for (let i = 0; i < swaps.length; ++i) {
+          const pair = swaps[i];
+          if (this.voice1 == pair[0] && this.voice2 == pair[1]) {
+            return true;
+          }
+      }
+    }
+    return false;
+  }
+}
+class selectVoiceMenuOption implements SuiConfiguredMenuOption {
+  voice: number;
+  constructor(voice: number) {
+    this.voice = voice;
+  }
+  async handler (menu: SuiMenuBase)  {
+    await menu.view.populateVoice(this.voice);
+  }
+  display (menu: SuiMenuBase) {
+    for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
+      const mm = menu.view.tracker.selections[i].measure;
+      if (mm.voices.length === 1) {
+        return this.voice === 1;
+      }
+      // If there are n voices, and I am n+1, show option
+      if (mm.voices.length === this.voice) {
+        return true;
+      }
+      if (mm.voices.length > this.voice && mm.getActiveVoice() !== this.voice) {
+        return true;
+      }
+    }
+    return false;
+  }
+  get menuChoice()  {
+    return {
+      icon: '',
+      text: `Voice ${this.voice + 1}`,
+      value: `voice${this.voice.toString()}`
+    };
   }
 }
 /**
@@ -50,7 +85,7 @@ class voiceSwapperMenuOption implements SuiConfiguredMenuOption {
  */
 const selectVoiceOneMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    menu.view.populateVoice(0);
+    await menu.view.populateVoice(0);
   }, display: (menu: SuiMenuBase) => {
     for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
       const mm = menu.view.tracker.selections[i].measure;
@@ -71,11 +106,11 @@ const selectVoiceOneMenuOption: SuiConfiguredMenuOption = {
  */
 const selectVoiceTwoMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    menu.view.populateVoice(1);
+    await menu.view.populateVoice(1);
   }, display: (menu: SuiMenuBase) => {
     for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
       const mm = menu.view.tracker.selections[i].measure;
-      if (mm.voices.length < 4) {
+      if (mm.voices.length <= 4 && mm.voices.length > 1) {
         return true;
       }
     }
@@ -92,7 +127,7 @@ const selectVoiceTwoMenuOption: SuiConfiguredMenuOption = {
  */
 const selectVoiceThreeMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    menu.view.populateVoice(2);
+    await menu.view.populateVoice(2);
   }, display: (menu: SuiMenuBase) => {
     for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
       const mm = menu.view.tracker.selections[i].measure;
@@ -113,7 +148,7 @@ const selectVoiceThreeMenuOption: SuiConfiguredMenuOption = {
  */
 const selectVoiceFourMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    menu.view.populateVoice(3);
+    await menu.view.populateVoice(3);
   }, display: (menu: SuiMenuBase) => {
     for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
       const mm = menu.view.tracker.selections[i].measure;
@@ -134,7 +169,7 @@ const selectVoiceFourMenuOption: SuiConfiguredMenuOption = {
  */
 const removeVoiceMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    menu.view.depopulateVoice();
+    await menu.view.depopulateVoice();
   }, display: (menu: SuiMenuBase) => {
     for (let i = 0; i < menu.view.tracker.selections.length; ++i) {
       const mm = menu.view.tracker.selections[i].measure;
@@ -155,6 +190,15 @@ const removeVoiceMenuOption: SuiConfiguredMenuOption = {
  * @category SuiMenu
  */
 const SuiVoiceMenuOptions: SuiConfiguredMenuOption[] = [
-  selectVoiceOneMenuOption, selectVoiceTwoMenuOption, selectVoiceThreeMenuOption, selectVoiceFourMenuOption,
+  new selectVoiceMenuOption(0),
+  new selectVoiceMenuOption(1),
+  new selectVoiceMenuOption(2),
+  new selectVoiceMenuOption(3),
+   new voiceSwapperMenuOption(0, 1),  
+   new voiceSwapperMenuOption(0, 2),
+   new voiceSwapperMenuOption(0, 3),
+   new voiceSwapperMenuOption(1, 2),
+   new voiceSwapperMenuOption(1, 3),
+   new voiceSwapperMenuOption(2, 3),
   removeVoiceMenuOption
 ];

@@ -666,6 +666,9 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
         selection.box = JSON.parse(JSON.stringify(this.suggestion.box));
         selection.scrollBox = JSON.parse(JSON.stringify(this.suggestion.scrollBox));
         this.selections = [selection];
+        // There is a single selection, make sure the active voice is set to it.
+        selection.measure.setActiveVoice(selection.selector.voice);
+        this.selectActiveVoice();
       }
     }
     if (preselected && this.modifierSelections.length) {

@@ -989,8 +989,16 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
    */
   alignNotesWithTimeSignature() {
     const tsTicks = SmoMusic.timeSignatureToTicks(this.timeSignature.timeSignature);
-    if (tsTicks === this.getMaxTicksVoice()) {
-      return;
+    let aligned = true;
+    for (let i = 0; i < this.voices.length; ++i) {
+      const voice = this.voices[i];
+      if (this.getTicksFromVoice(i) !== tsTicks) {
+        aligned = false;
+        break;
+      }
+    }
+    if (aligned) {
+      return true;
     }
     const replaceNoteWithDuration = (target: number, ar: SmoNote[], note: SmoNote) => {
       const fitNote = new SmoNote(SmoNote.defaults);

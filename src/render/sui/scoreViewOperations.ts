@@ -454,6 +454,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
     SmoOperation.setActiveVoice(this.score, index);
     this._renderChangedMeasures(measuresToAdd);
     await this.renderer.updatePromise();
+    this.tracker.selectActiveVoice();
   }
   async swapVoices(voice1: number, voice2: number): Promise<void> {
     const selections = this.tracker.getSelectedMeasures();

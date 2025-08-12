@@ -219,7 +219,8 @@ export class VxMeasure implements VxMeasureIf {
       if (smoNote.fillStyle && !this.printing) {
         vexNote.setStyle({ fillStyle: smoNote.fillStyle });
       } else if (voiceIx > 0 && !this.printing) {
-        vexNote.setStyle({ fillStyle: "#115511" });
+        const voiceFill = ['#115511','#555511','#883344']
+        vexNote.setStyle({ fillStyle: voiceFill[voiceIx - 1] });
       } else if (smoNote.isHidden() && this.printing) {
         vexNote.setStyle({ fillStyle: "#ffffff00" });
       }
