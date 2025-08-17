@@ -426,7 +426,7 @@ export class UndoBuffer {
       } else {
         if (typeof(staffMap[buf.selector.staff]) === 'number') {
           buf.selector.staff = staffMap[buf.selector.staff];
-          const staff = SmoSystemStaff.deserialize(buf.json);
+          const staff = SmoSystemStaff.deserialize(buf.json, !score.preferences.transposingScore);
           score.replaceStaff(buf.selector.staff, staff);
         }
       }      

@@ -366,7 +366,10 @@ export class SmoScore {
       const current = func(measure);
       const ix = measure.measureNumber.measureIndex;
       const currentInstrument = this.staves[0].getStaffInstrument(ix);
-      current.keySignature = SmoMusic.vexKeySigWithOffset(current.keySignature, -1 * currentInstrument.keyOffset);
+      // If this is a non-transposing score, adjust the key signature
+      if (!this.preferences.transposingScore) {
+        current.keySignature = SmoMusic.vexKeySigWithOffset(current.keySignature, -1 * currentInstrument.keyOffset);
+      }
       if (ix === 0) {
         keySignature[0] = current.keySignature;
         tempo[0] = current.tempo;
@@ -483,7 +486,9 @@ export class SmoScore {
     obj.audioSettings = this.audioSettings.serialize();
     if (!skipStaves) {
       this.staves.forEach((staff: SmoSystemStaff) => {
-        obj.staves!.push(staff.serialize({ skipMaps: true, preserveIds: preserveIds }));
+        obj.staves!.push(staff.serialize({ skipMaps: true, preserveIds: preserveIds, 
+          transposeInstruments: !this.preferences.transposingScore
+         }));
       });
     } else {
       obj.staves = [];
@@ -687,7 +692,7 @@ export class SmoScore {
     jsonObj.staves.forEach((staffObj: any, staffIx: number) => {
       staffObj.staffId = staffIx;
       staffObj.renumberingMap = renumberingMap;
-      const staff = SmoSystemStaff.deserialize(staffObj);
+      const staff = SmoSystemStaff.deserialize(staffObj, !params.preferences?.transposingScore);
       staves.push(staff);
     });
 

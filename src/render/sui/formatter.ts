@@ -745,7 +745,8 @@ export class SuiLayoutFormatter {
     clefLast: string, keySigLast: string, timeSigLast: TimeSignature, tempoLast: SmoTempoText) {
     // The key signature is set based on the transpose index already, i.e. an Eb part in concert C already has 3 sharps.
     const xposeScore = this.score?.preferences?.transposingScore && (this.score?.isPartExposed() === false);
-    const xposeOffset = xposeScore ? measure.transposeIndex : 0;
+    // const xposeOffset = xposeScore ? measure.transposeIndex : 0;
+    const xposeOffset = 0;
     const measureKeySig = SmoMusic.vexKeySignatureTranspose(measure.keySignature, xposeOffset);
     measure.svg.forceClef = (systemIndex === 0 || measure.clef !== clefLast);
     measure.svg.forceTimeSignature = (measure.measureNumber.measureIndex === 0 || 

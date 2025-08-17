@@ -617,9 +617,11 @@ export abstract class SuiScoreView {
       const row = rows[i];
       if (row.show) {
         const srcStave = this.storeScore.staves[i];
-        const jsonObj = srcStave.serialize({ skipMaps: false, preserveIds: true });
+        const jsonObj = srcStave.serialize({ skipMaps: false, preserveIds: true,
+          transposeInstruments: !this.storeScore.preferences.transposingScore
+         });
         jsonObj.staffId = staffMap.length;
-        const nStave = SmoSystemStaff.deserialize(jsonObj);
+        const nStave = SmoSystemStaff.deserialize(jsonObj, !this.storeScore.preferences.transposingScore);
         nStave.mapStaffFromTo(i, nscore.staves.length);
         nscore.staves.push(nStave);
         if (srcStave.keySignatureMap) {
@@ -673,15 +675,22 @@ export abstract class SuiScoreView {
     this.renderer.setViewport();
   }
   /**
-   * Update score based on transposing flag.
+   * If the score is non-transposed, transpose the part so it is in the 
+   * correct key.
    */
   _setTransposing() {
-    if (!this.isPartExposed()) {
+    if (this.isPartExposed()) {
+      const xpose = this.score.preferences?.transposingScore;
+      if (xpose) {
+        this.score.setNonTransposing();
+      }
+    }
+    /* if (!this.isPartExposed()) {
       const xpose = this.score.preferences?.transposingScore;
       if (xpose) {
         this.score.setTransposing();
       }
-    }
+    } */
   }
 
   /**

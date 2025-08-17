@@ -224,8 +224,10 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this.storeScore.updateScorePreferences(new SmoScorePreferences(pref));
     if (curXpose === false && oldXpose === true) {
       this.score.setNonTransposing();
+      this.storeScore.setNonTransposing();
     } else if (curXpose === true && oldXpose === false) {
       this.score.setTransposing();
+      this.storeScore.setTransposing();
     }
     this.renderer.setDirty();
     return this.renderer.updatePromise();

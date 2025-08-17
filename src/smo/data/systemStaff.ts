@@ -26,7 +26,8 @@ import { FontInfo } from '../../common/vex';
  */
 export interface SmoStaffSerializationOptions {
   skipMaps: boolean,
-  preserveIds: boolean
+  preserveIds: boolean,
+  transposeInstruments: boolean
 }
 /**
  * Constructor parameters for {@link SmoSystemStaff}.
@@ -295,7 +296,11 @@ export class SmoSystemStaff implements SmoObjectParams {
       params.measureInstrumentMap![parseInt(ikey, 10)] = this.measureInstrumentMap[parseInt(ikey, 10)].serialize();
     });
     this.measures.forEach((measure) => {
-      params.measures!.push(measure.serialize());
+      const mp = measure.serialize();
+      if (!options.transposeInstruments) {
+        mp.transposeIndex = 0;
+      }
+      params.measures!.push(mp);
     });
     params.modifiers = [];
     this.modifiers.forEach((modifier) => {
@@ -314,7 +319,7 @@ export class SmoSystemStaff implements SmoObjectParams {
   }
   // ### deserialize
   // parse formerly serialized staff.
-  static deserialize(jsonObj: SmoSystemStaffParamsSer): SmoSystemStaff {
+  static deserialize(jsonObj: SmoSystemStaffParamsSer, transposeInstruments: boolean): SmoSystemStaff {
     const params: SmoSystemStaffParams = SmoSystemStaff.defaults;
     params.staffId = jsonObj.staffId ?? 0;
     params.measures = [];
@@ -386,7 +391,9 @@ export class SmoSystemStaff implements SmoObjectParams {
         instrumentAr[curInstrumentIndex + 1].measureIndex) {
         curInstrumentIndex += 1;
       }
-      measure.transposeIndex = instrumentAr[curInstrumentIndex].instrument.keyOffset;
+      if (transposeInstruments) {
+        measure.transposeIndex = instrumentAr[curInstrumentIndex].instrument.keyOffset;
+      }
       measure.lines = instrumentAr[curInstrumentIndex].instrument.lines;
       params.measures.push(measure);
     });
