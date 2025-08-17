@@ -307,6 +307,10 @@ export class SmoStretchNoteActor extends TickIteratorBase {
 
   static apply(params: SmoStretchNoteParams) {
     const actor = new SmoStretchNoteActor(params);
+    // The duration would extend over the barline.
+    if (actor.notesToInsert.length < 1) {
+      return;
+    }
     SmoTickIterator.iterateOverTicks(actor.measure, actor, actor.voice);
   }
   iterateOverTick(note: SmoNote, tickmap: TickMap, index: number) {
