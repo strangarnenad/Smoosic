@@ -208,12 +208,16 @@ export class PasteBuffer {
       const selection: PasteNote = this.notes[i];
       if (selection.tupletStart) {
         // const tupletTree: SmoTupletTree | null = SmoTupletTree.getTupletTreeForNoteIndex(this.tupletNoteMap, selection.selector.voice, selection.selector.tick);
-        if (currentDuration + selection.tupletStart.totalTicks > measureTotalDuration && measureSelection !== null) {
+        if (currentDuration + selection.tupletStart.totalTicks > measureTotalDuration && 
+          currentDuration + selection.note.tickCount < measureTotalDuration &&
+           measureSelection !== null) {
           //if tuplet does not fit in a measure as a whole we cannot paste it, it is ether the whole thing or nothing
           //reset everything that has been changed so far and return
-          this.measures = [];
-          this.staffSelectors = [];
-          return;
+          if (measureSelection === null) {
+            this.measures = [];
+            this.staffSelectors = [];
+            return;
+          }
         }
       }
       if (currentDuration + selection.note.tickCount > measureTotalDuration && measureSelection !== null) {
@@ -222,7 +226,8 @@ export class PasteBuffer {
         const remainder = (currentDuration + selection.note.tickCount) - measureTotalDuration;
         currentDuration = remainder;
 
-        measureSelection = SmoSelection.measureSelection(this.score as SmoScore, measureSelection.selector.staff,measureSelection.selector.measure + 1);
+        measureSelection = SmoSelection.measureSelection(this.score as SmoScore, 
+          measureSelection.selector.staff,measureSelection.selector.measure + 1);
 
         // If the paste buffer overlaps the end of the score, we can't paste (TODO:  add a measure in this case)
         if (measureSelection != null) {

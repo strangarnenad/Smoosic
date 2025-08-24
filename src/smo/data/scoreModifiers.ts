@@ -124,10 +124,11 @@ export interface SmoScoreInfo {
 }
 
 
-export type SmoScorePreferenceBool = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'transposingScore' | 'autoScrollPlayback';
+export type SmoScorePreferenceBool = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' 
+  | 'transposingScore' | 'autoScrollPlayback' | 'showPartNames';
 export type SmoScorePreferenceNumber = 'defaultDupleDuration' | 'defaultTripleDuration';
 export const SmoScorePreferenceBools: SmoScorePreferenceBool[] = ['autoPlay', 'autoAdvance', 'showPiano', 'hideEmptyLines', 
-  'transposingScore', 'autoScrollPlayback'];
+  'transposingScore', 'autoScrollPlayback', 'showPartNames'];
 export const SmoScorePreferenceNumbers: SmoScorePreferenceNumber[] = ['defaultDupleDuration', 'defaultTripleDuration'];
 /**
  * Global score/program behavior preferences, see below for parameters
@@ -142,6 +143,7 @@ export interface SmoScorePreferencesParams {
   showPiano: boolean;
   hideEmptyLines: boolean;
   transposingScore: boolean;
+  showPartNames: boolean;
 }
 /**
  * Some default SMO behavior
@@ -163,6 +165,7 @@ export class SmoScorePreferences {
   hideEmptyLines: boolean = false;
   autoScrollPlayback: boolean = true;
   transposingScore: boolean = false;
+  showPartNames: boolean = false;
   static get defaults(): SmoScorePreferencesParams {
     return {
       autoPlay: true,
@@ -172,7 +175,8 @@ export class SmoScorePreferences {
       autoScrollPlayback: true,
       showPiano: false,
       hideEmptyLines: false,
-      transposingScore: false
+      transposingScore: false,
+      showPartNames: false
     };
   }
   constructor(params: SmoScorePreferencesParams) {
@@ -184,8 +188,11 @@ export class SmoScorePreferences {
         this[nn] = params[nn];
       });
       // legacy, added later
-      if (typeof(params.autoScrollPlayback) === 'undefined') {
+      if (typeof(params.autoScrollPlayback) === 'undefined') {        
         this.autoScrollPlayback = true;
+      }
+      if (typeof(params.showPartNames) === 'undefined') {
+        this.showPartNames = false;
       }
     }
   }

@@ -79,6 +79,13 @@ export class SuiScorePreferencesAdapter extends SuiComponentAdapter {
     this.preferences.transposingScore = value;
     this.view.updateScorePreferences(this.preferences);
   }
+  get showPartNames() {
+    return this.preferences.showPartNames;
+  }
+  set showPartNames(value: boolean) {
+    this.preferences.showPartNames = value;
+    this.view.updateScorePreferences(this.preferences);
+  }
   async cancel() {
     const p1 = JSON.stringify(this.preferences);
     const p2 = JSON.stringify(this.backup);
@@ -125,6 +132,10 @@ export class SuiScorePreferencesDialog extends SuiDialogAdapterBase<SuiScorePref
         smoName: 'hideEmptyLines',
         control: 'SuiToggleComponent',
         label: 'Hide Empty Lines'
+      },  {
+        smoName: 'showPartNames',
+        control: 'SuiToggleComponent',
+        label: 'Show Part Names in Score'
       }, {
         smoName: 'defaultDupleDuration',
         control: 'SuiDropdownComponent',

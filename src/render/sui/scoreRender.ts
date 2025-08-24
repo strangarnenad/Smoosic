@@ -610,6 +610,22 @@ export class SuiScoreRender {
 
     measures.forEach((measure) => {
       const context = this.vexContainers.getRenderer(measure.svg.logicalBox);
+      // For scores with more than one part, put a helper part number on there.
+      if (this.score?.preferences.showPartNames && !printing && !this.score?.isPartExposed()) {
+        this.score?.staves.forEach((curStaff) => {
+          if (curStaff.partInfo.partAbbreviation.length > 0) {
+            const numAr: any[] = [];
+            const mm = curStaff.measures[measure.measureNumber.localIndex];
+            const modBox = context.offsetSvgPoint(mm.svg.logicalBox);
+            numAr.push({ y: modBox.y + mm.svg.logicalBox.height / 2 });
+            numAr.push({ x: modBox.x - (20 +  curStaff.partInfo.partAbbreviation.length) });
+            numAr.push({ 'font-family': SourceSansProFont.fontFamily });
+            numAr.push({ 'font-size': '10pt' });
+            SvgHelpers.placeSvgText(context.svg, numAr, 'measure-number', 
+              curStaff.partInfo.partAbbreviation);
+          }
+        });
+      }
       if (measure.measureNumber.localIndex > 0 && measure.measureNumber.systemIndex === 0 && measure.svg.logicalBox && context) {
         const numAr: any[] = [];
         const modBox = context.offsetSvgPoint(measure.svg.logicalBox);

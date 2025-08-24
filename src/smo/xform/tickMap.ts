@@ -20,6 +20,7 @@ export class TickMap {
   keySignature: string;
   voice: number;
   notes: SmoNote[] = [];
+  priorAccidentals: TickAccidental[] = [];
   index: number = 0;
   startIndex: number = 0;
   endIndex: number = 0;
@@ -107,34 +108,6 @@ export class TickMap {
     this.durationAccidentalMap[this.durationMap[this.index]] = newObj;
   }
 
-  // ### getActiveAccidental
-  // return the active accidental for the given note
-  getActiveAccidental(pitch: Pitch, iteratorIndex: number, keySignature: string) {
-    let defaultAccidental: string = SmoMusic.getKeySignatureKey(pitch.letter, keySignature);
-    let i = 0;
-    let j = 0;
-    defaultAccidental = defaultAccidental.length > 1 ? defaultAccidental[1] : 'n';
-    if (iteratorIndex === 0) {
-      return defaultAccidental;
-    }
-    // Back up the accidental map until we have a match, or until we run out
-    for (i = iteratorIndex; i > 0; --i) {
-      const map: Record<string, TickAccidental> = this.accidentalMap[i - 1];
-      const mapKeys = Object.keys(map);
-      for (j = 0; j < mapKeys.length; ++j) {
-        const mapKey: string = mapKeys[j];
-        // The letter name + accidental in the map
-        const mapPitch: Pitch = map[mapKey].pitch;
-        const mapAcc = mapPitch.accidental ? mapPitch.accidental : 'n';
-
-        // if the letters match and the accidental...
-        if (mapPitch.letter.toLowerCase() === pitch.letter) {
-          return mapAcc;
-        }
-      }
-    }
-    return defaultAccidental;
-  }
   get duration() {
     return this.totalDuration;
   }

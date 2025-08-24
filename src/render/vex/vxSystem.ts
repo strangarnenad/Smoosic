@@ -621,7 +621,8 @@ export class VxSystem {
     if (softmax === SmoMeasureFormat.defaultProportionality) {
       softmax = this.score.layoutManager?.getGlobalLayout().proportionality ?? 0;
     }
-    const vxMeasure: VxMeasure = new VxMeasure(this.context, selection, printing, softmax);
+    const tiedOverPitches = selection.staff.getTiedPitchesForNextMeasure(smoMeasure.measureNumber.measureIndex - 1);
+    const vxMeasure: VxMeasure = new VxMeasure(this.context, selection, printing, softmax, tiedOverPitches);
 
     // create the vex notes, beam groups etc. for the measure
     vxMeasure.preFormat();

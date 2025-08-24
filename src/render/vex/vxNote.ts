@@ -9,7 +9,7 @@ import { SmoOrnament, SmoArticulation, SmoDynamicText, SmoLyric,
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoMeasure, MeasureTickmaps } from '../../smo/data/measure';
 import { SvgHelpers } from '../sui/svgHelpers';
-import { Clef, IsClef } from '../../smo/data/common';
+import { Clef, IsClef, Pitch } from '../../smo/data/common';
 import { SvgPage } from '../sui/svgPageMap';
 import { toVexBarlineType, vexBarlineType, vexBarlinePosition, toVexBarlinePosition, toVexSymbol,
   toVexTextJustification, toVexTextPosition, getVexChordBlocks, toVexStemDirection } from './smoAdapter';
@@ -42,6 +42,7 @@ export interface VexNoteModifierIf {
   staveNote: Note,
   voiceIndex: number,
   tickIndex: number,
+  tiedOverPitches: Pitch[],
   tabNote?: StemmableNote | TabNote,
 }
 /**
@@ -96,6 +97,20 @@ export class VxNote {
     this.noteData.smoNote.accidentalsRendered = [];
     for (i = 0; i < this.noteData.smoNote.pitches.length && this.noteData.vxMeasure.tickmapObject !== null; ++i) {
       const pitch = this.noteData.smoNote.pitches[i];
+      const tiedOver = this.noteData.tiedOverPitches.find((pp) => pp.letter === pitch.letter && pp.octave === pitch.octave);
+      if (tiedOver) {
+        if (tiedOver.accidental === pitch.accidental) {
+          // Why do we do this?
+          this.noteData.smoNote.accidentalsRendered.push('');
+          continue;
+        }
+        else {
+          const acc = new VF.Accidental(pitch.accidental);
+          this.noteData.smoNote.accidentalsRendered.push(pitch.accidental);
+          this.noteData.staveNote.addModifier(acc, i);
+          continue;
+        }
+      }
       const zz = SmoMusic.accidentalDisplay(pitch, this.noteData.smoMeasure.keySignature,
         this.noteData.vxMeasure.tickmapObject.tickmaps[this.noteData.voiceIndex].durationMap[this.noteData.tickIndex], 
         this.noteData.vxMeasure.tickmapObject.accidentalArray);

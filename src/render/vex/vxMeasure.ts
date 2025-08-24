@@ -15,7 +15,7 @@ import { SmoOrnament, SmoDynamicText,
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoMeasure, MeasureTickmaps } from '../../smo/data/measure';
 import { SvgHelpers } from '../sui/svgHelpers';
-import { Clef, IsClef, ElementLike } from '../../smo/data/common';
+import { Clef, IsClef, ElementLike, Pitch } from '../../smo/data/common';
 import { SvgPage } from '../sui/svgPageMap';
 import { SmoTabStave } from '../../smo/data/staffModifiers';
 import { toVexBarlineType, vexBarlineType, vexBarlinePosition, toVexBarlinePosition, toVexSymbol,
@@ -70,8 +70,10 @@ export class VxMeasure implements VxMeasureIf {
   collisionMap: Record<number, SmoNote[]> = {};
   dbgLeftX: number = 0;
   dbgWidth: number = 0;
+  tiedOverPitches: Pitch[] = [];
 
-  constructor(context: SvgPage, selection: SmoSelection, printing: boolean, softmax: number) {
+  constructor(context: SvgPage, selection: SmoSelection, 
+    printing: boolean, softmax: number, tiedOverPitches: Pitch[]) {
     this.context = context;
     this.rendered = false;
     this.selection = selection;
@@ -85,6 +87,7 @@ export class VxMeasure implements VxMeasureIf {
     this.beamToVexMap = {};
     this.softmax = softmax;
     this.smoTabStave = selection.staff.getTabStaveForMeasure(selection.selector);
+    this.tiedOverPitches = tiedOverPitches;
   }
 
   static get fillStyle() {
@@ -229,12 +232,14 @@ export class VxMeasure implements VxMeasureIf {
         vexNote.setStave(this.stave);
       }
     }
+    const tiedOverPitches = tickIndex === 0 ? this.tiedOverPitches : [];
     const noteData: VexNoteModifierIf = {
       smoMeasure: this.smoMeasure,
       vxMeasure: this,
       smoNote: smoNote,
       staveNote: vexNote,
       voiceIndex: voiceIx,
+      tiedOverPitches,
       tickIndex: tickIndex
     }
     if (tabNote) {

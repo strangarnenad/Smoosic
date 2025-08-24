@@ -6,13 +6,13 @@
  * @module /smo/data/systemStaff
  * **/
 import { SmoObjectParams, SmoAttrs, MeasureNumber, getId, 
-   ElementLike } from './common';
+   Pitch, ElementLike } from './common';
 import { SmoMusic } from './music';
 import { SmoMeasure, SmoMeasureParamsSer } from './measure';
 import { SmoMeasureFormat, SmoRehearsalMark, SmoRehearsalMarkParams, SmoTempoTextParams, SmoVolta, SmoBarline } from './measureModifiers';
 import { SmoInstrumentParams, StaffModifierBase, SmoInstrument, SmoInstrumentMeasure, SmoInstrumentStringParams, SmoInstrumentNumParams, 
   SmoTie, SmoStaffTextBracket, SmoStaffTextBracketParamsSer, 
-  StaffModifierBaseSer, SmoTabStave, SmoTabStaveParamsSer } from './staffModifiers';
+  StaffModifierBaseSer, SmoTabStave, SmoTabStaveParamsSer, TieLine } from './staffModifiers';
 import { SmoPartInfo, SmoPartInfoParamsSer } from './partInfo';
 import { SmoTextGroup } from './scoreText';
 import { SmoSelector } from '../xform/selections';
@@ -587,6 +587,32 @@ export class SmoSystemStaff implements SmoObjectParams {
     }
     this.removeTabStaves(toRemove);
     this.tabStaves.push(ts);
+  }
+  /**
+   * Get all the pitches that start ties to the next measure, so that their
+   * accidentals may be preserved
+   * @param selector 
+   * @returns 
+   */
+  getTiedPitchesForNextMeasure(measureIndex: number) {
+    const rv: Pitch[] = [];
+    if (measureIndex <= 0) {
+      return rv;
+    }
+    for (let i = 0; i < this.measures[measureIndex].voices.length; ++i) {
+      const voice = this.measures[measureIndex].voices[i];
+      const lastNote = voice.notes[voice.notes.length - 1];
+      const sel = SmoSelector.fromMeasure(this.measures[measureIndex]);
+      sel.voice = i;
+      sel.tick = voice.notes.length - 1;
+      const ties = this.getTiesStartingAt(sel);
+      if (ties.length) {
+        ties[0].lines.forEach((ll:TieLine ) => {
+            rv.push(lastNote.pitches[ll.from]);
+        });
+      }
+     }
+     return rv;
   }
   getTabStaveForMeasure(selector: SmoSelector): SmoTabStave | undefined {
     return this.tabStaves.find((ts) => 

@@ -685,12 +685,6 @@ export abstract class SuiScoreView {
         this.score.setNonTransposing();
       }
     }
-    /* if (!this.isPartExposed()) {
-      const xpose = this.score.preferences?.transposingScore;
-      if (xpose) {
-        this.score.setTransposing();
-      }
-    } */
   }
 
   /**
@@ -736,14 +730,9 @@ export abstract class SuiScoreView {
         serialized.keySignature = concertKey;
         const rmeasure = SmoMeasure.deserialize(serialized);
         rmeasure.svg = svg;
-        // If this is a tranposed score, the displayed score needs to be in 'C'.
-        // We do this step last since serialize/unserialize work in a pitch transposed
-        // for the instrument
-        if (this.score.preferences.transposingScore && !this.score.isPartExposed()) {
-          rmeasure.transposeToOffset(-1 * xpose, 'c');
-          rmeasure.keySignature = 'c';
-          rmeasure.transposeIndex = 0;
-        }
+        // We used to force a tranposing score stff into  'c' but now we keep the 
+        // measures in the concert key, and the transpose offset to 0, so no need to do anything
+        // special here.
         const selector: SmoSelector = { staff: staffId, measure: i, voice: 0, tick: 0, pitches: [] };
         this.score.replaceMeasure(selector, rmeasure);
       });
