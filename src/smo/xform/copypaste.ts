@@ -42,7 +42,8 @@ export interface ModifierPlacement {
  * @category SmoTransform
  */
 export class PasteBuffer {
-  notes: PasteNote[];
+  notes: Record<number, PasteNote[]>;
+  staffIndex: number;
   noteIndex: number;
   measures: SmoMeasure[];
   measureIndex: number;
@@ -54,8 +55,9 @@ export class PasteBuffer {
   destination: SmoSelector = SmoSelector.default;
   staffSelectors: SmoSelector[] = [];
   constructor() {
-    this.notes = [];
+    this.notes = {};
     this.noteIndex = 0;
+    this.staffIndex = 0;
     this.measures = [];
     this.measureIndex = -1;
     this.remainder = 0;
@@ -66,11 +68,18 @@ export class PasteBuffer {
     this.score = score;
   }
   getCopyBufferTickCount() {
-    let rv = 0;
-    this.notes.forEach((note) => {
-      rv += note.note.tickCount;
+    let maxRv = 0;
+    const staves = Object.keys(this.notes);
+    staves.forEach((staffStr: string) => {
+      const staff: number = parseInt(staffStr);
+      const notes = this.notes[staff];
+      let rv = 0;
+      notes.forEach((note) => {
+        rv += note.note.tickCount;
+      });
+      maxRv = Math.max(rv, maxRv);
     });
-    return rv;
+    return maxRv;
   }
   setSelections(score: SmoScore, selections: SmoSelection[]) {
     this.notes = [];
@@ -108,6 +117,7 @@ export class PasteBuffer {
     let minSelector = selections[0].selector;
     selections.forEach((selection) => {
       selector = JSON.parse(JSON.stringify(selection.selector));
+      const staff = selector.staff;
       if (SmoSelector.gt(selector, maxSelector)) {
         maxSelector = selector;
       }
@@ -151,17 +161,24 @@ export class PasteBuffer {
             pasteNote.tupletStart = SmoTupletTree.clone(tupletTree);
           }
         }
-
-        this.notes.push(pasteNote);
+        if (!this.notes[staff]) {
+          this.notes[staff] = [];
+        }
+        this.notes[staff].push(pasteNote);
       }
     });
-    this.notes.sort((a, b) =>
-      SmoSelector.gt(a.selector, b.selector) ? 1 : -1
-    );
+    const staves = Object.keys(this.notes);
+    staves.forEach((staffStr) => {
+      const staff = parseInt(staffStr);
+      const notes = this.notes[staff];
+      notes.sort((a, b) =>
+        SmoSelector.gt(a.selector, b.selector) ? 1 : -1
+      );
+    });
   }
 
   clearSelections() {
-    this.notes = [];
+    this.notes = {};
   }
 
   _findModifier(selector: SmoSelector) {
@@ -181,7 +198,7 @@ export class PasteBuffer {
 
   // Before pasting, populate an array of existing measures from the paste destination
   // so we know how to place the notes.
-  _populateMeasureArray(selector: SmoSelector) {
+  _populateMeasureArray(selector: SmoSelector, notes: PasteNote[]) {
     let measureSelection = SmoSelection.measureSelection(this.score!, selector.staff, selector.measure);
     if (!measureSelection) {
       return;
@@ -204,13 +221,14 @@ export class PasteBuffer {
 
     let currentDuration = tickmapForFirstMeasure.durationMap[selector.tick];
     const measureTotalDuration = tickmapForFirstMeasure.totalDuration;
-    for (let i: number = 0; i < this.notes.length; i++) {
-      const selection: PasteNote = this.notes[i];
+    
+    for (let i: number = 0; i < notes.length; i++) {
+      const selection: PasteNote = notes[i];
       if (selection.tupletStart) {
         // const tupletTree: SmoTupletTree | null = SmoTupletTree.getTupletTreeForNoteIndex(this.tupletNoteMap, selection.selector.voice, selection.selector.tick);
         if (currentDuration + selection.tupletStart.totalTicks > measureTotalDuration && 
           currentDuration + selection.note.tickCount < measureTotalDuration &&
-           measureSelection !== null) {
+          measureSelection !== null) {
           //if tuplet does not fit in a measure as a whole we cannot paste it, it is ether the whole thing or nothing
           //reset everything that has been changed so far and return
           if (measureSelection === null) {
@@ -240,7 +258,6 @@ export class PasteBuffer {
         currentDuration += selection.note.tickCount;
       }
     }
-
     const lastMeasure = this.measures[this.measures.length - 1];
 
     //adjust the beginning of the paste
@@ -253,10 +270,13 @@ export class PasteBuffer {
     }
 
     if (this.measures.length > 1) {
-      this._removeOverlappingTuplets(firstMeasure, selector.tick, firstMeasure.voices[selector.voice].notes.length - 1, selector.voice);
-      this._removeOverlappingTuplets(lastMeasure, 0, lastMeasure.getClosestIndexFromTickCount(selector.voice, currentDuration), selector.voice);
+      this._removeOverlappingTuplets(firstMeasure, 
+        selector.tick, firstMeasure.voices[selector.voice].notes.length - 1, selector.voice);
+      this._removeOverlappingTuplets(lastMeasure, 
+        0, lastMeasure.getClosestIndexFromTickCount(selector.voice, currentDuration), selector.voice);
     } else {
-      this._removeOverlappingTuplets(firstMeasure, selector.tick, lastMeasure.getClosestIndexFromTickCount(selector.voice, currentDuration), selector.voice);
+      this._removeOverlappingTuplets(firstMeasure, 
+        selector.tick, lastMeasure.getClosestIndexFromTickCount(selector.voice, currentDuration), selector.voice);
     }
 
     //if there are more than 2 measures remove tuplets from all but first and last measure.
@@ -289,7 +309,7 @@ export class PasteBuffer {
   // ### _populateVoice
   // ### Description:
   // Create a new voice for a new measure in the paste destination
-  _populateVoice(): SmoVoice[] {
+  _populateVoice(notes: PasteNote[]): SmoVoice[] {
     // this._populateMeasureArray();
     const measures = this.measures;
     let measure = measures[0];
@@ -306,8 +326,8 @@ export class PasteBuffer {
         measure.voices.push(nvoice);
       }
       tickmap = measure.tickmapForVoice(this.destination.voice);
-      this._populateNew(voice, measure, tickmap, startSelector);
-      if (this.noteIndex < this.notes.length && this.measureIndex < measures.length) {
+      this._populateNew(voice, measure, tickmap, startSelector, notes);
+      if (this.noteIndex < notes.length && this.measureIndex < measures.length) {
         voice = {
           notes: []
         };
@@ -404,16 +424,16 @@ export class PasteBuffer {
    * @param startSelector 
    * @returns 
    */
-  _populateNew(voice: SmoVoice, measure: SmoMeasure, tickmap: TickMap, startSelector: SmoSelector) {
+  _populateNew(voice: SmoVoice, measure: SmoMeasure, tickmap: TickMap, startSelector: SmoSelector, notes: PasteNote[]) {
     let currentDuration = tickmap.durationMap[startSelector.tick];
     let i = 0;
     let j = 0;
     const totalDuration = tickmap.totalDuration;
-    while (currentDuration < totalDuration && this.noteIndex < this.notes.length) {
+    while (currentDuration < totalDuration && this.noteIndex < notes.length) {
       if (!this.score) {
         return;
       }
-      const selection: PasteNote = this.notes[this.noteIndex];
+      const selection: PasteNote = notes[this.noteIndex];
       const note: SmoNote = selection.note;
       if (note.noteType === 'n') {
         const pitchAr: number[] = [];
@@ -504,7 +524,8 @@ export class PasteBuffer {
       diffToAdjustRemainingTuplets += lmap.length;
       existingIndex++;
     }
-    SmoTupletTree.adjustTupletIndexes(measure.tupletTrees, voiceIndex, startIndexToAdjustRemainingTuplets, diffToAdjustRemainingTuplets);
+    SmoTupletTree.adjustTupletIndexes(
+      measure.tupletTrees, voiceIndex, startIndexToAdjustRemainingTuplets, diffToAdjustRemainingTuplets);
 
     for (let i = existingIndex + 1; i < measure.voices[voiceIndex].notes.length; i++) {
       voice.notes.push(SmoNote.clone(measure.voices[voiceIndex].notes[i]));
@@ -528,19 +549,19 @@ export class PasteBuffer {
     }
     serializedMeasure.voices = voices;
   }
-  pasteChords(selector: SmoSelector) {
-    if (this.notes.length < 1) {
-      return;
+  pasteChordNotes(selector: SmoSelector, notes: PasteNote[]): PasteNote[] {
+    if (notes.length < 1) {
+      return [];
     }
     if (!this.score) {
-      return;
+      return [];
     }
     let srcTick = 0;
     let destTick = 0;
     let srcIndex = 0;
     let selection = SmoSelection.noteSelection(this.score!, selector.staff, selector.measure, selector.voice, selector.tick);   
-    while (selection && selection.note && srcIndex < this.notes.length) {
-      const srcNote = this.notes[srcIndex].note;
+    while (selection && selection.note && srcIndex < notes.length) {
+      const srcNote = notes[srcIndex].note;
       const chords = srcNote.getChords();
       if (selection && selection.note) {
         const destNote = selection.note;
@@ -551,7 +572,7 @@ export class PasteBuffer {
           chords.forEach((chord) => {
             if (selection) {
             const nchord = SmoLyric.transposeChordToKey(
-              chord, selection.measure.transposeIndex,this.notes[srcIndex].originalKey, selection.measure.keySignature);
+              chord, selection.measure.transposeIndex,notes[srcIndex].originalKey, selection.measure.keySignature);
               destNote.addLyric(nchord);
             }
           });
@@ -568,19 +589,79 @@ export class PasteBuffer {
         srcIndex += 1;
       }
     }
+    return notes;
   }
-  pasteSelections(selector: SmoSelector) {
-    let i = 0;
-    if (this.notes.length < 1) {
-      return;
+  pasteIntoScore(score: SmoScore, selector: SmoSelector, func:(selector: SmoSelector, notes: PasteNote[]) => PasteNote[]) {
+    let lowest: SmoSelector = SmoSelector.default;
+    const enforceRect = true;
+    let  pasted = 0;
+    let startMeasure = 0;
+    let startTick = 0;
+    let startStaff = 0;
+    for (let j = 0; j < score?.staves.length; ++j ) {
+      if (!this.notes[j]) {
+        continue;
+      }
+      const notes = this.notes[j];
+      if (pasted === 0) {
+        lowest.measure = selector.measure;
+        lowest.tick = selector.tick;
+        lowest.staff = selector.staff;
+        startMeasure = notes[0].selector.measure;
+        startTick = notes[0].selector.tick;
+        startStaff = notes[0].selector.staff;
+      } else {
+        if (enforceRect) {
+          if (notes[0].selector.measure !== startMeasure || notes[0].selector.tick !== startTick) {
+            // can only paste rectangles.  Maybe warn?
+            return;
+          }
+          if (notes[0].selector.staff !== lowest.staff + 1) {
+            // can only paste rectangles, not clear where next selection goes
+            return;
+          }
+        }
+        if (score.staves.length <= lowest.staff + 1) {
+          // nowhere to paste this.
+          return; 
+        }
+        lowest.staff += 1;
+      }
+      pasted += 1;
+      // Replace with fresh copy of the pasted notes
+      this.notes[j] = func(lowest, notes);
     }
+  }
+  pasteChords(selector: SmoSelector) {
     if (!this.score) {
       return;
     }
-    const maxCutVoice = this.notes.map((n) => n.selector.voice).reduce((a, b) => a > b ? a : b);
-    const minCutVoice = this.notes.map((n) => n.selector.voice).reduce((a, b) => a > b ? a : b);
+    const func = (selector: SmoSelector, notes: PasteNote[]) => {
+      return this.pasteChordNotes(selector, notes);
+    }
+    this.pasteIntoScore(this.score, selector, func);
+  }
+  pasteSelections(selector: SmoSelector) {
+    if (!this.score) {
+      return;
+    }
+    const func = (selector: SmoSelector, notes: PasteNote[]) => {
+      return this.pasteNoteSelections(selector, notes);
+    }
+    this.pasteIntoScore(this.score, selector, func);
+  }
+  pasteNoteSelections(selector: SmoSelector, notes: PasteNote[]): PasteNote[] {
+    let i = 0;
+    if (notes.length < 1) {
+      return notes;
+    }
+    if (!this.score) {
+      return notes;
+    }
+    const maxCutVoice = notes.map((n) => n.selector.voice).reduce((a, b) => a > b ? a : b);
+    const minCutVoice = notes.map((n) => n.selector.voice).reduce((a, b) => a > b ? a : b);
     const backupNotes: PasteNote[] = [];
-    this.notes.forEach((bb) => {
+    notes.forEach((bb) => {
       const note = (SmoNote.deserialize(bb.note.serialize()));
       const selector = JSON.parse(JSON.stringify(bb.selector));
       let tupletStart = bb.tupletStart;
@@ -596,12 +677,12 @@ export class PasteBuffer {
     this.noteIndex = 0;
     this.measureIndex = -1;
     this.remainder = 0;
-    this._populateMeasureArray(selector);
+    this._populateMeasureArray(selector, notes);
     if (this.measures.length === 0) {
-      return;
+      return notes;
     }
 
-    const voices = this._populateVoice();
+    const voices = this._populateVoice(notes);
     const measureSel = JSON.parse(JSON.stringify(this.destination));
     const selectors: SmoSelector[] = [];
     for (i = 0; i < this.measures.length && i < voices.length; ++i) {
@@ -664,6 +745,6 @@ export class PasteBuffer {
         selection.staff.addStaffModifier(mod.modifier);
       }
     });
-    this.notes = backupNotes;
+    return(backupNotes);
   }
 }
