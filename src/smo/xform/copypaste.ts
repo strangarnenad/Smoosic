@@ -616,7 +616,7 @@ export class PasteBuffer {
             // can only paste rectangles.  Maybe warn?
             return;
           }
-          if (notes[0].selector.staff !== lowest.staff + 1) {
+          if (notes[0].selector.staff !== startStaff + 1) {
             // can only paste rectangles, not clear where next selection goes
             return;
           }
@@ -626,6 +626,7 @@ export class PasteBuffer {
           return; 
         }
         lowest.staff += 1;
+        startStaff += 1;
       }
       pasted += 1;
       // Replace with fresh copy of the pasted notes

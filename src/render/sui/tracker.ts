@@ -579,35 +579,40 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     this.selections = ar;
   }
 
-  _selectFromToInStaff(score: SmoScore, sel1: SmoSelection, sel2: SmoSelection) {
-    const selections = SmoSelection.innerSelections(score, sel1.selector, sel2.selector);
-    /* .filter((ff) => 
-      ff.selector.voice === sel1.measure.activeVoice
-    ); */
-    this.selections = [];
-    // Get the actual selections from our map, since the client bounding boxes are already computed
-    selections.forEach((sel) => {
-      const key = SmoSelector.getNoteKey(sel.selector);
-      sel.measure.setActiveVoice(sel.selector.voice);
-      // Skip measures that are not rendered because they are part of a multi-rest
-      if (this.measureNoteMap && this.measureNoteMap[key]) {
-        this.selections.push(this.measureNoteMap[key]);
-      }
-    });
-
-    if (this.selections.length === 0) {
-      this.selections = [sel1];
-    }
-    this.idleTimer = Date.now();
-  }
-  _selectBetweenSelections(s1: SmoSelection, s2: SmoSelection) {
+  _selectBetweenSelections(s1o: SmoSelection, s2o: SmoSelection) {
     const score = this.renderer.score ?? null;
     if (!score) {
       return;
     }
-    const min = SmoSelector.gt(s1.selector, s2.selector) ? s2 : s1;
-    const max = SmoSelector.lt(min.selector, s2.selector) ? s2 : s1;
-    this._selectFromToInStaff(score, min, max);
+    const staffMin = Math.min(s1o.selector.staff, s2o.selector.staff);
+    const staffMax = Math.max(s1o.selector.staff, s2o.selector.staff);
+    this.selections = [];
+    for (let i = staffMin; i <= staffMax; ++i) {
+      const s1 = JSON.parse(JSON.stringify(s1o.selector));
+      s1.staff = i;
+      const s2 = JSON.parse(JSON.stringify(s2o.selector));
+      s2.staff = i;
+      const s1s = SmoSelection.selectionFromSelector(this.score!, s1);
+      const s2s = SmoSelection.selectionFromSelector(this.score!, s2);
+      if (s1s && s2s) {
+        const min = SmoSelector.gt(s1s.selector, s2s.selector) ? s2s : s1s;
+        const max = SmoSelector.lt(min.selector, s2s.selector) ? s2s : s1s;
+        const selections = SmoSelection.innerSelections(score, min.selector, max.selector);
+        // Get the actual selections from our map, since the client bounding boxes are already computed
+        selections.forEach((sel) => {
+          const key = SmoSelector.getNoteKey(sel.selector);
+          sel.measure.setActiveVoice(sel.selector.voice);
+          // Skip measures that are not rendered because they are part of a multi-rest
+          if (this.measureNoteMap && this.measureNoteMap[key]) {
+            this.selections.push(this.measureNoteMap[key]);
+          }
+        });
+
+        if (this.selections.length === 0) {
+          this.selections = [min];
+        }        
+      }
+    }
     this._createLocalModifiersList();
     this.highlightQueue.selectionCount = this.selections.length;
     this.deferHighlight();
@@ -634,10 +639,10 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
 
     if (ev.shiftKey) {
       const sel1 = this.getExtremeSelection(-1);
-      if (sel1.selector.staff === this.suggestion.selector.staff) {
-        this._selectBetweenSelections(sel1, this.suggestion);
-        return;
-      }
+      //if (sel1.selector.staff === this.suggestion.selector.staff) {
+      this._selectBetweenSelections(sel1, this.suggestion);
+      return;
+      //}
     }
 
     if (ev.ctrlKey) {
