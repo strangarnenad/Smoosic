@@ -11,7 +11,7 @@ import { SvgHelpers } from '../../render/sui/svgHelpers';
 import { SmoScore } from '../data/score';
 import { TickMap } from './tickMap';
 import { SmoSystemStaff } from '../data/systemStaff';
-import { getId } from '../data/common';
+import { getId, Clef, Pitch } from '../data/common';
 import {SmoUnmakeTupletActor} from "./tickDuration";
 import { SmoTempoText, TimeSignature } from '../data/measureModifiers';
 
@@ -441,6 +441,13 @@ export class PasteBuffer {
           pitchAr.push(ix);
         });
         SmoNote.transpose(note, pitchAr, measure.transposeIndex, selection.originalKey, measure.keySignature);
+      } else {
+        const npitches: Pitch[] = [];
+        note.pitches.forEach((pp) => {
+          const npitch = SmoMeasure.defaultPitchForClef[measure.clef as Clef];
+          npitches.push(npitch);
+          note.pitches = npitches;
+        });
       }
       this._populateModifier(selection.selector, startSelector, this.score.staves[selection.selector.staff]);
 
