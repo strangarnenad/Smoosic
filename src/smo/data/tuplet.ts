@@ -347,6 +347,10 @@ export class SmoTuplet {
   static deserialize(jsonObj: SmoTupletParamsSer): SmoTuplet {
     const tupJson = SmoTuplet.defaults;
     smoSerialize.serializedMerge(SmoTuplet.parameterArray, jsonObj, tupJson);
+    // Make the tuplet count === default if it is 0
+    if (tupJson.totalTicks === 0) {
+      tupJson.totalTicks = SmoTuplet.defaults.totalTicks;
+    }
     // Legacy schema did not have notesOccupied, we need to calculate it.
     if ((jsonObj as any).notes !== undefined) {
       //todo: notesOccupied can probably be removed

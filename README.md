@@ -17,7 +17,7 @@ Smoosic is highly dependent on the [Vexflow engraving library](https://github.co
 
 See [changes](https://smoosic.github.io/Smoosic/changes.md) for changes, updates, initiatives etc.
 
-There is a [demo application](https://smoosic.github.io/Smoosic/release/html/smoosic.html) that you can play around with that shows the capabilities.
+There is a [demo application](https://smoosic.github.io/Smoosic/release/html/smoosic.html) that you can play around with that show the capabilities.
 
 ## What's new in Smoosic?
 This is a completely new Github project.  It contains 5 repositories (so far):

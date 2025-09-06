@@ -3,7 +3,6 @@
 import { buildDom, createTopDomContainer } from '../../common/htmlHelpers';
 import { SvgBox } from '../../smo/data/common';
 import { UndoBuffer } from '../../smo/xform/undo';
-import { SuiDynamicsMenu } from './dynamics';
 import { SuiBeamMenu, SuiBeamMenuOptions } from './beams';
 import { layoutDebug } from '../../render/sui/layoutDebug';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
@@ -366,8 +365,7 @@ export class SuiMenuManager {
     });
   }
 }
-export const menuTranslationsInit = () => {
-  MenuTranslations.push(suiMenuTranslation(SuiDynamicsMenu.defaults, 'SuiDynamicsMenu'));
+export const menuTranslationsInit = () => {  
   MenuTranslations.push(suiConfiguredMenuTranslate(SuiBeamMenuOptions, 'Beam', 'SuiBeamMenu'));
 }
 

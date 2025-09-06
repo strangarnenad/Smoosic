@@ -108,10 +108,8 @@ export class SuiScoreRender {
       if (newGroup.attachToSelector) {
         // If this text is attached to a staff that is not visible, don't draw it.
         let mappedStaff = this.score!.staves.find((staff) => staff.staffId === newGroup.selector!.staff);
-        if (this.score?.isPartExposed() && this.score.staves[0].partInfo.preserveTextGroups) {
-          mappedStaff = this.score!.staves.find((staff) => 
-            staff.getMappedStaffId() === newGroup.selector!.staff);
-        }
+        // We used to translate the staff id here, but this should already be done.  The mapped staff of the text group
+        // should always match the displayed version of the text group, if this is the view score.
         if (!mappedStaff) {
           return;
         }

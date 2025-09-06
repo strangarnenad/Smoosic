@@ -1215,9 +1215,22 @@ export class SmoScore {
     const tgid = typeof (textGroup) === 'string' ? textGroup :
       textGroup.attrs.id;
     const ar = this.textGroups.filter((tg) => tg.attrs.id !== tgid);
+    const selector = textGroup.selector;
     this.textGroups = ar;
     if (toAdd) {
       this.textGroups.push(textGroup);
+      // If this is attached to music, push the group to the part
+      if (textGroup.attachToSelector && selector) {
+        const stave = this.staves[selector.staff];
+        if (stave.partInfo.preserveTextGroups) {
+          const partGroup = SmoTextGroup.deserializePreserveId(textGroup);
+          if (partGroup.selector) {
+            partGroup.selector.staff = 0; // TODO: works for 2-staff parts?
+            // Maybe: if (stave.partInfo.stavesAfter) set it to 1.
+          }
+          stave.partInfo.updateTextGroup(partGroup, toAdd);
+        }
+      }
     }
   }
   addTextGroup(textGroup: SmoTextGroup) {

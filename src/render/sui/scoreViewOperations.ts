@@ -87,6 +87,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
    */
   async removeTextGroup(textGroup: SmoTextGroup): Promise<void> {
     let selector = textGroup.selector ?? SmoSelector.default;
+    let altSelector = JSON.parse(JSON.stringify(selector));
     const partInfo = this.score.staves[0].partInfo;
     const isPartExposed = this.isPartExposed();
     const bufType = isPartExposed && partInfo.preserveTextGroups 
@@ -98,14 +99,18 @@ export class SuiScoreViewOperations extends SuiScoreView {
     if (bufType === UndoBuffer.bufferTypes.PART_MODIFIER) {
       selector.staff = this.staffMap[0];
     } else {
-      selector.staff = this.staffMap[selector.staff];
+      altSelector.staff = this.staffMap[selector.staff];
     }
     if (!ogText) {
       return;
     }
+    // We undo buffer using the score location, not the group location
     this.storeUndo.addBuffer('remove text group', bufType,
-      selector, ogText, UndoBuffer.bufferSubtypes.REMOVE);
+      altSelector, ogText, UndoBuffer.bufferSubtypes.REMOVE);
     const altGroup = SmoTextGroup.deserializePreserveId(textGroup.serialize());
+    if (altGroup.selector) {
+      altGroup.selector.staff = altSelector.staff;
+    }
     textGroup.elements.forEach((el: ElementLike) => RemoveElementLike(el));
     textGroup.elements = [];
     if (isPartExposed && partInfo.preserveTextGroups) {
@@ -126,7 +131,8 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * @returns 
    */
   async updateTextGroup(newVersion: SmoTextGroup): Promise<void> {
-    const selector = newVersion.selector ?? SmoSelector.default;
+    const selector = newVersion.selector ?? SmoSelector.default; // for score view
+    const altSelector = JSON.parse(JSON.stringify(selector)); // for full score
     const isPartExposed = this.isPartExposed();
     const partInfo = this.score.staves[0].partInfo;
     // Back up the original score text
@@ -144,20 +150,26 @@ export class SuiScoreViewOperations extends SuiScoreView {
       // if this is part text, make sure the undo buffer is associated with the part stave
       // in the full score, so undo works properly
       if (bufType === UndoBuffer.bufferTypes.PART_MODIFIER) {
-        selector.staff = this.staffMap[0];
+        altSelector.staff = this.staffMap[0];
       } else {
-        selector.staff = this.staffMap[selector.staff];
+        altSelector.staff = this.staffMap[selector.staff];
       }
       this.storeUndo.addBuffer('modify text',
-        bufType, selector, ogtg, UndoBuffer.bufferSubtypes.UPDATE);
+        bufType, altSelector, ogtg, UndoBuffer.bufferSubtypes.UPDATE);
     }
     const altNew = SmoTextGroup.deserializePreserveId(newVersion.serialize());
+    if (altNew.selector) {
+      altNew.selector.staff = altSelector.staff;
+    }
     this.score.updateTextGroup(newVersion, true);
-    // If this is part text, don't store it in the score text, except for the displayed score
-    if (!isPartExposed) {
-      this.storeScore.updateTextGroup(altNew, true);
+    // If this is part text and part-specific text is set, 
+    // only set the partInfo for the stored score, but don't add to 
+    // global text.
+    if (isPartExposed) {
+      const partInfo = this.storeScore.staves[altSelector.staff].partInfo;
+      partInfo.updateTextGroup(altNew, true);
     } else {
-      this.storeScore.staves[this._getEquivalentStaff(0)].partInfo.updateTextGroup(altNew, true);
+      this.storeScore.updateTextGroup(altNew, true);
     }
     // TODO: only render the one TG.
     await this.renderer.rerenderTextGroups();
@@ -287,37 +299,28 @@ export class SuiScoreViewOperations extends SuiScoreView {
       SmoOperation.addDynamic(selections[0], dynamic);
     });
   }
-  /**
-   * Remove dynamics from the selection 
-   * @param selection 
-   * @param dynamic 
-   * @returns 
-   */
-  async _removeDynamic(selection: SmoSelection, dynamic: SmoDynamicText): Promise<void> {
-    const equiv = this._getEquivalentSelection(selection);
-    if (equiv !== null && equiv.note !== null) {
-      const altModifiers = equiv.note.getModifiers('SmoDynamicText');
-      SmoOperation.removeDynamic(selection, dynamic);
-      if (altModifiers.length) {
-        SmoOperation.removeDynamic(equiv, altModifiers[0] as SmoDynamicText);
-      }
-    }
-    await this.renderer.updatePromise();
-  }
+
   /**
    * Remove dynamics from the current selection
    * @param dynamic
    * @returns 
    */
   async removeDynamic(dynamic: SmoDynamicText): Promise<void> {
-    const sel = this.tracker.modifierSelections[0];
-    if (!sel.selection) {
-      return PromiseHelpers.emptyPromise();
+    const measures = SmoSelection.getMeasureList(this.tracker.selections);
+    for (let i = 0; i < measures.length; ++i) {
+      const selection = measures[i];
+      if (selection) {
+        const equiv = this._getEquivalentSelection(selection);
+        if (equiv?.note) {
+          const altModifiers = equiv.note.getModifiers('SmoDynamicText');
+          SmoOperation.removeDynamic(selection, dynamic);
+          if (altModifiers.length) {
+            SmoOperation.removeDynamic(equiv, altModifiers[0] as SmoDynamicText);
+          }
+        }
+      }
     }
-    this.tracker.selections = [sel.selection];
-    this._undoFirstMeasureSelection('remove dynamic');
-    this._removeDynamic(sel.selection, dynamic);
-    this.renderer.addToReplaceQueue(sel.selection);
+    this._renderChangedMeasures(measures);
     await this.renderer.updatePromise()
   }
   /**

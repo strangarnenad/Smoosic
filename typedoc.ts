@@ -141,7 +141,6 @@ export * from './src/ui/i18n/translationEditor';
 export * from './src/ui/keyBindings/default/editorKeys';
 export * from './src/ui/keyBindings/default/trackerKeys';
 export * from './src/ui/menus/beams';
-export * from './src/ui/menus/dynamics';
 export * from './src/ui/menus/file';
 export * from './src/ui/menus/keySignature';
 export * from './src/ui/menus/language';

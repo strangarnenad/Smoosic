@@ -104,7 +104,6 @@ import { SuiPartMenu } from '../ui/menus/parts';
 import { SuiVoiceMenu } from '../ui/menus/voices';
 import { SuiBeamMenu } from '../ui/menus/beams';
 import { SuiPartSelectionMenu } from '../ui/menus/partSelection';
-import { SuiDynamicsMenu } from '../ui/menus/dynamics';
 import { SuiTimeSignatureMenu } from '../ui/menus/timeSignature';
 import { SuiKeySignatureMenu } from '../ui/menus/keySignature';
 import { SuiStaffModifierMenu } from '../ui/menus/staffModifier';
@@ -313,7 +312,6 @@ export * from '../ui/i18n/translationEditor';
 export * from '../ui/keyBindings/default/editorKeys';
 export * from '../ui/keyBindings/default/trackerKeys';
 export * from '../ui/menus/beams';
-export * from '../ui/menus/dynamics';
 export * from '../ui/menus/file';
 export * from '../ui/menus/keySignature';
 export * from '../ui/menus/language';
@@ -346,7 +344,7 @@ export const Smo = {
   DisplaySettings,  ExtendedCollapseParent, CollapseRibbonControl,
   // Menus
   SuiMenuManager, SuiMenuBase, SuiMenuCustomizer, SuiScoreMenu, SuiFileMenu,
-  SuiDynamicsMenu, SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
+  SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
   SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SuiEditMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
   SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
   // Dialogs

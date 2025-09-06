@@ -119,16 +119,18 @@ const lyricsDialogMenuOption: SuiConfiguredMenuOption = {
  */
 const dynamicsDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    const sel = menu.view.tracker.selections[0];
+    const sel = menu.view.tracker.selections;
     let modifier = null;
-    if (sel.note) {
-      const dynamics = sel.note.getModifiers('SmoDynamicText');
+    if (sel[0].note) {
+      const dynamics = sel[0].note.getModifiers('SmoDynamicText');
       if (dynamics.length) {
         modifier = dynamics[0];
       } else {
         const params = SmoDynamicText.defaults;
         modifier = new SmoDynamicText(params);
-        menu.view.addDynamic(sel, modifier);
+        for (let i = 0; i < sel.length; ++i) {
+          await menu.view.addDynamic(sel[i], modifier);
+        }
       }
     }
     createAndDisplayDialog(SuiDynamicModifierDialog, {

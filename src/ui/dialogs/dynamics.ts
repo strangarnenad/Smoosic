@@ -12,19 +12,25 @@ import { PromiseHelpers } from '../../common/promiseHelpers';
 export class SuiDynamicDialogAdapter extends SuiComponentAdapter {
   modifier: SmoDynamicText;
   backup: SmoDynamicText;
-  selection: SmoSelection;
+  selections: SmoSelection[] = [];
+  changed: boolean = false;
   constructor(view: SuiScoreViewOperations, modifier: SmoDynamicText) {
     super(view);
     this.modifier = modifier;
     this.backup = new SmoDynamicText(this.modifier);
+    this.view.undoTrackerMeasureSelections('Dynamics');
     if (this.view.tracker.modifierSelections.length) {
-      this.selection = this.view.tracker.modifierSelections[0].selection!;
+      this.view.tracker.modifierSelections.forEach((ms) => {
+        if (ms.selection) {
+          this.selections.push(ms.selection);
+        }
+      });
     } else {
-      this.selection = this.view.tracker.selections[0];
+      this.selections = this.view.tracker.selections;
     }
   }
   async cancel() {
-    await this.view.addDynamic(this.selection, this.backup);
+    this.view.undo();
   }
   async commit() {
     return PromiseHelpers.emptyPromise();
@@ -33,39 +39,48 @@ export class SuiDynamicDialogAdapter extends SuiComponentAdapter {
     return this.modifier.xOffset;
   }
   async remove() {
-    await this.view.removeDynamic(this.modifier);
+    for (let i = 0;i < this.selections.length; ++i) {
+      await this.view.removeDynamic(this.modifier);
+    }
+  }
+  syncModifiers() {
+    for (let i = 0;i < this.selections.length; ++i) {
+      this.view.addDynamic(this.selections[i], this.modifier);
+    }
   }
   set xOffset(value: number) {
     this.modifier.xOffset = value;
-    this.view.addDynamic(this.selection, this.modifier);
+    for (let i = 0;i < this.selections.length; ++i) {
+      this.view.addDynamic(this.selections[i], this.modifier);
+    }
   }
   get fontSize() {
     return this.modifier.fontSize;
   }
   set fontSize(value: number) {
     this.modifier.fontSize = value;
-    this.view.addDynamic(this.selection, this.modifier);
+    this.syncModifiers();
   }
   get yOffsetLine() {
     return this.modifier.yOffsetLine;
   }
   set yOffsetLine(value: number) {
     this.modifier.yOffsetLine = value;
-    this.view.addDynamic(this.selection, this.modifier);
+    this.syncModifiers();
   }
   get yOffsetPixels() {
     return this.modifier.yOffsetPixels;
   }
   set yOffsetPixels(value: number) {
     this.modifier.yOffsetPixels = value;
-    this.view.addDynamic(this.selection, this.modifier);
+    this.syncModifiers();
   }
   get text() {
     return this.modifier.text;
   }
   set text(value: string) {
     this.modifier.text = value;
-    this.view.addDynamic(this.selection, this.modifier);
+    this.syncModifiers();
   }
 }
 /**

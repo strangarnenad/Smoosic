@@ -623,6 +623,14 @@ export abstract class SuiScoreView {
         jsonObj.staffId = staffMap.length;
         const nStave = SmoSystemStaff.deserialize(jsonObj, !this.storeScore.preferences.transposingScore);
         nStave.mapStaffFromTo(i, nscore.staves.length);
+        // Remap score text groups attached to music in this staff
+        const localText = 
+          nscore.textGroups.filter((tt) => (tt.attachToSelector && tt.selector && tt.selector.staff === i));
+        localText.forEach((tt) => {
+          if (tt.selector) {
+            tt.selector.staff = nscore.staves.length;
+          }
+        })
         nscore.staves.push(nStave);
         if (srcStave.keySignatureMap) {
           nStave.keySignatureMap = JSON.parse(JSON.stringify(srcStave.keySignatureMap));
