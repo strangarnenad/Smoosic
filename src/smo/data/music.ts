@@ -56,7 +56,13 @@ export class SmoAudioPitch {
     return map;
   }
   static frequencies: Record<string, number> | null = null;
-
+  static frequencyKeys: string[] | null = null;
+  static get pitchFrequencyKeys() {
+    if (!SmoAudioPitch.frequencyKeys) {
+      SmoAudioPitch.frequencyKeys = Object.keys(this.pitchFrequencyMap);
+    }
+    return SmoAudioPitch.frequencyKeys;
+  }
   static get pitchFrequencyMap() {
     if (!SmoAudioPitch.frequencies) {
       SmoAudioPitch.frequencies = SmoAudioPitch._computeFrequencies();
@@ -65,7 +71,7 @@ export class SmoAudioPitch {
     return SmoAudioPitch.frequencies;
   }
   static frequencyToVexPitch(freq: number): string {
-    const keys = Object.keys(SmoAudioPitch.pitchFrequencyMap);
+    const keys = SmoAudioPitch.pitchFrequencyKeys;
     const strs: string[] = keys.filter((k) => Math.abs(SmoAudioPitch.pitchFrequencyMap[k] - freq) < 1);
     if (!strs.length) {
       return Math.floor(freq).toString();
@@ -74,7 +80,7 @@ export class SmoAudioPitch {
       const vexPitch = strs[i];
       if (vexPitch.length === 3 && 
         (vexPitch[1] === 'n' || vexPitch[1] === '#' || vexPitch[1] === 'b')) {
-        return vexPitch;
+        return vexPitch.substring(0, vexPitch.length-1)+'/'+vexPitch[vexPitch.length - 1];
       }
     }
     return Math.floor(freq).toString();

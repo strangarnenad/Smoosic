@@ -23,6 +23,9 @@ import { UndoBuffer } from '../../smo/xform/undo';
 import { SvgPageMap, SvgPage } from './svgPageMap';
 import { VexFlow } from '../../common/vex';
 import { Note } from '../../common/vex';
+import { SplendidGrandPiano, Soundfont, Reverb } from "smplr";
+// import {   AudioWorkletNode,
+//   AudioContext as StandardizedAudioContext, } from 'standardized-audio-context'
 
 declare var $: any;
 const VF = VexFlow;

@@ -17,6 +17,7 @@ import { SmoSystemStaff } from '../../smo/data/systemStaff';
 import { SuiScoreRender, ScoreRenderParams } from './scoreRender';
 import { SuiExceptionHandler } from '../../ui/exceptions';
 import { VexFlow, setFontStack } from '../../common/vex';
+import { layoutDebug } from './layoutDebug';
 declare var $: any;
 
 
@@ -172,20 +173,32 @@ export class SuiRenderState {
    * @returns 
    */
   replaceMeasures() {
-    const staffMap: Record<number | string, { system: VxSystem, staff: SmoSystemStaff }> = {};
-    if (this.score === null || this.measureMapper === null || this.replaceQ.length === 0) {
-      return;
+    const promise = new Promise<void>((resolve, reject) => {
+      try {
+      const staffMap: Record<number | string, { system: VxSystem, staff: SmoSystemStaff }> = {};
+      if (this.score === null || this.measureMapper === null || this.replaceQ.length === 0) {
+        resolve();
+        return;
+      }
+      this.replaceQ.forEach((change) => {
+        this.renderer.replaceSelection(staffMap, change);
+      });
+      Object.keys(staffMap).forEach((key) => {
+        const obj = staffMap[key];
+        this.renderer.renderModifiers(obj.staff, obj.system);
+        obj.system.renderEndings(this.measureMapper!.scroller);
+        obj.system.updateLyricOffsets();
+      });
+      this.replaceQ = [];
+      resolve();
+    } catch (ex) {
+      console.error(ex);
+      SuiExceptionHandler.instance.exceptionHandler(ex);
+      this.handlingRedraw = false;
+      reject(ex);
     }
-    this.replaceQ.forEach((change) => {
-      this.renderer.replaceSelection(staffMap, change);
     });
-    Object.keys(staffMap).forEach((key) => {
-      const obj = staffMap[key];
-      this.renderer.renderModifiers(obj.staff, obj.system);
-      obj.system.renderEndings(this.measureMapper!.scroller);
-      obj.system.updateLyricOffsets();
-    });
-    this.replaceQ = [];
+    return promise;
   }
   async preserveScroll() {
     const scrollState = this.measureMapper!.scroller.scrollState;
@@ -210,8 +223,8 @@ export class SuiRenderState {
 
   // ### renderPromise
   // return a promise that resolves when the score is in a fully rendered state.
-  updatePromise() {
-    this.replaceMeasures();
+  async updatePromise() {
+    await this.replaceMeasures();
     return this._renderStatePromise(() => this.renderStateRendered);
   }
   async handleRedrawTimer() {
@@ -222,47 +235,51 @@ export class SuiRenderState {
       return;
     }
     this.handlingRedraw = true;
-    const redrawTime = Math.max(this.renderer.renderTime, this.idleRedrawTime);
-    // If there has been a change, redraw the score
-    if (this.passState === SuiRenderState.passStates.initial) {
-      this.dirty = true;
-      this.undoStatus = this.undoBuffer.opCount;
-      this.idleLayoutTimer = Date.now();
+    try {
+      const redrawTime = Math.max(this.renderer.renderTime, this.idleRedrawTime);
+      // If there has been a change, redraw the score
+      if (this.passState === SuiRenderState.passStates.initial) {
+        this.dirty = true;
+        this.undoStatus = this.undoBuffer.opCount;
+        this.idleLayoutTimer = Date.now();
 
-      // indicate the display is 'dirty' and we will be refreshing it.
-      $('body').addClass('refresh-1');
-      try {
-        // Sort of a hack.  If the viewport changed, the scroll state is already reset
-        // so we can't preserver the scroll state.
-        if (!this.renderer.viewportChanged) {
-          this.preserveScroll();
+        // indicate the display is 'dirty' and we will be refreshing it.
+        $('body').addClass('refresh-1');
+          // Sort of a hack.  If the viewport changed, the scroll state is already reset
+          // so we can't preserver the scroll state.
+          if (!this.renderer.viewportChanged) {
+            this.preserveScroll();
+          }
+          await this.render();
+      } else if (this.passState === SuiRenderState.passStates.replace && this.undoStatus === this.undoBuffer.opCount) {
+        // Consider navigation as activity when deciding to refresh
+        this.idleLayoutTimer = Math.max(this.idleLayoutTimer, this.measureMapper!.getIdleTime());
+        $('body').addClass('refresh-1');
+        // Do we need to refresh the score?
+        if (this.renderer.backgroundRender === false && Date.now() - this.idleLayoutTimer > redrawTime) {
+          this.passState = SuiRenderState.passStates.initial;
+          if (!this.renderer.viewportChanged) {
+            this.preserveScroll();
+          }
+          this.render();
         }
-        await this.render();
-      } catch (ex) {
-        console.error(ex);
-        SuiExceptionHandler.instance.exceptionHandler(ex);
-        this.handlingRedraw = false;
-      }
-    } else if (this.passState === SuiRenderState.passStates.replace && this.undoStatus === this.undoBuffer.opCount) {
-      // Consider navigation as activity when deciding to refresh
-      this.idleLayoutTimer = Math.max(this.idleLayoutTimer, this.measureMapper!.getIdleTime());
-      $('body').addClass('refresh-1');
-      // Do we need to refresh the score?
-      if (this.renderer.backgroundRender === false && Date.now() - this.idleLayoutTimer > redrawTime) {
-        this.passState = SuiRenderState.passStates.initial;
-        if (!this.renderer.viewportChanged) {
-          this.preserveScroll();
+      } else {
+        this.idleLayoutTimer = Date.now();
+        this.undoStatus = this.undoBuffer.opCount;
+        if (this.replaceQ.length > 0) {
+          this.render();
         }
-        this.render();
       }
-    } else {
-      this.idleLayoutTimer = Date.now();
-      this.undoStatus = this.undoBuffer.opCount;
-      if (this.replaceQ.length > 0) {
-        this.render();
+      if (layoutDebug.testThrow) {
+        layoutDebug.testThrow = false;
+        throw ('Test throw full render')
       }
+      this.handlingRedraw = false;
+    } catch (ex) {
+      console.error(ex);
+      SuiExceptionHandler.instance.exceptionHandler(ex);
+      this.handlingRedraw = false;
     }
-    this.handlingRedraw = false;
   }
   pollRedraw() {
     setTimeout(async () => {
@@ -416,19 +433,15 @@ export class SuiRenderState {
       this.setViewport();
       this._resetViewport = false;
     }
-    try {
-      if (SuiRenderState.passStates.replace === this.passState) {
-        this.replaceMeasures();
-      } else if (SuiRenderState.passStates.initial === this.passState) {
-        if (this.renderer.backgroundRender) {
-          return;
-        }
-        this.renderer.layout();
-        this.renderer.drawPageLines();
-        this.setPassState(SuiRenderState.passStates.clean, 'rs: complete render');
-      }
-    } catch (excp) {
-      console.warn('exception in render: ' + excp);
+    if (SuiRenderState.passStates.replace === this.passState) {
+      await this.replaceMeasures();
+    } else if (SuiRenderState.passStates.initial === this.passState) {
+      if (this.renderer.backgroundRender) {
+        return;
+      }        
+      this.renderer.layout();
+      this.renderer.drawPageLines();
+      this.setPassState(SuiRenderState.passStates.clean, 'rs: complete render');
     }
     this.dirty = false;
   }

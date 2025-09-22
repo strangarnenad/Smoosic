@@ -183,6 +183,10 @@ body.showQwerty .keyContainer {
 	margin-left:7px;
 	margin-right:7px;
 }
+.dropdownControl.smoControl .dropdown-menu.show {
+    display: grid;
+    grid-template-columns: 150px 150px 150px;
+}
 .attributeDialog .btn.dropdown-toggle {
   margin-left: 5px;
   margin-right: 5px;

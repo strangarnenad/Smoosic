@@ -306,15 +306,14 @@ export class SuiEventHandler implements ModalEventHandler {
     }));
   }
 
-  mouseClick(ev: any) {
+  async mouseClick(ev: any) {
     const dataCopy = SuiTracker.serializeEvent(ev);
-    this.view.renderer.updatePromise().then(() => {
-      this.view.tracker.selectSuggestion(dataCopy);
-      var modifier = this.view.tracker.getSelectedModifier();
-      if (modifier) {
-        this.createModifierDialog(modifier);
-      }
-    });
+    await this.view.renderer.updatePromise();    
+    this.view.tracker.selectSuggestion(dataCopy);
+    var modifier = this.view.tracker.getSelectedModifier();
+    if (modifier) {
+      this.createModifierDialog(modifier);
+    }
   }
   bindEvents() {
     const self = this;

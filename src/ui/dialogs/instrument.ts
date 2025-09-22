@@ -50,18 +50,13 @@ export class SuiInstrumentAdapter extends SuiComponentAdapter {
   set transposeIndex(value: number) {
     this.writeNumParam('keyOffset', value);
   }
-  get instrumentName() {
-    return this.instrument.instrumentName;
-  }
+
   get subFamily() {
     return this.instrument.instrument;
   }
   set subFamily(value: string) {
     this.writeStringParam('instrument', value);
     this.instrument.family = SuiSampleMedia.getFamilyForInstrument(value);
-  }
-  set instrumentName(value: string) {
-    this.writeStringParam('instrumentName', value);
   }
   get clef(): Clef {
     return this.instrument.clef;
@@ -122,10 +117,6 @@ export class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrumentAdapt
             defaultValue: 0,
             control: 'SuiRockerComponent',
             label: 'Transpose Index (1/2 steps)',
-          }, {
-            smoName: 'instrumentName',
-            control: 'SuiTextInputComponent',
-            label: 'Name'
           }, {
             smoName: 'subFamily',
             control: 'SuiDropdownComponent',

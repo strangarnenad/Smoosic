@@ -28,6 +28,22 @@ export class SuiDom {
       $('body').removeClass('splashScreen modal');
     }, 1000);
   }
+  static async loadAudio(): Promise<void> {
+    const b: any=buildDom;
+    var r = b('div').attr('id', 'load-audio-id').classes('load-audio-modal').append(
+      b('button').classes('load-audio-button').text('Load Audio')
+    );
+    $('body').append(r.dom());
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 500);
+      // Should we force an interaction for tablet users?
+      // $('#load-audio-id button').on('click', () => {
+      //   resolve();
+      // });
+    });
+  }
   static get scrollRegionId() {
     return 'smo-scroll-region';
   }

@@ -1,6 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-import { SuiOscillator, SuiSampler, SuiWavetable, SynthWavetable } from './oscillator';
+import { SuiOscillator, SuiSampler} from './oscillator';
 import { SmoAudioScore } from '../../smo/xform/audioTrack';
 import { SuiScoreView } from '../sui/scoreView';
 import { SmoScore } from '../../smo/data/score';
@@ -324,13 +324,7 @@ export class SuiAudioPlayer {
             params.gain = sound.volume;
             params.instrument = sound.instrument;
             params.useReverb = this.score.audioSettings.reverbEnable;
-            if (this.score.audioSettings.playerType === 'synthesizer') {
-              params.wavetable = SynthWavetable;
-              params.waveform = this.score.audioSettings.waveform;
-              cuedSound.oscs.push(new SuiWavetable(params));
-            } else {
-              cuedSound.oscs.push(new SuiSampler(params));
-            }
+            cuedSound.oscs.push(new SuiSampler(params));
           }
         });
         if (j + 1 < keys.length) {

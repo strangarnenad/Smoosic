@@ -16,6 +16,7 @@ import { CollapseRibbonControl, ExtendedCollapseParent } from '../ui/buttons/col
 import { DisplaySettings } from '../ui/buttons/display';
 import { SmoTranslationEditor } from '../ui/i18n/translationEditor';
 import { SmoConfiguration } from './configuration';
+import { RibbonLayout, ModalComponent, CompleteNotifier, RibbonDefinition } from '../ui/common';
 import { RibbonButtons } from '../ui/buttons/ribbon';
 import { simpleRibbonLayout } from '../ui/ribbonLayout/default/tabletRibbon';
 import { ModalEventHandler } from './common';
@@ -173,7 +174,6 @@ export * from './configuration';
 export * from './dynamicInit';
 export * from './dom';
 export * from './eventHandler';
-export * from './exports';
 export * from '../common/midi-parser';
 export * from './generateVexTests';
 export * from './keyCommands';
@@ -307,6 +307,7 @@ export * from '../ui/fileio/fileInput';
 export * from '../ui/fileio/library';
 export * from '../ui/fileio/xhrLoader';
 export * from '../ui/help';
+export * from '../ui/common';
 export * from '../ui/i18n/language';
 export * from '../ui/i18n/translationEditor';
 export * from '../ui/keyBindings/default/editorKeys';
@@ -341,6 +342,7 @@ export const Smo = {
   // Ribbon buttons
   simpleRibbonLayout,
   RibbonButtons,
+  ModalComponent, CompleteNotifier,
   DisplaySettings,  ExtendedCollapseParent, CollapseRibbonControl,
   // Menus
   SuiMenuManager, SuiMenuBase, SuiMenuCustomizer, SuiScoreMenu, SuiFileMenu,

@@ -3,7 +3,7 @@
  * @module /smo/data/common
  */
 export const SmoNamespace = {
-  value: 'globalThis.Smo'
+  value: 'Smo'
 };
 export type dynamicCtor = (params: any) => any;
 export const SmoDynamicCtor: Record<string, dynamicCtor> = {};
