@@ -150,6 +150,7 @@ import { SmoSystemStaff } from '../smo/data/systemStaff';
 import { SmoSystemGroup, SmoAudioPlayerSettings, SmoScorePreferences, scoreModifierDynamicCtorInit } from '../smo/data/scoreModifiers';
 import { SmoTextGroup, SmoTextGroupParams } from '../smo/data/scoreText';
 import { SmoOperation } from '../smo/xform/operations';
+import { ScoreRoadMapBuilder } from '../smo/xform/roadmap';
 import {
     SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,
     SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature, measureModifierDynamicCtorInit
@@ -225,7 +226,6 @@ export * from '../smo/mxml/smoToXml';
 export * from '../smo/mxml/xmlHelpers';
 export * from '../smo/mxml/xmlState';
 export * from '../smo/mxml/xmlToSmo';
-export * from '../smo/xform/audioTrack';
 export * from '../smo/xform/beamers';
 export * from '../smo/xform/copypaste';
 export * from '../smo/xform/operations';
@@ -396,7 +396,7 @@ SuiPitchComposite,
   // Smo Music Objects
   SmoScore,  SmoScorePreferences, scoreModifierDynamicCtorInit,  engravingFontTypes, isEngravingFont,
   XmlToSmo,  SmoToXml,  MidiToSmo,  SmoToMidi,  SmoMusic,  SmoAudioPitch,  SmoMeasure,  SmoNamespace, SmoDynamicCtor,
-  SmoSystemStaff,  SmoNote, IsPitchLetter,
+  SmoSystemStaff,  SmoNote, IsPitchLetter, ScoreRoadMapBuilder,
   // staff modifier
   SmoStaffHairpin, StaffModifierBase,  SmoStaffTextBracket, staffModifierDynamicCtorInit,
   SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave, 

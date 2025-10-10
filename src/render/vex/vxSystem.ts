@@ -594,10 +594,10 @@ export class VxSystem {
   // ## Description:
   // Create the graphical (VX) notes and render them on svg.  Also render the tuplets and beam
   // groups
-  renderMeasure(smoMeasure: SmoMeasure, printing: boolean) {
+  renderMeasure(smoMeasure: SmoMeasure, printing: boolean, firstInColumn: boolean) {
     if (smoMeasure.svg.hideMultimeasure) {
       return;
-    }
+    }    
     const measureIndex = smoMeasure.measureNumber.measureIndex;
     if (this.minMeasureIndex < 0 || this.minMeasureIndex > measureIndex) {
       this.minMeasureIndex = measureIndex;
@@ -623,6 +623,7 @@ export class VxSystem {
     }
     const tiedOverPitches = selection.staff.getTiedPitchesForNextMeasure(smoMeasure.measureNumber.measureIndex - 1);
     const vxMeasure: VxMeasure = new VxMeasure(this.context, selection, printing, softmax, tiedOverPitches);
+    vxMeasure.setFirstInColumn(firstInColumn);
 
     // create the vex notes, beam groups etc. for the measure
     vxMeasure.preFormat();
@@ -642,6 +643,7 @@ export class VxSystem {
       });
       vxMeasures.forEach((vv: VxMeasure) => {
         if (!vv.rendered && !vv.smoMeasure.svg.hideEmptyMeasure && vv.stave) {
+          // only render some modifiers like coda once.
           vv.stave.setNoteStartX(vv.stave.getNoteStartX() + adjXMap[vv.smoMeasure.measureNumber.systemIndex] - vv.smoMeasure.svg.adjX);
           const systemGroup = this.score.getSystemGroupForStaff(vv.selection);
           const justifyGroup: string = (systemGroup && vv.smoMeasure.format.autoJustify) ? systemGroup.attrs.id : vv.selection.staff.attrs.id;

@@ -841,6 +841,9 @@ export class SmoScore {
       stave.numberMeasures();
     }
   }
+  get measureCount() {
+    return this.staves[0].measures.length;
+  }
 
   /**
    * determine if the measure at this index could be a multi-measure rest

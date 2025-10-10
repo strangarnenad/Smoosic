@@ -142,7 +142,7 @@ export abstract class SuiOscillator {
       attackEnv: 0.05,
       decayEnv: 0.4,
       sustainEnv: 0.8,
-      releaseEnv: 0.25,
+      releaseEnv: 0.25, 
       sustainLevel: 0.5,
       releaseLevel: 0.1,
       waveform: 'custom',
@@ -159,20 +159,22 @@ export abstract class SuiOscillator {
   constructor(params: SuiOscillatorParams) {
     this.duration = params.duration;
   }
+  /**
+   * Generate a tone from a note selected or added
+   * @param measure 
+   * @param note 
+   * @param score 
+   * @param instrument 
+   * @param gain 
+   * @returns 
+   */
   static fromNote(measure: SmoMeasure, note: SmoNote, score: SmoScore, instrument: SmoInstrument, gain: number): SuiOscillator[] {
     let frequency = 0;
     let duration = 0;
-    const tempo = measure.getTempo();
-    const bpm = tempo.bpm;
-    const beats = note.tickCount / 4096;
-    duration = (beats / bpm) * 60000;
-
-    // adjust if bpm is over something other than 1/4 note
-    duration = duration * (4096 / tempo.beatDuration);
-
+    // Just make all the notes same length, since we are not in tempo
+    duration = 500;
     const ar: SuiOscillator[] = [];
     gain = isNaN(gain) ? 0.2 : gain;
-    gain = gain / note.pitches.length;
     if (note.noteType === 'r') {
       gain = 0.001;
     }

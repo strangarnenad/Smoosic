@@ -51,6 +51,7 @@ export class VxMeasure implements VxMeasureIf {
   smoTabStave?: SmoTabStave;
   tabStave?: TabStave;
   rendered: boolean = false;
+  firstInColumn: boolean = false;
   noteToVexMap: Record<string, Note> = {};
   beamToVexMap: Record<string, Beam> = {};
   tupletToVexMap: Record<string, Tuplet> = {};
@@ -92,6 +93,9 @@ export class VxMeasure implements VxMeasureIf {
 
   static get fillStyle() {
     return '#000';
+  }
+  setFirstInColumn(val: boolean) {
+    this.firstInColumn = val;
   }
   // Treat a rest like a whole rest if there is only a single rest in the measure
   // and the measure length is not a pickup
@@ -443,8 +447,12 @@ export class VxMeasure implements VxMeasureIf {
     } else if (eb.barline !== SmoBarline.barlines.singleBar) {
       this.stave.setEndBarType(toVexBarlineType(eb));
     }
-    if (sym && sym.symbol !== SmoRepeatSymbol.symbols.None) {
-      const rep = new VF.Repetition(toVexSymbol(sym), sym.xOffset + this.smoMeasure.staffX, sym.yOffset);
+    if (sym && sym.symbol !== SmoRepeatSymbol.symbols.None && this.firstInColumn) {
+      let yOff = sym.yOffset;
+      if (this.smoMeasure.getRehearsalMark()) {
+        yOff -= 30;
+      }
+      const rep = new VF.Repetition(toVexSymbol(sym), sym.xOffset + this.smoMeasure.staffX, yOff);
       this.stave.getModifiers().push(rep);
     }
     const tms = this.smoMeasure.getMeasureText();

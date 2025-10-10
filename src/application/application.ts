@@ -176,8 +176,7 @@ export class SuiApplication {
         self._startApplication();
       }
       else if (self.config.mode === 'application') {
-        await SuiDom.loadAudio();
-        await SuiSampleMedia.samplePromise(SuiOscillator.audio);
+        SuiSampleMedia.samplePromise(SuiOscillator.audio);
         self._startApplication();
       } else {  // library mode.
         self.createView(self.score!);

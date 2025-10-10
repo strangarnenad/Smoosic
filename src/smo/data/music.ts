@@ -173,6 +173,20 @@ export interface KeySignatureRole {
  * @category SmoTransform
  */
 export class SmoMusic {
+    /**
+     *Normalized gain from dynamics
+     */
+    static get dynamicVolumeMap(): Record<string, number> {
+      // matches SmoDynamicText.dynamics
+      return {
+        pp: 0.4,
+        p: 0.5,
+        mp: 0.6,
+        mf: 0.7,
+        f: 0.75,
+        ff: 0.8
+      };
+    }
   /**
    * Ported from vex, used to convert pitches to numerical values
    * */

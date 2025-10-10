@@ -1,14 +1,16 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
 import { SuiOscillator, SuiSampler} from './oscillator';
-import { SmoAudioScore } from '../../smo/xform/audioTrack';
 import { SuiScoreView } from '../sui/scoreView';
 import { SmoScore } from '../../smo/data/score';
-import { SmoSelector } from '../../smo/xform/selections';
-import { SmoTie } from '../../smo/data/staffModifiers';
-import { SmoAudioPitch } from '../../smo/data/music';
+import { SmoSelector, SmoSelection } from '../../smo/xform/selections';
+import { SmoTie, SmoStaffHairpin, SmoStaffTextBracket } from '../../smo/data/staffModifiers';
+import { SmoAudioPitch, SmoMusic } from '../../smo/data/music';
+import { SmoNote } from '../../smo/data/note';
 import { SuiAudioAnimationParams } from './musicCursor';
-import { ScoreRoadMapBuilder } from './roadmap';
+import { ScoreRoadMapBuilder } from '../../smo/xform/roadmap';
+import { SmoDynamicText } from '../../smo/data/noteModifiers';
+import { setDynamics, setNoteDuration } from '../../smo/xform/updateAudio';
 
 /**
  * Create audio player for the score from the start point
@@ -148,15 +150,16 @@ export class SuiAudioPlayer {
       a.audioAnimation.clearAudioAnimationHandler(0);
     }
     SuiAudioPlayer.playing = false;
-
   }
+
   instanceId: number;
   paused: boolean;
   view: SuiScoreView;
   score: SmoScore;
   cuedSounds: CuedAudioContexts;
   audioDefaults = SuiOscillator.defaults;
-  openTies: Record<string, SoundParams | null> = {};
+  // a running record of the volumes we have used from the volume array, if a note is played multiple times.
+  volumeMap: Record<string, number> = {};
   audioAnimation: SuiAudioAnimationParams;
   constructor(parameters: SuiAudioPlayerParams) {
     this.instanceId = SuiAudioPlayer.incrementInstanceId();
@@ -186,12 +189,8 @@ export class SuiAudioPlayer {
           selector.staff = staffIx;
           selector.voice = voiceIx;
           selector.tick = tickIx;
-          let ties: SmoTie[] = [];
-          const tieIx = '' + staffIx + '-' + measureIndex + '-' + voiceIx;
-          const prevMeasureIx = '' + staffIx + '-' + (measureIndex - 1) + '-' + voiceIx;
           const silent = instrument.instrument === 'none';
           if (smoNote.noteType === 'n' && !smoNote.isHidden() && !silent) {
-            ties = staff.getTiesStartingAt(selector);
             smoNote.pitches.forEach((pitch, pitchIx) => {
               const freq = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, smoNote.getMicrotone(pitchIx) ?? null);
               const freqRound = Math.round(freq);
@@ -209,8 +208,18 @@ export class SuiAudioPlayer {
                 voiceCount[curTick] += 1;
               }
             });
-            const duration = smoNote.tickCount;
-            const volume = SmoAudioScore.volumeFromNote(smoNote, SmoAudioScore.dynamicVolumeMap.mf);
+            const duration = smoNote.audioData.tiedDuration;
+            const noteId = smoNote.attrs.id;
+            let volume = smoNote.audioData.volume.length > 0 ? smoNote.audioData.volume[0] : 0;
+            if (this.volumeMap[noteId]) {
+              const ix = this.volumeMap[noteId];
+              if (smoNote.audioData.volume.length > ix + 1) {
+                volume = smoNote.audioData.volume[ix + 1];
+              }
+              this.volumeMap[noteId] = ix + 1;
+            } else {
+              this.volumeMap[noteId] = 1;
+            }
             const soundData: SoundParams = {
               frequencies,
               volume,
@@ -227,26 +236,7 @@ export class SuiAudioPlayer {
               }
               measureNotes[curTick].push(soundData);
             }
-            // If this is continuation of tied note, just change duration
-            if (this.openTies[prevMeasureIx]) {
-              this.openTies[prevMeasureIx]!.duration += duration;
-              if (ties.length === 0) {
-                this.openTies[prevMeasureIx] = null;
-              }
-            }
-            else if (this.openTies[tieIx]) {
-              this.openTies[tieIx]!.duration += duration;
-              if (ties.length === 0) {
-                this.openTies[tieIx] = null;
-              }
-            } else if (ties.length) {
-              // If start of tied note, record the tie note, the next note in this voice
-              // will adjust duration
-              this.openTies[tieIx] = soundData;
-              pushTickArray(curTick, soundData);
-            } else {
-              pushTickArray(curTick, soundData);
-            }
+            pushTickArray(curTick, soundData);
           }
           curTick += Math.round(smoNote.tickCount);
         });
@@ -257,8 +247,7 @@ export class SuiAudioPlayer {
       measureTicks -= keys.reduce((a, b) => a > b ? a : b);
     }
     return { endTicks: measureTicks, measureNotes };
-  }
-  
+  }  
   createCuedSound(measureIndex: number) {
     let i = 0;
     let j = 0;
@@ -316,12 +305,13 @@ export class SuiAudioPlayer {
         this.cuedSounds.addToTail(cuedSound);
         soundData.forEach((sound) => {
           const adjDuration = Math.round(sound.duration * timeRatio) + 150;
+          const gain = sound.duration === 0 ? 0 : sound.volume;
           for (i = 0; i < sound.frequencies.length && sound.noteType === 'n'; ++i) {
             const freq = sound.frequencies[i];
             const params = this.audioDefaults;
             params.frequency = freq;
             params.duration = adjDuration;
-            params.gain = sound.volume;
+            params.gain = gain;
             params.instrument = sound.instrument;
             params.useReverb = this.score.audioSettings.reverbEnable;
             cuedSound.oscs.push(new SuiSampler(params));
@@ -404,12 +394,12 @@ export class SuiAudioPlayer {
     }, milliseconds)
   }
   startPlayer(measureIndex: number) {
-    this.openTies = {};
     this.cuedSounds.reset();
     this.cuedSounds.paramLinkHead = null;
     this.cuedSounds.paramLinkTail = null;
     const roadmap = new ScoreRoadMapBuilder(this.score);
     roadmap.populate(measureIndex);
+    setNoteDuration(this.score, roadmap);
     while (!roadmap.isDone) {
       const nextMeasure = roadmap.getAndAdvance();
       const { endTicks, measureNotes } = this.getNoteSoundData(nextMeasure);
@@ -485,6 +475,7 @@ export class SuiAudioPlayer {
     // }
     // const sounds = SuiAudioPlayer.getTrackSounds(this.audio.tracks, this.startIndex);
     // this.playSoundsAtOffset(sounds, 0);
+    setDynamics(this.score);
     this.startPlayer(startIndex);
   }
 }

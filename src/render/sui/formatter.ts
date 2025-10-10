@@ -684,6 +684,7 @@ export class SuiLayoutFormatter {
           const rowAdj = currentLine.filter((mm) => mm.svg.rowInSystem === i);
           rowAdj.forEach((row) => {
             row.setY(row.svg.staffY - adjY, 'format-hide');
+            row.adjustY(-adjY);
           });
         }
       }
@@ -701,7 +702,7 @@ export class SuiLayoutFormatter {
           const nextmm = rows[i + 1][j];
           nextmm.svg.forceTimeSignature = mm.svg.forceTimeSignature;
           nextmm.svg.forceKeySignature = mm.svg.forceKeySignature;
-          nextmm.svg.forceTempo = mm.svg.forceKeySignature;
+          nextmm.svg.forceTempo = mm.svg.forceTempo;
         }
       }
     }

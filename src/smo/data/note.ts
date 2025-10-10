@@ -16,6 +16,11 @@ import { SmoMusic } from './music';
 import { Ticks, Pitch, SmoAttrs, Transposable, PitchLetter, SvgBox, getId } from './common';
 import { FontInfo, vexCanonicalNotes } from '../../common/vex';
 import { SmoTupletParamsSer } from './tuplet';
+
+export interface SmoAudioData {
+  volume: number[],
+  tiedDuration: number
+}
 /**
  * @category SmoObject
  */
@@ -316,6 +321,12 @@ export class SmoNote implements Transposable {
   static get beamStateMax() {
     return SmoNote.beamStates.secondary;
   }
+  static get defaultAudioData() {
+    return {
+      volume: [],
+
+    }
+  }
   // Note type and ID
   attrs: SmoAttrs;
   flagState: number = SmoNote.flagStates.auto;
@@ -344,6 +355,12 @@ export class SmoNote implements Transposable {
   renderId: string | null = null;
   keySignature: string = 'c';
   logicalBox: SvgBox | null = null;
+  // mixin for real-time audio playback
+  audioData: SmoAudioData = {
+    volume: [],
+    tiedDuration: 0
+  };
+  
   isCue: boolean = false;
   hasTabNote: boolean = true;
   accidentalsRendered: string[] = [];// set by renderer if accidental is to display
