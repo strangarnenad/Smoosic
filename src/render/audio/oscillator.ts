@@ -131,7 +131,7 @@ export const SynthWavetable: WaveTable = {
  * @category SuiAudio
  */
 export abstract class SuiOscillator {
-  abstract play(): Promise<any>;
+  abstract play(): void;
   static get defaults(): SuiOscillatorParams {
     const wavetable: WaveTable = {
       real: [], imaginary: []
@@ -236,15 +236,11 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
       this.midinumber = 0;
     }
   }
-  async play() {
+  play() {
     const note = this.midinumber;
-    const now = SuiOscillatorSoundfont.audio.currentTime;
     if (this.velocity > 0 && this.samples) {
-      this.samples.start({ note, time: now, duration: this.duration / 1000, velocity: this.velocity });
+      this.samples.start({ note, time: 0, duration: this.duration / 1000, velocity: this.velocity });
     }
-    return new Promise((resolve) => {
-      setTimeout(resolve, Math.round(this.duration * 1000));
-    });
   }
 }
 

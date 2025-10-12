@@ -1954,7 +1954,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
    * Play the music from the starting selection
    * @returns 
    */
-  playFromSelection(): void {
+  async playFromSelection() {
     var mm = this.tracker.getExtremeSelection(-1);
     if (SuiAudioPlayer.playingInstance && SuiAudioPlayer.playingInstance.paused) {
       SuiAudioPlayer.playingInstance.play();

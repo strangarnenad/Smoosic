@@ -8,7 +8,7 @@ import { SmoMusic } from '../data/music';
 import { TimeSignature, SmoTempoText } from '../data/measureModifiers';
 import { ScoreRoadMapBuilder } from '../xform/roadmap';
 import { SmoScore } from '../data/score';
-import { setNoteDuration, setDynamics } from '../xform/updateAudio';
+import { PopulateAudioData } from '../xform/updateAudio';
 
 declare var MidiWriter: any;
 /*  options: [{
@@ -90,8 +90,7 @@ export class SmoToMidi {
     // Create a roadmap of the entire score so we can get repeats, ties etc.
     rm.populate(0);
     // Update duration and dynamics information
-    setNoteDuration(score, rm);
-    setDynamics(score);
+    PopulateAudioData(score, rm);
     const trackHash: Record<number | string, MidiTrackHash> = {};
     // eslint-disable-next-line
     for (let i = 0; i < rm.jumpQueue.length; ++i) {
@@ -154,8 +153,10 @@ export class SmoToMidi {
               for (let nix = 0; nix < voice.notes.length; ++nix) {
                 const note = voice.notes[nix];
                 const duration = Math.round(beatTime * (note.audioData.tiedDuration / 4096));
+                const silenceTime = duration - Math.round(duration * note.audioData.durationPct);
+                const soundTime = duration - silenceTime;
                 const midiPitches = SmoMusic.smoPitchesToMidiStrings(note.pitches);
-                let velocity = Math.round(127 * note.audioData.volume[0]);
+                let velocity = Math.min(127, Math.round(127 * note.audioData.volume[0]));
                 if (duration === 0) {
                   velocity = 0;
                 }
@@ -171,10 +172,18 @@ export class SmoToMidi {
                 const midiNote = new MidiWriter.NoteEvent({
                   channel: trackIx + 1,
                   pitch: midiPitches,
-                  duration: 't' + duration,
+                  duration: 't' + soundTime,
                   velocity
                 });
                 track.addEvent(midiNote);
+                if (silenceTime > 0) {
+                  const rest = new MidiWriter.NoteOffEvent({
+                  channel: trackIx + 1,
+                  pitch: 'C4',
+                  duration: 't' + silenceTime
+                  });
+                  track.addEvent(rest);
+                }
               }                       
             }
           }

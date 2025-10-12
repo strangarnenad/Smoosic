@@ -2,7 +2,8 @@ import { SmoScore } from '../data/score';
 import { SmoSelector, SmoSelection } from './selections';
 import { SmoTie, SmoStaffHairpin, SmoStaffTextBracket } from '../data/staffModifiers';
 import { SmoMusic } from '../data/music';
-import { SmoNote } from '../data/note'
+import { SmoNote } from '../data/note';
+import { SmoArticulation } from '../data/noteModifiers';
 import { SmoDynamicText } from '../data/noteModifiers';
 import { ScoreRoadMapBuilder } from './roadmap';
 /**
@@ -113,7 +114,7 @@ const assignHairpinDynamics = (score: SmoScore, selection: SmoSelection) => {
     assignDynamicsFromModifier(score, innerSelections, sign, hairpin.startSelector, hairpin.endSelector);
   });
 }
-export const setDynamics = (score: SmoScore) => {
+const setDynamics = (score: SmoScore) => {
   score.staves.forEach((staff) => {
     let dynamic = SmoMusic.dynamicVolumeMap['mp'];
     staff.measures.forEach((mm) => {
@@ -136,6 +137,18 @@ export const setDynamics = (score: SmoScore) => {
                 dynamic = note.audioData.volume[0];
               } else {
                 note.audioData.volume.push(dynamic);
+              }
+              const articulations: SmoArticulation[] = note.getArticulations();
+              const marcato = 
+                articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.marcato) >= 0;
+              const accent = 
+                articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.accent) >= 0;
+              for (let av = 0; av < note.audioData.volume.length; ++av) {
+                if (marcato) {
+                  note.audioData.volume[av] += 0.1;
+                } else if (accent) {
+                  note.audioData.volume[av] += 0.1;
+                }
               }
             }
           }
@@ -164,7 +177,8 @@ export const setDynamics = (score: SmoScore) => {
  * @param score 
  * @param roadMap 
  */
-export const setNoteDuration = (score: SmoScore, roadMap: ScoreRoadMapBuilder) => {
+export const PopulateAudioData = (score: SmoScore, roadMap: ScoreRoadMapBuilder) => {
+  setDynamics(score);
   const q = roadMap.jumpQueue;
   const trackVoices: Record<string, number> = {};
   const tiedNotes: Record<number, SmoNote | undefined> = {};
@@ -182,11 +196,11 @@ export const setNoteDuration = (score: SmoScore, roadMap: ScoreRoadMapBuilder) =
         const currentTrack = trackVoices[trackKey];        
         for (let j = segment.startMeasure; j <= segment.endMeasure; ++j) {
           const mm = staff.measures[j];
-          if (mm.voices.length > k) {
-            const voice = mm.voices[k];
+          if (mm.voices.length > v) {
+            const voice = mm.voices[v];
             for (let n = 0; n < voice.notes.length; ++n) {
               let selection = SmoSelection.noteSelection(score, 
-                  staff.staffId, mm.measureNumber.localIndex, k, n
+                  staff.staffId, mm.measureNumber.localIndex, v, n
                   );
               if (selection && selection.note) {
                 const note = selection.note;
@@ -200,8 +214,26 @@ export const setNoteDuration = (score: SmoScore, roadMap: ScoreRoadMapBuilder) =
                   }
                 } else if (tieLen.length) {                  
                   tiedNotes[currentTrack] = note;
+                  note.audioData.durationPct = 1.0;
                 } else {
                   note.audioData.tiedDuration = note.tickCount;
+                  note.audioData.durationPct = 0.9;
+                  const articulations: SmoArticulation[] = note.getArticulations();
+                  const staccato = 
+                    articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.staccato) >= 0;
+                  const tenuto = 
+                    articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.tenuto) >= 0;
+                  const marcato = 
+                    articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.marcato) >= 0;
+                  if (staccato && tenuto) {
+                    note.audioData.durationPct = 0.85;
+                  } else if (staccato) {
+                    note.audioData.durationPct = 0.6;
+                  }else if (tenuto) {
+                    note.audioData.durationPct = 0.95;
+                  } else if (marcato) {
+                    note.audioData.durationPct = 0.45;
+                  }
                 }
               }
             }

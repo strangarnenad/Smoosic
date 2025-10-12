@@ -19,7 +19,8 @@ import { SmoTupletParamsSer } from './tuplet';
 
 export interface SmoAudioData {
   volume: number[],
-  tiedDuration: number
+  tiedDuration: number,
+  durationPct: number
 }
 /**
  * @category SmoObject
@@ -358,7 +359,8 @@ export class SmoNote implements Transposable {
   // mixin for real-time audio playback
   audioData: SmoAudioData = {
     volume: [],
-    tiedDuration: 0
+    tiedDuration: 0,
+    durationPct: 0
   };
   
   isCue: boolean = false;
