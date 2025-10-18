@@ -665,7 +665,10 @@ export class SmoNote implements Transposable {
     );
     note.pitches.sort((a, b) => keyIndex(a) - keyIndex(b));
   }
-  setNoteHead(noteHead: string) {
+  setNoteHead(notehead: string) {
+    this.noteHead = notehead;
+  }
+  toggleNoteHead(noteHead: string) {
     if (this.noteHead === noteHead) {
       this.noteHead = '';
     } else {

@@ -71,6 +71,7 @@ export class VxMeasure implements VxMeasureIf {
   collisionMap: Record<number, SmoNote[]> = {};
   dbgLeftX: number = 0;
   dbgWidth: number = 0;
+  hideAccidentals: boolean = false;
   tiedOverPitches: Pitch[] = [];
 
   constructor(context: SvgPage, selection: SmoSelection, 
@@ -80,6 +81,10 @@ export class VxMeasure implements VxMeasureIf {
     this.selection = selection;
     this.smoMeasure = this.selection.measure;
     this.printing = printing;
+    const instrument = selection.staff.getStaffInstrument(selection.selector.measure);
+    if (instrument.isPercussion && instrument.usePercussionNoteheads) {
+      this.hideAccidentals = true;
+    }
     this.allCues = selection.staff.partInfo.displayCues;
     this.tupletToVexMap = {};
     this.vexNotes = [];
@@ -244,7 +249,8 @@ export class VxMeasure implements VxMeasureIf {
       staveNote: vexNote,
       voiceIndex: voiceIx,
       tiedOverPitches,
-      tickIndex: tickIndex
+      tickIndex: tickIndex,
+      hideAccidentals: this.hideAccidentals
     }
     if (tabNote) {
       noteData.tabNote = tabNote;

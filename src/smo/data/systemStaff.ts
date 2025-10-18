@@ -12,7 +12,8 @@ import { SmoMeasure, SmoMeasureParamsSer } from './measure';
 import { SmoMeasureFormat, SmoRehearsalMark, SmoRehearsalMarkParams, SmoTempoTextParams, SmoVolta, SmoBarline } from './measureModifiers';
 import { SmoInstrumentParams, StaffModifierBase, SmoInstrument, SmoInstrumentMeasure, SmoInstrumentStringParams, SmoInstrumentNumParams, 
   SmoTie, SmoStaffTextBracket, SmoStaffTextBracketParamsSer, 
-  StaffModifierBaseSer, SmoTabStave, SmoStaffHairpin, TieLine } from './staffModifiers';
+  StaffModifierBaseSer, SmoTabStave, SmoStaffHairpin, TieLine,
+  SmoInstrumentBooleanParams } from './staffModifiers';
 import { SmoPartInfo, SmoPartInfoParamsSer } from './partInfo';
 import { SmoTextGroup } from './scoreText';
 import { SmoSelector } from '../xform/selections';
@@ -371,6 +372,11 @@ export class SmoSystemStaff implements SmoObjectParams {
         });
         SmoInstrumentNumParams.forEach((str) => {
           if (typeof(inst[str]) === 'number') {
+            defs[str] = inst[str];
+          }
+        });
+        SmoInstrumentBooleanParams.forEach((str) => {
+          if (typeof(inst[str]) === 'boolean') {
             defs[str] = inst[str];
           }
         });

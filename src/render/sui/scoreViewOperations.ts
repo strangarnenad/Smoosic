@@ -480,8 +480,8 @@ export class SuiScoreViewOperations extends SuiScoreView {
     }
     this._undoSelections('change instrument', selections);
     const altSelections = this._getEquivalentSelections(selections);
-    SmoOperation.changeInstrument(instrument, selections);
-    SmoOperation.changeInstrument(instrument, altSelections);
+    SmoOperation.changeInstrument(instrument, this.score, selections);
+    SmoOperation.changeInstrument(instrument, this.storeScore, altSelections);
     this._renderChangedMeasures(selections);
     await this.renderer.updatePromise();
   }
@@ -765,11 +765,20 @@ export class SuiScoreViewOperations extends SuiScoreView {
       });
 
     } else {
+      let isPercussion = false;
       selections.forEach((selected) => {
         SmoOperation.transpose(selected, offset);
+        if (selected.staff.getStaffInstrument(selected.selector.measure).isPercussion) {
+          isPercussion = true;
+        }
         const altSel = this._getEquivalentSelection(selected);
         SmoOperation.transpose(altSel!, offset);
       });
+      // if this is percussion, set that property
+      if (isPercussion) {
+        this.score.setNoteInstrumentProperties();
+        this.storeScore.setNoteInstrumentProperties()
+      }
       if (selections.length === 1 && this.score.preferences.autoPlay) {
         SuiOscillator.playSelectionNow(selections[0], this.score, 1);
       }
@@ -1179,8 +1188,12 @@ export class SuiScoreViewOperations extends SuiScoreView {
   async setPitch(letter: PitchLetter): Promise<void> {
     const selections = this.tracker.selections;
     const measureSelections = this.undoTrackerMeasureSelections('set pitch ' + letter);
+    let isPercussion = false;
     selections.forEach((selected) => {
       const selector = selected.selector;
+      if (selected.staff.getStaffInstrument(selected.selector.measure).isPercussion) {
+        isPercussion = true;
+      }
       let hintSel = SmoSelection.lastNoteSelectionNonRest(this.score,
         selector.staff, selector.measure, selector.voice, selector.tick);
       if (!hintSel) {
@@ -1202,6 +1215,10 @@ export class SuiScoreViewOperations extends SuiScoreView {
         this.tracker.moveSelectionRight();
       }
     });
+    if (isPercussion) {
+      this.score.setNoteInstrumentProperties();
+      this.storeScore.setNoteInstrumentProperties()
+    }
     if (selections.length === 1 && this.score.preferences.autoPlay) {
       SuiOscillator.playSelectionNow(selections[0], this.score, 1);
     }
@@ -1794,7 +1811,7 @@ export class SuiScoreViewOperations extends SuiScoreView {
       const numKey = parseInt(key, 10);
       const inst = staff.measureInstrumentMap[numKey];
       const selections = SmoSelection.innerSelections(this.storeScore, inst.startSelector, inst.endSelector);
-      SmoOperation.changeInstrument(inst, selections);
+      SmoOperation.changeInstrument(inst, this.storeScore, selections);
     })
     if (instrument.staffId > 0) {
       const selection = SmoSelection.measureSelection(this.storeScore, instrument.staffId - 1, 0);

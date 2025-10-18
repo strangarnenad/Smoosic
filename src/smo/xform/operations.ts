@@ -248,7 +248,7 @@ export class SmoOperation {
   }
   static setNoteHead(selections: SmoSelection[], noteHead: string) {
     selections.forEach((selection: SmoSelection) => {
-      selection.note?.setNoteHead(noteHead);
+      selection.note?.toggleNoteHead(noteHead);
     });
   }
 
@@ -1014,7 +1014,7 @@ export class SmoOperation {
    * @param instrument
    * @param selections
    */
-  static changeInstrument(instrument: SmoInstrument, selections: SmoSelection[]) {
+  static changeInstrument(instrument: SmoInstrument, score: SmoScore, selections: SmoSelection[]) {
     selections[0].staff.consolidateInstruments();
     const measureSel = SmoSelection.getMeasureList(selections);
     const measureIndex = measureSel[0].selector.measure;
@@ -1051,6 +1051,7 @@ export class SmoOperation {
     });
     selections[0].staff.measureInstrumentMap = instMap;
     selections[0].staff.updateInstrumentOffsets();
+    score.setNoteInstrumentProperties();
   }
   static computeMultipartRest(score: SmoScore) {
     let i = 0;

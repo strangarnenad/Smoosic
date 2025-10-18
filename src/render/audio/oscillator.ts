@@ -9,7 +9,7 @@ import { SmoMusic,  } from '../../smo/data/music';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
 import { SmoInstrument } from '../../smo/data/staffModifiers';
-import { loadedSoundfonts, drumMidiMap } from './samples';
+import { loadedSoundfonts } from './samples';
 import {
   getSoundfontKits,
   Soundfont,
@@ -235,9 +235,9 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
       // Since we treat pitches in non-pitched percussion as if treble clef,
       // adjust to match the MIDI pitch.
       if (this.instrument === 'percussion') {
-        if (drumMidiMap[this.midinumber]) {
+        if (SmoInstrument.defaultDrumMidiMap[this.midinumber]) {
           // Sampler library maps midi notes an octave below Smoosic
-          this.midinumber = drumMidiMap[this.midinumber] - 12;
+          this.midinumber = SmoInstrument.defaultDrumMidiMap[this.midinumber] - 12;
         }
         gain = gain * 0.5;
       }

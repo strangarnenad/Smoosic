@@ -38,11 +38,22 @@ export class SuiInstrumentAdapter extends SuiComponentAdapter {
     this.view.changeInstrument(this.instrument, this.selections);
     this.instrument = new SmoInstrument(this.instrument);
   }
+  writeBooleanParam(paramName: 'usePercussionNoteheads', value: boolean) {
+    this.instrument[paramName] = value as any;
+    this.view.changeInstrument(this.instrument, this.selections);
+    this.instrument = new SmoInstrument(this.instrument);
+  }
   get lines() {
     return this.instrument.lines;
   }
   set lines(value: number) {
     this.writeNumParam('lines', value);
+  }
+  get usePercussionNoteheads() {
+    return this.instrument.usePercussionNoteheads;
+  }
+  set usePercussionNoteheads(value: boolean) {
+    this.writeBooleanParam('usePercussionNoteheads', value);
   }
   get transposeIndex() {
     return this.instrument.keyOffset;
@@ -61,7 +72,7 @@ export class SuiInstrumentAdapter extends SuiComponentAdapter {
   get clef(): Clef {
     return this.instrument.clef;
   }
-  set clef(value: Clef)  {
+  set clef(value: Clef) {
     this.instrument.clef = value;
     this.view.changeInstrument(this.instrument, this.selections);
     this.instrument = new SmoInstrument(this.instrument);
@@ -87,7 +98,7 @@ export class SuiInstrumentAdapter extends SuiComponentAdapter {
   async cancel() {
     await this.view.changeInstrument(this.backup, this.selections);
   }
-  async remove() { 
+  async remove() {
     return PromiseHelpers.emptyPromise();
   }
 }
@@ -102,120 +113,124 @@ export class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrumentAdapt
     };
   }
   // export type Clef = 'treble' | 'bass' | 'tenor' | 'alto' | 'soprano' | 'percussion'
-    //| 'mezzo-soprano' | 'baritone-c' | 'baritone-f' | 'subbass' | 'french';
-  static dialogElements: DialogDefinition = 
-      {
-        label: 'Instrument Properties',
-        elements:
-          [{
-            smoName: 'lines',
-            defaultValue: 5,
-            control: 'SuiRockerComponent',
-            label: 'Staff lines (1-5)'
+  //| 'mezzo-soprano' | 'baritone-c' | 'baritone-f' | 'subbass' | 'french';
+  static dialogElements: DialogDefinition =
+    {
+      label: 'Instrument Properties',
+      elements:
+        [{
+          smoName: 'lines',
+          defaultValue: 5,
+          control: 'SuiRockerComponent',
+          label: 'Staff lines (1-5)'
+        }, {
+          smoName: 'transposeIndex',
+          defaultValue: 0,
+          control: 'SuiRockerComponent',
+          label: 'Transpose Index (1/2 steps)',
+        }, {
+          smoName: 'subFamily',
+          control: 'SuiDropdownComponent',
+          label: 'Sample Sound',
+          options: [{
+            value: 'piano',
+            label: 'Grand Piano'
           }, {
-            smoName: 'transposeIndex',
-            defaultValue: 0,
-            control: 'SuiRockerComponent',
-            label: 'Transpose Index (1/2 steps)',
+            value: 'bass',
+            label: 'Bass (bowed)'
           }, {
-            smoName: 'subFamily',
-            control: 'SuiDropdownComponent',
-            label: 'Sample Sound',
-            options: [{
-              value: 'piano',
-              label:'Grand Piano'
-            }, {
-              value: 'bass',
-              label: 'Bass (bowed)'
-            }, {
-              value: 'jazzBass',
-              label: 'Bass (plucked)'
-            }, {
-              value: 'eGuitar',
-              label: 'Electric Guitar'
-            }, {
-              value: 'cello',
-              label: 'Cello'
-            }, {
-              value: 'violin',
-              label: 'Violin'
-            }, {
-              value: 'trumpet',
-              label: 'Bb Trumpet'
-            }, {
-              value: 'horn',
-              label: 'F Horn'
-            }, {
-              value: 'trombone',
-              label: 'Trombone'
-            }, {
-              value: 'tuba',
-              label: 'Tuba'
-            }, {
-              value: 'clarinet',
-              label: 'Bb Clarinet'
-            },  {
-              value: 'flute',
-              label: 'Flute'
-            }, {
-              value: 'altoSax',
-              label: 'Eb Alto Sax'
-            },  {
-              value: 'tenorSax',
-              label: 'Bb Tenor Sax'
-            },  {
-              value: 'bariSax',
-              label: 'Eb Bari Sax'
-            },  {
-              value: 'pad',
-              label: 'Synth Pad'
-            }, {
-              value: 'percussion',
-              label: 'Percussion'
-            }, {
-              value: 'none',
-              label: 'None'
-            }]
+            value: 'jazzBass',
+            label: 'Bass (plucked)'
           }, {
-            smoName: 'clef',
-            control: 'SuiDropdownComponent',
-            label: 'Clef',
-            options: [{
-              value: 'treble',
-              label:'Treble'
-            }, {
-              value: 'bass',
-              label: 'Bass'
-            }, {
-              value: 'tenor',
-              label: 'Tenor'
-            }, {
-              value: 'alto',
-              label: 'Alto'
-            }, {
-              label: 'Percussion',
-              value: 'percussion'
-            }]
+            value: 'eGuitar',
+            label: 'Electric Guitar'
           }, {
-            smoName: 'applyTo',
-            defaultValue: SuiInstrumentDialog.applyTo.score,
-            dataType: 'int',
-            control: 'SuiDropdownComponent',
-            label: 'Apply To',
-            options: [{
-              value: SuiInstrumentDialog.applyTo.score,
-              label: 'Score'
-            }, {
-              value: SuiInstrumentDialog.applyTo.selected,
-              label: 'Selected Measures'
-            }, {
-              value: SuiInstrumentDialog.applyTo.remaining,
-              label: 'Remaining Measures'
-            }]
-          }
-          ],
-          staticText: []
-      };
+            value: 'cello',
+            label: 'Cello'
+          }, {
+            value: 'violin',
+            label: 'Violin'
+          }, {
+            value: 'trumpet',
+            label: 'Bb Trumpet'
+          }, {
+            value: 'horn',
+            label: 'F Horn'
+          }, {
+            value: 'trombone',
+            label: 'Trombone'
+          }, {
+            value: 'tuba',
+            label: 'Tuba'
+          }, {
+            value: 'clarinet',
+            label: 'Bb Clarinet'
+          }, {
+            value: 'flute',
+            label: 'Flute'
+          }, {
+            value: 'altoSax',
+            label: 'Eb Alto Sax'
+          }, {
+            value: 'tenorSax',
+            label: 'Bb Tenor Sax'
+          }, {
+            value: 'bariSax',
+            label: 'Eb Bari Sax'
+          }, {
+            value: 'pad',
+            label: 'Synth Pad'
+          }, {
+            value: 'percussion',
+            label: 'Percussion'
+          }, {
+            value: 'none',
+            label: 'None'
+          }]
+        }, {
+          smoName: 'clef',
+          control: 'SuiDropdownComponent',
+          label: 'Clef',
+          options: [{
+            value: 'treble',
+            label: 'Treble'
+          }, {
+            value: 'bass',
+            label: 'Bass'
+          }, {
+            value: 'tenor',
+            label: 'Tenor'
+          }, {
+            value: 'alto',
+            label: 'Alto'
+          }, {
+            label: 'Percussion',
+            value: 'percussion'
+          }]
+        }, {
+          smoName: 'usePercussionNoteheads',
+          control: 'SuiToggleComponent',
+          label: 'User Pecussion Symbols (Percussion Clef Only)'
+        }, {
+          smoName: 'applyTo',
+          defaultValue: SuiInstrumentDialog.applyTo.score,
+          dataType: 'int',
+          control: 'SuiDropdownComponent',
+          label: 'Apply To',
+          options: [{
+            value: SuiInstrumentDialog.applyTo.score,
+            label: 'Score'
+          }, {
+            value: SuiInstrumentDialog.applyTo.selected,
+            label: 'Selected Measures'
+          }, {
+            value: SuiInstrumentDialog.applyTo.remaining,
+            label: 'Remaining Measures'
+          }]
+        }
+        ],
+      staticText: []
+    };
   constructor(parameters: SuiDialogParams) {
     const adapter = new SuiInstrumentAdapter(parameters.view);
     super(SuiInstrumentDialog.dialogElements, { adapter, ...parameters });

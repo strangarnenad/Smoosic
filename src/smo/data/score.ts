@@ -177,13 +177,6 @@ export type SmoModifier = SmoNoteModifierBase | SmoMeasureModifierBase | StaffMo
  */
 export class SmoScore {
   /**
-   * Map of instruments to staves, used in serialization.
-   *
-   * @type {any[]}
-   * @memberof SmoScore
-   */
-  instrumentMap: any[] = [];
-  /**
    * Default fonts in this score, for each type of text (lyrics, etc)
    *
    * @type {FontPurpose[]}
@@ -1112,6 +1105,32 @@ export class SmoScore {
           mm.transposeToOffset(inst.keyOffset, concert);
           mm.transposeIndex = inst.keyOffset;
           mm.keySignature = concert;
+        }
+      });
+    });
+  }
+  setNoteInstrumentProperties() {
+    this.staves.forEach((staff) => {
+      staff.measures.forEach((mm) => {
+        const inst = staff.getStaffInstrument(mm.measureNumber.measureIndex);
+        if (inst.isPercussion) {
+          mm.voices.forEach((voice) => {
+            voice.notes.forEach((note) => {
+              if (inst.usePercussionNoteheads) {
+                if (!note.isRest()) {
+                  const intNote = SmoMusic.midiPitchToMidiNumber(SmoMusic.smoPitchToMidiString(
+                    note.pitches[0]));
+                  if (SmoInstrument.xNoteheadInstruments.indexOf(intNote) >= 0) {
+                    note.setNoteHead('T2');
+                  } else if (SmoInstrument.triNoteheadInstruments.indexOf(intNote) >= 0) {
+                    note.setNoteHead('X2');
+                  } else {
+                    note.setNoteHead('');
+                  }
+                }
+              }
+            });
+          });
         }
       });
     });

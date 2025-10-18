@@ -13,6 +13,7 @@ import { SmoAttrs, getId, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBa
   SmoDynamicCtor, ElementLike } from './common';
 import { SmoTabNote, SmoFretPosition } from './noteModifiers';
 import { SmoMusic } from './music';
+import Smo from '../../application/exports';
 /**
  * Base class that mostly standardizes the interface and deals with serialization.
  * @param ctor constructor for derived class
@@ -139,6 +140,8 @@ export interface SmoInstrumentParams {
    * -2 indicates key of Bb
    */
   keyOffset: number,
+  usePercussionNoteheads: boolean,
+  percussionMap: Record<number, number>,
   /**
    * for future
    */
@@ -179,6 +182,8 @@ export type SmoInstrumentNumParamType = 'keyOffset' | 'midichannel' | 'midiport'
 export const SmoInstrumentNumParams: SmoInstrumentNumParamType[] = ['keyOffset', 'midichannel', 'midiport', 'midiInstrument', 'lines'];
 export type SmoInstrumentStringParamType = 'instrumentName' | 'abbreviation' | 'family' | 'instrument' | 'clef';
 export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instrumentName', 'abbreviation', 'family', 'instrument', 'clef'];
+export type SmoInstrumentBooleanParamType = 'usePercussionNoteheads';
+export const SmoInstrumentBooleanParams: SmoInstrumentBooleanParamType[] = ['usePercussionNoteheads'];
 /**
  * Define an instrument.  An instrument is associated with a part, but a part can have instrument changes
  * and thus contain multiple instruments at different points in the score.
@@ -189,8 +194,41 @@ export const SmoInstrumentStringParams: SmoInstrumentStringParamType[] = ['instr
 export class SmoInstrument extends StaffModifierBase {
   static get attributes() {
     return ['startSelector', 'endSelector', 'clef',
-      'keyOffset', 'midichannel', 'midiport', 'instrumentName', 'abbreviation', 'instrument', 'family', 'lines'];
+      'keyOffset', 'midichannel', 'midiport', 'instrumentName', 
+      'abbreviation', 'instrument', 'family', 'lines'];
   }
+  static defaultDrumMidiMap: Record<number, number> = {
+    58: 54, // Bb3 Tambourine
+    59: 56, // B3 Cowbell
+    60: 39, // C4 Hand Clap
+    61: 58, // Db4 vibraslap
+    62: 42, // Closed Hi Hat, D4
+    63: 61, // Eb4 Low Bongo
+    64: 46, // Open Hi Hat, E4
+    65: 35, // Acoustic Bass Drum, F4
+    66: 60, // Gb4 High Bongo
+    67: 38, // Kick Drum G4
+    68: 64, // Ab4 Low Conga
+    69: 41, // Low Tom, A4
+    70: 63, // Bb4 High Conga
+    71: 47, // Mid Tom  B4
+    72: 38, // Snare C5
+    73: 62, // Db5 High Conga muted
+    74: 50, // High Tom D5
+    75: 52, // Eb5 65 High Timbale
+    76: 51, // Ride E5
+    77: 49, // F5 Crash
+    78: 70, // Gg5 Low Timbale
+    79: 57, // G5 Agogo Bell
+    80: 70, // Ab5 Maracas
+    81: 76, // A5 Wood Block
+    82: 75, // Bb5 Claves
+    83: 74, // Guiro B5
+    84: 81, // Triangle C6
+  }
+  static xNoteheadInstruments: number[] = [77, 62, 64, 76, 84];
+  static triNoteheadInstruments: number[] = [58, 59, 60, 63, 66, 68,
+    70, 73, 75, 78, 80, 81, 82, 83];
   startSelector: SmoSelector;
   endSelector: SmoSelector;
   instrumentName: string = '';
@@ -198,6 +236,8 @@ export class SmoInstrument extends StaffModifierBase {
   keyOffset: number = 0;
   clef: Clef = 'treble';
   midiInstrument: number = 1;
+  usePercussionNoteheads: boolean = false;
+  percussionMap: Record<number, number> = {};
   lines: number = 5;
   midichannel: number;
   midiport: number;
@@ -212,6 +252,8 @@ export class SmoInstrument extends StaffModifierBase {
       instrumentName: '',
       abbreviation: '',
       family: 'keyboard',
+      usePercussionNoteheads: false,
+      percussionMap: JSON.parse(JSON.stringify(SmoInstrument.defaultDrumMidiMap)),
       instrument: 'piano',
       midichannel: 0,
       midiInstrument: 1,
@@ -257,6 +299,7 @@ export class SmoInstrument extends StaffModifierBase {
     this.clef = params.clef;
     this.midiport = params.midiport;
     this.midichannel = params.midichannel;
+    this.usePercussionNoteheads = params.usePercussionNoteheads ?? false;
     this.startSelector = params.startSelector;
     this.endSelector = params.endSelector;
   }
@@ -264,6 +307,7 @@ export class SmoInstrument extends StaffModifierBase {
     const params: Partial<SmoInstrumentParamsSer> = {};
     smoSerialize.serializedMergeNonDefault(SmoInstrument.defaults, SmoInstrumentStringParams, this, params);
     smoSerialize.serializedMergeNonDefault(SmoInstrument.defaults, SmoInstrumentNumParams, this, params);
+    smoSerialize.serializedMergeNonDefault(SmoInstrument.defaults, SmoInstrumentBooleanParams, this, params);
     params.startSelector = this.startSelector;
     params.endSelector = this.endSelector;
     params.ctor = 'SmoInstrument';
@@ -271,6 +315,9 @@ export class SmoInstrument extends StaffModifierBase {
       throw ('bad instrument ' + JSON.stringify(params));
     }
     return params;
+  }
+  get isPercussion(): boolean {
+    return this.clef === 'percussion';
   }
   eq(other: SmoInstrument): boolean {
     let rv = true;
