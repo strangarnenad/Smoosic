@@ -373,7 +373,7 @@ export class PasteBuffer {
       }
       const repl = StaffModifierBase.deserialize(mod.serialize());
       repl.endSelector = JSON.parse(JSON.stringify(destSelector));
-      const tickOffset = SmoSelection.countTicks(this.score, mod.startSelector, mod.endSelector);
+      const tickOffset = SmoSelection.countTickIndices(this.score, mod.startSelector, mod.endSelector);
       this.modifiersToPlace.push({
         modifier: repl,
         ticksToStart: tickOffset

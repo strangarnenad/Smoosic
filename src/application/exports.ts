@@ -16,6 +16,7 @@ import { CollapseRibbonControl, ExtendedCollapseParent } from '../ui/buttons/col
 import { DisplaySettings } from '../ui/buttons/display';
 import { SmoTranslationEditor } from '../ui/i18n/translationEditor';
 import { SmoConfiguration } from './configuration';
+import { RibbonLayout, ModalComponent, CompleteNotifier, RibbonDefinition } from '../ui/common';
 import { RibbonButtons } from '../ui/buttons/ribbon';
 import { simpleRibbonLayout } from '../ui/ribbonLayout/default/tabletRibbon';
 import { ModalEventHandler } from './common';
@@ -149,6 +150,7 @@ import { SmoSystemStaff } from '../smo/data/systemStaff';
 import { SmoSystemGroup, SmoAudioPlayerSettings, SmoScorePreferences, scoreModifierDynamicCtorInit } from '../smo/data/scoreModifiers';
 import { SmoTextGroup, SmoTextGroupParams } from '../smo/data/scoreText';
 import { SmoOperation } from '../smo/xform/operations';
+import { ScoreRoadMapBuilder } from '../smo/xform/roadmap';
 import {
     SmoRehearsalMark, SmoMeasureFormat, SmoBarline, SmoRepeatSymbol,
     SmoVolta, SmoMeasureText, SmoTempoText, TimeSignature, measureModifierDynamicCtorInit
@@ -173,7 +175,6 @@ export * from './configuration';
 export * from './dynamicInit';
 export * from './dom';
 export * from './eventHandler';
-export * from './exports';
 export * from '../common/midi-parser';
 export * from './generateVexTests';
 export * from './keyCommands';
@@ -225,7 +226,6 @@ export * from '../smo/mxml/smoToXml';
 export * from '../smo/mxml/xmlHelpers';
 export * from '../smo/mxml/xmlState';
 export * from '../smo/mxml/xmlToSmo';
-export * from '../smo/xform/audioTrack';
 export * from '../smo/xform/beamers';
 export * from '../smo/xform/copypaste';
 export * from '../smo/xform/operations';
@@ -307,6 +307,7 @@ export * from '../ui/fileio/fileInput';
 export * from '../ui/fileio/library';
 export * from '../ui/fileio/xhrLoader';
 export * from '../ui/help';
+export * from '../ui/common';
 export * from '../ui/i18n/language';
 export * from '../ui/i18n/translationEditor';
 export * from '../ui/keyBindings/default/editorKeys';
@@ -341,6 +342,7 @@ export const Smo = {
   // Ribbon buttons
   simpleRibbonLayout,
   RibbonButtons,
+  ModalComponent, CompleteNotifier,
   DisplaySettings,  ExtendedCollapseParent, CollapseRibbonControl,
   // Menus
   SuiMenuManager, SuiMenuBase, SuiMenuCustomizer, SuiScoreMenu, SuiFileMenu,
@@ -394,7 +396,7 @@ SuiPitchComposite,
   // Smo Music Objects
   SmoScore,  SmoScorePreferences, scoreModifierDynamicCtorInit,  engravingFontTypes, isEngravingFont,
   XmlToSmo,  SmoToXml,  MidiToSmo,  SmoToMidi,  SmoMusic,  SmoAudioPitch,  SmoMeasure,  SmoNamespace, SmoDynamicCtor,
-  SmoSystemStaff,  SmoNote, IsPitchLetter,
+  SmoSystemStaff,  SmoNote, IsPitchLetter, ScoreRoadMapBuilder,
   // staff modifier
   SmoStaffHairpin, StaffModifierBase,  SmoStaffTextBracket, staffModifierDynamicCtorInit,
   SmoInstrument, SmoSlur, SmoPedalMarking, SmoTie, SmoTabStave, 

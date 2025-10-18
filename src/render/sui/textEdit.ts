@@ -823,7 +823,7 @@ export class SuiChordEditor extends SuiTextEditor {
       this.svgText.element?.remove();
     }
   }
-  async evKey(evdata: KeyEvent): Promise<boolean> {
+  async evKey(evdata: any): Promise<boolean> {
     let edited = false;
     if (this._setSymbolModifier(evdata.key)) {
       return true;
@@ -848,6 +848,8 @@ export class SuiChordEditor extends SuiTextEditor {
     if (this.svgText !== null && this.svgText.blocks.length > this.textPos && this.textPos >= 0) {
       this.textType = this.svgText.blocks[this.textPos].textType;
     }
+    evdata.preventDefault(); // prevent browser scroll
+
     return edited;
   }
   lyric: SmoLyric;
@@ -1343,7 +1345,7 @@ export class SuiLyricSession {
   }
   // ### evKey
   // Key handler (pass to editor)
-  async evKey(evdata: KeyEvent): Promise<boolean> {
+  async evKey(evdata: any): Promise<boolean> {
     if (this.state !== SuiTextEditor.States.RUNNING) {
       return false;
     }
@@ -1359,6 +1361,7 @@ export class SuiLyricSession {
       await this.editor.evKey(evdata);
       this._hideLyric();
     }
+    evdata.preventDefault();
     return true;
   }
   get textType(): number {

@@ -391,7 +391,7 @@ export class SmoSelection {
    * @param sel2 
    * @returns 
    */
-  static countTicks(score: SmoScore, sel1: SmoSelector, sel2: SmoSelector): number {
+  static countTickIndices(score: SmoScore, sel1: SmoSelector, sel2: SmoSelector): number {
     if (SmoSelector.eq(sel1, sel2)) {
       return 0;
     }
@@ -410,6 +410,33 @@ export class SmoSelection {
         endSelection = SmoSelection.lastNoteSelectionFromSelector(score, endSelection.selector);
         ticks += 1;
       }
+    }
+    return ticks;
+  }
+/**
+   * Count the number of tick indices between selector 1 and selector 2;
+   * @param score 
+   * @param sel1 
+   * @param sel2 
+   * @returns 
+   */
+  static countTicks(score: SmoScore, sel1: SmoSelector, sel2: SmoSelector): number {
+    if (SmoSelector.eq(sel1, sel2)) {
+      return 0;
+    }
+    const backwards = SmoSelector.gt(sel1, sel2);
+    let ticks = 0;
+    const start = backwards ? sel2 : sel1;
+    const end = backwards ? sel1 : sel2;
+    let startSelection = SmoSelection.selectionFromSelector(score, start);
+    while (startSelection !== null) {
+        if (startSelection && startSelection.note) {
+          ticks += startSelection.note.tickCount;
+        }
+        startSelection = SmoSelection.nextNoteSelectionFromSelector(score, startSelection.selector);
+        if (startSelection && SmoSelector.gteq(startSelection?.selector, end)) {
+          break;
+        }
     }
     return ticks;
   }

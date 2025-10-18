@@ -5,10 +5,18 @@ import { SmoAudioPitch } from '../../smo/data/music';
 import { SmoMicrotone } from '../../smo/data/noteModifiers';
 import { SmoMeasure } from '../../smo/data/measure';
 import { SmoNote } from '../../smo/data/note';
+import { SmoMusic,  } from '../../smo/data/music';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
-import { SmoOscillatorInfo } from '../../smo/data/staffModifiers';
-import { SuiSampleMedia, AudioSample } from './samples';
+import { SmoInstrument } from '../../smo/data/staffModifiers';
+import { loadedSoundfonts } from './samples';
+import {
+  getSoundfontKits,
+  Soundfont,
+  getSoundfontNames,
+  Reverb
+} from 'smplr';
+
 
 /**
  * Create audio reverb node.
@@ -77,6 +85,7 @@ export interface WaveTable {
   real: number[],
   imaginary: number[]
 }
+
 /**
  * Parameters to create an oscillator for a single note of music
  * @category SuiAudio
@@ -84,6 +93,7 @@ export interface WaveTable {
 export interface SuiOscillatorParams {
   duration: number,
   frequency: number,
+  detune?: number,
   attackEnv: number,
   decayEnv: number,
   sustainEnv: number,
@@ -121,8 +131,7 @@ export const SynthWavetable: WaveTable = {
  * @category SuiAudio
  */
 export abstract class SuiOscillator {
-  static audio: AudioContext = new AudioContext();
-  static created: number = 0;
+  abstract play(): void;
   static get defaults(): SuiOscillatorParams {
     const wavetable: WaveTable = {
       real: [], imaginary: []
@@ -133,7 +142,7 @@ export abstract class SuiOscillator {
       attackEnv: 0.05,
       decayEnv: 0.4,
       sustainEnv: 0.8,
-      releaseEnv: 0.25,
+      releaseEnv: 0.25, 
       sustainLevel: 0.5,
       releaseLevel: 0.1,
       waveform: 'custom',
@@ -144,9 +153,45 @@ export abstract class SuiOscillator {
     };
     return JSON.parse(JSON.stringify(obj));
   }
+  static audio: AudioContext = new AudioContext();
 
-  static sampleFiles: string[] = ['bb4', 'cn4'];
-  static samples: AudioSample[] = [];
+  duration: number;
+  constructor(params: SuiOscillatorParams) {
+    this.duration = params.duration;
+  }
+  /**
+   * Generate a tone from a note selected or added
+   * @param measure 
+   * @param note 
+   * @param score 
+   * @param instrument 
+   * @param gain 
+   * @returns 
+   */
+  static fromNote(measure: SmoMeasure, note: SmoNote, score: SmoScore, instrument: SmoInstrument, gain: number): SuiOscillator[] {
+    let frequency = 0;
+    let duration = 0;
+    // Just make all the notes same length, since we are not in tempo
+    duration = 500;
+    const ar: SuiOscillator[] = [];
+    gain = isNaN(gain) ? 0.2 : gain;
+    if (note.noteType === 'r') {
+      gain = 0.001;
+    }
+    note.pitches.forEach((pitch, pitchIx) => {
+      const mtone: SmoMicrotone | null = note.getMicrotone(pitchIx) ?? null;
+      frequency = SmoAudioPitch.smoPitchToFrequency(pitch, -1 * measure.transposeIndex, mtone);
+      const def = SuiOscillator.defaults;
+      def.frequency = frequency;
+      def.duration = duration;
+      def.gain = gain;
+      def.instrument = instrument.instrument;
+      const osc = new SuiOscillatorSoundfont(def);
+      ar.push(osc);
+    });
+
+    return ar;
+  }
   static playSelectionNow(selection: SmoSelection, score: SmoScore, gain: number) {
     // In the midst of re-rendering...
     if (!selection.note) {
@@ -156,298 +201,67 @@ export abstract class SuiOscillator {
       return;
     }
     const soundInfo = selection.staff.getStaffInstrument(selection.selector.measure);
-    const oscInfo = SuiSampleMedia.getSmoOscillatorInfo(soundInfo.instrument);
     setTimeout(() => {
-      const ar = SuiOscillator.fromNote(selection.measure, selection.note!, score, oscInfo[0], gain);
+      const ar = SuiOscillatorSoundfont.fromNote(selection.measure, selection.note!, score, soundInfo, gain);
       ar.forEach((osc) => {
         osc.play();
       });
     }, 1);
   }
-
-  static get attackTime() {
-    return 25;
-  }
-  static get decayTime() {
-    return 15;
-  }
-  // ### fromNote
-  // Create an areray of oscillators for each pitch in a note
-  static fromNote(measure: SmoMeasure, note: SmoNote, score: SmoScore, soundInfo: SmoOscillatorInfo, gain: number): SuiOscillator[] {
-    let frequency = 0;
-    let duration = 0;
-    const tempo = measure.getTempo();
-    const bpm = tempo.bpm;
-    const beats = note.tickCount / 4096;
-    duration = (beats / bpm) * 60000;
-
-    // adjust if bpm is over something other than 1/4 note
-    duration = duration * (4096 / tempo.beatDuration);
-    if (soundInfo.waveform === 'sample') {
-      duration = 250;
-    }
-
-    const ar: SuiOscillator[] = [];
-    gain = isNaN(gain) ? 0.2 : gain;
-    gain = gain / note.pitches.length;
-    if (note.noteType === 'r') {
-      gain = 0.001;
-    }
-    note.pitches.forEach((pitch, pitchIx) => {
-      const mtone: SmoMicrotone | null = note.getMicrotone(pitchIx) ?? null;
-      frequency = SmoAudioPitch.smoPitchToFrequency(pitch, -1 * measure.transposeIndex, mtone);
-      const def = SuiOscillator.defaults;
-      def.instrument = soundInfo.instrument;
-      def.frequency = frequency;
-      def.duration = duration;
-      def.gain = gain;
-      if (soundInfo.waveform !== 'sample') {
-        def.waveform = soundInfo.waveform;
-        if (def.waveform === 'custom') {
-          def.wavetable = SynthWavetable;
-        }
-        const osc = new SuiWavetable(def);
-        ar.push(osc);
-      } else {
-        const osc = new SuiSampler(def);
-        ar.push(osc);
-      }
-    });
-
-    return ar;
-  }
-
-  static get attributes() {
-    return ['duration', 'frequency', 'pitch', 'attackEnv', 'sustainEnv', 'decayEnv',
-      'releaseEnv', 'sustainLevel', 'releaseLevel', 'waveform', 'wavetable', 'gain'];
-  }
-  
-  static resolveAfter(time: number) {
-    return new Promise<void>((resolve) => {
-      const timerFunc = () => {
-        resolve();
-      }
-      setTimeout(() => {
-        timerFunc();
-      }, time);
-    });
-  }
-  _playPromise(duration: number, gain: GainNode) {
-    const audio = SuiOscillator.audio;
-    const promise = new Promise<void>((resolve) => {
-      if (this.osc) {
-        this.osc.start(0);
-      }
-      setTimeout(() => {
-        resolve();
-      }, duration);
-
-      setTimeout(() => {
-        if (this.osc) {
-          this.osc.stop(0);
-        }
-        this.disconnect();
-      }, duration + 500);
-    });
-    return promise;
-  }
-
-  static toFloatArray(ar: number[]): Float32Array {
-    const rv = new Float32Array(ar.length);
-    let i = 0;
-    for (i = 0; i < ar.length; ++i) {
-      rv[i] = ar[i];
-    }
-    return rv;
-  }
-  reverb: SuiReverb | null;
-  attack: number;
-  decay: number;
-  sustain: number;
-  release: number;
-  waveform: OscillatorType;
-  attackEnv: number = -1;
-  duration: number = -1;
-  decayEnv: number = -1;
-  sustainEnv: number = -1;
-  releaseEnv: number = -1;
-  gain: number = 1.0;
-  sustainLevel: number = 0;
-  releaseLevel: number = 0;
-  frequency: number = -1;
-  wavetable: WaveTable | null = null;
-  useReverb: boolean;
-  gainNode: GainNode | undefined;
-  delayNode: DelayNode | undefined;
+}
+export class SuiOscillatorSoundfont extends SuiOscillator {
   instrument: string;
-  osc: AudioScheduledSourceNode | undefined;
-  constructor(parameters: SuiOscillatorParams) {
-    smoSerialize.serializedMerge(SuiOscillator.attributes, parameters, this);
-    this.reverb = null;
-    // this.reverb = null;
-    this.attack = this.attackEnv * SuiOscillator.attackTime;
-    this.decay = this.decayEnv * SuiOscillator.decayTime;
-    this.sustain = this.sustainEnv * this.duration;
-    this.release = this.releaseEnv * this.duration;
-    this.instrument = parameters.instrument;
-    if (parameters.wavetable) {
-      this.wavetable = parameters.wavetable;
-    }
-    this.useReverb = parameters.useReverb;
-    // this.frequency = this.frequency / 2;  // Overtones below partial
-    this.waveform = parameters.waveform;
-    if (!parameters.wavetable && this.waveform === 'custom') {
-      this.waveform = 'sine';
-    }
-  }
-  abstract play(): Promise<any>;
-  abstract createAudioNode(): AudioScheduledSourceNode;
-
-  disconnect() {
-    if (this.osc) {
-      this.osc.disconnect();
-    }
-    if (this.gainNode) {
-      this.gainNode.disconnect();
-    }
-    if (this.delayNode) {
-      this.delayNode.disconnect();
-    }
-    if (this.reverb) {
-      this.reverb.disconnect();
-    }
-    SuiOscillator.created -= 1;
-  }
-
-  /**
-   * Connect the audio sound source to the output, combining other
-   * nodes in the mix such as convolver (reverb), delay, and gain.
-   * Also set up the envelope
-   * @returns - a promise that tis resolved when `duration` time has expired
-   */
-  async createAudioGraph(): Promise<any> {
-    if (this.frequency === 0) {
-      return SuiSampler.resolveAfter(this.duration);
-    }
-    const audio = SuiOscillator.audio;
-    const attack = this.attack / 1000;
-    const decay = this.decay / 1000;
-    const sustain = this.sustain / 1000;
-    const release = this.release / 1000;
-    this.gainNode = audio.createGain();
-    this.osc = this.createAudioNode();
-    const gp1 = this.gain;
-
-    if (this.useReverb) {
-      this.reverb = new SuiReverb(SuiOscillator.audio);
-    }
-
-    if (this.useReverb && this.reverb) {
-      this.delayNode = audio.createDelay(this.reverb.length);
-    }
-    this.gainNode.gain.exponentialRampToValueAtTime(gp1, audio.currentTime + attack);
-    this.gainNode.gain.exponentialRampToValueAtTime(this.sustainLevel * gp1, audio.currentTime + attack + decay);
-    this.gainNode.gain.exponentialRampToValueAtTime(this.releaseLevel * gp1, audio.currentTime + attack + decay + sustain);
-    this.gainNode.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + attack + decay + sustain + release);
-
-    // osc.connect(gain1);
-    if (this.useReverb && this.reverb && this.osc) {
-      this.osc.connect(this.reverb.input);
-    }
-    this.osc.connect(this.gainNode);
-    if (this.delayNode && this.reverb) {
-      this.reverb.connect(this.delayNode);
-      this.delayNode.connect(audio.destination);
-    }
-    this.gainNode.connect(audio.destination);
-    SuiOscillator.created += 1;
-    return this.playPromise(this.duration);
-  }
-  playPromise(duration: number): Promise<void> {
-    const promise = new Promise<void>((resolve) => {
-      if (this.osc) {
-        this.osc.start(0);
+  samples: Soundfont;
+  midinumber: number;
+  offset: number = 0;
+  velocity: number;
+  constructor(params: SuiOscillatorParams) {
+    super(params);
+    this.instrument = params.instrument;
+    this.samples = loadedSoundfonts[this.instrument];
+    const vex: string = SmoAudioPitch.frequencyToVexPitch(params.frequency);
+    const pitch = SmoMusic.vexToSmoPitch(vex);
+    if (params.gain !== 0) {
+      let midiStr = '';
+      try {
+      midiStr = SmoMusic.smoPitchToMidiString(pitch);
+      } catch (exp) {
+        const pstr = JSON.stringify(pitch);
+        console.warn(`bad pitch ${pstr}`);
       }
-      setTimeout(() => {
-        resolve();
-      }, duration);
-      setTimeout(() => {
-        if (this.osc) {
-          this.osc.stop(0);
+      this.midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
+      let gain = params.gain;
+      // hack: should have different logic for percussion sampler
+      // Since we treat pitches in non-pitched percussion as if treble clef,
+      // adjust to match the MIDI pitch.
+      if (this.instrument === 'percussion') {
+        if (SmoInstrument.defaultDrumMidiMap[this.midinumber]) {
+          // Sampler library maps midi notes an octave below Smoosic
+          this.midinumber = SmoInstrument.defaultDrumMidiMap[this.midinumber] - 12;
         }
-        this.disconnect();
-      }, Math.round(duration * 1.05));
-    });
-    return promise;
-  }
-}
-/**
- * An audio output that uses browser audio api OscillatorNode as a sound source
- * @category SuiAudio
- */
-export class SuiWavetable extends SuiOscillator {
-  createAudioNode(): AudioScheduledSourceNode {
-    const node = SuiOscillator.audio.createOscillator();
-    if (this.wavetable && this.wavetable.imaginary.length > 0 && this.wavetable.real.length > 0 && this.waveform === 'custom') {
-      const wave = SuiOscillator.audio.createPeriodicWave(SuiOscillator.toFloatArray(this.wavetable.real),
-        SuiOscillator.toFloatArray(this.wavetable.imaginary),
-        { disableNormalization: false });
-      node.setPeriodicWave(wave);
+        gain = gain * 0.5;
+      }
+      this.velocity = Math.round(127 * gain);
     } else {
-      node.type = this.waveform;
+      this.velocity = 0;
+      this.midinumber = 0;
     }
-    node.frequency.value = this.frequency;
-    return node;
   }
-  // play the audio oscillator for the specified duration.  Return a promise that
-  // resolves after the duration.  Also dispose of the audio resources after the play is complete.
-  async play() {
-    return this.createAudioGraph();
+  play() {
+    const note = this.midinumber;
+    if (this.velocity > 0 && this.samples) {
+      this.samples.start({ note, time: 0, duration: this.duration / 1000, velocity: this.velocity });
+    }
   }
 }
+
 
 /**
  * An audio output primitive that uses frequency-adjusted sampled sounds
  * @category SuiAudio
  */
-export class SuiSampler extends SuiOscillator {
+export class SuiSampler extends SuiOscillatorSoundfont {
   constructor(params: SuiOscillatorParams) {
     super(params);
-    if (SuiSampleMedia.sampleOscMap[this.instrument]) {
-      const sampleInfo = SuiSampleMedia.sampleOscMap[this.instrument];
-      if (sampleInfo.length) {
-        if (sampleInfo[0].sustain === 'sustained') {
-          this.attack = 0.1 * this.duration;
-        }
-      }
-    }
-  }
-  // Note: samplePromise must be complete before you call this  
-  createAudioNode(): AudioScheduledSourceNode {
-    const node = SuiOscillator.audio.createBufferSource();
-    const chooserParams = {
-      instrument: this.instrument,
-      frequency: this.frequency,
-      duration: this.duration,
-      gain: this.gain
-    }
-    const sample = SuiSampleMedia.matchedSample(chooserParams);
-    if (!sample) {
-      return node;
-    }
-    
-    const cents = 1200 * (Math.log(this.frequency / sample!.frequency))
-      / Math.log(2);
-    this.gain = this.gain * sample.gain;
-    node.buffer = sample!.sample;
-    node.detune.value = cents;    
-    return node;
-  }
-  async play() {
-    const self = this;
-    return SuiSampleMedia.samplePromise(SuiOscillator.audio).then(() => {
-      self.createAudioGraph();
-    });
-  }
-
+  }  
 }

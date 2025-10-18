@@ -44,6 +44,7 @@ export interface VexNoteModifierIf {
   tickIndex: number,
   tiedOverPitches: Pitch[],
   tabNote?: StemmableNote | TabNote,
+  hideAccidentals: boolean
 }
 /**
  * Interpret parameters for StaveNote and other StemmableNotes
@@ -111,18 +112,20 @@ export class VxNote {
           continue;
         }
       }
-      const zz = SmoMusic.accidentalDisplay(pitch, this.noteData.smoMeasure.keySignature,
-        this.noteData.vxMeasure.tickmapObject.tickmaps[this.noteData.voiceIndex].durationMap[this.noteData.tickIndex], 
-        this.noteData.vxMeasure.tickmapObject.accidentalArray);
-      if (zz) {
-        const acc = new VF.Accidental(zz.symbol);
-        if (zz.courtesy) {
-          acc.setAsCautionary();
+      if (!this.noteData.hideAccidentals) {
+        const zz = SmoMusic.accidentalDisplay(pitch, this.noteData.smoMeasure.keySignature,
+          this.noteData.vxMeasure.tickmapObject.tickmaps[this.noteData.voiceIndex].durationMap[this.noteData.tickIndex], 
+          this.noteData.vxMeasure.tickmapObject.accidentalArray);
+        if (zz) {
+          const acc = new VF.Accidental(zz.symbol);
+          if (zz.courtesy) {
+            acc.setAsCautionary();
+          }
+          this.noteData.smoNote.accidentalsRendered.push(pitch.accidental);
+          this.noteData.staveNote.addModifier(acc, i);
+        } else {
+          this.noteData.smoNote.accidentalsRendered.push('');
         }
-        this.noteData.smoNote.accidentalsRendered.push(pitch.accidental);
-        this.noteData.staveNote.addModifier(acc, i);
-      } else {
-        this.noteData.smoNote.accidentalsRendered.push('');
       }
     }
     this.createDots();

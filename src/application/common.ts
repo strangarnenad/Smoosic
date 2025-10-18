@@ -77,7 +77,7 @@ export interface KeyCommandParams {
  */
 export abstract class ModalEventHandler {
   abstract mouseMove(ev: any): void;
-  abstract mouseClick(ev: any): void;
+  abstract mouseClick(ev: any): Promise<void>;
   abstract evKey(evdata: any): Promise<void>;
   abstract keyUp(evdata: any): void;
 }
@@ -120,14 +120,14 @@ export class ModalEventHandlerProxy {
       this._handler.mouseMove(ev);
     }
   }
-  mouseClick(ev: any) {
+  async mouseClick(ev: any) {
     if (this._handler) {
-      this._handler.mouseClick(ev);
+      await this._handler.mouseClick(ev);
     }
   }
   bindEvents() {
     const mousemove = async (ev: any) => { this.mouseMove(ev); }
-    const mouseclick = async (ev: any) => { this.mouseClick(ev); }
+    const mouseclick = async (ev: any) => { await this.mouseClick(ev); }
     const keydown = async (ev: any) => { this.evKey(ev); }
     const keyup = async (ev: any) => { this.keyUp(ev); }
     this.mouseMoveHandler = this.eventSource.bindMouseMoveHandler(mousemove);

@@ -38,7 +38,6 @@ import { getDomContainer } from '../common/htmlHelpers';
 import { SuiHelp } from '../ui/help';
 import { VexFlow } from '../common/vex';
 import { TextFormatter } from '../common/textformatter';
-
 declare var $: any;
 
 export interface pairType { [key: string]: string }
@@ -169,40 +168,28 @@ export class SuiApplication {
    * 2.  If in application mode, start the UI.  If in translation mode, start translation
    * @returns 
    */
-  initialize(): Promise<SuiApplication> {
-    dynamicCtorInit();
-    const samplePromise: Promise<any> = SuiSampleMedia.samplePromise(SuiOscillator.audio);
-
+  async initialize(): Promise<SuiApplication> {
     const self = this;    
-    // Hide header at the top of some applications
-    $('#link-hdr button').off('click').on('click', () => {
-      $('#link-hdr').addClass('hide');
-    });
-
-    const createScore = (): Promise<any> => {
-      return self.createScore();
-    }
-    const startApplication = () => {
+    dynamicCtorInit();
+    const startApplication = async () => {
       if (self.config.mode === 'translate') {
         self._startApplication();
       }
       else if (self.config.mode === 'application') {
+        SuiSampleMedia.samplePromise(SuiOscillator.audio);
         self._startApplication();
       } else {  // library mode.
         self.createView(self.score!);
       }
     }
-    const render = () => {
-      return self.view?.renderer.renderPromise();
-    }
-    const rv = new Promise<SuiApplication>((resolve: any) => {
-      samplePromise.then(createScore).then(startApplication).then(render)
-        .then(
-          () => {
-            resolve(self);
-          });
+    await this.createScore();
+    await startApplication();
+    await this.view?.renderer.renderPromise();
+    // Hide header at the top of some applications
+    $('#link-hdr button').off('click').on('click', () => {
+      $('#link-hdr').addClass('hide');
     });
-    return rv;
+    return this;
   }
   /**
    * Create the initial score we use to populate the UI etc:

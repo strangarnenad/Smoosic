@@ -66,6 +66,7 @@ export class layoutDebug {
       LAST: 8
     };
   }
+  static testThrow: boolean = false;
   static get codeRegionStrings(): string[] {
     return ['COMPUTE', 'PREFORMATA', 'PREFORMATB', 'PREFORMATC', 'FORMAT', 'RENDER', 'UPDATE_MAP', 'POST_RENDER', 'MAP'];
   }

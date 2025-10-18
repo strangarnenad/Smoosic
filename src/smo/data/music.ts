@@ -56,7 +56,13 @@ export class SmoAudioPitch {
     return map;
   }
   static frequencies: Record<string, number> | null = null;
-
+  static frequencyKeys: string[] | null = null;
+  static get pitchFrequencyKeys() {
+    if (!SmoAudioPitch.frequencyKeys) {
+      SmoAudioPitch.frequencyKeys = Object.keys(this.pitchFrequencyMap);
+    }
+    return SmoAudioPitch.frequencyKeys;
+  }
   static get pitchFrequencyMap() {
     if (!SmoAudioPitch.frequencies) {
       SmoAudioPitch.frequencies = SmoAudioPitch._computeFrequencies();
@@ -65,7 +71,7 @@ export class SmoAudioPitch {
     return SmoAudioPitch.frequencies;
   }
   static frequencyToVexPitch(freq: number): string {
-    const keys = Object.keys(SmoAudioPitch.pitchFrequencyMap);
+    const keys = SmoAudioPitch.pitchFrequencyKeys;
     const strs: string[] = keys.filter((k) => Math.abs(SmoAudioPitch.pitchFrequencyMap[k] - freq) < 1);
     if (!strs.length) {
       return Math.floor(freq).toString();
@@ -74,7 +80,7 @@ export class SmoAudioPitch {
       const vexPitch = strs[i];
       if (vexPitch.length === 3 && 
         (vexPitch[1] === 'n' || vexPitch[1] === '#' || vexPitch[1] === 'b')) {
-        return vexPitch;
+        return vexPitch.substring(0, vexPitch.length-1)+'/'+vexPitch[vexPitch.length - 1];
       }
     }
     return Math.floor(freq).toString();
@@ -167,6 +173,20 @@ export interface KeySignatureRole {
  * @category SmoTransform
  */
 export class SmoMusic {
+    /**
+     *Normalized gain from dynamics
+     */
+    static get dynamicVolumeMap(): Record<string, number> {
+      // matches SmoDynamicText.dynamics
+      return {
+        pp: 0.4,
+        p: 0.5,
+        mp: 0.6,
+        mf: 0.7,
+        f: 0.75,
+        ff: 0.8
+      };
+    }
   /**
    * Ported from vex, used to convert pitches to numerical values
    * */
@@ -886,6 +906,15 @@ export class SmoMusic {
   }
   static midiPitchToMidiNumber(midiPitch: string): number {
     return SmoMusic.smoPitchToInt(SmoMusic.midiPitchToSmoPitch(midiPitch)) + 12;
+  }
+  static midiNumberToMidiPitch(midiNumber: number): string {
+    const smoPitch = SmoMusic.smoIntToPitch(midiNumber - 24);
+    let rv = smoPitch.letter.toUpperCase();
+    if (smoPitch.accidental !== 'n') {
+      rv += smoPitch.accidental;
+    }
+    rv += smoPitch.octave;
+    return rv;
   }
 
   static pitchToVexKey(smoPitch: Pitch, head: string | null = null): string {

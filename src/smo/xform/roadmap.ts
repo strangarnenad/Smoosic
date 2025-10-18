@@ -1,5 +1,5 @@
-import { SmoScore } from '../../smo/data/score';
-import { SmoVolta, SmoBarline } from '../../smo/data/measureModifiers';
+import { SmoScore } from '../data/score';
+import { SmoVolta, SmoBarline } from '../data/measureModifiers';
 
 export type playerStartReason = 'scoreStart' |'startRepeat' | 'DC' |  'DS' | 'Volta';
 export type playerEndReason = 'scoreStart' | 'scoreEnd' | 'endRepeat' | 'Coda' | 'Segno' | 'Volta';
@@ -36,6 +36,7 @@ export class ScoreRoadMapBuilder {
       ending: -1
     }
   }
+
   constructor(score: SmoScore) {
     this.score = score;
   }
@@ -325,13 +326,13 @@ export class ScoreRoadMapBuilder {
       if (this.codaMeasure > this.dsMeasure) {
         currentJump = {
           startMeasure: this.codaMeasure,
-          endMeasure,
+          endMeasure: stave.measures.length - 1,
           startReason: 'DS',
           endReason: 'scoreEnd',
           ending: -1
         };
         this.jumpQueue.push(currentJump);
-        this.populateRange(this.dsMeasure, stave.measures.length - 1, currentJump);
+        this.populateRange(this.codaMeasure, stave.measures.length - 1, currentJump);
       }
     }
     // If we are starting from somewhere other than the beginning, remove everything before the 

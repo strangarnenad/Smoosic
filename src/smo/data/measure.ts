@@ -1453,12 +1453,6 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     }
     return null;
   }
-
-
-
-
-
-
   setClef(clef: Clef) {
     const oldClef = this.clef;
     this.clef = clef;
@@ -1630,7 +1624,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
   get isToCoda(): boolean {
     const rs = this.getRepeatSymbol();
     if (rs && 
-      (rs.symbol === SmoRepeatSymbol.symbols['toCoda'])) {
+      (rs.symbol === SmoRepeatSymbol.symbols['ToCoda'])) {
       return true;
     }
     return false;

@@ -12,7 +12,8 @@ import { SmoMeasure, SmoMeasureParamsSer } from './measure';
 import { SmoMeasureFormat, SmoRehearsalMark, SmoRehearsalMarkParams, SmoTempoTextParams, SmoVolta, SmoBarline } from './measureModifiers';
 import { SmoInstrumentParams, StaffModifierBase, SmoInstrument, SmoInstrumentMeasure, SmoInstrumentStringParams, SmoInstrumentNumParams, 
   SmoTie, SmoStaffTextBracket, SmoStaffTextBracketParamsSer, 
-  StaffModifierBaseSer, SmoTabStave, SmoTabStaveParamsSer, TieLine } from './staffModifiers';
+  StaffModifierBaseSer, SmoTabStave, SmoStaffHairpin, TieLine,
+  SmoInstrumentBooleanParams } from './staffModifiers';
 import { SmoPartInfo, SmoPartInfoParamsSer } from './partInfo';
 import { SmoTextGroup } from './scoreText';
 import { SmoSelector } from '../xform/selections';
@@ -374,6 +375,11 @@ export class SmoSystemStaff implements SmoObjectParams {
             defs[str] = inst[str];
           }
         });
+        SmoInstrumentBooleanParams.forEach((str) => {
+          if (typeof(inst[str]) === 'boolean') {
+            defs[str] = inst[str];
+          }
+        });
         if (typeof(inst.startSelector) !== 'undefined') {
           defs.startSelector = inst.startSelector;
         }
@@ -588,6 +594,11 @@ export class SmoSystemStaff implements SmoObjectParams {
     this.removeTabStaves(toRemove);
     this.tabStaves.push(ts);
   }
+  get maxVoiceCount() {
+    let rv = 0;
+    this.measures.forEach((mm) => rv = Math.max(rv, mm.voices.length));
+    return rv;
+  }
   /**
    * Get all the pitches that start ties to the next measure, so that their
    * accidentals may be preserved
@@ -761,6 +772,11 @@ export class SmoSystemStaff implements SmoObjectParams {
     return this.modifiers.filter((mod) =>
       SmoSelector.sameNote(mod.endSelector, selector) && mod.attrs.type === 'SmoTie'
     );
+  }
+  getHairpinsStartingAt(selector: SmoSelector): SmoStaffHairpin[] {
+    return this.modifiers.filter((mod) =>
+      SmoSelector.sameNote(mod.startSelector, selector) && mod.attrs.type === 'SmoStaffHairpin'
+    ) as SmoStaffHairpin[];
   }
   getPedalMarkingsContaining(selector: SmoSelector) {
     return this.modifiers.filter((mod) => 

@@ -54,7 +54,6 @@ export * from './src/smo/mxml/smoToXml';
 export * from './src/smo/mxml/xmlHelpers';
 export * from './src/smo/mxml/xmlState';
 export * from './src/smo/mxml/xmlToSmo';
-export * from './src/smo/xform/audioTrack';
 export * from './src/smo/xform/beamers';
 export * from './src/smo/xform/copypaste';
 export * from './src/smo/xform/operations';

@@ -6,7 +6,6 @@ import { ButtonDefinition, ButtonAction } from './button';
 import { BrowserEventSource } from '../eventSource';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { CompleteNotifier, RibbonLayout } from '../common';
-export { RibbonLayout } from '../common';
 import { SuiTracker } from '../../render/sui/tracker';
 import { SuiMenuManager } from '../menus/manager';
 import { SuiLibraryDialog } from '../dialogs/library';

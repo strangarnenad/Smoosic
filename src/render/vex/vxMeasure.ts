@@ -51,6 +51,7 @@ export class VxMeasure implements VxMeasureIf {
   smoTabStave?: SmoTabStave;
   tabStave?: TabStave;
   rendered: boolean = false;
+  firstInColumn: boolean = false;
   noteToVexMap: Record<string, Note> = {};
   beamToVexMap: Record<string, Beam> = {};
   tupletToVexMap: Record<string, Tuplet> = {};
@@ -70,6 +71,7 @@ export class VxMeasure implements VxMeasureIf {
   collisionMap: Record<number, SmoNote[]> = {};
   dbgLeftX: number = 0;
   dbgWidth: number = 0;
+  hideAccidentals: boolean = false;
   tiedOverPitches: Pitch[] = [];
 
   constructor(context: SvgPage, selection: SmoSelection, 
@@ -79,6 +81,10 @@ export class VxMeasure implements VxMeasureIf {
     this.selection = selection;
     this.smoMeasure = this.selection.measure;
     this.printing = printing;
+    const instrument = selection.staff.getStaffInstrument(selection.selector.measure);
+    if (instrument.isPercussion && instrument.usePercussionNoteheads) {
+      this.hideAccidentals = true;
+    }
     this.allCues = selection.staff.partInfo.displayCues;
     this.tupletToVexMap = {};
     this.vexNotes = [];
@@ -92,6 +98,9 @@ export class VxMeasure implements VxMeasureIf {
 
   static get fillStyle() {
     return '#000';
+  }
+  setFirstInColumn(val: boolean) {
+    this.firstInColumn = val;
   }
   // Treat a rest like a whole rest if there is only a single rest in the measure
   // and the measure length is not a pickup
@@ -240,7 +249,8 @@ export class VxMeasure implements VxMeasureIf {
       staveNote: vexNote,
       voiceIndex: voiceIx,
       tiedOverPitches,
-      tickIndex: tickIndex
+      tickIndex: tickIndex,
+      hideAccidentals: this.hideAccidentals
     }
     if (tabNote) {
       noteData.tabNote = tabNote;
@@ -443,8 +453,12 @@ export class VxMeasure implements VxMeasureIf {
     } else if (eb.barline !== SmoBarline.barlines.singleBar) {
       this.stave.setEndBarType(toVexBarlineType(eb));
     }
-    if (sym && sym.symbol !== SmoRepeatSymbol.symbols.None) {
-      const rep = new VF.Repetition(toVexSymbol(sym), sym.xOffset + this.smoMeasure.staffX, sym.yOffset);
+    if (sym && sym.symbol !== SmoRepeatSymbol.symbols.None && this.firstInColumn) {
+      let yOff = sym.yOffset;
+      if (this.smoMeasure.getRehearsalMark()) {
+        yOff -= 30;
+      }
+      const rep = new VF.Repetition(toVexSymbol(sym), sym.xOffset + this.smoMeasure.staffX, yOff);
       this.stave.getModifiers().push(rep);
     }
     const tms = this.smoMeasure.getMeasureText();
