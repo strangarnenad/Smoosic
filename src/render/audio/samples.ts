@@ -9,7 +9,8 @@ import {
   getSoundfontKits,
   Soundfont,
   getSoundfontNames,
-  Reverb
+  Reverb,
+  Soundfont2Sampler,
 } from 'smplr';
 
 export const instrumentSampleMap: Record<string, string> = {
@@ -31,7 +32,40 @@ export const instrumentSampleMap: Record<string, string> = {
    'pad': 'pad_3_polysynth',
    'percussion':'timpani'
 };
-export const loadedInstruments: Record<string, Soundfont> = {};
+export const loadedSoundfonts: Record<string, Soundfont> = {};
+// There is no standard for percussion notation.  We adopt the convention used
+// often for drumsets that rounded note heads are membrane/stick drums, and 
+// the accidentals are symbols or hand drums.  We may offer an option of using
+// conventional note heads, e.g. an x instead of the accidental for cymbals
+export const drumMidiMap: Record<number, number> = {
+   58: 54, // Bb3 Tambourine
+   59: 56, // B3 Cowbell
+   60: 39, // C4 Hand Clap
+   61: 58, // Db4 vibraslap
+   62: 42, // Closed Hi Hat, D4
+   63: 61, // Eb4 Low Bongo
+   64: 46, // Open Hi Hat, E4
+   65: 35, // Acoustic Bass Drum, F4
+   66: 60, // Gb4 High Bongo
+   67: 38, // Kick Drum G4
+   68: 64, // Ab4 Low Conga
+   69: 41, // Low Tom, A4
+   70: 63, // Bb4 High Conga
+   71: 47, // Mid Tom  B4
+   72: 38, // Snare C5
+   73: 62, // Db5 High Conga muted
+   74: 50, // High Tom D5
+   75: 52, // Eb5 65 High Timbale
+   76: 51, // Ride E5
+   77: 49, // F5 Crash
+   78: 70, // Gg5 Low Timbale
+   79: 57, // G5 Agogo Bell
+   80: 70, // Ab5 Maracas
+   81: 76, // A5 Wood Block
+   82: 75, // Bb5 Claves
+   83: 74, // Guiro B5
+   84: 81, // Triangle C6
+}
             
 /**
  * A set of parameters from the instrument interface used to create audio from samples.
@@ -93,15 +127,21 @@ export class SuiSampleMedia {
   static async samplePromise(audio: AudioContext): Promise<any> {
     let i = 0;
     const instrumentKeys = Object.keys(instrumentSampleMap);
+    const context = new AudioContext() as unknown as AudioContext;
     for (let i = 0; i < instrumentKeys.length; ++i)  {
       const key = instrumentKeys[i];
       const sampler = instrumentSampleMap[key];
-      const context = new AudioContext() as unknown as AudioContext;
-      const instrument = new Soundfont(context, { instrument: sampler });
+      const obj: any = {};
+      if (key === 'percussion') {
+        obj['instrumentUrl'] = 'https://smoosic.github.io/SmoSounds/drumfont/percussion-ogg.js';
+      } else {
+        obj['instrument'] = sampler;
+      }
+      const instrument = new Soundfont(context, obj);
       // instrument.output.addEffect("reverb", new Reverb(context), 0.9);
       await instrument.load;
       instrument.output.addEffect("reverb", new Reverb(context), 0.1);
-      loadedInstruments[key] = instrument;
+      loadedSoundfonts[key] = instrument;
     }
   }  
 }

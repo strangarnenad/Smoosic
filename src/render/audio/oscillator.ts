@@ -9,7 +9,7 @@ import { SmoMusic,  } from '../../smo/data/music';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
 import { SmoInstrument } from '../../smo/data/staffModifiers';
-import { SuiSampleMedia, AudioSample, loadedInstruments } from './samples';
+import { loadedSoundfonts, drumMidiMap } from './samples';
 import {
   getSoundfontKits,
   Soundfont,
@@ -218,7 +218,7 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   constructor(params: SuiOscillatorParams) {
     super(params);
     this.instrument = params.instrument;
-    this.samples = loadedInstruments[this.instrument];
+    this.samples = loadedSoundfonts[this.instrument];
     const vex: string = SmoAudioPitch.frequencyToVexPitch(params.frequency);
     const pitch = SmoMusic.vexToSmoPitch(vex);
     if (params.gain !== 0) {
@@ -230,7 +230,18 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
         console.warn(`bad pitch ${pstr}`);
       }
       this.midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
-      this.velocity = Math.round(127 * params.gain);
+      let gain = params.gain;
+      // hack: should have different logic for percussion sampler
+      // Since we treat pitches in non-pitched percussion as if treble clef,
+      // adjust to match the MIDI pitch.
+      if (this.instrument === 'percussion') {
+        if (drumMidiMap[this.midinumber]) {
+          // Sampler library maps midi notes an octave below Smoosic
+          this.midinumber = drumMidiMap[this.midinumber] - 12;
+        }
+        gain = gain * 0.5;
+      }
+      this.velocity = Math.round(127 * gain);
     } else {
       this.velocity = 0;
       this.midinumber = 0;

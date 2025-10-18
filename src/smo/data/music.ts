@@ -907,6 +907,15 @@ export class SmoMusic {
   static midiPitchToMidiNumber(midiPitch: string): number {
     return SmoMusic.smoPitchToInt(SmoMusic.midiPitchToSmoPitch(midiPitch)) + 12;
   }
+  static midiNumberToMidiPitch(midiNumber: number): string {
+    const smoPitch = SmoMusic.smoIntToPitch(midiNumber - 24);
+    let rv = smoPitch.letter.toUpperCase();
+    if (smoPitch.accidental !== 'n') {
+      rv += smoPitch.accidental;
+    }
+    rv += smoPitch.octave;
+    return rv;
+  }
 
   static pitchToVexKey(smoPitch: Pitch, head: string | null = null): string {
     if (!head) {
