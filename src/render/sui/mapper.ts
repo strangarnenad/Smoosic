@@ -632,20 +632,18 @@ export abstract class SuiMapper {
       const artifacts = selections;
       // const artifacts = SvgHelpers.findIntersectingArtifactFromMap(bb, this.measureNoteMap, SvgHelpers.smoBox(this.scroller.scrollState.scroll));
       // TODO: handle overlapping suggestions
-      if (!artifacts.length) {
-        const sel = this.renderer.pageMap.findModifierTabs(logicalBox);
-        if (sel.length) {
-          this._setModifierAsSuggestion(sel[0]);
-          this.eraseMousePositionBox();
-        } else {
-          // no intersection, show mouse hint          
-          this.createMousePositionBox(logicalBox);
-        }
-        return;
+      const modifiers = this.renderer.pageMap.findModifierTabs(logicalBox);
+      if (modifiers.length) {
+        this._setModifierAsSuggestion(modifiers[0]);
+        this.eraseMousePositionBox();
+      } else if (artifacts.length) {
+        const artifact = artifacts[0];
+        this.eraseMousePositionBox();
+        this._setArtifactAsSuggestion(artifact);
+      } else {
+        // no intersection, show mouse hint
+        this.createMousePositionBox(logicalBox);
       }
-      const artifact = artifacts[0];
-      this.eraseMousePositionBox();
-      this._setArtifactAsSuggestion(artifact);
     }
   }
   _getRectangleChain(selection: SmoSelection) {
