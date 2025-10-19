@@ -220,6 +220,8 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
     this.instrument = params.instrument;
     this.samples = loadedSoundfonts[this.instrument];
     const vex: string = SmoAudioPitch.frequencyToVexPitch(params.frequency);
+    const closestFrequency = SmoAudioPitch.smoPitchToFrequency(SmoMusic.vexToSmoPitch(vex), 0, null);
+    const offset = params.frequency - closestFrequency;
     const pitch = SmoMusic.vexToSmoPitch(vex);
     if (params.gain !== 0) {
       let midiStr = '';
@@ -231,6 +233,12 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
       }
       this.midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
       let gain = params.gain;
+      // Microtone offset, need to convert from abs frequency into cents
+      if (Math.abs(offset) > 1) {
+        const nextPitch = offset > 0 ? (Math.pow(2, 1 / 12) * closestFrequency) :
+          (closestFrequency / Math.pow(2, 1 / 12));
+        this.offset = (100 * Math.sign(offset) * offset)/(nextPitch - closestFrequency);
+      }
       // hack: should have different logic for percussion sampler
       // Since we treat pitches in non-pitched percussion as if treble clef,
       // adjust to match the MIDI pitch.
@@ -250,7 +258,8 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   play() {
     const note = this.midinumber;
     if (this.velocity > 0 && this.samples) {
-      this.samples.start({ note, time: 0, duration: this.duration / 1000, velocity: this.velocity });
+      this.samples.start({ note, time: 0, duration: this.duration / 1000, 
+        velocity: this.velocity, detune: this.offset});
     }
   }
 }

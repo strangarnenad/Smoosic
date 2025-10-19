@@ -72,18 +72,15 @@ export class SmoAudioPitch {
   }
   static frequencyToVexPitch(freq: number): string {
     const keys = SmoAudioPitch.pitchFrequencyKeys;
-    const strs: string[] = keys.filter((k) => Math.abs(SmoAudioPitch.pitchFrequencyMap[k] - freq) < 1);
-    if (!strs.length) {
-      return Math.floor(freq).toString();
-    }
-    for (let i = 0; i < strs.length; ++i) {
-      const vexPitch = strs[i];
-      if (vexPitch.length === 3 && 
-        (vexPitch[1] === 'n' || vexPitch[1] === '#' || vexPitch[1] === 'b')) {
-        return vexPitch.substring(0, vexPitch.length-1)+'/'+vexPitch[vexPitch.length - 1];
-      }
-    }
-    return Math.floor(freq).toString();
+    const distance = (a:string, freq:number) => Math.abs(SmoAudioPitch.pitchFrequencyMap[a] - freq);
+    // Find closest pitch
+    const closest = SmoAudioPitch.pitchFrequencyKeys.reduce((a, b) => 
+      distance(a, freq) < distance(b, freq) ? a: b);
+    // get the shortest enharmonic (i.e. no double accidentals)
+    const enh = SmoMusic.getEnharmonics(
+      closest.slice(0,-1)).reduce((a,b) => a.length < b.length ? a : b);
+    const octave = closest.slice(-1);
+    return `${enh}/${octave}`;
   }
 
   static _rawPitchToFrequency(smoPitch: Pitch, offset: number): number {

@@ -371,6 +371,9 @@ export class SuiAudioPlayer {
       this.cuedSounds.playWaitTimer = cuedSound.waitTime; // still needed?
       cuedSound = this.cuedSounds.advanceHead();
     }
+    if (SuiAudioPlayer.playing) {
+      SuiAudioPlayer.stopPlayer();
+    }
   }
   // Resolve promise when either the buffer is low enough that we need to add more things to it, or
   // there is no more audio to play

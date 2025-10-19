@@ -22,14 +22,14 @@ const microtoneButtonFactory: getButtonsFcn = () => {
         {
           classes: 'icon collapseParent button-array',
           control: 'SuiButtonArrayButton',
-          icon: 'icon-bravura ribbon-button-text icon-accidentalQuarterToneFlatStein',
+          icon: 'icon-bravura ribbon-button-text icon-accidentalThreeQuarterTonesFlatZimmermann',
           id: 'flat75sz',
           label: '3/4 flat',
           smoName: 'flat75sz'
         },  {
           classes: 'icon collapseParent button-array',
           control: 'SuiButtonArrayButton',
-          icon: 'icon-bravura ribbon-button-text icon-accidentalThreeQuarterTonesFlatZimmermann',
+          icon: 'icon-bravura ribbon-button-text icon-accidentalQuarterToneFlatStein',
           id: 'flat25sz',
           label: '1/4 flat',
           smoName: 'flat25sz'
