@@ -15,6 +15,8 @@ import {
 
 export const instrumentSampleMap: Record<string, string> = {
   'piano':'acoustic_grand_piano',
+  'accordion': 'accordion',
+  'electricPiano':'electric_piano_1',
   'bass':'acoustic_bass',
   'jazzBass': 'electric_bass_finger',
   'eGuitar': 'electric_guitar_jazz',

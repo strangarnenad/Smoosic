@@ -215,6 +215,7 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   midinumber: number;
   offset: number = 0;
   velocity: number;
+  delayTime: number = 0;
   constructor(params: SuiOscillatorParams) {
     super(params);
     this.instrument = params.instrument;
@@ -258,8 +259,14 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   play() {
     const note = this.midinumber;
     if (this.velocity > 0 && this.samples) {
-      this.samples.start({ note, time: 0, duration: this.duration / 1000, 
-        velocity: this.velocity, detune: this.offset});
+      if (this.delayTime > 0) {
+        const currentTime = SuiOscillator.audio.currentTime;
+        this.samples.start({ note, time: currentTime + (this.delayTime / 1000), duration: this.duration / 1000, 
+          velocity: this.velocity, detune: this.offset});
+       } else {
+        this.samples.start({ note, time: 0, duration: (this.duration + this.delayTime) / 1000, 
+          velocity: this.velocity, detune: this.offset});
+        }
     }
   }
 }
@@ -273,4 +280,36 @@ export class SuiSampler extends SuiOscillatorSoundfont {
   constructor(params: SuiOscillatorParams) {
     super(params);
   }  
+}
+export class SuiTrillSampler extends SuiOscillator {
+  trillDuration: number;
+  soundArray: SuiOscillatorSoundfont[] = [];
+  arrayIndex: number = 0;
+  constructor(params: SuiOscillatorParams, upperPitch:number, trillDuration: number) {
+    super(params);
+    const upperParams = JSON.parse(JSON.stringify(params)) as SuiOscillatorParams;
+    const lowerParams = JSON.parse(JSON.stringify(params)) as SuiOscillatorParams;
+    upperParams.frequency = upperPitch;    
+    this.trillDuration = trillDuration;
+    let fullTime = params.duration;
+    let increment = this.trillDuration * 2;
+    while (fullTime > 0) {
+      [upperParams, lowerParams].forEach((p) => {
+        const np = JSON.parse(JSON.stringify(p)) as SuiOscillatorParams;
+        np.duration = Math.min(this.trillDuration, fullTime);
+        this.soundArray.push(new SuiOscillatorSoundfont(np));
+        fullTime -= increment;
+        if (increment > this.trillDuration) {
+          increment *= (1 / Math.pow(2, 0.5));
+        }
+      })
+    }
+  }
+  play() {
+    for (let i = 0; i < this.soundArray.length; ++i) {
+      const osc = this.soundArray[i];
+      osc.delayTime = i * this.trillDuration;
+      osc.play();
+    }
+  }
 }

@@ -3,7 +3,7 @@ import { SmoSelector, SmoSelection } from './selections';
 import { SmoTie, SmoStaffHairpin, SmoStaffTextBracket } from '../data/staffModifiers';
 import { SmoMusic } from '../data/music';
 import { SmoNote } from '../data/note';
-import { SmoArticulation } from '../data/noteModifiers';
+import { SmoArticulation, SmoOrnament } from '../data/noteModifiers';
 import { SmoDynamicText } from '../data/noteModifiers';
 import { ScoreRoadMapBuilder } from './roadmap';
 /**
@@ -204,6 +204,14 @@ export const PopulateAudioData = (score: SmoScore, roadMap: ScoreRoadMapBuilder)
                   );
               if (selection && selection.note) {
                 const note = selection.note;
+                const ornament: SmoOrnament | undefined = note.getOrnament('tr');
+                if (ornament) {
+                  for (let tx = 0; tx < note.pitches.length; ++tx) {
+                    const pitch = note.pitches[tx];
+                    const opitch = SmoMusic.getIntervalInKey(pitch, note.keySignature, 1);
+                    note.audioData.trillPitches.push(opitch);
+                  }
+                }
                 const tieLen = staff.getTiesStartingAt(selection.selector);
                 const tiedNote = tiedNotes[currentTrack];
                 if (tiedNote) {

@@ -197,6 +197,9 @@ export class SmoInstrument extends StaffModifierBase {
       'keyOffset', 'midichannel', 'midiport', 'instrumentName', 
       'abbreviation', 'instrument', 'family', 'lines'];
   }
+  // Internally, percussion clef uses treble clef pitches (since percussion clef
+  // piches are not defined.).  This maps the notes from Bb3 to C6 to general midi
+  // map drum parts.  There is no standard for this, and maps should be editable.
   static defaultDrumMidiMap: Record<number, number> = {
     58: 54, // Bb3 Tambourine
     59: 56, // B3 Cowbell

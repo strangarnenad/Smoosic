@@ -136,6 +136,15 @@ export class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrumentAdapt
             value: 'piano',
             label: 'Grand Piano'
           }, {
+            value: 'electricPiano',
+            label: 'Electric Piano'
+          }, {
+            value: 'accordion',
+            label: 'Accordion'
+          }, {
+            value: 'piano',
+            label: 'Grand Piano'
+          }, {
             value: 'bass',
             label: 'Bass (bowed)'
           }, {

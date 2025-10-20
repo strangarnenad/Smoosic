@@ -20,7 +20,9 @@ import { SmoTupletParamsSer } from './tuplet';
 export interface SmoAudioData {
   volume: number[],
   tiedDuration: number,
-  durationPct: number
+  durationPct: number,
+  graceNotePitches: Pitch[],
+  trillPitches: Pitch[]
 }
 /**
  * @category SmoObject
@@ -360,7 +362,9 @@ export class SmoNote implements Transposable {
   audioData: SmoAudioData = {
     volume: [],
     tiedDuration: 0,
-    durationPct: 0
+    durationPct: 0,
+    trillPitches: [],
+    graceNotePitches: []
   };
   
   isCue: boolean = false;

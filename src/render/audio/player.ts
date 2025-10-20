@@ -1,12 +1,11 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-import { SuiOscillator, SuiSampler, SuiOscillatorSoundfont} from './oscillator';
+import { SuiOscillator, SuiSampler, SuiOscillatorSoundfont, SuiTrillSampler } from './oscillator';
 import { SuiScoreView } from '../sui/scoreView';
 import { SmoScore } from '../../smo/data/score';
+import { TimeSignature } from '../../smo/data/measureModifiers'
 import { SmoSelector, SmoSelection } from '../../smo/xform/selections';
-import { SmoTie, SmoStaffHairpin, SmoStaffTextBracket } from '../../smo/data/staffModifiers';
 import { SmoAudioPitch, SmoMusic } from '../../smo/data/music';
-import { SmoNote } from '../../smo/data/note';
 import { SuiAudioAnimationParams } from './musicCursor';
 import { ScoreRoadMapBuilder } from '../../smo/xform/roadmap';
 import { SmoDynamicText } from '../../smo/data/noteModifiers';
@@ -28,6 +27,8 @@ export interface SuiAudioPlayerParams {
  */
 export interface SoundParams {
   frequencies: number[],
+  trillFrequencies: number[],
+  graceNoteFrequencies: number[],
   duration: number,
   offsetPct: number,
   durationPct: number,
@@ -122,8 +123,8 @@ export class CuedAudioContexts {
 export class SuiAudioPlayer {
   static _playing: boolean = false;
   static instanceId: number = 0;
-  static duplicatePitchThresh = 4;
-  static voiceThresh = 16;
+  static duplicatePitchThresh = 8;
+  static voiceThresh = 32;
   static _playingInstance: SuiAudioPlayer | null = null;
   static set playing(val) {
     SuiAudioPlayer._playing = val;
@@ -171,7 +172,13 @@ export class SuiAudioPlayer {
     this.audioAnimation = parameters.audioAnimation;
   }
 
-  getNoteSoundData(measureIndex: number) {
+  /**
+   * Popuate the SoundData structures used to create the oscillators
+   *  from the notes in this measure.
+   * @param measureIndex 
+   * @returns 
+   */
+  private getNoteSoundData(measureIndex: number) {
     const measureNotes: Record<number, SoundParams[]> = {};
     let measureTicks = this.score.staves[0].measures[measureIndex].getMaxTicksVoice();
     const freqDuplicates: Record<number, Record<number, number>> = {};
@@ -189,7 +196,6 @@ export class SuiAudioPlayer {
           selector.staff = staffIx;
           selector.voice = voiceIx;
           selector.tick = tickIx;
-          const silent = instrument.instrument === 'none';
           smoNote.pitches.forEach((pitch, pitchIx) => {
             const freq = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, smoNote.getMicrotone(pitchIx) ?? null);
             const freqRound = Math.round(freq);
@@ -226,6 +232,8 @@ export class SuiAudioPlayer {
           }
           const soundData: SoundParams = {
             frequencies,
+            trillFrequencies: [],
+            graceNoteFrequencies: [],
             volume,
             offsetPct: curTick / measureTicks,
             durationPct,
@@ -234,6 +242,11 @@ export class SuiAudioPlayer {
             instrument: instrument.instrument,
             selector
           };
+          for (let tr = 0; tr < smoNote.audioData.trillPitches.length; ++tr) {
+            const tpitch = smoNote.audioData.trillPitches[tr];
+            const tfreq = SmoAudioPitch.smoPitchToFrequency(tpitch, xpose, null);
+            soundData.trillFrequencies.push(tfreq);
+          }
           const pushTickArray = (curTick: number, soundData: SoundParams) => {
             if (typeof(measureNotes[curTick]) === 'undefined') {
               measureNotes[curTick] = [];
@@ -267,8 +280,10 @@ export class SuiAudioPlayer {
       { endTicks: this.cuedSounds.paramLinkHead.endTicks, measureNotes: this.cuedSounds.paramLinkHead.soundParams };
     this.cuedSounds.paramLinkHead = this.cuedSounds.paramLinkHead.next;
     const smoTemp = this.score.staves[0].measures[measureIndex].getTempo();
+    const smoTimeSig = this.score.staves[0].measures[measureIndex].timeSignature;
     const msPerTick = 60000 / (smoTemp.bpm * 4096); // milliseconds per SMO tick
     const keys: number[] = [];
+    const trillDuration = msPerTick * 512;
     Object.keys(measureNotes).forEach((key) => {
       keys.push(parseInt(key, 10));
     });    
@@ -300,7 +315,12 @@ export class SuiAudioPlayer {
             params.gain = gain;
             params.instrument = sound.instrument;
             params.useReverb = this.score.audioSettings.reverbEnable;
-            cuedSound.oscs.push(new SuiSampler(params));
+            if (sound.trillFrequencies.length > i) {
+              const tfreq = sound.trillFrequencies[i];
+              cuedSound.oscs.push(new SuiTrillSampler(params, tfreq, trillDuration));
+            } else {
+              cuedSound.oscs.push(new SuiSampler(params));
+            }
           }
         });
         if (j + 1 < keys.length) {

@@ -307,18 +307,18 @@ export class SuiScoreViewOperations extends SuiScoreView {
    */
   async removeDynamic(dynamic: SmoDynamicText): Promise<void> {
     const measures = SmoSelection.getMeasureList(this.tracker.selections);
-    for (let i = 0; i < measures.length; ++i) {
-      const selection = measures[i];
+    for (let j = 0; j < this.tracker.selections.length; ++j) {
+      const selection = this.tracker.selections[j];
       if (selection) {
         const equiv = this._getEquivalentSelection(selection);
-        if (equiv?.note) {
+        if (equiv?.note && selection.note) {
           const altModifiers = equiv.note.getModifiers('SmoDynamicText');
           SmoOperation.removeDynamic(selection, dynamic);
           if (altModifiers.length) {
             SmoOperation.removeDynamic(equiv, altModifiers[0] as SmoDynamicText);
           }
-        }
       }
+    }
     }
     this._renderChangedMeasures(measures);
     await this.renderer.updatePromise()
@@ -1851,6 +1851,18 @@ export class SuiScoreViewOperations extends SuiScoreView {
       nInfo.stavesBefore = i;
       nInfo.stavesAfter = partLength - i - 1;
       this.storeScore.staves[nStaffIndex].partInfo = nInfo;
+      // Make sure that the next stave in the score has the correct 'staves before' setting
+      if (this.storeScore.staves.length > nStaffIndex + 1) {
+        if (nInfo.stavesAfter === 0) {
+          const nextStaff = this.storeScore.staves[nStaffIndex + 1];
+          nextStaff.partInfo.stavesBefore = 0;
+          const nextStaffDisplayIndex = this.staffMap.findIndex((x) => x === nStaffIndex + 1);
+          if (nextStaffDisplayIndex >= 0) {
+            this.score.staves[nextStaffDisplayIndex].partInfo = 
+              new SmoPartInfo(nextStaff.partInfo); 
+          }
+        }
+      }
       // If the staff index is currently displayed, 
       const displayedIndex = this.staffMap.findIndex((x) => x === nStaffIndex);
       if (displayedIndex >= 0) {
