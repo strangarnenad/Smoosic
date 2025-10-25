@@ -17,12 +17,14 @@ import { Ticks, Pitch, SmoAttrs, Transposable, PitchLetter, SvgBox, getId } from
 import { FontInfo, vexCanonicalNotes } from '../../common/vex';
 import { SmoTupletParamsSer } from './tuplet';
 
+export interface PlayedNote {
+  pitches: Pitch[],
+  duration: number,
+  durationPct: number
+}
 export interface SmoAudioData {
   volume: number[],
-  tiedDuration: number,
-  durationPct: number,
-  graceNotePitches: Pitch[],
-  trillPitches: Pitch[]
+  playedNotes: PlayedNote[]
 }
 /**
  * @category SmoObject
@@ -361,10 +363,7 @@ export class SmoNote implements Transposable {
   // mixin for real-time audio playback
   audioData: SmoAudioData = {
     volume: [],
-    tiedDuration: 0,
-    durationPct: 0,
-    trillPitches: [],
-    graceNotePitches: []
+    playedNotes: []
   };
   
   isCue: boolean = false;
@@ -463,6 +462,12 @@ export class SmoNote implements Transposable {
   }
   getOrnament(stringCode: string) {
     return this.ornaments.find((aa) => aa.ornament === stringCode);
+  }
+  hasMordent() {
+    return this.ornaments.find((aa) => aa.isMordent()) !== undefined;
+  }
+  hasTurn() {
+    return this.ornaments.find((aa) => aa.isTurn()) !== undefined;
   }
 
   /**

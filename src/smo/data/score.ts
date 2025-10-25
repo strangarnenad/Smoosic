@@ -1119,7 +1119,7 @@ export class SmoScore {
               if (inst.usePercussionNoteheads) {
                 if (!note.isRest()) {
                   const intNote = SmoMusic.midiPitchToMidiNumber(SmoMusic.smoPitchToMidiString(
-                    note.pitches[0]));
+                    note.pitches[0], 0));
                   if (SmoInstrument.xNoteheadInstruments.indexOf(intNote) >= 0) {
                     note.setNoteHead('T2');
                   } else if (SmoInstrument.triNoteheadInstruments.indexOf(intNote) >= 0) {

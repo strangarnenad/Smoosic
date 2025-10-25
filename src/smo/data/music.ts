@@ -866,8 +866,8 @@ export class SmoMusic {
    * @param smoPitch pitch to convert
    * @returns pitch in MIDI string format.
    */
-  static smoPitchToMidiString(smoPitch: Pitch): string {
-    const midiPitch = SmoMusic.smoIntToPitch(SmoMusic.smoPitchToInt(smoPitch));
+  static smoPitchToMidiString(smoPitch: Pitch, offset: number): string {
+    const midiPitch = SmoMusic.smoIntToPitch(SmoMusic.smoPitchToInt(smoPitch) + offset);
     let rv = midiPitch.letter.toUpperCase();
     if (midiPitch.accidental !== 'n') {
       rv += midiPitch.accidental;
@@ -875,10 +875,10 @@ export class SmoMusic {
     rv += midiPitch.octave;
     return rv;
   }
-  static smoPitchesToMidiStrings(smoPitches: Pitch[]): string[] {
+  static smoPitchesToMidiStrings(smoPitches: Pitch[], offset: number): string[] {
     const rv: string[] = [];
     smoPitches.forEach((pitch) => {
-      rv.push(SmoMusic.smoPitchToMidiString(pitch));
+      rv.push(SmoMusic.smoPitchToMidiString(pitch, offset));
     });
     return rv;
   }
@@ -903,6 +903,23 @@ export class SmoMusic {
   }
   static midiPitchToMidiNumber(midiPitch: string): number {
     return SmoMusic.smoPitchToInt(SmoMusic.midiPitchToSmoPitch(midiPitch)) + 12;
+  }
+  static midiNumberAndDetuneFromPitch(pitch: Pitch, xpose: number, microtone?: SmoMicrotone) {
+    // Frequency adjusted for microtones
+    const freq = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, microtone ?? null);
+    // Equal-tempered frequency
+    const toneFrequency = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, null);
+    let offset = freq - toneFrequency;
+    let detune = 0;
+    // the next tone up or down is a semitone, calculate the frequency so we can derive cents
+    if (Math.abs(offset) > 1) {
+      const nextPitch = offset > 0 ? (Math.pow(2, 1 / 12) * toneFrequency) :
+        (toneFrequency / Math.pow(2, 1 / 12));
+      detune = (100 * Math.sign(offset) * offset)/(nextPitch - toneFrequency);
+    }
+    const midiStr = SmoMusic.smoPitchToMidiString(pitch, xpose);
+    const midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
+    return { midinumber, detune, frequency: toneFrequency };
   }
   static midiNumberToMidiPitch(midiNumber: number): string {
     const smoPitch = SmoMusic.smoIntToPitch(midiNumber - 24);

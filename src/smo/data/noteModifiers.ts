@@ -501,6 +501,12 @@ export class SmoOrnament extends SmoNoteModifierBase {
     prallup: 'schleifer',
     tr: 'trill-mark'
   }
+  static get mordents(): string[] {
+    return ['mordent', 'mordent_inverted', 'upmordent', 'downmordent', 'upprall', 'pralldown', 'prallup'];
+  }
+  static get turns(): string[] {
+    return ['turn', 'turn_inverted'];
+  }
   static readonly textNoteOrnaments: Record<string, string>  = {
     breath: 'breath',
     caesura: 'caesura_straight'
@@ -530,6 +536,12 @@ export class SmoOrnament extends SmoNoteModifierBase {
   }
   isJazz() {
     return SmoOrnament.jazzOrnaments.indexOf(this.ornament) >= 0;
+  }
+  isMordent() {
+    return SmoOrnament.mordents.indexOf(this.ornament) >= 0;
+  }
+  isTurn() {
+    return SmoOrnament.turns.indexOf(this.ornament) >= 0;
   }
   position: string = SmoOrnament.positions.above;
   offset: string = 'on';

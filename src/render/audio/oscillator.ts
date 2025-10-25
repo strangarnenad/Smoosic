@@ -92,6 +92,7 @@ export interface WaveTable {
  */
 export interface SuiOscillatorParams {
   duration: number,
+  delayTime: number,
   frequency: number,
   detune?: number,
   attackEnv: number,
@@ -172,17 +173,21 @@ export abstract class SuiOscillator {
     let frequency = 0;
     let duration = 0;
     // Just make all the notes same length, since we are not in tempo
-    duration = 500;
+    duration = 0.5;
     const ar: SuiOscillator[] = [];
     gain = isNaN(gain) ? 0.2 : gain;
     if (note.noteType === 'r') {
       gain = 0.001;
     }
     note.pitches.forEach((pitch, pitchIx) => {
-      const mtone: SmoMicrotone | null = note.getMicrotone(pitchIx) ?? null;
-      frequency = SmoAudioPitch.smoPitchToFrequency(pitch, -1 * measure.transposeIndex, mtone);
+      const mtone: SmoMicrotone | undefined = note.getMicrotone(pitchIx);
+      // Get the midi frequency and offset from the pitch.  true frequency is ignored here
+      const { midinumber, detune, frequency } = SmoMusic.midiNumberAndDetuneFromPitch(pitch, 
+        -1 * measure.transposeIndex, 
+        mtone);
       const def = SuiOscillator.defaults;
-      def.frequency = frequency;
+      def.frequency = midinumber;
+      def.detune = detune;
       def.duration = duration;
       def.gain = gain;
       def.instrument = instrument.instrument;
@@ -216,30 +221,18 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   offset: number = 0;
   velocity: number;
   delayTime: number = 0;
+  detune: number = 0;
   constructor(params: SuiOscillatorParams) {
     super(params);
+    this.delayTime = params.delayTime ?? 0;
+    this.detune = params.detune ?? 0;
     this.instrument = params.instrument;
     this.samples = loadedSoundfonts[this.instrument];
-    const vex: string = SmoAudioPitch.frequencyToVexPitch(params.frequency);
-    const closestFrequency = SmoAudioPitch.smoPitchToFrequency(SmoMusic.vexToSmoPitch(vex), 0, null);
-    const offset = params.frequency - closestFrequency;
-    const pitch = SmoMusic.vexToSmoPitch(vex);
+    this.midinumber = params.frequency;
+
     if (params.gain !== 0) {
       let midiStr = '';
-      try {
-      midiStr = SmoMusic.smoPitchToMidiString(pitch);
-      } catch (exp) {
-        const pstr = JSON.stringify(pitch);
-        console.warn(`bad pitch ${pstr}`);
-      }
-      this.midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
       let gain = params.gain;
-      // Microtone offset, need to convert from abs frequency into cents
-      if (Math.abs(offset) > 1) {
-        const nextPitch = offset > 0 ? (Math.pow(2, 1 / 12) * closestFrequency) :
-          (closestFrequency / Math.pow(2, 1 / 12));
-        this.offset = (100 * Math.sign(offset) * offset)/(nextPitch - closestFrequency);
-      }
       // hack: should have different logic for percussion sampler
       // Since we treat pitches in non-pitched percussion as if treble clef,
       // adjust to match the MIDI pitch.
@@ -261,10 +254,10 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
     if (this.velocity > 0 && this.samples) {
       if (this.delayTime > 0) {
         const currentTime = SuiOscillator.audio.currentTime;
-        this.samples.start({ note, time: currentTime + (this.delayTime / 1000), duration: this.duration / 1000, 
+        this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 
           velocity: this.velocity, detune: this.offset});
        } else {
-        this.samples.start({ note, time: 0, duration: (this.duration + this.delayTime) / 1000, 
+        this.samples.start({ note, time: 0, duration: (this.duration + this.delayTime), 
           velocity: this.velocity, detune: this.offset});
         }
     }
@@ -280,36 +273,4 @@ export class SuiSampler extends SuiOscillatorSoundfont {
   constructor(params: SuiOscillatorParams) {
     super(params);
   }  
-}
-export class SuiTrillSampler extends SuiOscillator {
-  trillDuration: number;
-  soundArray: SuiOscillatorSoundfont[] = [];
-  arrayIndex: number = 0;
-  constructor(params: SuiOscillatorParams, upperPitch:number, trillDuration: number) {
-    super(params);
-    const upperParams = JSON.parse(JSON.stringify(params)) as SuiOscillatorParams;
-    const lowerParams = JSON.parse(JSON.stringify(params)) as SuiOscillatorParams;
-    upperParams.frequency = upperPitch;    
-    this.trillDuration = trillDuration;
-    let fullTime = params.duration;
-    let increment = this.trillDuration * 2;
-    while (fullTime > 0) {
-      [upperParams, lowerParams].forEach((p) => {
-        const np = JSON.parse(JSON.stringify(p)) as SuiOscillatorParams;
-        np.duration = Math.min(this.trillDuration, fullTime);
-        this.soundArray.push(new SuiOscillatorSoundfont(np));
-        fullTime -= increment;
-        if (increment > this.trillDuration) {
-          increment *= (1 / Math.pow(2, 0.5));
-        }
-      })
-    }
-  }
-  play() {
-    for (let i = 0; i < this.soundArray.length; ++i) {
-      const osc = this.soundArray[i];
-      osc.delayTime = i * this.trillDuration;
-      osc.play();
-    }
-  }
 }

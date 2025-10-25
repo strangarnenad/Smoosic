@@ -152,37 +152,42 @@ export class SmoToMidi {
               }
               for (let nix = 0; nix < voice.notes.length; ++nix) {
                 const note = voice.notes[nix];
-                const duration = Math.round(beatTime * (note.audioData.tiedDuration / 4096));
-                const silenceTime = duration - Math.round(duration * note.audioData.durationPct);
-                const soundTime = duration - silenceTime;
-                const midiPitches = SmoMusic.smoPitchesToMidiStrings(note.pitches);
-                let velocity = Math.min(127, Math.round(127 * note.audioData.volume[0]));
-                if (duration === 0) {
-                  velocity = 0;
-                }
-                // const selector: SmoSelector = { staff: k, measure: j, voice: vix, tick: nix, pitches: [] };
-                if (note.isRest()) {
-                  const rest = new MidiWriter.NoteOffEvent({
-                  channel: trackIx + 1,
-                  pitch: 'C4',
-                  duration: 't' + duration
-                });
-                track.addEvent(rest);
-              } else {
-                const midiNote = new MidiWriter.NoteEvent({
-                  channel: trackIx + 1,
-                  pitch: midiPitches,
-                  duration: 't' + soundTime,
-                  velocity
-                });
-                track.addEvent(midiNote);
-                if (silenceTime > 0) {
-                  const rest = new MidiWriter.NoteOffEvent({
-                  channel: trackIx + 1,
-                  pitch: 'C4',
-                  duration: 't' + silenceTime
+                for (let sndix = 0; sndix < note.audioData.playedNotes.length; ++sndix) {
+                  const snd = note.audioData.playedNotes[sndix];
+                  const duration = Math.round(beatTime * (snd.duration / 4096));
+                  const silenceTime = duration - Math.round(duration * snd.durationPct);
+                  const soundTime = duration - silenceTime;
+                  // Note: we calculate detune, but MIDI note needs a midi number.  We could support it maybe
+                  // with a cc value
+                  const midiPitches = SmoMusic.smoPitchesToMidiStrings(note.pitches, -1 * measure.transposeIndex);
+                  let velocity = Math.min(127, Math.round(127 * note.audioData.volume[0]));
+                  if (duration === 0) {
+                    velocity = 0;
+                  }
+                  // const selector: SmoSelector = { staff: k, measure: j, voice: vix, tick: nix, pitches: [] };
+                  if (note.isRest()) {
+                    const rest = new MidiWriter.NoteOffEvent({
+                    channel: trackIx + 1,
+                    pitch: 'C4',
+                    duration: 't' + duration
                   });
                   track.addEvent(rest);
+                } else {
+                  const midiNote = new MidiWriter.NoteEvent({
+                    channel: trackIx + 1,
+                    pitch: midiPitches,
+                    duration: 't' + soundTime,
+                    velocity
+                  });
+                  track.addEvent(midiNote);
+                  if (silenceTime > 0) {
+                    const rest = new MidiWriter.NoteOffEvent({
+                    channel: trackIx + 1,
+                    pitch: 'C4',
+                    duration: 't' + silenceTime
+                    });
+                    track.addEvent(rest);
+                  }
                 }
               }                       
             }
