@@ -1792,10 +1792,20 @@ export class SuiScoreViewOperations extends SuiScoreView {
     }
     // if we are looking at a subset of the score,
     // revert to the full score view before removing the staff.
-    const sel = this.tracker.selections[0];
-    const scoreSel = this._getEquivalentSelection(sel);
-    const staffIndex = scoreSel!.selector.staff;
-    SmoOperation.removeStaff(this.storeScore, staffIndex);
+    const toRemove: number[] = [];
+    const selectedStaves: Record<number, boolean>  = {};
+    this.tracker.selections.forEach((sel) => {
+      const scoreSel = this._getEquivalentSelection(sel);
+      if (!selectedStaves[scoreSel!.selector.staff]) {
+        selectedStaves[scoreSel!.selector.staff] = true;
+        toRemove.push(scoreSel!.selector.staff);
+      }
+    });
+    // Sort in descending order so we don't mess up the staff indices as we remove
+    toRemove.sort((a, b) => b - a);
+    toRemove.forEach((staffIndex) => {
+      SmoOperation.removeStaff(this.storeScore, staffIndex);
+    });
     this.viewAll();
     this.renderer.setRefresh();
     return this.renderer.updatePromise();

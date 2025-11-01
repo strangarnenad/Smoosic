@@ -752,7 +752,18 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     clonedMeasure.tempo = new SmoTempoText(measure.tempo);
     return clonedMeasure;
   }
-
+  hasNonRestNotes(): boolean {
+    for (let i = 0; i < this.voices.length; ++i) {
+      const voice = this.voices[i];
+      for (let j = 0; j < voice.notes.length; ++j) {
+        const smoNote = voice.notes[j];
+        if (!smoNote.isRest()) {
+          return true;
+        }
+      } 
+    }
+    return false;
+  }
   /**
    * When creating a new measure, the 'default' settings can vary depending on
    * what comes before/after the measure.  This determines the default pitch

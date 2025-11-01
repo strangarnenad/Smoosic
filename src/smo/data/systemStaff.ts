@@ -548,6 +548,19 @@ export class SmoSystemStaff implements SmoObjectParams {
   isRehearsal(index: number) {
     return !(typeof(this.measures[index].getRehearsalMark()) === 'undefined');
   }
+  hasNonRestNotes(): boolean {
+    const nonrv = this.measures.find((mm) => mm.hasNonRestNotes());
+    return !!nonrv;
+  }
+  hasInstrument():boolean {
+    for (let i = 0; i < this.measures.length; ++i) {
+      const inst = this.getStaffInstrument(i);
+      if (inst.instrument !== 'none') {
+        return true;
+      }
+    }
+    return false;
+  }
   findSimlarOverlap(modifier: StaffModifierBase) {
     const overlap = this.modifiers.filter((ff) => 
       SmoSelector.overlaps(ff.startSelector, ff.endSelector, modifier.startSelector, modifier.endSelector) &&
@@ -977,9 +990,10 @@ export class SmoSystemStaff implements SmoObjectParams {
     let localIndex = 0;
     for (i = 0; i < this.measures.length; ++i) {
       const measure = this.measures[i];
+      
       if (typeof(this.renumberingMap[i]) === 'number') {
         localIndex = this.renumberingMap[i];
-      } else {
+      } else if (i > 0) {  // Auto-increment the custom numbering, but make sure we don't increment 0
         localIndex += 1;
       }
       // since systemIndex is a render-time decision, we don't update it here.

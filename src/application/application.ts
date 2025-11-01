@@ -1,7 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
 import { smoSerialize } from '../common/serializationHelpers';
-import { _MidiWriter } from '../common/midiWriter';
 import { dynamicCtorInit } from './dynamicInit';
 
 import { SmoConfiguration, SmoConfigurationParams } from './configuration';
@@ -244,8 +243,6 @@ export class SuiApplication {
     }
   }
   _startApplication() {
-    // Initialize the midi writer library
-    _MidiWriter();
     const queryString = new QueryParser();
     const languageSelect = queryString.pairs.find((x) => x['language']) ?? {'language': 'en'}
     if (this.config.mode === 'translate') {

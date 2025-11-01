@@ -197,6 +197,28 @@ export class SmoInstrument extends StaffModifierBase {
       'keyOffset', 'midichannel', 'midiport', 'instrumentName', 
       'abbreviation', 'instrument', 'family', 'lines'];
   }
+  // Used for midi export
+  static instrumentMidiMap: Record<string, number> = {
+    'piano': 1,
+    'accordion': 22,
+    'electricPiano':5,
+    'bass':33,
+    'jazzBass': 34,
+    'eGuitar': 27,
+    'cello': 43,
+    'violin': 41,
+    'trumpet': 57,
+    'horn': 61,
+    'trombone': 58,
+    'tuba': 59,
+    'clarinet': 72,
+    'flute': 74,
+    'altoSax': 66,
+    'tenorSax':67,
+    'bariSax': 68,
+    'pad': 89,
+    'percussion': 116
+  };
   // Internally, percussion clef uses treble clef pitches (since percussion clef
   // piches are not defined.).  This maps the notes from Bb3 to C6 to general midi
   // map drum parts.  There is no standard for this, and maps should be editable.
@@ -245,6 +267,12 @@ export class SmoInstrument extends StaffModifierBase {
   midichannel: number;
   midiport: number;
   family: string;
+  get midiInstrumentDefault() {
+    if (SmoInstrument.instrumentMidiMap[this.instrument]) {
+      return SmoInstrument.instrumentMidiMap[this.instrument] - 1;
+    }
+    return 1; // default to piano
+  }
   instrument: string;
   articulation?: string;
   mutes?: string;
@@ -302,6 +330,7 @@ export class SmoInstrument extends StaffModifierBase {
     this.clef = params.clef;
     this.midiport = params.midiport;
     this.midichannel = params.midichannel;
+    this.midiInstrument = this.midiInstrumentDefault;
     this.usePercussionNoteheads = params.usePercussionNoteheads ?? false;
     this.startSelector = params.startSelector;
     this.endSelector = params.endSelector;

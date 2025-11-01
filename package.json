@@ -13,7 +13,7 @@
     "@types/qunit": "^2.19.11",
     "express": "^5.1.0",
     "midi-parser-js": "^4.0.4",
-    "midi-writer-js": "^1.7.5",
+    "midi-writer-js": "^3.1.1",
     "smplr": "^0.16.3",
     "ts-loader": "^9.2.5",
     "typedoc": "^0.25.0",
