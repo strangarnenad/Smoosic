@@ -185,7 +185,7 @@ const setDynamics = (score: SmoScore) => {
     });
   });
 }
-const updateForOrnaments = (note: SmoNote , previousNote: SmoNote | undefined) => {
+const updateForOrnaments = (note: SmoNote , key: string, previousNote: SmoNote | undefined) => {
   const trill: SmoOrnament | undefined = note.getOrnament('tr');
   const graceNotes: SmoGraceNote[] = note.getGraceNotes();
   const hasMordent = note.hasMordent();
@@ -214,7 +214,7 @@ const updateForOrnaments = (note: SmoNote , previousNote: SmoNote | undefined) =
     lower.duration = Math.min(Math.floor(oduration / 4), 2048);
     const upperPitches:Pitch[] = [];
     lower.pitches.forEach((lp:Pitch) => {
-      const upperPitch = SmoMusic.getIntervalInKey(lp, note.keySignature, 1);
+      const upperPitch = SmoMusic.getIntervalInKey(lp, key, 1);
       upperPitches.push(upperPitch);
     });
     const upper = JSON.parse(JSON.stringify(lower));
@@ -239,12 +239,12 @@ const updateForOrnaments = (note: SmoNote , previousNote: SmoNote | undefined) =
     const upperPitches:Pitch[] = [];
     const lowerPitches:Pitch[] = [];
     lower.pitches.forEach((lp:Pitch) => {
-      const lowerPitch = SmoMusic.getIntervalInKey(lp, note.keySignature, -1);
+      const lowerPitch = SmoMusic.getIntervalInKey(lp, key, -1);
       lowerPitches.push(lowerPitch);
     });
     lower.pitches = lowerPitches;
     upper.pitches.forEach((up:Pitch) => {
-      const upperPitch = SmoMusic.getIntervalInKey(up, note.keySignature, 1);
+      const upperPitch = SmoMusic.getIntervalInKey(up, key, 1);
       upperPitches.push(upperPitch);
     });
     upper.pitches = upperPitches;
@@ -273,7 +273,7 @@ const updateForOrnaments = (note: SmoNote , previousNote: SmoNote | undefined) =
       for (let ty = 0; ty < playedNote.pitches.length; ++ty) {
         // TODO: get upper note from ornament definition
         const lower = JSON.parse(JSON.stringify(playedNote.pitches[ty]));
-        const upper = SmoMusic.getIntervalInKey(lower, note.keySignature, 1);
+        const upper = SmoMusic.getIntervalInKey(lower, key, 1);
 
         while (targetDuration > 0) {
           [lower, upper].forEach((opitch) => {
@@ -345,7 +345,7 @@ export const PopulateAudioData = (score: SmoScore, roadMap: ScoreRoadMapBuilder)
                   note.audioData.playedNotes = [];
                   // If the note is tied from a prevous note, is it also tied to the next note?
                   if (tieLen.length < 1) {
-                    updateForOrnaments(tiedNote, previousNote[currentTrack]);
+                    updateForOrnaments(tiedNote, mm.keySignature, previousNote[currentTrack]);
                     previousNote[currentTrack] = tiedNote;
                     tiedNotes[currentTrack] = undefined;
                   }
@@ -357,7 +357,7 @@ export const PopulateAudioData = (score: SmoScore, roadMap: ScoreRoadMapBuilder)
                     durationPct: 1.0
                   }];
                   // This would only do something if the last note is tied to nothing
-                  updateForOrnaments(note, undefined);
+                  updateForOrnaments(note, mm.keySignature, undefined);
                 } else {
                   note.audioData.playedNotes = [{
                     pitches: JSON.parse(JSON.stringify(note.pitches)),
@@ -381,7 +381,7 @@ export const PopulateAudioData = (score: SmoScore, roadMap: ScoreRoadMapBuilder)
                   } else if (marcato) {
                     note.audioData.playedNotes[0].durationPct = 0.45;
                   } else {
-                    updateForOrnaments(note, previousNote[currentTrack]);
+                    updateForOrnaments(note, mm.keySignature, previousNote[currentTrack]);
                   }
                   previousNote[currentTrack] = note;
                 }
