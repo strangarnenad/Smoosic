@@ -252,6 +252,9 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   }
   play() {
     const note = this.midinumber;
+    if (SuiOscillator.audio.state === 'suspended') {
+      SuiOscillator.audio.resume();
+    }
     if (this.velocity > 0 && this.samples) {
       if (layoutDebug.mask & layoutDebug.values.oscillators) {
         console.log(`osc: mn/dur/del/time  ${note} /${this.duration}/ ${this.delayTime} / ${SuiOscillator.audio.currentTime} `);

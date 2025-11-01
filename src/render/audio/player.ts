@@ -488,8 +488,7 @@ export class SuiAudioPlayer {
   // each inner oscillator is a promise, the combined promise is resolved when all
   // the beats have completed.
   static _playChord(oscAr: SuiOscillator[]) {
-    // var par: Promise<void>[] = [];
-    const now = SuiOscillatorSoundfont.audio.currentTime;
+    // var par: Promise<void>[] = [];    
     for (let i = 0; i < oscAr.length; ++i) {
       oscAr[i].play();
     }
