@@ -10,6 +10,7 @@ import { SmoSelection } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
 import { SmoInstrument } from '../../smo/data/staffModifiers';
 import { loadedSoundfonts } from './samples';
+import { layoutDebug } from '../sui/layoutDebug';
 import {
   getSoundfontKits,
   Soundfont,
@@ -252,6 +253,9 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   play() {
     const note = this.midinumber;
     if (this.velocity > 0 && this.samples) {
+        if (layoutDebug.mask & layoutDebug.values.oscillators) {
+          console.log(`osc: mn/dur/del/time  ${note} /${this.duration}/ ${this.delayTime} / ${SuiOscillator.audio.currentTime} `);
+        }
       if (this.delayTime > 0) {
         const currentTime = SuiOscillator.audio.currentTime;
         this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 

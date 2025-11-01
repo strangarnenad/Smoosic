@@ -31,7 +31,8 @@ export class layoutDebug {
       dialogEvents: 256,
       cursor: 512,
       text: 1024,
-      page: 2048
+      page: 2048,
+      oscillators: 4096,
     };
   }
 
@@ -48,7 +49,8 @@ export class layoutDebug {
       256: 'dialog-events',
       512: 'cursor-adj-dbg',
       1024: 'text-debug',
-      2048: 'page-debug'
+      2048: 'page-debug',
+      4096: 'oscillators-debug'
     };
   }
   // for profiling render performance

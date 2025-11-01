@@ -8,6 +8,7 @@ import { SmoAudioPitch, SmoMusic } from '../../smo/data/music';
 import { SuiAudioAnimationParams } from './musicCursor';
 import { ScoreRoadMapBuilder } from '../../smo/xform/roadmap';
 import { PopulateAudioData } from '../../smo/xform/updateAudio';
+import { layoutDebug } from '../sui/layoutDebug';
 
 /**
  * Create audio player for the score from the start point
@@ -261,6 +262,9 @@ export class SuiAudioPlayer {
     const keys = Object.keys(measureNotes).map((x) => parseInt(x, 10));
     if (keys.length) {
       measureTicks -= keys.reduce((a, b) => a > b ? a : b);
+    }
+    if (layoutDebug.mask & layoutDebug.values.oscillators) {
+      console.log(`player:  ${measureIndex} ${JSON.stringify(measureNotes, null, ' ')}`);
     }
     return { endTicks: measureTicks, measureNotes };
   }
