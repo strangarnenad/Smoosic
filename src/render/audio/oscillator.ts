@@ -253,17 +253,12 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   play() {
     const note = this.midinumber;
     if (this.velocity > 0 && this.samples) {
-        if (layoutDebug.mask & layoutDebug.values.oscillators) {
-          console.log(`osc: mn/dur/del/time  ${note} /${this.duration}/ ${this.delayTime} / ${SuiOscillator.audio.currentTime} `);
-        }
-      if (this.delayTime > 0) {
-        const currentTime = SuiOscillator.audio.currentTime;
-        this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 
-          velocity: this.velocity, detune: this.offset});
-       } else {
-        this.samples.start({ note, time: 0, duration: (this.duration + this.delayTime), 
-          velocity: this.velocity, detune: this.offset});
-        }
+      if (layoutDebug.mask & layoutDebug.values.oscillators) {
+        console.log(`osc: mn/dur/del/time  ${note} /${this.duration}/ ${this.delayTime} / ${SuiOscillator.audio.currentTime} `);
+      }
+      const currentTime = SuiOscillator.audio.currentTime;
+      this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 
+        velocity: this.velocity, detune: this.offset});
     }
   }
 }
