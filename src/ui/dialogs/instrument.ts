@@ -219,7 +219,7 @@ export class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrumentAdapt
         }, {
           smoName: 'usePercussionNoteheads',
           control: 'SuiToggleComponent',
-          label: 'User Pecussion Symbols (Percussion Clef Only)'
+          label: 'Use Percussion Symbols (Percussion Clef Only)'
         }, {
           smoName: 'applyTo',
           defaultValue: SuiInstrumentDialog.applyTo.score,

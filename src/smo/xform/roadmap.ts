@@ -185,7 +185,7 @@ export class ScoreRoadMapBuilder {
     currentJump: ScoreSegment
   ) {
      let skipTo = -1;
-    for (let i = startMeasure; i < endMeasure; ++i) {
+    for (let i = startMeasure; i <= endMeasure; ++i) {
       if (skipTo > i) {
         continue;
       }
