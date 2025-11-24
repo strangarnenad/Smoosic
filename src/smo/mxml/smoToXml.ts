@@ -276,7 +276,7 @@ export class SmoToXml {
    */
   static barline(measureElement: Element, smoState: SmoState, start: boolean) {
     const nn = XmlHelpers.createTextElementChild;
-    let barlineElement = null;
+    let barlineElement: Element | null = null;
     const staff = smoState.partStaves[smoState.staffPartIx];
     const measure = staff.measures[smoState.measureIndex];
     if (start) {

@@ -35,6 +35,7 @@ export interface SmoConfigurationParams {
   language: string;
   initialScore?: string | SmoScore;
   remoteScore?: string;
+  domContainer: string | HTMLElement;
   scoreDomContainer: string | HTMLElement;
   leftControls?: string | HTMLElement;
   topControls?: string | HTMLElement;
@@ -65,6 +66,7 @@ export interface SmoConfigurationParams {
  export class SmoConfiguration implements SmoRenderConfiguration, SmoUiConfiguration {
   mode: SmoMode;
   language: string = '';
+  domContainer?: string | HTMLElement;
   initialScore?: string | SmoScore;
   remoteScore?: string;
   leftControls?: string | HTMLElement;

@@ -626,15 +626,8 @@ body.bugReport .bug-modal {
   display: flex;
 }
 
-.bug-modal {
-  display: none;
-  flex-flow: column;
-	width:100%;
-	height:100%;
-  font-size: 1.5em;
-  top: calc(50% - 200px);
-  left: calc(50% - 300px);
-	margin:10px;
+.bug-modal .modal {
+  display: block;
 }
 .bug-title {
   position: absolute;

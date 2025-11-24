@@ -1784,7 +1784,7 @@ export class SmoMusic {
    * @returns
    */
   static splitIntoValidDurations(ticks: number): number[] {
-    const rv = [];
+    const rv: number[] = [];
     let closest = 0;
     while (ticks > 128) {
       closest = SmoMusic.closestDurationTickLtEq(ticks);
@@ -1840,7 +1840,7 @@ export class SmoMusic {
   static gcdMap(duration: number): number[] {
     let k = 0;
     const keys = Object.keys(SmoMusic.ticksToDuration).map((x) => parseInt(x, 10));
-    const dar = [];
+    const dar: number[] = [];
     const gcd = (td: number) => {
       let rv = keys[0];
       for (k = 1; k < keys.length; ++k) {

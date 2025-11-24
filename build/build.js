@@ -1,11 +1,12 @@
 const path = require('path');
+const { VueLoaderPlugin } = require('vue-loader')
 const CopyPlugin = require("copy-webpack-plugin");
 const BUILD_DIR = __dirname;
 const BASE_DIR = path.join(BUILD_DIR, '..');
 const args = process.argv.slice(2);
 var command = args[0] ?? 'monolith';
 console.log(`command is ${command}`);
-const webpack = require('webpack');
+const { webpack, DefinePlugin } = require('webpack');
 const webpackConfig = {
   mode: 'development',
   entry: path.join(BASE_DIR, 'src/application/exports.ts'),
@@ -18,7 +19,7 @@ const webpackConfig = {
     globalObject: 'this'
   },
   resolve: {
-    extensions: ['.ts', '.js', '.json']
+    extensions: ['.ts', '.tsx','.js', '.jsx']
   },
   devtool: 'eval-source-map',
   externals: {
@@ -28,6 +29,8 @@ const webpackConfig = {
     assets: true,
     modules: true,
     loggingDebug: true,
+    errorCause: true,
+    errorDetails: true,
     colors: true,
     reasons: true,
     usedExports: true
@@ -43,13 +46,24 @@ const webpackConfig = {
         {
         loader: 'ts-loader',
         options: {
-          configFile: "tsconfig.json"
+          configFile: "tsconfig.json",
+          appendTsSuffixTo: [/\.vue$/],
         }
       }
        ]
-    }]
+    },  {
+          test: /\.vue$/,
+          use: ['vue-loader'],
+        },
+      { test: /\.css$/, use: ['vue-style-loader', 'css-loader']}]
   },
   plugins: [
+    new VueLoaderPlugin(),
+    new DefinePlugin({
+      __VUE_OPTIONS_API__ : true,
+      __VUE_PROD_DEVTOOLS__ : true,
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__ : true
+    }),    
     new CopyPlugin({
       patterns: [
         { from: "src/styles/", to: "styles/"}

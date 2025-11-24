@@ -16,7 +16,7 @@ import { CollapseRibbonControl, ExtendedCollapseParent } from '../ui/buttons/col
 import { DisplaySettings } from '../ui/buttons/display';
 import { SmoTranslationEditor } from '../ui/i18n/translationEditor';
 import { SmoConfiguration } from './configuration';
-import { RibbonLayout, ModalComponent, CompleteNotifier, RibbonDefinition } from '../ui/common';
+import { RibbonLayout, ModalComponent, CompleteNotifier, RibbonDefinition, replaceVueRoot } from '../ui/common';
 import { RibbonButtons } from '../ui/buttons/ribbon';
 import { simpleRibbonLayout } from '../ui/ribbonLayout/default/tabletRibbon';
 import { ModalEventHandler } from './common';
@@ -66,6 +66,7 @@ import { SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog } 
 import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
 import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
+import { SuiNavigation } from '../ui/navigation';
 import { SuiLoadMxmlDialog, SuiLoadFileDialog,
     SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog,
     SuiSaveMidiDialog, SuiSaveVexDialog } from '../ui/dialogs/fileDialogs';
@@ -169,6 +170,8 @@ import { SuiPitchAdapter, SuiPitchDialog, SuiLetterButtonComponent, SuiIntervalB
 const getClass = (jsonString: string) => {
     return eval('Smo.' + jsonString);
 };
+export * from '../ui/modalDialogs';
+export * from '../ui/composables/splashInit';
 export * from './application';
 export * from './common';
 export * from './configuration';
@@ -420,6 +423,6 @@ SuiPitchComposite,
     getClass,
   // utilities
   buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer,
-  renderVexTests
+  renderVexTests, replaceVueRoot, SuiNavigation
 }
 export default Smo;

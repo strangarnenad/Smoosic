@@ -7,6 +7,7 @@ import { SuiSlurAttributesDialog } from './slur';
 import { SuiPedalMarkingDialog } from './pedalMarking';
 import { SuiVoltaAttributeDialog } from './volta';
 import { SuiLyricDialog } from './lyric';
+import { SuiChordChangeDialog } from './chordChange';
 import { SuiTieAttributesDialog } from './tie';
 import { SuiDynamicModifierDialog } from './dynamics';
 import { SuiTextBlockDialog } from './textBlock';
@@ -39,6 +40,8 @@ import { SuiMicrotoneButtonComponent } from './microtones';
 import { SuiNoteHeadButtonComponent, SuiStemButtonComponent  } from './noteHead';
 import { SuiOrnamentButtonComponent } from './ornament';
 import { SuiIntervalButtonComponent, SuiTransposeButtonComponent, SuiLetterButtonComponent } from './pitch';
+import { SmoLyric } from '../../smo/data/noteModifiers';
+import { SuiExceptionHandler } from '../exceptions';
 
 export type ModifiersWithDialogs = 'SmoStaffHairpin' | 'SmoTie' | 'SmoSlur' | 
 'SmoDynamicText' | 'SmoVolta' | 'SmoScoreText' | 'SmoLoadScore' | 'SmoLyric' | 'SmoPedalMarking';
@@ -77,7 +80,16 @@ export function isModifierWithDialog(modifier: SmoModifier) {
     } else if (ctor === 'SmoStaffTextBracket') {
       return createAndDisplayDialog(SuiTextBracketDialog, parameters);
     } else {
-      return createAndDisplayDialog(SuiLyricDialog, parameters);
+      if (modifier.ctor !== 'SmoLyric') {
+        throw new SuiExceptionHandler('Unknown modifier dialog type ' + ctor);
+      }
+      
+      const lModifier = (modifier as SmoLyric);
+      if (lModifier.parser == SmoLyric.parsers.lyric) {
+        return createAndDisplayDialog(SuiLyricDialog, parameters);
+      } else {
+        return createAndDisplayDialog(SuiChordChangeDialog, parameters);
+      }
     }
   }
 }

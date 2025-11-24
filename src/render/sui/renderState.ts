@@ -109,7 +109,7 @@ export class SuiRenderState {
     setFontStack(this.score!.engravingFont);
   }
   addToReplaceQueue(selection: SmoSelection | SmoSelection[]) {
-    let selections = [];
+    let selections: SmoSelection[] = [];
     if (!Array.isArray(selection)) {
       selections = [selection];
     } else {

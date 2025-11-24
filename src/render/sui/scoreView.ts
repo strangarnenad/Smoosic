@@ -523,7 +523,7 @@ export abstract class SuiScoreView {
    * @returns 
    */
   getView(): ViewMapEntry[] {
-    const rv = [];
+    const rv: ViewMapEntry[] = [];
     let i = 0;
     for (i = 0; i < this.storeScore.staves.length; ++i) {
       const show = this.staffMap.indexOf(i) >= 0;
@@ -612,7 +612,7 @@ export abstract class SuiScoreView {
     }
     const nscore = SmoScore.deserialize(JSON.stringify(this.storeScore.serialize(
       { skipStaves: true, useDictionary: false, preserveStaffIds: false })));
-    const staffMap = [];
+    const staffMap: number[] = [];
     for (i = 0; i < rows.length; ++i) {
       const row = rows[i];
       if (row.show) {

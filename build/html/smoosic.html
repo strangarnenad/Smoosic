@@ -3,6 +3,8 @@
 <head>
 		<meta charset="utf-8">
 		<title>Smoosic Editor</title>
+        <link href="../styles/bravura-font-codes.css" rel="stylesheet">
+        <link href="../styles/bootstrap.min.css" rel="stylesheet">
 		<link href="../styles/fonts.css" type="text/css" rel="stylesheet">
         <link href="../styles/media.css" rel="stylesheet">
         <link href="../styles/ribbon.css" rel="stylesheet">
@@ -10,8 +12,6 @@
         <link href="../styles/menus.css" rel="stylesheet">
         <link href="../styles/piano.css" rel="stylesheet">
         <link href="../styles/tree.css" rel="stylesheet">
-        <link href="../styles/bravura-font-codes.css" rel="stylesheet">
-        <link href="../styles/bootstrap.min.css" rel="stylesheet">
         <!-- script type="text/javascript" src="../../../vexflow_smoosic/build/cjs/vexflow-debug.js"></script -->
         <!-- script type="text/javascript" src="../../node_modules/vexflow_smoosic/build/cjs/vexflow-debug-with-tests.js"></script -->
         <!-- script type="text/javascript" src="../../../vexflow_smoosic/build/cjs/vexflow-debug-with-tests.js"></script -->
@@ -20,9 +20,7 @@
 		<script type="text/javascript" src="../smoosic.js" ></script>
     <script type="text/javascript">
            document.addEventListener("DOMContentLoaded", function (event) {
-             Smo.SuiDom.createUiDom(document.getElementById('smoo'));
-               var config = { mode: 'application', leftControls: 'controls-left', topControls: 'controls-top'
-                , scoreDomContainer: 'smo-scroll-region'  };
+               var config = { mode: 'application', domContainer:'smoo'  };
              Smo.SuiApplication.configure(config);
            });
        </script>

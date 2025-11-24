@@ -592,7 +592,7 @@ export class SmoScore {
   static deserialize(jsonString: string): SmoScore {
     let jsonObj: Partial<SmoScoreParamsSer> = JSON.parse(jsonString);
     let upconvertFormat = false;
-    let formattingManager = null;
+    let formattingManager: SmoFormattingManager|null = null;
     if (jsonObj.dictionary) {
       jsonObj = smoSerialize.detokenize(jsonObj, jsonObj.dictionary);
     }
@@ -1051,7 +1051,7 @@ export class SmoScore {
    * @param staff 
    */
   replaceStaff(index: number, staff: SmoSystemStaff) {
-    const staves = [];
+    const staves: SmoSystemStaff[] = [];
     let i = 0;
     for (i = 0; i < this.staves.length; ++i) {
       if (i !== index) {
@@ -1154,7 +1154,7 @@ export class SmoScore {
       parameters = SmoSystemStaff.defaults;
     }
     const proto = this.staves[0];
-    const measures = [];
+    const measures: SmoMeasure[] = [];
     for (i = 0; i < proto.measures.length; ++i) {
       const measure: SmoMeasure = proto.measures[i];
       const jsonObj: SmoMeasureParamsSer = measure.serialize();

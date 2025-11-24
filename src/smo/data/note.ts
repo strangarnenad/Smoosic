@@ -427,10 +427,10 @@ export class SmoNote implements Transposable {
   }
 
   private _addModifier(dynamic: SmoDynamicText, toAdd: boolean) {
-    var tms = [];
+    var tms: SmoDynamicText[] = [];
     this.textModifiers.forEach((tm) => {
       if (tm.attrs.type !== dynamic.attrs.type) {
-        tms.push(tm);
+        tms.push(tm as SmoDynamicText);
       }
     });
     if (toAdd) {
@@ -440,7 +440,7 @@ export class SmoNote implements Transposable {
   }
 
   setArticulation(articulation: SmoArticulation, set: boolean) {
-    var tms = [];
+    var tms: SmoArticulation[] = [];
     this.articulations.forEach((tm) => {
       if (tm.articulation !== articulation.articulation) {
         tms.push(tm);

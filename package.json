@@ -15,12 +15,14 @@
     "midi-parser-js": "^4.0.4",
     "midi-writer-js": "^3.1.1",
     "smplr": "^0.16.3",
+    "soundfont2": "^0.4.0",
+    "standardized-audio-context": "^25.3.58",
     "ts-loader": "^9.2.5",
     "typedoc": "^0.25.0",
     "typescript": "^5.2.2",
     "vexflow_smoosic": "4.2.11",
-    "standardized-audio-context": "^25.3.58",
-    "soundfont2": "^0.4.0"
+    "vue": "^3.5.24",
+    "vue-loader": "^17.4.2"
   },
   "main": "build/smoosic.js",
   "description": "<sub>[Github site](https://github.com/Smoosic/smoosic) | [source documentation](https://smoosic.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub>",

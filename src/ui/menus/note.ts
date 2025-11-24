@@ -158,7 +158,7 @@ const togglePedalRelease: SuiConfiguredMenuOption = {
       
       pms.forEach(async (mod) => {
         const pm = mod as SmoPedalMarking;
-        const releaseAr = [];
+        const releaseAr: any = [];
         pm.releases.forEach((rr) => {
           if (SmoSelector.eq(rr, selectorToAdd)) {
             shouldAdd = false;

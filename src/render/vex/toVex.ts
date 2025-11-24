@@ -435,7 +435,7 @@ function createTuplets(smoMeasure: SmoMeasure, strs: string[]) {
         continue;
       }
       const traverseTupletTree = ( parentTuplet: SmoTuplet): void => {
-        const vexNotes = [];
+        const vexNotes: string[] = [];
         for (let smoNote of smoMeasure.tupletNotes(parentTuplet)) {
           const vexNote = `${smoNote.attrs.id}`;
           vexNotes.push(vexNote);
