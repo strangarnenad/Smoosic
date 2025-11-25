@@ -14,14 +14,14 @@ export default defineComponent({
     const buttonProps = props.buttonProps;
     const domId = props.domId;
     const getId = (str) => `${domId}-${str}`;
-    return { buttonProps, domId, getId };
+    const getClasses = (btnProps) => `${btnProps.icon} ${btnProps.classes}`;
+    return { buttonProps, domId, getId, getClasses };
   }
 });
 </script>
 <template>
   <div class="ribbonButtonContainer collapseContainer" data-group="quickButtons" :id="domId">
-    <buttonComp v-for="props in buttonProps" :domId="getId(props.buttonId)" :buttonId="props.buttonId"
-      :buttonIcon="props.buttonIcon" :buttonText="props.buttonText" :callback="props.callback" :key="props.buttonId">
+    <buttonComp v-for="props in buttonProps" :buttonProps="props" :domId="getId(props.id)" :key="props.id">
     </buttonComp>
   </div>
 </template>

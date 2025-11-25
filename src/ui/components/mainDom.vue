@@ -21,17 +21,18 @@ export default defineComponent({
 </script>
 <template>
   <div class="bug-modal" id="bug-modal" :class="{ hide: !showBugModal }"></div>
-  <div class="dom-container">
+  <div class="dom-container" :class="{masked: showBugModal}">
+    <div class="mask"></div>
     <div class="workspace language-dir">
-      <div class="row navbar-expand" id="top-bar">
-        <div class="titleText">Smoosic</div>
+      <div class="row navbar-expand justify-content-md-center flex-md-fill controls-top" id="top-bar">
+        <h4 class="col-1 titleText">Smoosic</h4>
         <div class="hide piano-container">
           <div class="key-left-ctrl"></div>
           <div class="piano-keys" ref="pianoKeys">
           </div>
           <div class="key-right-ctrl"></div>
         </div>
-        <div class="controls-top" id="controls-top">
+        <div class="col-6" id="controls-top">
         </div>
       </div>
       <div class="media" id="media">

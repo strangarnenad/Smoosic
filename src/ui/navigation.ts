@@ -20,9 +20,11 @@ export class SuiNavigation {
     createApp(mainDom as any, { bugModalView: this.bugModalView, mainDomInit }).mount(uiDomContainer);
   }
   showBugModal() {
+    $('.dom-container').addClass('show-modal');
     this.bugModalView.value = true;
   }
   hideBugModal() {
+    $('.dom-container').removeClass('show-modal');
     this.bugModalView.value = false;
   }
 }

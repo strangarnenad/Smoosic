@@ -1,34 +1,48 @@
 <script>
 import { defineComponent } from 'vue';
+/* 
+export interface ButtonDefinition {
+    leftText: string,
+    rightText: string,
+    classes: string,
+    icon: string,
+    action: ButtonAction,
+    ctor: string,
+    group: string,
+    id: string,
+    callback?: ButtonCallback,
+    hotKey?: string,
+    dataElements?: {
+      interval: string,
+      direction: string
+    }
+  }*/
 export default defineComponent({
   props: {
-    domId: String,
-    buttonId: String,
-    buttonIcon: String,
-    buttonText: {
+    domId: {
       type: String,
-      default: ''
+      required: true
     },
-    callback: {
-      type: Function,
+    buttonProps: {
+      type: Object,
       required: true
     }
   },
   setup(props) {
-    const buttonId = props.buttonId;
-    const callback = props.callback;
-    const icon = props.buttonIcon;
-    const buttonText = props.buttonText;
+    const buttonProps = props.buttonProps;
     const domId = props.domId;
     const getId = (str) => `${domId}-${str}`;
-    const classes = `icon icon-smo icon-${icon}`;
-    return { buttonId, callback, classes, icon, buttonText, getId };
+    const hasRightText = buttonProps.rightText && buttonProps.rightText.length > 0;
+    const hasLeftText = buttonProps.leftText && buttonProps.leftText.length > 0;
+    return { buttonProps, getId, domId, hasRightText, hasLeftText };
   }
 });
 </script>
 <template>
-  <button :id="getId('refresh')" class="icon refresh" @click.prevent="callback">
-    <span class="left-text"><span class="text-span"></span><span
-        :class="classes"></span></span><span
-      class="ribbon-button-hotkey">{{ buttonText }}</span></button>
+  <button :id="getId(buttonProps.id)" 
+    :class="buttonProps.classes"
+    @click.prevent="buttonProps.callback(buttonProps)">
+    <span class="left-text"><span class="text-span">{{ buttonProps.leftText }}</span>
+    <span :class="buttonProps.icon"></span></span>
+    <span class="right-text">{{ buttonProps.rightText }}</span></button>
 </template>

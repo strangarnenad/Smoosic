@@ -107,25 +107,15 @@ div.ribbonButtonContainer.expanded {
 	background-color:#fff;
 }
 
-.controls-top button
- {
-	padding: 5px 0;
+.controls-top button  {
 	border: 1px #44e solid;
-	position:relative;
-  font-size: 0.7em;
   border-radius:5px;
 	min-width: 50px;
-	height:50px;
 }
 .controls-top button.button-wide {
   font-size: 1em;
 }
-button.hover-text .ribbon-button-hotkey {
-  display: none;
-}
-button.hover-text .ribbon-button-hotkey {
-  display: none;
-}
+
 #controls-left .nav-item {
   min-width: 150px;
 }
@@ -138,40 +128,21 @@ body.alt-key button.hover-text .ribbon-button-hotkey {
   display: inline-block;
 }
 
-.controls-top div {
-	display:inline-block;
-}
-
-.controls-left  button:hover,controls-left button:focus,
-.controls-top  button:hover,controls-left button:focus{
-	border:2px blue solid;
-	border-radius:3px;
-	opacity:0.7;
-}
-
-.controls-top .text-span {
-	position:absolute;
-	top: 30%;
-	left: 10px;
-}
 .controls-top .ribbonButtonContainer .text-span .icon-bravura {
   display: block;
   left: 12px;
 }
-.controls-top button span.ribbon-button-hotkey {
-  position: absolute;
-  right: 2px;
-  top: 33%;
+.controls-top button span.right-text {
   font-family: sans-serif;
+  padding-left:0.2rem;
 }
-.controls-top button.beams .ribbon-button-hotkey {
-    font-size:0.6em;
-}
-
 .controls-top button.textButton {
     font-size:1.2em;
 }
 
+.hide {
+  display: none !important;
+}
 .controls-top button.duration.expanded.tuplet span.ribbon-button-hotkey  {
 	font-size:1em;
   padding-left: 7px;
@@ -210,17 +181,41 @@ button.addChord .left-text .icon {
 button#MicrotoneButtons  {
     width:35px;
 }
-
-.hide {
-    display:none;
-}
-
 .ribbonButtonContainer[data-group="quickButtons"] {
     margin-left:10px;
+    display: flex;
+    flex-flow: row wrap;
 }
-.ribbonButtonContainer[data-group="quickButtons"] button {
-    width:35px;
-    height:40px;
+.controls-top .titleText {
+  padding-top:0.3rem;
+  font-style: italic;
+}
+button.icon {
+  width: 55px;
+  height: 40px;
+}
+button.drop-down, button.text-icon {
+  width: 120px;
+  height: 40px;
+}
+button.text-icon {
+  display:flex;
+  justify-content: space-around;
+}
+button.text-icon .icon-bravura {
+  font-size: 2.3rem;
+  padding-left: 0.2rem;
+}
+button.text-icon .left-text {
+  position:relative;
+}
+button.text-icon .left-text .text-span{
+  padding-right: 0.3rem;
+  font-size: 1.3rem;
+}
+button.text-icon .left-text .icon-smo {
+  padding-left: 0.3rem;
+  font-size:1.3rem;
 }
 .ribbonButtonContainer[data-group="quickButtons"] .button-wide button {
   font-size: 1.2em;
@@ -228,78 +223,39 @@ button#MicrotoneButtons  {
 .ribbonButtonContainer[data-group="quickButtons"] .button-wide button .icon {
   font-size: 2em;
 }
-.controls-top .ribbonButtonContainer .ribbon-button-text.icon-smo.icon {
-  position: absolute;
-  top:8px;
-  left:12px;
-}
+
 .controls-top .ribbonButtonContainer .button-wide .ribbon-button-text.icon-smo.icon, 
 .controls-top .ribbonButtonContainer .button-wide .ribbon-button-text.icon-bravura.icon {
   right: 5px;
   left:inherit;
   bottom:inherit;
 }
-.controls-top .ribbonButtonContainer .button-wide .ribbon-button-text.icon-bravura.icon {
+.ribbonButtonContainer .button-wide .ribbon-button-text.icon-bravura.icon {
   top: 0;
 }
-.controls-top .ribbonButtonContainer .button-wide .ribbon-button-text.icon-smo.icon {
+.ribbonButtonContainer .button-wide .ribbon-button-text.icon-smo.icon {
   top: 5px;
 }
-.controls-top .ribbonButtonContainer .left-text {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 100%;
+.ribbonButtonContainer button.drop-down .left-text {
+  padding-right: 0.2rem;
 }
-.controls-top .ribbonButtonContainer .button-wide .text-span {
-  top: 8px;
-  left: 5px;
+.ribbonButtonContainer button.drop-down .icon-smo::before {
+    background-image: var(--bs-accordion-btn-active-icon);
+    transform: var(--bs-accordion-btn-icon-transform);
 }
-
-.controls-top button.articulation {
-	width:50px;
-}
-
-.controls-top button.articulation span.ribbon-button-text.icon {
-	top:30%;
-}
-
-.controls-top button.selection-icon span.ribbon-button-text.icon {
-	top:30%;
-	left: 20%;
-}
-
-.controls-top button.articulation span.ribbon-button-text.icon:before {
-	font-size:1.8em;
-}
-.controls-top button.selection-icon {
-	width:50px;
-}
-.controls-top button.selection-icon span.ribbon-button-text.icon:before {
-	font-size: 2.2em;
-}
-.ribbon-button-hotkey {
-  display: none;
-}
-button.select-part-button .ribbon-button-hotkey {
+.ribbonButtonContainer button.icon .left-text {
+  font-size: 1.2rem;
   display: inline-block;
+  padding-top:0.2rem;
 }
-.ribbonButtonContainer[data-group="quickButtons"] button.button-wide {
-  width:100px;
+
+.ribbonButtonContainer button.button-wide {
+  width:120px;
 }
-.controls-top .ribbonButtonContainer[data-group="quickButtons"] .select-part-button {
+.ribbonButtonContainer .select-part-button {
   width: 120px;
 }
-.controls-top .ribbonButtonContainer[data-group="quickButtons"] .select-part-button .ribbon-button-text {
-  position: absolute;
-  left: 5px;
-}
-.controls-top .ribbonButtonContainer[data-group="quickButtons"] .select-part-button .ribbon-button-hotkey {
-  right: 15px;
-}
-.ribbonButtonContainer[data-group="microtone"] {
-    font-size:1.5em;
-}
+
 #addDynamicsMenu {
 	font-size:.9em;
 }
@@ -451,6 +407,10 @@ li.nav-item:hover {
     width:60px;
 	font-size:1.6em;
 }
+button.hover-text .ribbon-button-hotkey {
+  display: none;
+}
+
 #AddGraceNote .ribbon-button-hotkey,#RemoveGraceNote .ribbon-button-hotkey {
     font-size:0.5em;
 }

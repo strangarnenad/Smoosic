@@ -37,13 +37,15 @@ export interface ButtonDefinition {
     ctor: string,
     group: string,
     id: string,
+    callback?: ButtonCallback,
     hotKey?: string,
     dataElements?: {
       interval: string,
       direction: string
     }
   }
-  
+  export type ButtonCallback = (button: ButtonDefinition) => Promise<void>;
+
 /**
  * @category SuiButton
  */

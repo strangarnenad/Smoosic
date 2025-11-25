@@ -32,22 +32,13 @@ export class defaultRibbonLayout {
     return ['DebugGroup', 'DebugButton2'];
   }
   static get displayIds() {
-    return ['quickButtons', 'selectPart', 'refresh', 'zoomout', 'zoomin', 'playButton2', 'stopButton2', 'keySignature', 'ribbonTempo', 'ribbonTime'];
+    return ['selectPart', 'refresh', 'zoomout', 'zoomin', 'playButton2', 'stopButton2', 'keySignature', 'ribbonTempo', 'ribbonTime'];
   }
   static get displayButtons(): ButtonDefinition[] {
     return [{
       leftText: '',
-      rightText: '',
-      classes: 'icon   hide',
-      icon: 'icon-smo icon-zoomplus',
-      action: 'collapseParent',
-      ctor: 'CollapseRibbonControl',
-      group: 'quickButtons',
-      id: 'quickButtons'
-    }, {
-      leftText: '',
       rightText: 'Select Part',
-      classes: 'icon  select-part-button',
+      classes: 'drop-down',
       icon: 'icon-smo icon-circle-down',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -56,7 +47,7 @@ export class defaultRibbonLayout {
     }, {
       leftText: '',
       rightText: '',
-      classes: 'icon    refresh',
+      classes: 'icon',
       icon: 'icon-smo icon-refresh',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -65,7 +56,7 @@ export class defaultRibbonLayout {
     }, {
       leftText: '',
       rightText: '',
-      classes: 'icon   refresh',
+      classes: 'icon',
       icon: 'icon-smo icon-zoomplus',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -74,7 +65,7 @@ export class defaultRibbonLayout {
     }, {
       leftText: '',
       rightText: '',
-      classes: 'icon   refresh',
+      classes: 'icon',
       icon: 'icon-smo icon-zoomminus',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -83,7 +74,7 @@ export class defaultRibbonLayout {
     }, {
       leftText: '',
       rightText: '',
-      classes: 'icon    play',
+      classes: 'icon',
       icon: 'icon-smo icon-play3',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -92,7 +83,7 @@ export class defaultRibbonLayout {
     }, {
       leftText: '',
       rightText: '',
-      classes: 'icon    stop2',
+      classes: 'icon',
       icon: 'icon-smo icon-stop2',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -100,9 +91,8 @@ export class defaultRibbonLayout {
       id: 'stopButton2'
     }, {
       leftText: 'Key',
-      rightText: 'Alt-k',
-      hotKey: 'k',
-      classes: 'icon keysignature button-wide hover-text',
+      rightText: '',
+      classes: 'text-icon',
       icon: 'icon-smo icon-key-sig-b',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -110,9 +100,8 @@ export class defaultRibbonLayout {
       id: 'keySignature'
     },  {
       leftText: 'Tempo',
-      rightText: 'Alt-o',
-      hotKey: 'o',
-      classes: 'icon keysignature button-wide hover-text',
+      rightText: '',
+      classes: 'text-icon',
       icon: 'icon-smo icon-metronome4',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
@@ -120,9 +109,8 @@ export class defaultRibbonLayout {
       id: 'ribbonTempo'
     },  {
       leftText: 'Time',
-      rightText: 'Alt-t',
-      hotKey: 't',
-      classes: 'icon keysignature button-wide hover-text',
+      rightText: '',
+      classes: 'text-icon',
       icon: 'icon-bravura icon-timeSigCommon',
       action: 'collapseChild',
       ctor: 'DisplaySettings',
