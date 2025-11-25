@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="row">
-          <div class="help-closer"><button class="icon-cross close" @click.prevent="closeFunction"></button></div>
+          <div class="help-closer"><button class="icon-cross close" @click.prevent="closeFunction" aria-label="Close"></button></div>
         </div>
         <div class="row align-items-center justify-content-center">
 

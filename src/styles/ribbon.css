@@ -76,7 +76,22 @@ div.ribbonButtonContainer.expanded {
 .controls-left .ribbonButtonContainer {
   display:flex;
 }
-
+button.menu-button,  
+button.menu-button .left-text,
+button.menu-button .text-span {
+  display: inline-block;
+}
+button.menu-button .text-span  {
+  text-align: left;
+  min-width: 70px;
+}
+button.menu-button .right-text{
+  display: none;
+}
+body.alt-key button.menu-button .right-text{
+  display: inline-block;
+  min-width: 50px;
+}
 .controls-left div.ribbonButtonContainer button {
   display:flex;
   flex: 1 1 0;
@@ -94,19 +109,15 @@ div.ribbonButtonContainer.expanded {
   font-size: 0.75em;
   float: right;
 }
-.controls-left button span.left-text {
-  flex:1 1 auto;
-}
 
 .controls-left .ribbonButtonContainer button span.ribbon-button-hotkey {
   flex: 0 1 auto;
   padding: 0 10px;
 }
-
-.controls-left button,.controls-top button {
-	background-color:#fff;
+.controls-left .menu-icon {
+  min-width: 100px;
+  display: inline-block;
 }
-
 .controls-top button  {
 	border: 1px #44e solid;
   border-radius:5px;
@@ -248,7 +259,9 @@ button.text-icon .left-text .icon-smo {
   display: inline-block;
   padding-top:0.2rem;
 }
-
+.ribbonButtonContainer button.icon .left-text .text-span {
+  display: none;
+}
 .ribbonButtonContainer button.button-wide {
   width:120px;
 }
@@ -419,7 +432,9 @@ button.hover-text .ribbon-button-hotkey {
 #ToggleAccidental .ribbon-button-hotkey,#ToggleCourtesy .ribbon-button-hotkey  {
 	font-size:0.7em;
 }
-
+#controls-left .btn-group-vertical button.btn.menu-button {
+    width: auto;
+}
 .controls-left button.icon span.icon:before,
 .controls-top button.icon span.icon:before{
 	font-size:1.6em;

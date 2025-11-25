@@ -32,15 +32,19 @@ export default defineComponent({
     const buttonProps = props.buttonProps;
     const domId = props.domId;
     const getId = (str) => `${domId}-${str}`;
+    const getLabelText = () => {
+      return buttonProps.leftText || buttonProps.rightText || '';
+    }
     const hasRightText = buttonProps.rightText && buttonProps.rightText.length > 0;
     const hasLeftText = buttonProps.leftText && buttonProps.leftText.length > 0;
-    return { buttonProps, getId, domId, hasRightText, hasLeftText };
+    return { buttonProps, getId, domId, hasRightText, hasLeftText, getLabelText };
   }
 });
 </script>
 <template>
   <button :id="getId(buttonProps.id)" 
     :class="buttonProps.classes"
+    :aria-label="getLabelText()"
     @click.prevent="buttonProps.callback(buttonProps)">
     <span class="left-text"><span class="text-span">{{ buttonProps.leftText }}</span>
     <span :class="buttonProps.icon"></span></span>

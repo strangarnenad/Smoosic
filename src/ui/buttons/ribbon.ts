@@ -18,6 +18,7 @@ import { SmoUiConfiguration } from '../configuration';
 import { createApp } from 'vue';
 import { SuiKeySignatureDialog } from '../dialogs/keySignature';
 import { default as ribbonApp } from '../components/buttons/ribbon.vue';
+import { default as ribbonSidebarApp } from '../components/buttons/sidebar.vue';
 import { SuiTimeSignatureDialog } from '../dialogs/timeSignature';
 
 declare var $: any;
@@ -293,48 +294,7 @@ export class RibbonButtons {
       );
       if (buttonData) {
         buttonData.callback = buttonCallback;
-        dataArray.push(buttonData);
-        /* if (buttonData.leftText) {
-          RibbonButtons.translateButtons.push({ buttonId: buttonData.id, buttonText: buttonData.leftText });
-        }
-        // collapse child is hidden until the parent button is selected, exposing the button group
-        if (RibbonButtons.isCollapsible(buttonData.action)) {
-          this.collapseChildren.push(buttonData);
-        }
-        if (buttonData.action !== 'collapseChild') {
-          // else the button has a specific action, such as a menu or dialog, or a parent button
-          // for translation, add the menu name to the button class
-          buttonClass = buttonData.classes;
-          if (buttonData.action === 'menu' || buttonData.action === 'modal') {
-            buttonClass += ' ' + buttonData.ctor;
-          }
-          const buttonHtml = RibbonButtons.ribbonButtonHtml('ribbonButtonContainer',
-            buttonData.id, buttonClass, buttonData.leftText, buttonData.icon, buttonData.rightText);
-          $(buttonHtml).attr('data-group', buttonData.group);
-          $(selector).append(buttonHtml);
-          const buttonElement = $('#' + buttonData.id);
-          // If this is a collabsable button, create it, otherwise bind its execute function.
-          if (buttonData.action === 'collapseParent') {
-            $(buttonHtml).addClass('collapseContainer');
-            // collapseParent
-            this.collapsables.push(new CollapseRibbonControl({
-              ctor: buttonData.ctor,
-              buttons: this.ribbonButtons,
-              view: this.view,
-              menus: this.menus,
-              eventSource: this.eventSource,
-              completeNotifier: this.controller,
-              buttonId: buttonData.id,
-              buttonElement,
-              buttonData
-            }));
-          } else {
-            const cb = async () => {
-              await this.executeButton(buttonElement, buttonData);
-            };        
-            this.eventSource.domClick(buttonElement, cb);
-          }
-        }*/
+        dataArray.push(buttonData);        
       }
     });
     const root = replaceVueRoot(selector);
@@ -345,12 +305,19 @@ export class RibbonButtons {
   // the button's configured action.
   createSidebarMenuHtml(buttonAr: string[], selector: string | HTMLElement) {
     let buttonClass = '';
+    const buttonList: ButtonDefinition[] = [];
+    const executeButton = async (buttonData: ButtonDefinition) => {
+      await this.executeButton(buttonData.id, buttonData);
+    };    
     buttonAr.forEach((buttonId) => {
       const buttonData = this.ribbonButtons.find((e) =>
         e.id === buttonId
       );
       if (buttonData) {
-        if (buttonData.leftText) {
+        buttonData.callback = executeButton;
+        buttonData.icon += ' menu-icon';
+        buttonList.push(buttonData);
+        /* if (buttonData.leftText) {
           RibbonButtons.translateButtons.push({ buttonId: buttonData.id, buttonText: buttonData.leftText });
         }
         // collapse child is hidden until the parent button is selected, exposing the button group
@@ -390,9 +357,10 @@ export class RibbonButtons {
             };
             this.eventSource.domClick(buttonElement, cb);
           }
-        }
+        }*/
       }
     });
+    createApp(ribbonSidebarApp as any, { buttonProps: buttonList, domId: selector instanceof HTMLElement ? selector.id : selector }).mount(selector);
   }
   createRibbon(buttonDataArray: string[], parentElement: string | HTMLElement) {
     this.createRibbonHtml(buttonDataArray, parentElement);

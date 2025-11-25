@@ -15,16 +15,23 @@ export default defineComponent({
     onMounted(() => {
       mainDomInit(pianoKeys.value);
     });
-    return { pianoKeys, showBugModal, mainDomInit  };
+    return { pianoKeys, showBugModal, mainDomInit };
   }
 });
 </script>
 <template>
   <div class="bug-modal" id="bug-modal" :class="{ hide: !showBugModal }"></div>
-  <div class="dom-container" :class="{masked: showBugModal}">
+  <div class="dom-container" :class="{ masked: showBugModal }">
     <div class="mask"></div>
     <div class="workspace language-dir">
       <div class="row navbar-expand justify-content-md-center flex-md-fill controls-top" id="top-bar">
+        <sub class="col-1" id="link-hdr"><a href="https://github.com/Smoosic/smoosic" aria-label="Github link" tabindex="0">Github
+            site</a> |
+          <a href="https://smoosic.github.io/Smoosic/changes.md" aria-label="Change notes" tabindex="0">change notes</a>
+          |
+          <a href="https://smoosic.github.io/Smoosic/release/html/smoosic.html" aria-label="application link"
+            tabindex="0">application</a><button class="close-header" aria-label="Close"><span
+              class="icon icon-cross"></span></button></sub>
         <h4 class="col-1 titleText">Smoosic</h4>
         <div class="hide piano-container">
           <div class="key-left-ctrl"></div>
@@ -36,9 +43,7 @@ export default defineComponent({
         </div>
       </div>
       <div class="media" id="media">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary">
-          <ul class="nav nav-pills flex-column mb-auto" id="controls-left">
-          </ul>
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary sticky-top" id="controls-left">
         </div>
         <div class="flex-lg-column" id="smo-scroll-region">
         </div>
