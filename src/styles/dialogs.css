@@ -21,6 +21,18 @@
   background-color: #888;
   z-index: 5
 }
+body .dialogContainer,  
+body .dialogContainer>div {
+  position:absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.draggable-button {
+  position: absolute;
+  left: 0.1rem;
+}
 body .attributeModal .show-when-editing {
   display:none;
 }

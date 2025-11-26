@@ -63,15 +63,14 @@ div.ribbonButtonContainer.expanded {
 }
 
 .controls-left {
-	margin-top: 33px;
 	background-color: #fff;
 	background:transparent;
 	display:flex;
   flex: 1 1 auto;
 	flex-direction:column;
   padding:10px;
+  justify-content:flex-start;
 }
-
 
 .controls-left .ribbonButtonContainer {
   display:flex;
@@ -196,22 +195,31 @@ button#MicrotoneButtons  {
     margin-left:10px;
     display: flex;
     flex-flow: row wrap;
+    background-color: var(--bs-body-bg);
 }
 .controls-top .titleText {
   padding-top:0.3rem;
   font-style: italic;
 }
+.btn:hover {
+    color: #fff;
+    background-color: #212529;
+    border-color: #212529;
+}
 button.icon {
-  width: 55px;
   height: 40px;
+  padding: 0;
+  background-color: var(--bg-btn-bg);
 }
 button.drop-down, button.text-icon {
-  width: 120px;
   height: 40px;
+  padding: 0;
+  background-color: var(--bg-btn-bg);
 }
 button.text-icon {
   display:flex;
   justify-content: space-around;
+  background-color: var(--bg-btn-bg);
 }
 button.text-icon .icon-bravura {
   font-size: 2.3rem;
@@ -434,6 +442,7 @@ button.hover-text .ribbon-button-hotkey {
 }
 #controls-left .btn-group-vertical button.btn.menu-button {
     width: auto;
+    max-height: 40px;
 }
 .controls-left button.icon span.icon:before,
 .controls-top button.icon span.icon:before{

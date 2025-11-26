@@ -20,7 +20,7 @@ export default defineComponent({
 });
 </script>
 <template>
-  <div class="ribbonButtonContainer collapseContainer" data-group="quickButtons" :id="domId">
+  <div class="ribbonButtonContainer collapseContainer btn-group" data-group="quickButtons" :id="domId">
     <buttonComp v-for="props in buttonProps" :buttonProps="props" :domId="getId(props.id)" :key="props.id">
     </buttonComp>
   </div>

@@ -21,16 +21,19 @@ export default defineComponent({
 </script>
 <template>
   <div class="bug-modal" id="bug-modal" :class="{ hide: !showBugModal }"></div>
+  <div class="draganime hide" aria-hidden="true" style="width: 380px; height: 153.031px; left: 754px; top: 265px;"></div>  
+  <div class="dialogContainer attributeDialog" id="attribute-modal-container"></div>
   <div class="dom-container" :class="{ masked: showBugModal }">
     <div class="mask"></div>
     <div class="workspace language-dir">
       <div class="row navbar-expand justify-content-md-center flex-md-fill controls-top" id="top-bar">
-        <sub class="col-1" id="link-hdr"><a href="https://github.com/Smoosic/smoosic" aria-label="Github link" tabindex="0">Github
+        <sub class="col-1" id="link-hdr"><a href="https://github.com/Smoosic/smoosic" aria-label="Github link" 
+          target="_blank" tabindex="0">Github
             site</a> |
-          <a href="https://smoosic.github.io/Smoosic/changes.md" aria-label="Change notes" tabindex="0">change notes</a>
+          <a href="https://smoosic.github.io/Smoosic/changes.md" aria-label="Change notes" target="_blank" tabindex="0">change notes</a>
           |
           <a href="https://smoosic.github.io/Smoosic/release/html/smoosic.html" aria-label="application link"
-            tabindex="0">application</a><button class="close-header" aria-label="Close"><span
+            target="_blank" tabindex="0">application</a><button class="close-header" aria-label="Close"><span
               class="icon icon-cross"></span></button></sub>
         <h4 class="col-1 titleText">Smoosic</h4>
         <div class="hide piano-container">

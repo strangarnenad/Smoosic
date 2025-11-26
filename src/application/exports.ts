@@ -67,9 +67,9 @@ import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
 import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
 import { SuiNavigation } from '../ui/navigation';
-import { SuiLoadMxmlDialog, SuiLoadFileDialog,
-    SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog,
-    SuiSaveMidiDialog, SuiSaveVexDialog } from '../ui/dialogs/fileDialogs';
+import { SuiLoadMxmlDialog, SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog,
+    SuiSaveMidiDialog, SuiSaveVexDialog,
+    SuiFileUploadDialog } from '../ui/dialogs/fileDialogs';
     // Dialog components
 
 import { SuiTextInputComponent, SuiTextInputComposite, SuiReadOnlyTextComponent } from '../ui/dialogs/components/textInput';
@@ -364,7 +364,7 @@ export const Smo = {
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
   SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
-  SuiLoadFileDialog, SuiLoadMxmlDialog, SuiScorePreferencesDialog,
+  SuiLoadMxmlDialog, SuiScorePreferencesDialog,
   SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
   SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
   SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
@@ -372,7 +372,7 @@ export const Smo = {
   SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
   SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
-  SuiSaveMidiDialog, SuiDialogBase, createAndDisplayDialog, 
+  SuiSaveMidiDialog, SuiDialogBase, createAndDisplayDialog,  SuiFileUploadDialog,
   SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
   SuiTransposeButtonComponent,
   // Dialog components

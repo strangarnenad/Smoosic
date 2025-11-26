@@ -27,4 +27,10 @@ export class SuiNavigation {
     $('.dom-container').removeClass('show-modal');
     this.bugModalView.value = false;
   }
+  showDialogModal() {
+    $('body').addClass('showAttributeDialog');
+  }
+  hideDialogModal() {
+    $('body').removeClass('showAttributeDialog');
+  }
 }

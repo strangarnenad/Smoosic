@@ -60,9 +60,6 @@ export class SuiDom {
           ));
     uiDomContainer.append(r.dom()[0]);
     */
-    const scrollRegion = document.createElement('div');
-    $(scrollRegion).attr('id', SuiDom.scrollRegionId).addClass('musicRelief');
-    $('.dom-container .media').append(scrollRegion);
     /* var pianoDom = $('.piano-keys')[0];
     var svg = document.createElementNS(SvgHelpers.namespace, 'svg');
     svg.id = 'piano-svg';

@@ -294,6 +294,7 @@ export class RibbonButtons {
       );
       if (buttonData) {
         buttonData.callback = buttonCallback;
+        buttonData.classes += ' btn';
         dataArray.push(buttonData);        
       }
     });

@@ -2,9 +2,9 @@ import { SuiMenuBase, SuiMenuParams } from './menu';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import {
   SuiSaveFileDialog, SuiPrintFileDialog, 
-  SuiLoadFileDialog, SuiLoadMidiDialog,
+  SuiLoadMidiDialog,
   SuiSaveXmlDialog, SuiSaveMidiDialog, SuiLoadMxmlDialog, SuiSaveVexDialog,
-  SuiSaveJsonValidationDialog
+  SuiSaveJsonValidationDialog, SuiFileUploadDialog
 } from '../dialogs/fileDialogs';
 import { SmoScore } from '../../smo/data/score';
 
@@ -39,10 +39,10 @@ export class SuiFileMenu extends SuiMenuBase {
       icon: '',
       text: 'Print',
       value: 'printScore'
-    }, {
+    },  {
       icon: '',
-      text: 'Import MusicXML',
-      value: 'importMxml'
+      text: 'Export Midi',
+      value: 'exportMidi'
     }, {
       icon: '',
       text: 'Export MusicXML',
@@ -51,14 +51,6 @@ export class SuiFileMenu extends SuiMenuBase {
       icon: '',
       text: 'Export SMO For Validation',
       value: 'SMOJSON'
-    }, {
-      icon: '',
-      text: 'Export Midi',
-      value: 'exportMidi'
-    }, {
-      icon: '',
-      text: 'Import Midi',
-      value: 'importMidi'
     },  {
       icon: '',
       text: 'Export Vex',
@@ -101,9 +93,9 @@ export class SuiFileMenu extends SuiMenuBase {
         startPromise: this.closePromise
       });
     } else if (text === 'openFile') {
-      createAndDisplayDialog(SuiLoadFileDialog, {
+      SuiFileUploadDialog({
         ctor: 'SuiLoadFileDialog',
-        id: 'loadFile',
+        id: text,
         modifier: null,
         completeNotifier: this.completeNotifier,
         tracker: this.tracker,
@@ -157,28 +149,6 @@ export class SuiFileMenu extends SuiMenuBase {
     } else if (text === 'exportMidi') {
       createAndDisplayDialog(SuiSaveMidiDialog, {
         ctor: 'SuiSaveMidiDialog',
-        id: 'save',
-        modifier: null,
-        completeNotifier: this.completeNotifier,
-        tracker: this.tracker,
-        eventSource: this.eventSource,
-        view: this.view,
-        startPromise: this.closePromise
-      });
-    } else if (text === 'importMxml') {
-      createAndDisplayDialog(SuiLoadMxmlDialog, {
-        ctor: 'SuiLoadMxmlDialog',
-        id: 'save',
-        modifier: null,
-        completeNotifier: this.completeNotifier,
-        tracker: this.tracker,
-        eventSource: this.eventSource,
-        view: this.view,
-        startPromise: this.closePromise
-      }); 
-    } else if (text === 'importMidi') {
-      createAndDisplayDialog(SuiLoadMidiDialog, {
-        ctor: 'SuiLoadMidiDialog',
         id: 'save',
         modifier: null,
         completeNotifier: this.completeNotifier,
