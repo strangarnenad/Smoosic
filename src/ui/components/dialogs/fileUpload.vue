@@ -9,7 +9,7 @@ export default defineComponent({
     enable: {
       type: Object,
       required: true
-    },   
+    },
     quantizeCb: {
       type: Function,
       required: false
@@ -28,7 +28,7 @@ export default defineComponent({
     }
   },
   setup(props) {
-    const { domId, uploadCb, quantizeCb, enable, commitCb, cancelCb } = {...props};
+    const { domId, uploadCb, quantizeCb, enable, commitCb, cancelCb } = { ...props };
     const top = '100';
     const left = '100';
     const quantizeValue = ref('1024');
@@ -46,8 +46,10 @@ export default defineComponent({
     const getLocString = () => {
       return `top: ${top}px; left: ${left}px;`;
     }
-    return { enable, uploadCb, commitCb, cancelCb, getDomId, getId, getLocString, 
-      domId, top, left, quantizeCb, quantizeValue, quantizeValues };
+    return {
+      enable, uploadCb, commitCb, cancelCb, getDomId, getId, getLocString,
+      domId, top, left, quantizeCb, quantizeValue, quantizeValues
+    };
   }
 });
 </script>
@@ -61,17 +63,18 @@ export default defineComponent({
       </div>
       <div class="row" :id="getId('loadFile')" data-param="loadFile">
         <div class="col">
-        <input type="file" class="file-button" 
-          accept=".json,.mid,.midi,.xml,.mxl"
-          @change="uploadCb" :id="getId('loadFile-input')">
-        <label
-          :for="getId('loadFile-input')"></label>
-          </div>
+          <input type="file" class="file-button" accept=".json,.mid,.midi,.xml,.mxl" @change="uploadCb"
+            :id="getId('loadFile-input')">
+          <label :for="getId('loadFile-input')"></label>
+        </div>
       </div>
       <div class="row" :class="{ hide: !quantizeCb }" id="quantize-row">
-        <div class="col">
-          <label :for="getId('quantize-select')">Quantize Midi:</label>
-          <select :id="getId('quantize-select')" v-model="quantizeValue" @change="quantizeCb(quantizeValue)">
+        <div class="col-md-6">
+          <label :for="getId('quantize-select')" class="form-label">Quantize Midi:</label>
+        </div>
+        <div class="col-md-6">
+          <select :id="getId('quantize-select')" v-model="quantizeValue" @change="quantizeCb(quantizeValue)"
+            class="form-control">
             <option v-for="option in quantizeValues" :key="option.value" :value="option.value">
               {{ option.text }}
             </option>
@@ -80,7 +83,8 @@ export default defineComponent({
       </div>
       <div class="buttonContainer">
         <button class="ok-button button-left btn btn-primary" :disabled="!enable" @click.prevent="commitCb">OK</button>
-        <button class="cancel-button button-center btn btn-secondary" @click.prevent="cancelCb">Cancel</button></div>
+        <button class="cancel-button button-center btn btn-secondary" @click.prevent="cancelCb">Cancel</button>
       </div>
     </div>
+  </div>
 </template>

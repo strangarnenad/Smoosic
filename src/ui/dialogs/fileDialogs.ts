@@ -16,9 +16,10 @@ import { parseMidi } from '../../common/midi-parser.js';
 import { replaceVueRoot } from '../common';
 import { createApp, ref, Ref, watch } from 'vue';
 import { SuiFileInput } from '../fileio/fileInput';
+import { default as messageDialog } from '../components/dialogs/modalMessage.vue';
 import { default as fileUploadApp } from '../components/dialogs/fileUpload.vue';
+import { default as saveFileApp } from '../components/dialogs/save.vue';
 import { SuiNavigation } from '../navigation';
-import { draggable, InputTrapper } from '../../common/htmlHelpers';
 declare var $: any;
 
 export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
@@ -39,7 +40,7 @@ export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
     uploadedFile = localFile.value;
     enable.value = true;
   };
-  const commitMidi =   async ()=> {
+  const commitMidi = async () => {
     try {
       // midi parser expects data in UintArray form
       const ar = new Uint8Array(uploadedFile);
@@ -50,16 +51,16 @@ export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
       console.warn('unable to score ' + e);
     }
   }
-  const commitXml = async ()=>{
-      try {
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(uploadedFile, 'text/xml');
-        const score = XmlToSmo.convert(xml);
-        score.layoutManager!.zoomToWidth($('body').width());
-        await parameters.view.changeScore(score);
-      } catch (e) {
-        console.warn('unable to score ' + e);
-      }    
+  const commitXml = async () => {
+    try {
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(uploadedFile, 'text/xml');
+      const score = XmlToSmo.convert(xml);
+      score.layoutManager!.zoomToWidth($('body').width());
+      await parameters.view.changeScore(score);
+    } catch (e) {
+      console.warn('unable to score ' + e);
+    }
   }
   const commitCb = async () => {
     complete.value = true;
@@ -98,520 +99,89 @@ export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
     cancelCb
   });
 }
-/**
- * internal state of FileLoadDialog is just the string for the filename.
- * @category SuiDialog
- */
-export class SuiXmlLoadAdapter extends SuiComponentAdapter {
-  xmlFile: string = '';
-  changeScore: boolean = false;
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-  }
-  get loadFile() {
-    return this.xmlFile;
-  }
-  set loadFile(value: string) {
-    this.xmlFile = value;
-  }
-  async commit() {
-    try {
-      const self = this;
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(this.xmlFile, 'text/xml');
-      const score = XmlToSmo.convert(xml);
-      score.layoutManager!.zoomToWidth($('body').width());
-      this.changeScore = true;
-      await this.view.changeScore(score);
-    } catch (e) {
-      console.warn('unable to score ' + e);
-    }
-  }
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
 
-/**
- * Load a music XML file
- * @category SuiDialog
- */
-export class SuiLoadMxmlDialog extends SuiDialogAdapterBase<SuiXmlLoadAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Load File',
-      elements: [{
-        smoName: 'loadFile',
-        defaultValue: '',
-        control: 'SuiFileDownloadComponent',
-        label: ''
-      },
-      ],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiLoadMxmlDialog';
-    const adapter = new SuiXmlLoadAdapter(parameters.view);
-    super(SuiLoadMxmlDialog.dialogElements, { adapter, ...parameters });
-  }
-  async changed() {
-    super.changed();
-    const enable = this.adapter.loadFile.length < 1;
-    $(this.dgDom.element).find('.ok-button').prop('disabled', enable);
-  }
-}
-/**
- * internal state of FileLoadDialog is just the string for the filename.
- * @category SuiDialog
- */
-export class SuiMidiLoadAdapter extends SuiComponentAdapter {
-  midiFile: any = null;
-  changeScore: boolean = false;
-  quantize: number = MidiToSmo.quantizeTicksDefault;
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-  }
-  get loadFile() {
-    return this.midiFile;
-  }
-  set loadFile(value: any) {
-    this.midiFile = value;
-  }
-  get quantizeDuration() {
-    return this.quantize;
-  }
-  set quantizeDuration(value: number) {
-    this.quantize = value;
-  }
-  async commit() {
-    try {
-      // midi parser expects data in UintArray form
-      const ar = new Uint8Array(this.midiFile);
-      const midi: any = parseMidi(ar);
-      const midiParser = new MidiToSmo(midi, this.quantize);
-      await this.view.changeScore(midiParser.convert());
-    } catch (e) {
-      console.warn('unable to score ' + e);
-    }
-  }
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiLoadMidiDialog extends SuiDialogAdapterBase<SuiMidiLoadAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Load File',
-      elements: [{
-        smoName: 'loadFile',
-        defaultValue: '',
-        control: 'SuiFileDownloadComponent',
-        label: ''
-      }, {
-        smoName: 'quantizeDuration',
-        defaultValue: SmoScore.engravingFonts.Bravura,
-        control: 'SuiDropdownComponent',
-        dataType: 'int',
-        label: 'Quantize to:',
-        options: [{
-          value: 1024,
-          label: '1/16th note'
-        }, {
-          value: 512,
-          label: '1/32nd note'
-        }, {
-          value: 2048,
-          label: '1/8th note'
-        }]
-      },
-      ],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiLoadMidiDialog';
-    const adapter = new SuiMidiLoadAdapter(parameters.view);
-    super(SuiLoadMidiDialog.dialogElements, { adapter, ...parameters });
-  }
-  async changed() {
-    super.changed();
-    const enable = this.adapter?.loadFile?.length < 1;
-    $(this.dgDom.element).find('.ok-button').prop('disabled', enable);
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiPrintFileDialog extends SuiDialogBase {
-  static dialogElements: DialogDefinition = {
-    label: 'Print Complete',
-    elements: [],
-    staticText: []
-  };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiPrintFileDialog';
-    super(SuiPrintFileDialog.dialogElements, parameters);
-  }
-
-  changed() { }
-  bindElements() {
-    const dgDom = this.dgDom;
-    $(dgDom.element).find('.ok-button').off('click').on('click', () => {
-      $('body').removeClass('printing');
-      this.view.renderer.restoreLayoutAfterPrint();
-      window.dispatchEvent(new Event('resize'));
-      this.complete();
-    });
-
-    $(dgDom.element).find('.cancel-button').remove();
-    $(dgDom.element).find('.remove-button').remove();
-  }
-  async commit() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiVexSaveAdapter extends SuiComponentAdapter {
-  fileName: string = '';
-  page: number = 0;
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-    this.fileName = this.view.score.scoreInfo.name;
-  }
-  get saveFileName() {
-    return this.fileName;
-  }
-  set saveFileName(value: string) {
-    this.fileName = value;
-  }
-
-  get pageToRender() {
-    return this.page;
-  }
-  set pageToRender(val: number) {
-    this.page = val;
-  }
-
-  async _saveScore() {
-    const vexText = SmoToVex.convert(this.view.score, { div: 'smoo', page: this.page });
-    if (!this.fileName.endsWith('.js')) {
-      this.fileName = this.fileName + '.js';
-    }
-    /* TODO: zip multiple render files
-    const zipname = this.fileName.replace('.js', 'zip');
-    const zipFile = new JSZip();
-    zipFile.file(this.fileName, vexText);
-    const content = await zipFile.generateAsync({ type: 'blob' });
-    addFileLink(zipname, content, $('.saveLink'));  */
-    addFileLink(this.fileName, vexText, $('.saveLink'));
-    $('.saveLink a')[0].click();
-  }
-  async commit() {
-    let filename = this.fileName;
-    const rawFile = filename.split('.')[0];
-    if (!filename) {
-      filename = 'vexRender.js';
-    }
-    if (filename.indexOf('.js') < 0) {
-      filename = filename + '.js';
-    }
-    await this._saveScore();
-  }
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiSaveVexDialog extends SuiDialogAdapterBase<SuiVexSaveAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Save as Vex Code',
-      elements: [{
-        smoName: 'saveFileName',
-        defaultValue: '',
-        control: 'SuiTextInputComponent',
-        label: 'File Name'
-      }, {
-        smoName: 'pageToRender',
-        defaultValue: 0,
-        control: 'SuiRockerComponent',
-        label: 'Page',
-        dataType: 'int',
-      }],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiVexSaveDialog';
-    const adapter = new SuiVexSaveAdapter(parameters.view);
-    super(SuiSaveVexDialog.dialogElements, { adapter, ...parameters });
-  }
-  async commit() {
-    await this.adapter.commit();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiSmoSaveAdapter extends SuiComponentAdapter {
-  fileName: string = '';
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-    this.fileName = this.view.score.scoreInfo.name;
-  }
-  get saveFileName() {
-    return this.fileName;
-  }
-  set saveFileName(value: string) {
-    this.fileName = value;
-  }
-  _saveScore() {
-    const json = this.view.storeScore.serialize();
+export const SuiFileSaveDialog  = async (parameters: SuiDialogParams) => {
+  const complete: Ref<boolean> = ref(false);
+  const page = 0;
+  const contents: Ref<any> = ref('');
+  const getSmoContent = () => {
+    const json = parameters.view.storeScore.serialize();
     const jsonText = JSON.stringify(json);
-    if (!this.fileName.endsWith('.json')) {
-      this.fileName = this.fileName + '.json';
-    }
-    addFileLink(this.fileName, jsonText, $('.saveLink'));
-    $('.saveLink a')[0].click();
+    return jsonText;
   }
-  async commit() {
-    let filename = this.fileName;
-    const rawFile = filename.split('.')[0];
-    if (!filename) {
-      filename = 'myScore.json';
-    }
-    if (filename.indexOf('.json') < 0) {
-      filename = filename + '.json';
-    }
-    const scoreInfo = this.view.score.scoreInfo;
-    scoreInfo.name = rawFile;
-    scoreInfo.version = scoreInfo.version + 1;
-    await this.view.updateScoreInfo(scoreInfo);
-    this._saveScore();
-  }
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiSaveFileDialog extends SuiDialogAdapterBase<SuiSmoSaveAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Save Score',
-      elements: [{
-        smoName: 'saveFileName',
-        defaultValue: '',
-        control: 'SuiTextInputComponent',
-        label: 'File Name'
-      }],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiSaveFileDialog';
-    const adapter = new SuiSmoSaveAdapter(parameters.view);
-    super(SuiSaveFileDialog.dialogElements, { adapter, ...parameters });
-  }
-  async commit() {
-    await this.adapter.commit();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiSaveJsonValidationAdapter extends SuiComponentAdapter {
-  fileName: string = '';
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-  }
-  get saveFileName() {
-    return this.fileName;
-  }
-  set saveFileName(value: string) {
-    this.fileName = value;
-  }
-  _saveScore() {
-    const json = this.view.storeScore.serialize({ useDictionary: false, skipStaves: false, preserveStaffIds: false });
+  const getSmoValidationContent = () => {
+    const json = parameters.view.storeScore.serialize({ useDictionary: false, skipStaves: false, preserveStaffIds: false });
     const jsonText = JSON.stringify(json);
-    if (!this.fileName.endsWith('.json')) {
-      this.fileName = this.fileName + '.json';
-    }
-    addFileLink(this.fileName, jsonText, $('.saveLink'));
-    $('.saveLink a')[0].click();
+    return jsonText;
   }
-  async commit() {
-    let filename = this.fileName;
-    const rawFile = filename.split('.')[0];
-    if (!filename) {
-      filename = 'myScore.json';
-    }
-    if (filename.indexOf('.json') < 0) {
-      filename = filename + '.json';
-    }
-    const scoreInfo = this.view.score.scoreInfo;
-    scoreInfo.name = rawFile;
-    scoreInfo.version = scoreInfo.version + 1;
-    await this.view.updateScoreInfo(scoreInfo);
-    this._saveScore();
-  }
-  // noop
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiXmlSaveAdapter extends SuiComponentAdapter {
-  fileName: string = '';
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-  }
-  get saveFileName() {
-    return this.fileName;
-  }
-  set saveFileName(value: string) {
-    this.fileName = value;
-  }
-  _saveXml() {
-    const dom = SmoToXml.convert(this.view.storeScore);
+  const getMusicXmlContent = () => {
+    const dom = SmoToXml.convert(parameters.view.storeScore);
     const ser = new XMLSerializer();
     const xmlText = ser.serializeToString(dom);
-    if (!this.fileName.endsWith('.xml') && !this.fileName.endsWith('.mxml')) {
-      this.fileName = this.fileName + '.xml';
-    }
-    addFileLink(this.fileName, xmlText, $('.saveLink'));
-    $('.saveLink a')[0].click();
+    return xmlText;
   }
-  async commit() {
-    let filename = this.fileName;
-    if (!filename) {
-      filename = 'myScore.xml';
-    }
-    if (filename.indexOf('.xml') < 0) {
-      filename = filename + '.xml';
-    }
-    this.view.score.scoreInfo.version += 1;
-    this._saveXml();
-    return PromiseHelpers.emptyPromise();
+  const getMidiContent = () => {
+    const bytes = SmoToMidi.convert(parameters.view.storeScore);
+    return bytes;
   }
-  // noop
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
+  const getVexContent = () => {
+    const vexText = SmoToVex.convert(parameters.view.storeScore, { div: 'smoo', page });
+    return vexText;
+  };
+  contents.value = getSmoContent();
+  const extension: Ref<string> = ref('.json');
+  const suggestedName = parameters.view.score.scoreInfo.name;
+  const changeExtensionCb = (ext: string) => {
+    if (ext === '.json') {
+      contents.value = getSmoContent();
+    } else if (ext === '.xml') {
+      contents.value = getMusicXmlContent();
+    } else if (ext === '.mid' || ext === '.midi') {
+      contents.value = getMidiContent();      
+    } else if (ext === '.js') {
+      contents.value = getVexContent();
+    } else if (ext === '.smojson') {
+      contents.value = getSmoValidationContent();
+      extension.value = '.json';
+      return;
+    } else {
+      contents.value = getSmoContent();
+    }
+    extension.value = ext;
   }
+  const commitCb = async () => {
+    complete.value = true;
+  }
+  const cancelCb = async () => {
+    complete.value = true;
+  }
+  const rootId = replaceVueRoot('#attribute-modal-container');
+  const appParams = { suggestedName, contents, extension, changeExtensionCb, domId: rootId };
+  InstallDialog({
+    root: rootId,
+    complete,
+    app: saveFileApp,
+    appParams,
+    dialogParams: parameters,
+    commitCb,
+    cancelCb
+  });
 }
-/**
- * @category SuiDialog
- */
-export class SuiSaveXmlDialog extends SuiDialogAdapterBase<SuiXmlSaveAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Save Score',
-      elements: [{
-        smoName: 'saveFileName',
-        control: 'SuiTextInputComponent',
-        label: 'File Name'
-      }],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiSaveXmlDialog';
-    const adapter = new SuiXmlSaveAdapter(parameters.view);
-    super(SuiSaveXmlDialog.dialogElements, { adapter, ...parameters });
+export const SuiPrintDialog = async (parameters: SuiDialogParams) => {
+  const complete: Ref<boolean> = ref(false);
+  await parameters.view.renderer.renderForPrintPromise();
+  window.print();
+  const okCb = () => {
+    complete.value = true;
+    $('body').removeClass('printing');
+    parameters.view.renderer.restoreLayoutAfterPrint();
+    window.dispatchEvent(new Event('resize'));
+    SuiNavigation.instance.hideDialogModal();
   }
-  async commit() {
-    await this.adapter.commit();
-  }
+  const rootId = replaceVueRoot('#attribute-modal-container');
+  const appParams = { domId: rootId, okCb, message: 'Print complete!', headline: 'Printing' };
+  createApp(messageDialog as any, appParams).mount('#' + rootId);
+  SuiNavigation.instance.showDialogModal();
+  
 }
-/**
- * @category SuiDialog
- */
-export class SuiSaveJsonValidationDialog extends SuiDialogAdapterBase<SuiSaveJsonValidationAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Export SMO XML',
-      elements: [{
-        smoName: 'saveFileName',
-        control: 'SuiTextInputComponent',
-        label: 'File Name'
-      }],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiSaveJsonValidationDialog';
-    const adapter = new SuiSaveJsonValidationAdapter(parameters.view);
-    super(SuiSaveJsonValidationDialog.dialogElements, { adapter, ...parameters });
-  }
-  async commit() {
-    await this.adapter.commit();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiMidiSaveAdapter extends SuiComponentAdapter {
-  fileName: string = '';
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-  }
-  get saveFileName() {
-    return this.fileName;
-  }
-  set saveFileName(value: string) {
-    this.fileName = value;
-  }
-  _saveScore() {
-    const bytes = SmoToMidi.convert(this.view.storeScore);
-    if (!this.fileName.endsWith('.mid')) {
-      this.fileName = this.fileName + '.mid';
-    }
-    addFileLink(this.fileName, bytes, $('.saveLink'), 'audio/midi');
-    $('.saveLink a')[0].click();
-  }
 
-  async commit() {
-    let filename = this.fileName;
-    if (!filename) {
-      filename = 'myScore.mid';
-    }
-    if (filename.indexOf('.mid') < 0) {
-      filename = filename + '.mid';
-    }
-    this.view.score.scoreInfo.version += 1;
-    this._saveScore();
-    return PromiseHelpers.emptyPromise();
-  }
-  async cancel() {
-    return PromiseHelpers.emptyPromise();
-  }
-}
-/**
- * @category SuiDialog
- */
-export class SuiSaveMidiDialog extends SuiDialogAdapterBase<SuiMidiSaveAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Save Score as Midi',
-      elements:
-        [{
-          smoName: 'saveFileName',
-          control: 'SuiTextInputComponent',
-          label: 'File Name'
-        }],
-      staticText: []
-    }
-  constructor(parameters: SuiDialogParams) {
-    parameters.ctor = 'SuiSaveMidiDialog';
-    const adapter = new SuiMidiSaveAdapter(parameters.view);
-    super(SuiSaveMidiDialog.dialogElements, { adapter, ...parameters });
-  }
-  async commit() {
-    await this.adapter.commit();
-  }
-}

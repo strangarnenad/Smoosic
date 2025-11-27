@@ -67,9 +67,7 @@ import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
 import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
 import { SuiNavigation } from '../ui/navigation';
-import { SuiLoadMxmlDialog, SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog,
-    SuiSaveMidiDialog, SuiSaveVexDialog,
-    SuiFileUploadDialog } from '../ui/dialogs/fileDialogs';
+import { SuiFileUploadDialog, SuiFileSaveDialog, SuiPrintDialog } from '../ui/dialogs/fileDialogs';
     // Dialog components
 
 import { SuiTextInputComponent, SuiTextInputComposite, SuiReadOnlyTextComponent } from '../ui/dialogs/components/textInput';
@@ -171,7 +169,6 @@ const getClass = (jsonString: string) => {
     return eval('Smo.' + jsonString);
 };
 export * from '../ui/modalDialogs';
-export * from '../ui/composables/splashInit';
 export * from './application';
 export * from './common';
 export * from './configuration';
@@ -364,15 +361,15 @@ export const Smo = {
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
   SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
-  SuiLoadMxmlDialog, SuiScorePreferencesDialog,
+  SuiScorePreferencesDialog,
   SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
   SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
   SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
   SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
   SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
-  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
-  SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
-  SuiSaveMidiDialog, SuiDialogBase, createAndDisplayDialog,  SuiFileUploadDialog,
+  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,  
+  SuiFileSaveDialog, SuiPrintDialog,
+  SuiDialogBase, createAndDisplayDialog,  SuiFileUploadDialog,
   SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
   SuiTransposeButtonComponent,
   // Dialog components

@@ -26,8 +26,8 @@ export default defineComponent({
   <div class="dom-container" :class="{ masked: showBugModal }">
     <div class="mask"></div>
     <div class="workspace language-dir">
-      <div class="row navbar-expand justify-content-md-center flex-md-fill controls-top" id="top-bar">
-        <sub class="col-1" id="link-hdr"><a href="https://github.com/Smoosic/smoosic" aria-label="Github link" 
+      <div class="row navbar-expand justify-content-start ms-5 flex-md-fill controls-top" id="top-bar">
+        <sub class="col-1 hide" id="link-hdr"><a href="https://github.com/Smoosic/smoosic" aria-label="Github link" 
           target="_blank" tabindex="0">Github
             site</a> |
           <a href="https://smoosic.github.io/Smoosic/changes.md" aria-label="Change notes" target="_blank" tabindex="0">change notes</a>

@@ -11,7 +11,7 @@ export const createModalSplash = () => {
   const close = () => {
     SuiNavigation.instance.hideBugModal();
   }
-  const app = createApp(someApp as any, { closeFunction: close });
+  const app = createApp(someApp as any, { closeFunction: close, timer: 5000 });
   app.mount('#' + root);
   SuiNavigation.instance.showBugModal();
   return app;

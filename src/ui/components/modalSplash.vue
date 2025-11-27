@@ -44,18 +44,29 @@
   </div>
 </template>
 <script type="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 export default defineComponent({
   props: {
     closeFunction: {
       type: Function,
       required: true
+    }, timer: {
+      type: Number,
+      required: false
     }
   }
   , setup(props) {
     const closeFunction = props.closeFunction;
+    const timer = props.timer || 0;
     const imageLoc = '../styles/images/logo.png';
-    return { closeFunction, imageLoc };
+    onMounted(() => {
+      if (timer && timer > 0) {
+        setTimeout(() => {
+          closeFunction();
+        }, timer);
+      }
+    })
+    return { closeFunction, imageLoc, timer };
   }
 });
 </script>

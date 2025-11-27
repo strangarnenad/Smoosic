@@ -1,10 +1,9 @@
 import { SuiMenuBase, SuiMenuParams } from './menu';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import {
-  SuiSaveFileDialog, SuiPrintFileDialog, 
-  SuiLoadMidiDialog,
-  SuiSaveXmlDialog, SuiSaveMidiDialog, SuiLoadMxmlDialog, SuiSaveVexDialog,
-  SuiSaveJsonValidationDialog, SuiFileUploadDialog
+  SuiFileSaveDialog ,  
+  SuiFileUploadDialog,
+  SuiPrintDialog
 } from '../dialogs/fileDialogs';
 import { SmoScore } from '../../smo/data/score';
 
@@ -39,23 +38,11 @@ export class SuiFileMenu extends SuiMenuBase {
       icon: '',
       text: 'Print',
       value: 'printScore'
-    },  {
-      icon: '',
-      text: 'Export Midi',
-      value: 'exportMidi'
     }, {
       icon: '',
-      text: 'Export MusicXML',
-      value: 'exportXml'
-    }, {
-      icon: '',
-      text: 'Export SMO For Validation',
-      value: 'SMOJSON'
-    },  {
-      icon: '',
-      text: 'Export Vex',
-      value: 'exportVex'
-    }, {
+      text: 'Import Midi',
+      value: 'importMidi'
+    },{
       icon: '',
       text: 'Cancel',
       value: 'cancel'
@@ -66,9 +53,7 @@ export class SuiFileMenu extends SuiMenuBase {
     return SuiFileMenu.defaults;
   }
   systemPrint() {
-    window.print();
-    createAndDisplayDialog(SuiPrintFileDialog, {
-      ctor: 'SuiPrintFileDialog',
+    SuiPrintDialog({      ctor: 'SuiPrintFileDialog',
       id: 'print',
       eventSource: this.eventSource,
       modifier: null,
@@ -82,9 +67,9 @@ export class SuiFileMenu extends SuiMenuBase {
     const text = $(ev.currentTarget).attr('data-value');
     const self = this;
     if (text === 'saveFile') {
-      createAndDisplayDialog(SuiSaveFileDialog, {
+      SuiFileSaveDialog ({
         ctor: 'SuiSaveFileDialog',
-        id: 'save',
+        id: text,
         modifier: null,
         completeNotifier: this.completeNotifier,
         tracker: this.tracker,
@@ -92,7 +77,7 @@ export class SuiFileMenu extends SuiMenuBase {
         view: this.view,
         startPromise: this.closePromise
       });
-    } else if (text === 'openFile') {
+    } else if (text === 'openFile' || text === 'importMidi') {
       SuiFileUploadDialog({
         ctor: 'SuiLoadFileDialog',
         id: text,
@@ -109,55 +94,8 @@ export class SuiFileMenu extends SuiMenuBase {
     } else if (text === 'quickSave') {
       this.view.quickSave();
     } else if (text === 'printScore') {
-      const systemPrint = () => {
-        self.systemPrint();
-      };
-      this.view.renderer.renderForPrintPromise().then(systemPrint);
-    } else if (text === 'exportXml') {
-      createAndDisplayDialog(SuiSaveXmlDialog, {
-        ctor: 'SuiSaveXmlDialog',
-        id: 'save',
-        modifier: null,
-        completeNotifier: this.completeNotifier,
-        tracker: this.tracker,
-        eventSource: this.eventSource,
-        view: this.view,
-        startPromise: this.closePromise
-      });
-    } else if (text === 'SMOJSON') {
-      createAndDisplayDialog(SuiSaveJsonValidationDialog, {
-        ctor: 'SuiSaveSmoosicXmlDialog',
-        id: 'saveSmoJson',
-        modifier: null,
-        completeNotifier: this.completeNotifier,
-        tracker: this.tracker,
-        eventSource: this.eventSource,
-        view: this.view,
-        startPromise: this.closePromise
-      });
-    } else if (text === 'exportVex') {
-      createAndDisplayDialog(SuiSaveVexDialog, {
-        ctor: 'SuiSaveVexDialog',
-        id: 'save',
-        modifier: null,
-        completeNotifier: this.completeNotifier,
-        tracker: this.tracker,
-        eventSource: this.eventSource,
-        view: this.view,
-        startPromise: this.closePromise
-      });
-    } else if (text === 'exportMidi') {
-      createAndDisplayDialog(SuiSaveMidiDialog, {
-        ctor: 'SuiSaveMidiDialog',
-        id: 'save',
-        modifier: null,
-        completeNotifier: this.completeNotifier,
-        tracker: this.tracker,
-        eventSource: this.eventSource,
-        view: this.view,
-        startPromise: this.closePromise
-      });
-    }
+      this.systemPrint();
+    } 
     this.complete();
   }
   keydown() { }
