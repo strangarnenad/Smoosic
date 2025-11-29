@@ -33,4 +33,3 @@ export declare class SuiScoreFontDialog extends SuiDialogAdapterBase<SuiScoreFon
     static createAndDisplay(parameters: SuiDialogParams): void;
     constructor(params: SuiDialogParams);
 }
-//# sourceMappingURL=fonts.d.ts.map

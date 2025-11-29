@@ -43,4 +43,3 @@ export declare class SuiArticulationDialog extends SuiDialogAdapterBase<SuiArtic
     constructor(parameters: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=articulation.d.ts.map

@@ -64,4 +64,3 @@ export declare class SuiPitchDialog extends SuiDialogAdapterBase<SuiPitchAdapter
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=pitch.d.ts.map

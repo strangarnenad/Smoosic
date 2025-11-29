@@ -55,4 +55,3 @@ export declare class SuiMenuManager {
     bindEvents(): void;
 }
 export declare const menuTranslationsInit: () => void;
-//# sourceMappingURL=manager.d.ts.map

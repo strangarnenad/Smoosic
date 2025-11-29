@@ -26,4 +26,3 @@ export declare class SuiStaffGroupDialog extends SuiDialogAdapterBase<SuiStaffGr
     getModifier(): SmoSystemGroup;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=staffGroup.d.ts.map

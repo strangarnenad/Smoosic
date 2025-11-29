@@ -44,4 +44,3 @@ export declare class SuiDurationDialog extends SuiDialogAdapterBase<SuiDurationA
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=durations.d.ts.map

@@ -23,4 +23,3 @@ export declare class SuiTransposeScoreDialog extends SuiDialogAdapterBase<SuiTra
     constructor(params: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=transposeScore.d.ts.map

@@ -33,4 +33,3 @@ export declare class SuiPedalMarkingDialog extends SuiDialogAdapterBase<SuiPedal
     constructor(parameters: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=pedalMarking.d.ts.map

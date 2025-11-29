@@ -11,4 +11,3 @@ export declare function renderVoltas(smoScore: SmoScore, startMeasure: number, e
 export declare class SmoToVex {
     static convert(smoScore: SmoScore, options: any): string;
 }
-//# sourceMappingURL=toVex.d.ts.map

@@ -21,4 +21,3 @@ export declare class vexGlyph {
     static clef(c: string): GlyphInfo;
     static get dimensions(): Record<string, GlyphInfo>;
 }
-//# sourceMappingURL=glyphDimensions.d.ts.map

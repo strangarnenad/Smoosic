@@ -93,4 +93,3 @@ export declare class SuiPitchArrayComponent extends SuiComponentParent {
 export declare class SuiPitchArrayComponentTab extends SuiPitchArrayComponent {
     constructor(dialog: SuiDialogNotifier, parameters: SuiBaseComponentParams);
 }
-//# sourceMappingURL=pitch.d.ts.map

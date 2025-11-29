@@ -35,4 +35,3 @@ export declare class SuiGraceNoteDialog extends SuiDialogAdapterBase<SuiGraceNot
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=gracenote.d.ts.map

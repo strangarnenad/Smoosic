@@ -33,4 +33,3 @@ export declare class SuiHairpinAttributesDialog extends SuiDialogAdapterBase<Sui
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=hairpin.d.ts.map

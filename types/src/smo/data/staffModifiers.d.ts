@@ -1,6 +1,6 @@
 import { SmoSelector } from '../xform/selections';
 import { SmoNote } from './note';
-import { SmoAttrs, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch } from './common';
+import { SmoAttrs, SvgPoint, SmoObjectParams, Clef, SvgBox, SmoModifierBase, Pitch, ElementLike } from './common';
 import { SmoTabNote, SmoFretPosition } from './noteModifiers';
 /**
  * Base class that mostly standardizes the interface and deals with serialization.
@@ -18,9 +18,10 @@ export declare abstract class StaffModifierBase implements SmoModifierBase {
     startSelector: SmoSelector;
     endSelector: SmoSelector;
     logicalBox: SvgBox | null;
-    element: SVGSVGElement | null;
+    element: ElementLike;
     constructor(ctor: string);
     static deserialize(params: SmoObjectParams): any;
+    static cloneWithId(o: StaffModifierBase): any;
     serializeWithId(): any;
     abstract serialize(): any;
 }
@@ -100,6 +101,8 @@ export interface SmoInstrumentParams {
      * -2 indicates key of Bb
      */
     keyOffset: number;
+    usePercussionNoteheads: boolean;
+    percussionMap: Record<number, number>;
     /**
      * for future
      */
@@ -120,6 +123,7 @@ export interface SmoInstrumentParams {
      * future, can be used to set sample
      */
     mutes?: string;
+    lines: number;
 }
 /**
  * Serialization of instrument-specific settings, such as sound and key
@@ -131,10 +135,12 @@ export interface SmoInstrumentParamsSer extends SmoInstrumentParams {
      */
     ctor: string;
 }
-export type SmoInstrumentNumParamType = 'keyOffset' | 'midichannel' | 'midiport' | 'midiInstrument';
+export type SmoInstrumentNumParamType = 'keyOffset' | 'midichannel' | 'midiport' | 'midiInstrument' | 'lines';
 export declare const SmoInstrumentNumParams: SmoInstrumentNumParamType[];
-export type SmoInstrumentStringParamType = 'instrumentName' | 'abbreviation' | 'family' | 'instrument';
+export type SmoInstrumentStringParamType = 'instrumentName' | 'abbreviation' | 'family' | 'instrument' | 'clef';
 export declare const SmoInstrumentStringParams: SmoInstrumentStringParamType[];
+export type SmoInstrumentBooleanParamType = 'usePercussionNoteheads';
+export declare const SmoInstrumentBooleanParams: SmoInstrumentBooleanParamType[];
 /**
  * Define an instrument.  An instrument is associated with a part, but a part can have instrument changes
  * and thus contain multiple instruments at different points in the score.
@@ -144,6 +150,10 @@ export declare const SmoInstrumentStringParams: SmoInstrumentStringParamType[];
  */
 export declare class SmoInstrument extends StaffModifierBase {
     static get attributes(): string[];
+    static instrumentMidiMap: Record<string, number>;
+    static defaultDrumMidiMap: Record<number, number>;
+    static xNoteheadInstruments: number[];
+    static triNoteheadInstruments: number[];
     startSelector: SmoSelector;
     endSelector: SmoSelector;
     instrumentName: string;
@@ -151,9 +161,13 @@ export declare class SmoInstrument extends StaffModifierBase {
     keyOffset: number;
     clef: Clef;
     midiInstrument: number;
+    usePercussionNoteheads: boolean;
+    percussionMap: Record<number, number>;
+    lines: number;
     midichannel: number;
     midiport: number;
     family: string;
+    get midiInstrumentDefault(): number;
     instrument: string;
     articulation?: string;
     mutes?: string;
@@ -161,6 +175,7 @@ export declare class SmoInstrument extends StaffModifierBase {
     static get defaultOscillatorParam(): SmoOscillatorInfo;
     constructor(params: SmoInstrumentParams);
     serialize(): SmoInstrumentParamsSer;
+    get isPercussion(): boolean;
     eq(other: SmoInstrument): boolean;
 }
 /**
@@ -749,4 +764,3 @@ export declare class SmoPedalMarking extends StaffModifierBase {
     serialize(): SmoPedalMarkingParamsSer;
 }
 export declare const staffModifierDynamicCtorInit: () => void;
-//# sourceMappingURL=staffModifiers.d.ts.map

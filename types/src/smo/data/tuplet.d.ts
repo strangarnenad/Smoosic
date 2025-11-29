@@ -1,4 +1,4 @@
-import { TupletInfo } from './note';
+import { SmoNote, TupletInfo } from './note';
 import { SmoAttrs } from './common';
 import { SmoMeasure, SmoVoice } from './measure';
 /**
@@ -35,6 +35,13 @@ export declare class SmoTupletTree {
     static getTupletTreeForNoteIndex(tupletTrees: SmoTupletTree[], voiceIx: number, noteIx: number): SmoTupletTree | null;
     static getTupletHierarchyForNoteIndex(tupletTrees: SmoTupletTree[], voiceIx: number, noteIx: number): SmoTuplet[];
     static removeTupletForNoteIndex(measure: SmoMeasure, voiceIx: number, noteIx: number): void;
+    /**
+     * Determines whether two notes are part of the same tuplet.
+     * @param noteOne
+     * @param noteTwo
+     */
+    static areNotesPartOfTheSameTuplet(noteOne: SmoNote, noteTwo: SmoNote): boolean;
+    static areTupletsBothNull(noteOne: SmoNote, noteTwo: SmoNote): boolean;
     serialize(): SmoTupletTreeParamsSer;
     static deserialize(jsonObj: SmoTupletTreeParamsSer): SmoTupletTree;
     static clone(tupletTree: SmoTupletTree): SmoTupletTree;
@@ -137,4 +144,3 @@ export declare class SmoTuplet {
     get notes_occupied(): number;
     get tickCount(): number;
 }
-//# sourceMappingURL=tuplet.d.ts.map

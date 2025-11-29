@@ -6,6 +6,5 @@ import { SmoConfiguration } from './configuration';
 export declare class SuiDom {
     static splash(config: SmoConfiguration): void;
     static get scrollRegionId(): string;
-    static createUiDom(uiDomContainer: HTMLElement | string | undefined): void;
+    static createUiDom(uiDomContainer: HTMLElement | string | undefined): HTMLElement;
 }
-//# sourceMappingURL=dom.d.ts.map

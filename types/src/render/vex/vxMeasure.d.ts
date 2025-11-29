@@ -2,6 +2,7 @@ import { SmoNote } from '../../smo/data/note';
 import { SmoDynamicText, SmoNoteModifierBase } from '../../smo/data/noteModifiers';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoMeasure, MeasureTickmaps } from '../../smo/data/measure';
+import { Pitch } from '../../smo/data/common';
 import { SvgPage } from '../sui/svgPageMap';
 import { SmoTabStave } from '../../smo/data/staffModifiers';
 import { Stave, Note, Beam, Tuplet, Voice, Formatter, TabStave } from '../../common/vex';
@@ -19,6 +20,7 @@ export declare class VxMeasure implements VxMeasureIf {
     smoTabStave?: SmoTabStave;
     tabStave?: TabStave;
     rendered: boolean;
+    firstInColumn: boolean;
     noteToVexMap: Record<string, Note>;
     beamToVexMap: Record<string, Beam>;
     tupletToVexMap: Record<string, Tuplet>;
@@ -38,8 +40,11 @@ export declare class VxMeasure implements VxMeasureIf {
     collisionMap: Record<number, SmoNote[]>;
     dbgLeftX: number;
     dbgWidth: number;
-    constructor(context: SvgPage, selection: SmoSelection, printing: boolean, softmax: number);
+    hideAccidentals: boolean;
+    tiedOverPitches: Pitch[];
+    constructor(context: SvgPage, selection: SmoSelection, printing: boolean, softmax: number, tiedOverPitches: Pitch[]);
     static get fillStyle(): string;
+    setFirstInColumn(val: boolean): void;
     isWholeRest(): boolean;
     createCollisionTickmap(): void;
     isCollision(voiceIx: number, tickIx: number): boolean;
@@ -88,4 +93,3 @@ export declare class VxMeasure implements VxMeasureIf {
      */
     render(): void;
 }
-//# sourceMappingURL=vxMeasure.d.ts.map

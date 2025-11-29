@@ -10,12 +10,14 @@ import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
 export declare class SuiDynamicDialogAdapter extends SuiComponentAdapter {
     modifier: SmoDynamicText;
     backup: SmoDynamicText;
-    selection: SmoSelection;
+    selections: SmoSelection[];
+    changed: boolean;
     constructor(view: SuiScoreViewOperations, modifier: SmoDynamicText);
     cancel(): Promise<void>;
     commit(): Promise<any>;
     get xOffset(): number;
     remove(): Promise<void>;
+    syncModifiers(): void;
     set xOffset(value: number);
     get fontSize(): number;
     set fontSize(value: number);
@@ -33,4 +35,3 @@ export declare class SuiDynamicModifierDialog extends SuiDialogAdapterBase<SuiDy
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=dynamics.d.ts.map

@@ -31,4 +31,3 @@ export declare class SuiScoreIdentificationDialog extends SuiDialogAdapterBase<S
     static createAndDisplay(parameters: SuiDialogParams): void;
     constructor(params: SuiDialogParams);
 }
-//# sourceMappingURL=scoreId.d.ts.map

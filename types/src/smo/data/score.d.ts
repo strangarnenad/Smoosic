@@ -134,13 +134,6 @@ export type SmoModifier = SmoNoteModifierBase | SmoMeasureModifierBase | StaffMo
  */
 export declare class SmoScore {
     /**
-     * Map of instruments to staves, used in serialization.
-     *
-     * @type {any[]}
-     * @memberof SmoScore
-     */
-    instrumentMap: any[];
-    /**
      * Default fonts in this score, for each type of text (lyrics, etc)
      *
      * @type {FontPurpose[]}
@@ -279,7 +272,7 @@ export declare class SmoScore {
     * **/
     static measureFormatFromLegacyScore(score: SmoScore, jsonObj: any): SmoFormattingManager | null;
     /**
-     * Return a default score with no notes or staves
+     * Return a default score with all default setting and one measure of notes
      * @param scoreDefaults
      * @param measureDefaults
      * @returns
@@ -302,6 +295,7 @@ export declare class SmoScore {
      * Iteratively number the staves, like when adding a measure
      */
     numberStaves(): void;
+    get measureCount(): number;
     /**
      * determine if the measure at this index could be a multi-measure rest
      * @param measureIndex - the measure index we are considering to add
@@ -374,6 +368,7 @@ export declare class SmoScore {
      * and pitches.  This logic assumes we are changing from transposing to non-transposing.
      */
     setNonTransposing(): void;
+    setNoteInstrumentProperties(): void;
     addStaff(parameters: SmoSystemStaffParams): SmoSystemStaff;
     /**
      * delete any system groups that apply to deleted staves
@@ -395,4 +390,3 @@ export declare class SmoScore {
     incrementActiveStaff(offset: number): number;
     setActiveStaff(index: number): void;
 }
-//# sourceMappingURL=score.d.ts.map

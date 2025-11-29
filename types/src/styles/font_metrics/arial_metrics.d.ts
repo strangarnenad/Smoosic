@@ -868,4 +868,3 @@ export namespace ArialFont {
     let resolution: number;
     let generatedOn: string;
 }
-//# sourceMappingURL=arial_metrics.d.ts.map

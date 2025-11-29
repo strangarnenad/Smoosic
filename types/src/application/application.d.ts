@@ -100,4 +100,3 @@ export declare class SuiApplication {
     _deferCreateTranslator(): void;
     static _deferLanguageSelection(lang: string): void;
 }
-//# sourceMappingURL=application.d.ts.map

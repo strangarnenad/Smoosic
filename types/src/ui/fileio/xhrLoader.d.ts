@@ -16,4 +16,3 @@ export declare class SuiXhrLoader {
      */
     loadAsync(): Promise<string | ArrayBuffer>;
 }
-//# sourceMappingURL=xhrLoader.d.ts.map

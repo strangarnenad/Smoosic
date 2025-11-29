@@ -47,4 +47,3 @@ export declare class SuiPageLayoutDialog extends SuiDialogAdapterBase<SuiPageLay
     static dialogElements: DialogDefinition;
     constructor(params: SuiDialogParams);
 }
-//# sourceMappingURL=pageLayout.d.ts.map

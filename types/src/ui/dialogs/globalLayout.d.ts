@@ -43,4 +43,3 @@ export declare class SuiGlobalLayoutDialog extends SuiDialogAdapterBase<SuiGloba
     constructor(params: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=globalLayout.d.ts.map

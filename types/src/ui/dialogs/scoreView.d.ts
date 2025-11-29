@@ -26,4 +26,3 @@ export declare class SuiScoreViewDialog extends SuiDialogAdapterBase<SuiScoreVie
     constructor(parameters: SuiDialogParams);
     get scoreViewCtrl(): StaffCheckComponent;
 }
-//# sourceMappingURL=scoreView.d.ts.map

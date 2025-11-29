@@ -76,4 +76,3 @@ export declare class SuiDropdownComposite extends SuiDropdownComponent {
     constructor(dialog: SuiDialogNotifier, parameters: SuiDropdownCompositeParams);
     handleChanged(): void;
 }
-//# sourceMappingURL=dropdown.d.ts.map

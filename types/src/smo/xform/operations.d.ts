@@ -28,11 +28,18 @@ export declare class SmoOperation {
     static setMeasureFormat(score: SmoScore, selection: SmoSelection, value: SmoMeasureFormat): void;
     static addKeySignature(score: SmoScore, selection: SmoSelection, keySignature: string): void;
     static addConnectorDown(score: SmoScore, selections: SmoSelection[], parameters: SmoSystemGroup): void;
-    static toggleBeamGroup(noteSelection: SmoSelection): void;
     static setActiveVoice(score: SmoScore, voiceIx: number): void;
+    /**
+     * Move a single stave up or down one.  If last down, move to first.
+     * If first up, move to last
+     * @param score
+     * @param selection
+     * @param index
+     */
     static moveStaffUpDown(score: SmoScore, selection: SmoSelection, index: number): void;
     static depopulateVoice(selection: SmoSelection, voiceIx: number): void;
     static populateVoice(selection: SmoSelection, voiceIx: number): void;
+    static swapVoice(selections: SmoSelection[], voice1: number, voice2: number): void;
     static setTabStave(score: SmoScore, tabStave: SmoTabStave): void;
     static removeTabStave(score: SmoScore, tabStaves: SmoTabStave[]): void;
     static setTimeSignature(score: SmoScore, selections: SmoSelection[], timeSignature: TimeSignature): void;
@@ -67,6 +74,7 @@ export declare class SmoOperation {
     static toggleEnharmonic(pitchSelection: SmoSelection): void;
     static addDynamic(selection: SmoSelection, dynamic: SmoDynamicText): void;
     static removeDynamic(selection: SmoSelection, dynamic: SmoDynamicText): void;
+    static unbeamSelections(noteSelection: SmoSelection): void;
     static beamSelections(score: SmoScore, selections: SmoSelection[]): void;
     static clearAllBeamGroups(score: SmoScore): void;
     static clearBeamGroups(score: SmoScore, selections: SmoSelection[]): void;
@@ -114,7 +122,6 @@ export declare class SmoOperation {
      * @param instrument
      * @param selections
      */
-    static changeInstrument(instrument: SmoInstrument, selections: SmoSelection[]): void;
+    static changeInstrument(instrument: SmoInstrument, score: SmoScore, selections: SmoSelection[]): void;
     static computeMultipartRest(score: SmoScore): void;
 }
-//# sourceMappingURL=operations.d.ts.map

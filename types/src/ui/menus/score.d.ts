@@ -19,4 +19,3 @@ export declare class SuiScoreMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=score.d.ts.map

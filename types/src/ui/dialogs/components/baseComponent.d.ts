@@ -156,4 +156,3 @@ export declare abstract class SuiCompositeBase extends SuiComponentBase {
 }
 export type dynamicComponentCtor = (arg1: SuiDialogNotifier, params: any) => any;
 export declare const SmoDynamicComponentCtor: Record<string, dynamicComponentCtor>;
-//# sourceMappingURL=baseComponent.d.ts.map

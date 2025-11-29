@@ -17,12 +17,15 @@ export declare class SuiInstrumentAdapter extends SuiComponentAdapter {
     constructor(view: SuiScoreViewOperations);
     writeNumParam(paramName: SmoInstrumentNumParamType, value: number): void;
     writeStringParam(paramName: SmoInstrumentStringParamType, value: string): void;
+    writeBooleanParam(paramName: 'usePercussionNoteheads', value: boolean): void;
+    get lines(): number;
+    set lines(value: number);
+    get usePercussionNoteheads(): boolean;
+    set usePercussionNoteheads(value: boolean);
     get transposeIndex(): number;
     set transposeIndex(value: number);
-    get instrumentName(): string;
     get subFamily(): string;
     set subFamily(value: string);
-    set instrumentName(value: string);
     get clef(): Clef;
     set clef(value: Clef);
     get applyTo(): number;
@@ -44,4 +47,3 @@ export declare class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrum
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=instrument.d.ts.map

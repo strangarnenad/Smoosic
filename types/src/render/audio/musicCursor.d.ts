@@ -23,4 +23,3 @@ export declare const defaultClearAudioAnimationHandler: (delay: number) => void;
   * @returns
   */
 export declare const defaultAudioAnimationHandler: (view: SuiScoreView, selector: SmoSelector, offsetPct: number, durationPct: number) => void;
-//# sourceMappingURL=musicCursor.d.ts.map

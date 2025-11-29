@@ -51,4 +51,3 @@ export declare class SuiToggleComposite extends SuiToggleComponent {
     constructor(dialog: SuiDialogNotifier, parameters: SuiToggleCompositeParams);
     handleChanged(): void;
 }
-//# sourceMappingURL=toggle.d.ts.map

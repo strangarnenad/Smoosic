@@ -11,4 +11,3 @@ export declare class SuiTupletMenu extends SuiConfiguredMenu {
  * @category SuiMenu
  */
 export declare const SuiTupletMenuOptions: SuiConfiguredMenuOption[];
-//# sourceMappingURL=tuplets.d.ts.map

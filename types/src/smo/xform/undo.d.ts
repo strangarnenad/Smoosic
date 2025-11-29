@@ -140,4 +140,3 @@ export declare class UndoBuffer {
      */
     undo(score: SmoScore, staffMap: Record<number, number>, pop: boolean): SmoScore;
 }
-//# sourceMappingURL=undo.d.ts.map

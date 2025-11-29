@@ -59,4 +59,3 @@ export declare class SuiTextBlockDialog extends SuiDialogBase {
 export declare class helpModal {
     static createAndDisplay(): Promise<void>;
 }
-//# sourceMappingURL=textBlock.d.ts.map

@@ -869,4 +869,3 @@ export namespace MerriweatherFont {
     let resolution: number;
     let generatedOn: string;
 }
-//# sourceMappingURL=Merriweather-Regular.d.ts.map

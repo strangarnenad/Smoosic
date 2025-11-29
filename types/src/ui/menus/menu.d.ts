@@ -134,4 +134,3 @@ export declare class SuiConfiguredMenu extends SuiMenuBase {
     preAttach(): void;
 }
 export declare const SuiMenuCustomizer: (fcn: customizeMenuOptionsFcn, ctor: string) => void;
-//# sourceMappingURL=menu.d.ts.map

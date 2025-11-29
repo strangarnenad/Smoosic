@@ -42,4 +42,3 @@ export declare class SuiNoteHeadDialog extends SuiDialogAdapterBase<SuiNoteHeadA
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=noteHead.d.ts.map

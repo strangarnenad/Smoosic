@@ -30,4 +30,3 @@ export declare class SuiFontComponent extends SuiComponentBase {
     setValue(value: FontInfo): void;
     bind(): void;
 }
-//# sourceMappingURL=fontComponent.d.ts.map

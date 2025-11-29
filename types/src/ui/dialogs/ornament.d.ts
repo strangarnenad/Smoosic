@@ -42,4 +42,3 @@ export declare class SuiOrnamentDialog extends SuiDialogAdapterBase<SuiOrnamentA
     constructor(parameters: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=ornament.d.ts.map

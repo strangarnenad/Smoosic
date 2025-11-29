@@ -11,4 +11,3 @@ export declare class SuiBeamMenu extends SuiConfiguredMenu {
  * @category SuiMenu
  */
 export declare const SuiBeamMenuOptions: SuiConfiguredMenuOption[];
-//# sourceMappingURL=beams.d.ts.map

@@ -1,5 +1,5 @@
 import { SmoScoreModifierBase, ScaledPageLayout } from './scoreModifiers';
-import { SmoAttrs, SmoModifierBase } from './common';
+import { SmoAttrs, SmoModifierBase, ElementLike } from './common';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
 /**
@@ -248,7 +248,7 @@ export declare class SmoTextGroup extends SmoScoreModifierBase {
     selector?: SmoSelector;
     musicXOffset: number;
     musicYOffset: number;
-    elements: SVGSVGElement[];
+    elements: ElementLike[];
     textBlocks: SmoTextBlock[];
     edited: boolean;
     skipRender: boolean;
@@ -275,4 +275,3 @@ export declare class SmoTextGroup extends SmoScoreModifierBase {
     offsetX(offset: number): void;
     offsetY(offset: number): void;
 }
-//# sourceMappingURL=scoreText.d.ts.map

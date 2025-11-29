@@ -50,4 +50,3 @@ export declare class SuiMeasureDialog extends SuiDialogAdapterBase<SuiMeasureFor
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=measureFormat.d.ts.map

@@ -56,4 +56,3 @@ export declare class SuiTextInputComposite extends SuiTextInputComponent {
 export declare class SuiReadOnlyTextComponent extends SuiTextInputComponent {
     constructor(dialog: SuiDialogNotifier, parameter: SuiTextInputComponentParams);
 }
-//# sourceMappingURL=textInput.d.ts.map

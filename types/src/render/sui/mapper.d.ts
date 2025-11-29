@@ -73,6 +73,7 @@ export declare abstract class SuiMapper {
      * @param modifierTabs
      */
     createLocalModifiersFromModifierTabs(modifierTabs: ModifierTab[]): void;
+    removeModifierSelectionBox(): void;
     clearModifierSelections(): void;
     loadScore(): void;
     clearMeasureMap(measure: SmoMeasure): void;
@@ -93,6 +94,9 @@ export declare abstract class SuiMapper {
      */
     isAdjacentSelection(s1: SmoSelection, s2: SmoSelection): boolean;
     areSelectionsAdjacent(): boolean;
+    /**
+     * This is the logic that stores the screen location of music after it's rendered
+     */
     mapMeasure(staff: SmoSystemStaff, measure: SmoMeasure, printing: boolean): void;
     _getTicksFromSelections(): number;
     _copySelections(): SmoSelector[];
@@ -110,4 +114,3 @@ export declare abstract class SuiMapper {
     _getRectangleChain(selection: SmoSelection): number[];
     _updateMeasureNoteMap(artifact: SmoSelection, printing: boolean): void;
 }
-//# sourceMappingURL=mapper.d.ts.map

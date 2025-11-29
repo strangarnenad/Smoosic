@@ -1,8 +1,14 @@
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { DialogDefinition, SuiDialogParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { SuiButtonArrayComponent } from './components/buttonArray';
+import { getButtonsFcn, SuiButtonArrayComponent } from './components/buttonArray';
 import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComponent';
+/**
+ * @category SuiDialog
+ * Buttons with ending or repeat functions
+ * @returns SuiButtonArrayParameters
+ */
+export declare const endingsButtonFactory: getButtonsFcn;
 /**
  * @category SuiDialog
  */
@@ -53,4 +59,3 @@ export declare class SuiEndingsDialog extends SuiDialogAdapterBase<SuiEndingsAda
     constructor(parameters: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=endings.d.ts.map

@@ -29,4 +29,10 @@ export interface RibbonDefinition {
     ribbon: RibbonLayout;
     ribbonButtons: ButtonDefinition[];
 }
-//# sourceMappingURL=common.d.ts.map
+export declare const modalContainerId = "#vue-modal-container";
+/**
+ * Remove and replace an element, so we can reattach Vue to it
+ * @param element the ID or element we are replacing
+ * @returns the new element id
+ */
+export declare const replaceVueRoot: (element: string | HTMLElement) => string;

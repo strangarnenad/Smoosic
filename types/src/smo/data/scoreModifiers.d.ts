@@ -98,7 +98,7 @@ export interface SmoScoreInfo {
      */
     version: number;
 }
-export type SmoScorePreferenceBool = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'transposingScore';
+export type SmoScorePreferenceBool = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'transposingScore' | 'autoScrollPlayback' | 'showPartNames';
 export type SmoScorePreferenceNumber = 'defaultDupleDuration' | 'defaultTripleDuration';
 export declare const SmoScorePreferenceBools: SmoScorePreferenceBool[];
 export declare const SmoScorePreferenceNumbers: SmoScorePreferenceNumber[];
@@ -109,11 +109,13 @@ export declare const SmoScorePreferenceNumbers: SmoScorePreferenceNumber[];
 export interface SmoScorePreferencesParams {
     autoPlay: boolean;
     autoAdvance: boolean;
+    autoScrollPlayback: boolean;
     defaultDupleDuration: number;
     defaultTripleDuration: number;
     showPiano: boolean;
     hideEmptyLines: boolean;
     transposingScore: boolean;
+    showPartNames: boolean;
 }
 /**
  * Some default SMO behavior
@@ -133,7 +135,9 @@ export declare class SmoScorePreferences {
     defaultTripleDuration: number;
     showPiano: boolean;
     hideEmptyLines: boolean;
+    autoScrollPlayback: boolean;
     transposingScore: boolean;
+    showPartNames: boolean;
     static get defaults(): SmoScorePreferencesParams;
     constructor(params: SmoScorePreferencesParams);
     serialize(): SmoScorePreferencesParams;
@@ -426,4 +430,3 @@ export declare class SmoSystemGroup extends SmoScoreModifierBase {
     serialize(): SmoSystemGroupParamsSer;
 }
 export declare const scoreModifierDynamicCtorInit: () => void;
-//# sourceMappingURL=scoreModifiers.d.ts.map

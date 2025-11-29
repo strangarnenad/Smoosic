@@ -8,6 +8,7 @@ import { DialogDefinition, SuiDialogParams } from './dialog';
 export declare class SuiScorePreferencesAdapter extends SuiComponentAdapter {
     preferences: SmoScorePreferences;
     backup: SmoScorePreferences;
+    originalTransposeScore: boolean;
     constructor(view: SuiScoreViewOperations);
     get autoAdvance(): boolean;
     set autoAdvance(value: boolean);
@@ -15,6 +16,8 @@ export declare class SuiScorePreferencesAdapter extends SuiComponentAdapter {
     set autoPlay(value: boolean);
     get showPiano(): boolean;
     set showPiano(value: boolean);
+    get autoScrollPlayback(): boolean;
+    set autoScrollPlayback(value: boolean);
     get hideEmptyLines(): boolean;
     set hideEmptyLines(value: boolean);
     get defaultDupleDuration(): number;
@@ -23,8 +26,10 @@ export declare class SuiScorePreferencesAdapter extends SuiComponentAdapter {
     set defaultTripleDuration(value: number);
     get transposingScore(): boolean;
     set transposingScore(value: boolean);
+    get showPartNames(): boolean;
+    set showPartNames(value: boolean);
     cancel(): Promise<void>;
-    commit(): Promise<any>;
+    commit(): Promise<void>;
 }
 /**
  * @category SuiDialog
@@ -33,4 +38,3 @@ export declare class SuiScorePreferencesDialog extends SuiDialogAdapterBase<SuiS
     static dialogElements: DialogDefinition;
     constructor(params: SuiDialogParams);
 }
-//# sourceMappingURL=preferences.d.ts.map

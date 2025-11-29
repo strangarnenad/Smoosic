@@ -3,7 +3,7 @@
  * pitch itself.  This includes grace notes, and note-text like lyrics.
  * @module /smo/data/noteModifiers
  */
-import { SmoAttrs, Ticks, Pitch, SmoObjectParams, Transposable, SvgBox, SmoModifierBase, Clef } from './common';
+import { SmoAttrs, Ticks, Pitch, SmoObjectParams, Transposable, SvgBox, SmoModifierBase, Clef, ElementLike } from './common';
 import { FontInfo } from '../../common/vex';
 /**
  * A note modifier is anything that is mapped to the note, but not part of the
@@ -15,7 +15,7 @@ export declare abstract class SmoNoteModifierBase implements SmoModifierBase {
     attrs: SmoAttrs;
     ctor: string;
     logicalBox: SvgBox | null;
-    element: SVGSVGElement | null;
+    element: ElementLike;
     constructor(ctor: string);
     static deserialize(jsonObj: SmoObjectParams): any;
     abstract serialize(): any;
@@ -196,7 +196,7 @@ export declare class SmoMicrotone extends SmoNoteModifierBase {
     static readonly pitchCoeff: Record<string, number>;
     get toPitchCoeff(): number;
     get toVex(): string;
-    static readonly defaults: SmoMicrotoneParams;
+    static get defaults(): SmoMicrotoneParams;
     static get parameterArray(): string[];
     serialize(): SmoMicrotoneParamsSer;
     constructor(parameters: SmoMicrotoneParams);
@@ -242,12 +242,16 @@ export interface SmoOrnamentParamsSer extends SmoOrnamentParams {
 export declare class SmoOrnament extends SmoNoteModifierBase {
     static readonly ornaments: Record<string, string>;
     static readonly xmlOrnaments: Record<string, string>;
+    static get mordents(): string[];
+    static get turns(): string[];
     static readonly textNoteOrnaments: Record<string, string>;
     static readonly xmlJazz: Record<string, string>;
     static get jazzOrnaments(): string[];
     static get legacyJazz(): Record<string, string>;
     toVex(): string;
     isJazz(): boolean;
+    isMordent(): boolean;
+    isTurn(): boolean;
     position: string;
     offset: string;
     ornament: string;
@@ -458,6 +462,7 @@ export declare class SmoLyric extends SmoNoteModifierBase {
     serialize(): SmoLyricParamsSer;
     get adjustNoteWidth(): boolean;
     set adjustNoteWidth(val: boolean);
+    static transposeChordToKey(chord: SmoLyric, offset: number, srcKey: string, destKey: string): SmoLyric;
     getClassSelector(): string;
     setText(text: string): void;
     isHyphenated(): boolean | 0;
@@ -466,6 +471,25 @@ export declare class SmoLyric extends SmoNoteModifierBase {
     static _chordGlyphFromCode(code: string): string;
     static _tokenizeChordString(str: string): string[];
     constructor(parameters: SmoLyricParams);
+}
+/**
+ * Used to create a {@link SmoBarline}
+ * @category SmoObject
+ */
+export interface SmoNoteBarParams {
+    barline: number;
+}
+export interface SmoNoteBarParamsSer extends SmoNoteBarParams {
+    ctor: string;
+    barline: number;
+}
+export declare class SmoNoteBar extends SmoNoteModifierBase {
+    barline: number;
+    static get defaults(): SmoNoteBarParams;
+    static get parameterArray(): string[];
+    static readonly barlines: Record<string, number>;
+    constructor(parameters: SmoNoteBarParams);
+    serialize(): SmoNoteBarParamsSer;
 }
 /**
  * The persisted bits of {@link SmoDynamicTextParams}
@@ -564,4 +588,3 @@ export declare class SmoTabNote extends SmoNoteModifierBase {
     serialize(): SmoTabNoteParamsSer;
 }
 export declare const noteModifierDynamicCtorInit: () => void;
-//# sourceMappingURL=noteModifiers.d.ts.map

@@ -17,4 +17,3 @@ export declare class SuiInsertMeasures extends SuiDialogBase {
     get appendCtrl(): SuiToggleComponent;
     populateInitial(): void;
 }
-//# sourceMappingURL=addMeasure.d.ts.map

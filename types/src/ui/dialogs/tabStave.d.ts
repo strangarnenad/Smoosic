@@ -40,4 +40,3 @@ export declare class SuiTabStaveDialog extends SuiDialogAdapterBase<SuiTabStaveA
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=tabStave.d.ts.map

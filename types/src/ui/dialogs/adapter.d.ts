@@ -105,4 +105,3 @@ export declare class SuiDialogAdapterBase<T extends SuiComponentAdapter> extends
      */
     bindElements(): void;
 }
-//# sourceMappingURL=adapter.d.ts.map

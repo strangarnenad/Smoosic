@@ -58,4 +58,3 @@ export declare class SuiPartInfoDialog extends SuiDialogAdapterBase<SuiPartInfoA
     constructor(params: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=partInfo.d.ts.map

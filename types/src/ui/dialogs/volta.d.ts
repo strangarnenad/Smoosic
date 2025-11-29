@@ -38,4 +38,3 @@ export declare class SuiVoltaAttributeDialog extends SuiDialogAdapterBase<SuiVol
     static createAndDisplay(parameters: SuiDialogParams): SuiVoltaAttributeDialog | null;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=volta.d.ts.map

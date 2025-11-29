@@ -34,4 +34,3 @@ export declare class SuiMicrotoneDialog extends SuiDialogAdapterBase<SuiMicroton
     constructor(parameters: SuiDialogParams);
     changed(): Promise<void>;
 }
-//# sourceMappingURL=microtones.d.ts.map
