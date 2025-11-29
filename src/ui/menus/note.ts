@@ -1,5 +1,5 @@
 import { createAndDisplayDialog } from '../dialogs/dialog';
-import {SuiArpeggioDialog } from '../dialogs/arpeggio';
+import { SuiArpeggioDialog } from '../dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../dialogs/clefChange';
 import { SuiNoteHeadDialog } from '../dialogs/noteHead';
 import { SuiOrnamentDialog } from '../dialogs/ornament';
@@ -41,7 +41,7 @@ const toggleCueMenuOption: SuiConfiguredMenuOption = {
  */
 const arpeggioMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiArpeggioDialog, {
+    SuiArpeggioDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -129,7 +129,7 @@ const graceNotesMenuOption: SuiConfiguredMenuOption = {
  */
 const clefNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiClefChangeDialog, {
+    SuiClefChangeDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -169,7 +169,7 @@ const togglePedalRelease: SuiConfiguredMenuOption = {
         if (shouldAdd) {
           releaseAr.push(selectorToAdd);
         }
-        pm.releases = releaseAr.sort((a, b) => SmoSelector.gt(a, b) ? 1 : -1);
+        pm.releases = releaseAr.sort((a: SmoSelector, b: SmoSelector) => SmoSelector.gt(a, b) ? 1 : -1);
         await addOrReplacePedalMarking(menu.view, pm);
       });
     });

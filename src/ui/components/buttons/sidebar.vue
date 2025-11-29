@@ -1,23 +1,17 @@
-<script>
-import { defineComponent } from 'vue';
-import { default as buttonComp } from './button.vue';
-export default defineComponent({
-  components: { buttonComp },
-  props: {
-    domId: String,
-    buttonProps: {
-      type: Array,
-      required: true
-    }
-  },
-  setup(props) {
-    const buttonProps = props.buttonProps;
-    const domId = props.domId;
-    const getId = (str) => `${domId}-${str}`;
-    const getClasses = (btnProps) => `${btnProps.icon} ${btnProps.classes}`;
-    return { buttonProps, domId, getId, getClasses };
-  }
-});
+<script setup lang="ts">
+import { ref } from 'vue';
+import { ButtonDefinition } from '../../buttons/button';
+import buttonComp  from './buttonComp.vue';
+interface Props {
+  domId: string,
+  buttonProps: ButtonDefinition[]
+}
+const props = defineProps < Props > ();
+const buttonProps = props.buttonProps;
+const domId = props.domId;
+const getId = (str: string) => `${domId}-${str}`;
+const getClasses = (btnProps: ButtonDefinition) => `${btnProps.icon} ${btnProps.classes}`;
+
 </script>
 <template>
   <div class="btn-group-vertical controls-left" role="group" :id="domId">

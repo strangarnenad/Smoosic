@@ -17,10 +17,9 @@ import { SmoNote } from '../../smo/data/note';
 import { EventHandler } from '../eventSource';
 import { SmoUiConfiguration } from '../configuration';
 import { PromiseHelpers } from '../../common/promiseHelpers';
-import { replaceVueRoot } from '../common';
 import { createApp, ref, Ref, watch } from 'vue';
 import { SuiNavigation } from '../navigation';
-import { default as baseDialog } from '../components/dialogs/legacyDialog.vue'
+
 
 declare var $: any;
 /**
@@ -54,7 +53,6 @@ export type DialogCallback = () => Promise<void>;
  */
 export interface DialogInstallParams {
   root: string,
-  complete: Ref<boolean>, 
   app: any, 
   appParams: any,
   dialogParams: SuiDialogParams,
@@ -75,14 +73,18 @@ export const InstallDialog = async (params: DialogInstallParams) => {
   if (params.dialogParams.startPromise) {
     await params.dialogParams.startPromise;
   }
-  const trapper = new InputTrapper('.attributeDialog');
+  const complete: Ref<boolean> = ref(false);
+
+  const trapper = new InputTrapper('#vue-modal-container');
   trapper.trap();
   const commitCb = async () => {
+    complete.value = true;
     await params.commitCb();
     trapper.close();
     SuiNavigation.instance.hideDialogModal();
   }
   const cancelCb = async () => {
+    complete.value = true;
     await params.cancelCb();
     trapper.close();
     SuiNavigation.instance.hideDialogModal();
@@ -93,6 +95,7 @@ export const InstallDialog = async (params: DialogInstallParams) => {
     }
     trapper.close();
     SuiNavigation.instance.hideDialogModal();
+    complete.value = true;
   }
   params.appParams.commitCb = commitCb;
   params.appParams.cancelCb = cancelCb;
@@ -108,17 +111,17 @@ export const InstallDialog = async (params: DialogInstallParams) => {
   }
   // We take over he keyboard for the modal dialog so the user doesn't change the score
   // while typing into the dialog.  the 'completeNotifier' takes it back when we are done
-  params.dialogParams.completeNotifier.unbindKeyboardForModal(new closeModalPromiser(params.complete));
+  params.dialogParams.completeNotifier.unbindKeyboardForModal(new closeModalPromiser(complete));
   params.dialogParams.eventSource.bindKeydownHandler(evKey);
   SuiNavigation.instance.showDialogModal();
-  const cb = () => { };
+  /* const cb = () => { };
   draggable({
     parent: $('#' + params.root).find('.attributeModal'),
     handle: $('#' + params.root).find('.jsDbMove'),
     animateDiv: '.draganime',
     cb,
     moveParent: true
-  });  
+  });*/  
 }
 
 /**
@@ -311,8 +314,8 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
 
     this.dialogElements = dialogElements;
 
-    const left = $('#smo-scroll-region').offset().left + $('.musicRelief').width() / 2;
-    const top = $('#smo-scroll-region').offset().top + $('.musicRelief').height() / 2;
+    const left = $('#smo-scroll-region').offset().left + $('#smo-scroll-region').width() / 2;
+    const top = $('#smo-scroll-region').offset().top + $('#smo-scroll-region').height() / 2;
 
     this.dgDom = this._constructDialog(dialogElements, {
       id: 'dialog-' + this.id,
@@ -470,13 +473,15 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
   }
   // ### build the html for the dialog, based on the instance-specific components.
   _constructDialog(dialogElements: DialogDefinition, parameters: SuiDomParams) {
-    const rootId = replaceVueRoot('#attribute-modal-container');
-    // createTopDomContainer('.attributeDialog');
-    const startDialogSession = () => {
-      return { elements: dialogElements, parameters };
-    }
-    createApp(baseDialog, { startDialogSession }).mount('#' + rootId);
+    createTopDomContainer('.attributeDialog');
     const id = parameters.id;
+     const b = buildDom;
+    const r = b('div').classes('attributeModal').attr('id', 'attr-modal-' + id)
+      .css('top', parameters.top + 'px').css('left', parameters.left + 'px')
+      .append(b('spanb').classes('draggable button').append(b('span').classes('icon icon-move jsDbMove')))
+      .append(b('h2').classes('dialog-label').text(this.label));
+
+    var ctrl = b('div').classes('smoControlContainer');
     dialogElements.elements.filter((de) => de.control).forEach((de) => {
       const classes = de.classes ? de.classes : '';
       const compParams: SuiBaseComponentParams = {
@@ -486,17 +491,28 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
         const control: SuiComponentBase = SmoDynamicComponentCtor[de.control](this, compParams);
         this.components.push(control);
         this.cmap[de.smoName + 'Ctrl'] = control;
-        $('#smo-dialog-container').append(control.html);
+        ctrl.append(control.html);
       } catch (exp) {
         console.error('bad ctor ' + de.smoName);
         throw(exp);
       }
     });
+    r.append(ctrl);
+    r.append(
+      b('div').classes('buttonContainer').append(
+        b('button').classes('ok-button button-left btn btn-primary').text('OK')).append(
+        b('button').classes('cancel-button button-center btn btn-secondary').text('Cancel')).append(
+        b('button').classes('remove-button button-right btn btn-secondary').text('Remove').append(
+          b('span').classes('icon icon-cancel-circle'))));
+    $('.attributeDialog').html('');
+
+    $('.attributeDialog').append(r.dom());
+
     const trapper = new InputTrapper('.attributeDialog');
     trapper.trap();
-    $('.attributeModal').find('.cancel-button').focus();
+    $('.attributeDialog').find('.cancel-button').focus();
     return {
-      element: $('.attributeModal'),
+      element: $('.attributeDialog'),
       trapper
     };
   }

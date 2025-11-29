@@ -105,7 +105,7 @@ export const initDialogTranslationElements = () => {
   DialogTranslations.push(suiDialogTranslate(SuiTextBlockDialog.dialogElements, 'SuiTextBracketDialog'));
   DialogTranslations.push(suiDialogTranslate(SuiLyricDialog.dialogElements, 'SuiLyricDialog'));
   DialogTranslations.push(suiDialogTranslate(SuiInsertMeasures.dialogElements, 'SuiInsertMeasures'));
-  DialogTranslations.push(suiDialogTranslate(SuiArpeggioDialog.dialogElements, 'SuiArpeggioDialog'));
+  // DialogTranslations.push(suiDialogTranslate(SuiArpeggioDialog.dialogElements, 'SuiArpeggioDialog'));
 }
 export const initDialogConstructors = () => {
   SmoDynamicComponentCtor['SuiButtonComponent'] = 

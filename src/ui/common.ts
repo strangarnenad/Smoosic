@@ -31,6 +31,7 @@ export interface RibbonLayout {
   ribbonButtons: ButtonDefinition[]
 }
 
+export const modalContainerId = '#vue-modal-container';
 /**
  * Remove and replace an element, so we can reattach Vue to it
  * @param element the ID or element we are replacing

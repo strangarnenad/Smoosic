@@ -9,7 +9,7 @@ console.log(`command is ${command}`);
 const { webpack, DefinePlugin } = require('webpack');
 const webpackConfig = {
   mode: 'development',
-  entry: path.join(BASE_DIR, 'src/application/exports.ts'),
+  entry: path.join(BASE_DIR, 'src/application/exports.ts'),  
   output: {
     path: BUILD_DIR,
     filename: 'smoosic.js',
@@ -54,6 +54,7 @@ const webpackConfig = {
     },  {
           test: /\.vue$/,
           use: ['vue-loader'],
+          exclude: /node_modules|types/
         },
       { test: /\.css$/, use: ['vue-style-loader', 'css-loader']}]
   },

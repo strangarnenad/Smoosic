@@ -1,28 +1,23 @@
-<script>
-import { defineComponent, onMounted, useTemplateRef, toRef } from 'vue';
-export default defineComponent({
-  props: {
-    bugModalView: Object,
-    mainDomInit: {
-      required: true,
-      type: Function
-    }
-  },
-  setup(props) {
-    const pianoKeys = useTemplateRef('pianoKeys');
-    const showBugModal = props.bugModalView;
-    const mainDomInit = props.mainDomInit;
-    onMounted(() => {
-      mainDomInit(pianoKeys.value);
-    });
-    return { pianoKeys, showBugModal, mainDomInit };
-  }
+<script setup lang="ts">
+import { onMounted, useTemplateRef, toRef, Ref } from 'vue';
+interface Props {
+  bugModalView: Ref<boolean>,
+  mainDomInit: (pianoKeys: HTMLElement | null) => void
+}
+const props = defineProps<Props>();
+const pianoKeys = useTemplateRef('pianoKeys');
+const showBugModal = props.bugModalView;
+const mainDomInit = props.mainDomInit;
+onMounted(() => {
+  mainDomInit(pianoKeys.value);
 });
+
 </script>
 <template>
   <div class="bug-modal" id="bug-modal" :class="{ hide: !showBugModal }"></div>
-  <div class="draganime hide" aria-hidden="true" style="width: 380px; height: 153.031px; left: 754px; top: 265px;"></div>  
+  <div class="draganime hide" style="width: 380px; height: 153.031px; left: 754px; top: 265px;"></div>
   <div class="dialogContainer attributeDialog" id="attribute-modal-container"></div>
+  <div class="vueDialogContainer" id="vue-modal-container"></div>
   <div class="dom-container" :class="{ masked: showBugModal }">
     <div class="mask"></div>
     <div class="workspace language-dir">

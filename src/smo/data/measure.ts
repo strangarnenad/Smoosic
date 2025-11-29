@@ -1684,7 +1684,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     if (rv === null) {
       return new SmoBarline(SmoBarline.defaults);
     }
-    return rv;
+    return rv as SmoBarline;
   }
 
   getEndBarline(): SmoBarline {    

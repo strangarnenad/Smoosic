@@ -13,7 +13,7 @@ import { MidiToSmo } from '../../smo/midi/midiToSmo';
 import { PromiseHelpers } from '../../common/promiseHelpers';
 import { SmoToVex } from '../../render/vex/toVex';
 import { parseMidi } from '../../common/midi-parser.js';
-import { replaceVueRoot } from '../common';
+import { replaceVueRoot, modalContainerId } from '../common';
 import { createApp, ref, Ref, watch } from 'vue';
 import { SuiFileInput } from '../fileio/fileInput';
 import { default as messageDialog } from '../components/dialogs/modalMessage.vue';
@@ -24,7 +24,6 @@ declare var $: any;
 
 export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
   const enable: Ref<boolean> = ref(false);
-  const complete: Ref<boolean> = ref(false);
   let filename = '';
   let uploadedFile: any | null = null;
   let quantizeValue: number = 1024;
@@ -63,7 +62,6 @@ export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
     }
   }
   const commitCb = async () => {
-    complete.value = true;
     if (filename.endsWith('.mid') || filename.endsWith('.midi')) {
       await commitMidi();
     }
@@ -82,16 +80,14 @@ export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
     }
   }
   const cancelCb = async () => {
-    complete.value = true;
   }
-  const rootId = replaceVueRoot('#attribute-modal-container');
-  const appParams = { enable, uploadCb, domId: rootId };
+  const rootId = replaceVueRoot(modalContainerId);
+  const appParams: any = { enable, uploadCb, domId: rootId };
   if (parameters.id === 'importMidi') {
     appParams['quantizeCb'] = quantizeCb;
   }
   InstallDialog({
     root: rootId,
-    complete,
     app: fileUploadApp,
     appParams,
     dialogParams: parameters,
@@ -101,7 +97,6 @@ export const SuiFileUploadDialog = async (parameters: SuiDialogParams) => {
 }
 
 export const SuiFileSaveDialog  = async (parameters: SuiDialogParams) => {
-  const complete: Ref<boolean> = ref(false);
   const page = 0;
   const contents: Ref<any> = ref('');
   const getSmoContent = () => {
@@ -150,16 +145,13 @@ export const SuiFileSaveDialog  = async (parameters: SuiDialogParams) => {
     extension.value = ext;
   }
   const commitCb = async () => {
-    complete.value = true;
   }
   const cancelCb = async () => {
-    complete.value = true;
   }
-  const rootId = replaceVueRoot('#attribute-modal-container');
+  const rootId = replaceVueRoot(modalContainerId);
   const appParams = { suggestedName, contents, extension, changeExtensionCb, domId: rootId };
   InstallDialog({
     root: rootId,
-    complete,
     app: saveFileApp,
     appParams,
     dialogParams: parameters,
@@ -168,17 +160,15 @@ export const SuiFileSaveDialog  = async (parameters: SuiDialogParams) => {
   });
 }
 export const SuiPrintDialog = async (parameters: SuiDialogParams) => {
-  const complete: Ref<boolean> = ref(false);
   await parameters.view.renderer.renderForPrintPromise();
   window.print();
   const okCb = () => {
-    complete.value = true;
     $('body').removeClass('printing');
     parameters.view.renderer.restoreLayoutAfterPrint();
     window.dispatchEvent(new Event('resize'));
     SuiNavigation.instance.hideDialogModal();
   }
-  const rootId = replaceVueRoot('#attribute-modal-container');
+  const rootId = replaceVueRoot(modalContainerId);
   const appParams = { domId: rootId, okCb, message: 'Print complete!', headline: 'Printing' };
   createApp(messageDialog as any, appParams).mount('#' + rootId);
   SuiNavigation.instance.showDialogModal();

@@ -18,16 +18,21 @@
     "soundfont2": "^0.4.0",
     "standardized-audio-context": "^25.3.58",
     "ts-loader": "^9.2.5",
-    "typedoc": "^0.25.0",
-    "typescript": "^5.2.2",
+    "typedoc": "^0.28.14",
+    "typescript": "^5.9.3",
     "vexflow_smoosic": "4.2.11",
-    "vue": "^3.5.24",
+    "vue": "^3.5.25",
     "vue-loader": "^17.4.2"
   },
   "main": "build/smoosic.js",
   "description": "<sub>[Github site](https://github.com/Smoosic/smoosic) | [source documentation](https://smoosic.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub>",
   "directories": {
     "test": "tests"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   },
   "scripts": {
     "test": "exit 0",

@@ -28,9 +28,9 @@ export class SuiNavigation {
     this.bugModalView.value = false;
   }
   showDialogModal() {
-    $('body').addClass('showAttributeDialog');
+    $('body').addClass('showVueDialog');
   }
   hideDialogModal() {
-    $('body').removeClass('showAttributeDialog');
+    $('body').removeClass('showVueDialog');
   }
 }

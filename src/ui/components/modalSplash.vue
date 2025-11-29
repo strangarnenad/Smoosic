@@ -1,3 +1,22 @@
+<script setup lang="ts">
+import { onMounted } from 'vue';
+interface Props {
+  closeFunction: () => void,
+  timer?: number
+}
+const props = defineProps < Props > ();
+const closeFunction = props.closeFunction;
+const timer = props.timer || 0;
+const imageLoc = '../styles/images/logo.png';
+onMounted(() => {
+  if (timer && timer > 0) {
+    setTimeout(() => {
+      closeFunction();
+    }, timer);
+  }
+})
+</script>
+
 <template>
   <div class="modal">
     <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -43,30 +62,3 @@
     </div>
   </div>
 </template>
-<script type="ts">
-import { defineComponent, onMounted } from 'vue';
-export default defineComponent({
-  props: {
-    closeFunction: {
-      type: Function,
-      required: true
-    }, timer: {
-      type: Number,
-      required: false
-    }
-  }
-  , setup(props) {
-    const closeFunction = props.closeFunction;
-    const timer = props.timer || 0;
-    const imageLoc = '../styles/images/logo.png';
-    onMounted(() => {
-      if (timer && timer > 0) {
-        setTimeout(() => {
-          closeFunction();
-        }, timer);
-      }
-    })
-    return { closeFunction, imageLoc, timer };
-  }
-});
-</script>
