@@ -9,7 +9,6 @@ interface Props3 {
 const props = defineProps<Props3>();
 const { topRef, leftRef } = props.getCoordsCb();
 const domId = props.domId;
-console.log('domId is ' + domId);
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }

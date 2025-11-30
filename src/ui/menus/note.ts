@@ -1,7 +1,7 @@
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiArpeggioDialog } from '../dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../dialogs/clefChange';
-import { SuiNoteHeadDialog } from '../dialogs/noteHead';
+import { SuiNoteHeadDialog, SuiNoteHeadDialogVue } from '../dialogs/noteHead';
 import { SuiOrnamentDialog } from '../dialogs/ornament';
 import { SuiDurationDialog } from '../dialogs/durations';
 import { SuiArticulationDialog } from '../dialogs/articulation';
@@ -63,7 +63,7 @@ const arpeggioMenuOption: SuiConfiguredMenuOption = {
  */
 const noteHeadMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiNoteHeadDialog, {
+    SuiNoteHeadDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -107,7 +107,7 @@ const pitchMenuOption: SuiConfiguredMenuOption = {
  */
 const graceNotesMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiGraceNoteDialog, {
+    SuiGraceNoteDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,

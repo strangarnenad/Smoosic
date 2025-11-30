@@ -32,7 +32,7 @@ import { dynamicCtorInit } from './dynamicInit';
 // Dialogs
 import { SuiDialogBase, createAndDisplayDialog } from '../ui/dialogs/dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from '../ui/dialogs/adapter';
-import { SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent } from '../ui/dialogs/gracenote';
+import { SuiGraceNoteDialog } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
 import { SuiTransposeScoreDialog, SuiTransposeScoreAdapter } from '../ui/dialogs/transposeScore';
 import { SuiMeasureDialog } from '../ui/dialogs/measureFormat';
@@ -350,7 +350,7 @@ export const Smo = {
   SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SuiEditMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
   SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
   // Dialogs
-  SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent,
+  SuiGraceNoteDialog,
   SuiDurationAdapter, SuiDurationDialog, SuiDurationButtonComponent,
   SuiComponentAdapter, SuiDialogAdapterBase,
   SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,

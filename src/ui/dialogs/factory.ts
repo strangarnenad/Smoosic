@@ -35,7 +35,6 @@ import { SuiToggleComponentParams, SuiToggleComponent, SuiToggleCompositeParams,
 import { SuiTreeComponent, SuiTreeComponentParams } from './components/tree';
 import { SuiArticulationButtonComponent } from './articulation';
 import { SuiDurationButtonComponent } from './durations';
-import { SuiGraceNoteButtonsComponent } from './gracenote';
 import { SuiMicrotoneButtonComponent } from './microtones';
 import { SuiNoteHeadButtonComponent, SuiStemButtonComponent  } from './noteHead';
 import { SuiOrnamentButtonComponent } from './ornament';
@@ -173,8 +172,6 @@ export const initDialogConstructors = () => {
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiStartBarButtonComponent(dialog, params);
   SmoDynamicComponentCtor['SuiRepeatSymbolButtonComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiRepeatSymbolButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiGraceNoteButtonsComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiGraceNoteButtonsComponent(dialog, params);
   SmoDynamicComponentCtor['SuiMicrotoneButtonComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiMicrotoneButtonComponent(dialog, params);
   SmoDynamicComponentCtor['SuiNoteHeadButtonComponent'] = 

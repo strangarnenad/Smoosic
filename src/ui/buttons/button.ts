@@ -43,9 +43,20 @@ export interface ButtonDefinition {
       interval: string,
       direction: string
     }
-  }
-  export type ButtonCallback = (button: ButtonDefinition) => Promise<void>;
-
+}
+export type ButtonCallback = (button: ButtonDefinition) => Promise<void>;
+export type DialogButtonState = 'selected' | 'unselected' | 'partiallySelected';
+export interface DialogButtonDefinition {
+    label: string,
+    classes: string,
+    icon: string,
+    callback: DialogButtonCallback,
+    id: string,
+    group: string,
+    hotkey?: string,
+    state: DialogButtonState
+}
+export type DialogButtonCallback = (button: DialogButtonDefinition) => Promise<void>;
 /**
  * @category SuiButton
  */

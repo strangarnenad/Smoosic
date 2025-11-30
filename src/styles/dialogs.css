@@ -37,6 +37,26 @@ body.showVueDialog .vueDialogContainer {
   position: absolute;
   left: 0.1rem;
 }
+.btn-toolbar.dialog-button-group {
+  flex-flow: row nowrap;
+}
+
+.dialog-button-group button.btn-sm {
+  position: relative;
+  min-width: 40px;
+  max-height: 40px;
+}
+.dialog-button-group button.btn-lg {
+  position: relative;
+  min-width: 120px;
+  max-height: 50px;
+}
+.dialog-button-group button.btn .icon-bravura {
+  font-size: 2.3rem;
+  top:0;
+  left: 0;
+  position: relative
+}
 body .attributeModal .show-when-editing {
   display:none;
 }

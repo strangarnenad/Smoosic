@@ -1,95 +1,71 @@
-<script>
-import { defineComponent, ref } from 'vue';
-export default defineComponent({
-  props: {
-    domId: {
-      type: String,
-      required: true
-    },
-    enable: {
-      type: Object,
-      required: true
-    },
-    initialValue: {
-      type: String,
-      required: true
-    },
-    clefChangeCb: {
-      type: Function,
-      required: true
-    },
-    commitCb: {
-      type: Function,
-      required: true
-    },
-    cancelCb: {
-      type: Function,
-      required: true
-    }
-  },
-  setup(props) {
-    const { domId, clefChangeCb, enable, initialValue, commitCb, cancelCb } = { ...props };
-    const top = '100';
-    const left = '100';
-    const clefChange = ref(initialValue);
-    const clefChanges = [{
-      label: 'Treble Clef Staff',
-      value: 'treble'
-    }, {
-      label: 'Bass Clef Staff',
-      value: 'bass'
-    }, {
-      label: 'Alto Clef Staff',
-      value: 'alto'
-    }, {
-      label: 'Tenor',
-      value: 'tenor'
-    }, {
-      label: 'Percussion',
-      value: 'percussion'
-    }];
-    const getDomId = () => {
-      return `attr-modal-dialog-${domId}`;
-    }
-    const getId = (str) => {
-      return `${domId}-${str}`;
-    }
-    const getLocString = () => {
-      return `top: ${top}px; left: ${left}px;`;
-    }
-    return {
-      enable, clefChangeCb, commitCb, cancelCb, getDomId, getId, getLocString,
-      domId, top, left, clefChange, clefChanges
-    };
-  }
-});
+<script setup lang="ts">
+import DialogButtons from './dialogButtons.vue';
+import draggableComp from './draggableComp.vue';
+import { ButtonDefinition } from '../../buttons/button';
+import buttonComp from '../buttons/buttonComp.vue';
+import { ref, Ref } from 'vue';
+interface Props {
+  domId: string,
+  addGraceNoteCb: () => Promise<void>,
+  removeGraceNoteCb: () => Promise<void>,
+  slashGraceNoteCb: () => Promise<void>,
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
+}
+const props = defineProps<Props>();
+const { domId, addGraceNoteCb, removeGraceNoteCb, slashGraceNoteCb, commitCb, cancelCb } = { ...props };
+const enable = ref(true);
+
+const top = ref(100);
+const left = ref(100);
+const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
+  return { topRef: top, leftRef: left };
+}
+const getDomId = () => {
+  return `attr-modal-dialog-${domId}`;
+}
+const getId = (str) => {
+  return `${domId}-${str}`;
+}
+const getLocString = () => {
+  return `top: ${top}px; left: ${left}px;`;
+}
 </script>
 <template>
   <div class="attributeModal" :id="getDomId()" :style="getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <span class="draggable-button">
-        <span class="icon icon-move jsDbMove"></span>
-      </span>
-      <div class="row">
+      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <div class="row mb-3">
         <h2 class="dialog-label">Grace Notes</h2>
       </div>
-      <div class="row align-items-baseline" :id="getId('clef-row')">
-        <div class="col-md-6">
-          <label :for="getId('clef-select')" class="form-label">Clef:</label>
-        </div>
-        <div class="col-md-6">
-          <select :id="getId('clef-select')" v-model="clefChange" @change="clefChangeCb(clefChange)"
-            class="form-control">
-            <option v-for="clefChange in clefChanges" :key="clefChange.value" :value="clefChange.value">
-              {{ clefChange.label }}
-            </option>
-          </select>
-        </div>
+      <div class="row-cols-4 mb-3">
+        <label class="align-self-center text-end" :for="getId('add-button')">Add Grace Note</label>
+        <button :domId="getId('add-button')" @click.prevent="addGraceNoteCb" class="btn btn-outline-secondary mx-3">
+          <span class="icon icon-smo icon-grace_note  me-2 h4"></span>
+          <span class="ms-2">shift-G</span>
+        </button>
       </div>
-      <div class="buttonContainer">
-        <button class="ok-button button-left btn btn-primary" :disabled="!enable" @click.prevent="commitCb">OK</button>
-        <button class="cancel-button button-center btn btn-secondary" @click.prevent="cancelCb">Cancel</button>
+      <div class="row-cols-4 mb-3">
+        <label class="align-self-center text-end" :for="getId('remove-button')">Remove Grace Note</label>
+        <button :domId="getId('remove-button')" @click.prevent="removeGraceNoteCb" class="btn btn-outline-secondary mx-3">
+          <span class="icon icon-smo icon-grace_note  me-2 h4"></span>
+          <span class="ms-2">alt-G</span>
+        </button>
+      </div>
+      <div class="row-cols-4 mb-3">
+        <label class="align-self-center text-end" :for="getId('slash-button')">Toggle Slash</label>
+        <button :domId="getId('slash-button')" @click.prevent="slashGraceNoteCb" class="btn btn-outline-secondary mx-3">
+          <div class="col align-self-start">
+          <span class="icon icon-smo icon-grace_slash  me-2 h4"></span>
+          <span class="ms-2"></span>
+          </div>
+        </button>
+      </div>
+      <div class="row mb-3 border-top pt-2">
+        <p class="text-muted">Use hot keys shift-G to add, alt-G to remove.</p>
+        <p class="text-muted">Use hot key alt-L to select grace notes.</p>
       </div>
     </div>
+    <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
   </div>
 </template>

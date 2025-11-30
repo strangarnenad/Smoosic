@@ -45,17 +45,13 @@ const getDomId = () => {
 const saveLink = useTemplateRef('saveLink');
 const saveFileCb = () => {
   if (saveLink.value) {
-    saveLink.value.click();
+    (saveLink.value as any).click();
   }
   commitCb();
 }
 const enable = ref(true);
 const getLocString = computed(() => {
   return `top: ${top.value}px; left: ${left.value}px;`;
-});
-
-watch(top, () => {
-  console.log(`top changed to ${top.value}`);
 });
 watch(contents, () => {
   url.value = URL.createObjectURL(new Blob([contents.value], { type: mimeType }));
