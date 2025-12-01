@@ -20,6 +20,7 @@ import { SvgHelpers } from '../render/sui/svgHelpers';
 import { SuiMenuManager } from '../ui/menus/manager';
 import { SmoConfiguration } from './configuration';
 import { SuiDom } from './dom';
+import { SuiNavigation } from '../ui/navigation'
 declare var $: any;
 
 /**
@@ -91,10 +92,6 @@ export class SuiEventHandler implements ModalEventHandler {
     this.bindEvents();
     this.bindResize();
     this.createPiano();
-  }
-
-  static get scrollable() {
-    return '.musicRelief';
   }
 
   private static handleScrollEventDefer(handler: SuiEventHandler) {
@@ -179,7 +176,7 @@ export class SuiEventHandler implements ModalEventHandler {
   // in the tracker.
   bindResize() {
     const self = this;
-    const el: HTMLElement = $(SuiEventHandler.scrollable)[0];
+    const el: HTMLElement = $(SuiNavigation.scrollable)[0];
     // unit test programs don't have resize html
     if (!el) {
       return;

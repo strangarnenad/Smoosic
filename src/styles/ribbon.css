@@ -117,11 +117,6 @@ body.alt-key button.menu-button .right-text{
   min-width: 100px;
   display: inline-block;
 }
-.controls-top button  {
-	border: 1px #44e solid;
-  border-radius:5px;
-	min-width: 50px;
-}
 .controls-top button.button-wide {
   font-size: 1em;
 }
@@ -203,13 +198,21 @@ button#MicrotoneButtons  {
 }
 .btn:hover {
     color: #fff;
-    background-color: #212529;
-    border-color: #212529;
+    background-color: #213529;
+    border-color: #213529;
+}
+.btn-group-vertical.controls-left .btn,
+.ribbonButtonContainer .btn {
+  border-color: #315529;
+  border-width: 2px;
+  border-style:outset;
+  transition: background-color 0.5s 
+    ease-in-out, transform 0.5s 
+    ease-in-out;  
 }
 button.icon {
   height: 40px;
   padding: 0;
-  background-color: var(--bg-btn-bg);
 }
 button.drop-down, button.text-icon {
   height: 40px;

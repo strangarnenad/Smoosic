@@ -148,8 +148,8 @@ export class defaultRibbonLayout {
       leftText: 'Help',
       rightText: '?',
       classes: 'menu-button btn btn-outline-dark',
-      action: 'modal',
-      ctor: 'helpModal',
+      action: 'menu',
+      ctor: 'SuiHelpMenu',
       group: 'scoreEdit',
       id: 'helpDialog'
     }, {

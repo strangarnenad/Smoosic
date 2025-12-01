@@ -19,6 +19,9 @@ export class SuiNavigation {
     SuiNavigation.instance = this;
     createApp(mainDom as any, { bugModalView: this.bugModalView, mainDomInit }).mount(uiDomContainer);
   }
+  static get scrollable() {
+    return '.musicRelief';
+  }
   showBugModal() {
     $('.dom-container').addClass('show-modal');
     this.bugModalView.value = true;

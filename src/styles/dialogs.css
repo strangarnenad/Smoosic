@@ -40,6 +40,9 @@ body.showVueDialog .vueDialogContainer {
 .btn-toolbar.dialog-button-group {
   flex-flow: row nowrap;
 }
+.btn-toolbar.dialog-button-group .btn {
+  border-color: var(--bs-form-valid-color);
+}
 
 .dialog-button-group button.btn-sm {
   position: relative;

@@ -39,13 +39,13 @@ const getLocString = () => {
         <h2 class="dialog-label">Note Heads and Stems</h2>
       </div>
       <div class="row mb-3">
-        <buttonGroup :label="'Head Shapes'" :buttonDefs="shapes" :domId="getId('shape-buttons')" :commonClasses="'btn btn-sm btn-outline-dark'"/>
+        <buttonGroup :label="'Head Shapes'" :buttonDefs="shapes" :domId="getId('shape-buttons')" :commonClasses="'btn btn-sm btn-outline-dark me-2'"/>
       </div>
       <div class="row mb-3">
-        <buttonGroup :label="'Heads'" :buttonDefs="heads" :domId="getId('head-buttons')" :commonClasses="'btn btn-sm btn-outline-dark'" />
+        <buttonGroup :label="'Heads'" :buttonDefs="heads" :domId="getId('head-buttons')" :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
       </div>
       <div class="row mb-3">
-        <buttonGroup :label="'Note Stems'" :buttonDefs="stems" :domId="getId('stem-buttons')" :commonClasses="'btn btn-lg btn-outline-dark'" />
+        <buttonGroup :label="'Note Stems'" :buttonDefs="stems" :domId="getId('stem-buttons')" :commonClasses="'btn btn-lg btn-outline-dark py-0  me-2'" />
       </div>
       <div class="row mb-3 border-top pt-2">
         <p class="text-muted">Use R to toggle note to rest.  Use &lt;Delete&gt; to toggle visibility.</p>

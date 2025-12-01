@@ -43,7 +43,7 @@ onMounted(() => {
       <div class="media" id="media">
         <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary sticky-top" id="controls-left">
         </div>
-        <div class="flex-lg-column" id="smo-scroll-region">
+        <div class="flex-lg-column musicRelief" id="smo-scroll-region">
         </div>
       </div>
     </div>
