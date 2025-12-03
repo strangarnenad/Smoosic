@@ -33,8 +33,8 @@ const ariaPressed = (button: DialogButtonDefinition) => {
 }
 </script>
 <template>
-  <label class="align-self-center text-end col-2">{{ label }}</label>
-  <div class="btn-toolbar dialog-button-group col-6" role="group" :id="domId">
+  <label class="center-text">{{ label }}</label>
+  <div class="btn-toolbar dialog-button-group" role="group" :id="domId">
     <button v-for="btnDef in buttonDefs" 
       data-bs-toggle="button"
       :key="btnDef.id" 

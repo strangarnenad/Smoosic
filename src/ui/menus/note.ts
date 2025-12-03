@@ -1,10 +1,10 @@
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiArpeggioDialog } from '../dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../dialogs/clefChange';
-import { SuiNoteHeadDialog, SuiNoteHeadDialogVue } from '../dialogs/noteHead';
-import { SuiOrnamentDialog } from '../dialogs/ornament';
+import { SuiNoteHeadDialog } from '../dialogs/noteHead';
+import { SuiOrnamentDialogVue } from '../dialogs/ornament';
 import { SuiDurationDialog } from '../dialogs/durations';
-import { SuiArticulationDialog } from '../dialogs/articulation';
+import { SuiArticulationDialog, SuiArticulationDialogVue } from '../dialogs/articulation';
 import { SuiGraceNoteDialog } from '../dialogs/gracenote';
 import { SuiMicrotoneDialog } from '../dialogs/microtones';
 import { SuiPitchDialog } from '../dialogs/pitch';
@@ -63,7 +63,7 @@ const arpeggioMenuOption: SuiConfiguredMenuOption = {
  */
 const noteHeadMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    SuiNoteHeadDialogVue({
+    SuiNoteHeadDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -194,7 +194,7 @@ const togglePedalRelease: SuiConfiguredMenuOption = {
  */
 const ornamentNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiOrnamentDialog, {
+    SuiOrnamentDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -238,14 +238,14 @@ const durationDialogMenuOption: SuiConfiguredMenuOption = {
  */
 const articulationNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiArticulationDialog, {
+    SuiArticulationDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
       eventSource: menu.eventSource,
       tracker: menu.tracker,
       ctor: 'SuiArticulationDialog',
-      id: 'ornament-dialog',
+      id: 'articulation-dialog',
       modifier: null
     });
   }, display: (menu: SuiMenuBase) => true,

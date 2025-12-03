@@ -36,7 +36,6 @@ import { SuiTreeComponent, SuiTreeComponentParams } from './components/tree';
 import { SuiArticulationButtonComponent } from './articulation';
 import { SuiDurationButtonComponent } from './durations';
 import { SuiMicrotoneButtonComponent } from './microtones';
-import { SuiNoteHeadButtonComponent, SuiStemButtonComponent  } from './noteHead';
 import { SuiOrnamentButtonComponent } from './ornament';
 import { SuiIntervalButtonComponent, SuiTransposeButtonComponent, SuiLetterButtonComponent } from './pitch';
 import { SmoLyric } from '../../smo/data/noteModifiers';
@@ -174,10 +173,6 @@ export const initDialogConstructors = () => {
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiRepeatSymbolButtonComponent(dialog, params);
   SmoDynamicComponentCtor['SuiMicrotoneButtonComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiMicrotoneButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiNoteHeadButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiNoteHeadButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiStemButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiStemButtonComponent(dialog, params);
   SmoDynamicComponentCtor['SuiOrnamentButtonComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiOrnamentButtonComponent(dialog, params);
 

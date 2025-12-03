@@ -40,7 +40,7 @@ import { SuiInsertMeasures } from '../ui/dialogs/addMeasure';
 import { SuiInstrumentDialog } from '../ui/dialogs/instrument';
 import { SuiTimeSignatureDialog } from '../ui/dialogs/timeSignature';
 import { SuiTempoDialog } from '../ui/dialogs/tempo';
-import { SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiNoteHeadButtonComponent, SuiStemButtonComponent } from '../ui/dialogs/noteHead';
+import { SuiNoteHeadDialog } from '../ui/dialogs/noteHead';
 import { SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from '../ui/dialogs/endings';
 import { SuiScoreIdentificationDialog } from '../ui/dialogs/scoreId';
@@ -61,7 +61,7 @@ import { SuiVoltaAttributeDialog } from '../ui/dialogs/volta';
 import { SuiHairpinAttributesDialog } from '../ui/dialogs/hairpin';
 import { SuiStaffGroupDialog } from '../ui/dialogs/staffGroup';
 import { SuiOrnamentDialog, SuiOrnamentButtonComponent } from '../ui/dialogs/ornament';
-import { SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter } from '../ui/dialogs/articulation';
+import { SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter, SuiArticulationDialogVue } from '../ui/dialogs/articulation';
 import { SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog } from '../ui/dialogs/microtones';
 import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
@@ -364,9 +364,9 @@ export const Smo = {
   SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
   SuiScorePreferencesDialog,
   SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
-  SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
+  SuiArticulationDialog, SuiArticulationDialogVue, SuiArticulationButtonComponent, SuiArticulationAdapter,
   SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
-  SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
+  SuiNoteHeadDialog,    
   SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,  
   SuiFileSaveDialog, SuiPrintDialog,

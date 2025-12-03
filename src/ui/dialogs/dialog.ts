@@ -97,6 +97,7 @@ export const InstallDialog = async (params: DialogInstallParams) => {
     SuiNavigation.instance.hideDialogModal();
     complete.value = true;
   }
+  $('#' + params.root).addClass('modal show fade');
   params.appParams.commitCb = commitCb;
   params.appParams.cancelCb = cancelCb;
   params.appParams.removeCb = removeCb;

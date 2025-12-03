@@ -3,12 +3,169 @@
 import { SmoSelection, SmoSelector } from '../../smo/xform/selections';
 
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { DialogDefinition, SuiDialogParams } from './dialog';
+import { InstallDialog, DialogDefinition, SuiDialogParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
 import { getButtonsFcn, SuiButtonArrayMSComponent, SuiButtonArrayParameters } from './components/buttonArray';
 import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComponent';
 import { SmoArticulation, SmoOrnament } from '../../smo/data/noteModifiers';
 import { reverseStaticMap } from '../../smo/data/common';
+import { replaceVueRoot, modalContainerId } from '../common';
+import { DialogButtonDefinition, DialogButtonState } from '../buttons/button';
+import { reactive } from 'vue';
+import articulationApp from '../components/dialogs/articulations.vue';
+
+export const SuiArticulationDialogVue = (parameters: SuiDialogParams) => {
+  const rootId = replaceVueRoot(modalContainerId);
+  
+  const setForAll: Record<string, number> = {};
+  let notesCount = 0;
+  parameters.view.tracker.selections.forEach((sel) => {
+    const ornaments = sel.note!.getOrnaments();
+    notesCount += 1;
+    ornaments.forEach((ornament) => {
+      if (!setForAll[ornament.ornament]) {
+        setForAll[ornament.ornament] = 0;
+      }
+      setForAll[ornament.ornament] = setForAll[ornament.ornament] + 1;
+    });
+  });
+  const keys = Object.keys(setForAll);
+  const transitionButtonState = (button: DialogButtonDefinition) => {
+    if (button.state === 'selected') {
+      button.state = 'unselected';
+    } else {
+      button.state = 'selected';
+    }
+  }
+  const articulationCb = async (button: DialogButtonDefinition) => {
+    transitionButtonState(button);
+    const code = SmoArticulation.articulations[button.id];
+    await parameters.view.toggleArticulation(code, 'SmoArticulation');
+  }  
+  const positionChangeCb = async (value: string) => {
+    const selections = parameters.view.tracker.selections.filter((ss) => ss.note);
+    selections.forEach((selection) => {
+      const articulations = selection.note!.getArticulations();
+      articulations.forEach((art) => {
+        parameters.view.modifySelectionNoWait('articulation pos', selection, (score, sel) => {
+          const nart = new SmoArticulation({ articulation: art.articulation, position: value });
+          sel.note!.setArticulation(art, false);
+          sel.note!.setArticulation(nart, true);
+        });
+      });
+    });
+  }
+  const articulations: DialogButtonDefinition[] = reactive([{
+    classes: '',
+    icon: 'icon-bravura  icon-fermataBelow',
+    id: 'fermata',
+    hotkey: '',
+    label: 'Fermata',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  },{
+    classes: '',
+    icon: 'icon-bravura icon-articAccentBelow',
+    id: 'accent',
+    hotkey: '',
+    label: 'Accent',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  },{
+    classes: '',
+    icon: 'icon-bravura icon-articTenutoBelow',
+    id: 'tenuto',
+    hotkey: '',
+    label: 'Tenuto',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  },{
+    classes: '',
+    icon: 'icon-bravura icon-articStaccatoBelow',
+    id: 'staccato',
+    hotkey: '',
+    label: 'Staccato',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  }, {
+    classes: '',
+    icon: 'icon-bravura icon-articMarcatoBelow',
+    id: 'marcato',
+    hotkey: '',
+    label: 'Marcato',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  }, {
+    classes: '',
+    icon: 'icon-bravura icon-pluckedSnapPizzicatoBelow',
+    id: 'pizzicato',
+    hotkey: '',
+    label: 'Pizzicato',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  }, {
+    classes: '',
+    icon: 'icon-bravura icon-stringsDownBow',
+    id: 'bowDown',
+    hotkey: '',
+    label: 'Bow Down',
+    callback: articulationCb,
+    state: 'unselected', 
+    group: 'Glyphs'
+  }, {
+    classes: '',
+    icon: 'icon-bravura icon-stringsUpBow',
+    id: 'bowUp',
+    hotkey: '',
+    label: 'Bow Up',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'Glyphs'
+  },   {
+    classes: '',
+    icon: 'icon-bravura icon-caesura',
+    id: 'caesura',
+    hotkey: '',
+    label: 'Caesura',
+    callback: articulationCb,
+    state: 'unselected',
+    group: 'basic'
+    }
+  ]);
+  
+  keys.forEach((key) => {
+    if (setForAll[key] === notesCount) {
+      let btnId = articulations.find((btn) => btn.id === key);
+      if (btnId) {
+        btnId.state = 'selected';
+      }
+    } else {
+      let btnId = articulations.find((btn) => btn.id === key);
+      if (btnId) {
+        btnId.state = 'partiallySelected';
+      }    
+    }
+  });
+
+  // Undo on cancel for any changes made
+  parameters.view.groupUndo(true);
+  const commitCb = async () => {
+  }
+  const cancelCb = async () => {    
+    await parameters.view.undo();
+  }
+  const appParams = {  domId: rootId,
+    articulations, positionChangeCb, initialValue: 'auto',
+  };
+
+  InstallDialog({root: rootId, app: articulationApp, appParams, dialogParams: parameters, commitCb, cancelCb });
+}
 
 /**
  * Buttons for the articulation dialog
