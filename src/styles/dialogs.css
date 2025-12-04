@@ -244,7 +244,9 @@ body.showQwerty .keyContainer {
   --bs-btn-padding-y: 0.175rem;
   font-size: 0.9em;
 }
-body.showVueDialog .attributeDialog {
+body.showVueDialog .attributeDialog,
+body.showAttributeDialog .attributeDialog {
+  position:absolute;
 	display:block;
 	z-index:3;
 }

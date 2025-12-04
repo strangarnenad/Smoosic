@@ -261,7 +261,7 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
       }
       const currentTime = SuiOscillator.audio.currentTime;
       this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 
-        velocity: this.velocity, detune: this.offset});
+        velocity: this.velocity, detune: this.detune});
     }
   }
 }

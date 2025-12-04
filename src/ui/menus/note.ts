@@ -4,9 +4,9 @@ import { SuiClefChangeDialog } from '../dialogs/clefChange';
 import { SuiNoteHeadDialog } from '../dialogs/noteHead';
 import { SuiOrnamentDialogVue } from '../dialogs/ornament';
 import { SuiDurationDialog } from '../dialogs/durations';
-import { SuiArticulationDialog, SuiArticulationDialogVue } from '../dialogs/articulation';
+import { SuiArticulationDialogVue } from '../dialogs/articulation';
 import { SuiGraceNoteDialog } from '../dialogs/gracenote';
-import { SuiMicrotoneDialog } from '../dialogs/microtones';
+import { SuiMicrotoneDialogVue } from '../dialogs/microtones';
 import { SuiPitchDialog } from '../dialogs/pitch';
 import { SmoPedalMarking } from '../../smo/data/staffModifiers';
 import { SmoSelector } from '../../smo/xform/selections';
@@ -260,7 +260,7 @@ const articulationNoteDialogMenuOption: SuiConfiguredMenuOption = {
  */
 const microtoneNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiMicrotoneDialog, {
+    SuiMicrotoneDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,

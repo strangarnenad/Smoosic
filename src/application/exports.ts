@@ -60,9 +60,9 @@ import { SuiTieAttributesDialog } from '../ui/dialogs/tie';
 import { SuiVoltaAttributeDialog } from '../ui/dialogs/volta';
 import { SuiHairpinAttributesDialog } from '../ui/dialogs/hairpin';
 import { SuiStaffGroupDialog } from '../ui/dialogs/staffGroup';
-import { SuiOrnamentDialog, SuiOrnamentButtonComponent } from '../ui/dialogs/ornament';
-import { SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter, SuiArticulationDialogVue } from '../ui/dialogs/articulation';
-import { SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog } from '../ui/dialogs/microtones';
+import { SuiOrnamentDialogVue } from '../ui/dialogs/ornament';
+import { SuiArticulationDialogVue } from '../ui/dialogs/articulation';
+import { SuiMicrotoneDialogVue } from '../ui/dialogs/microtones';
 import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
 import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
@@ -363,9 +363,9 @@ export const Smo = {
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
   SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
   SuiScorePreferencesDialog,
-  SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
-  SuiArticulationDialog, SuiArticulationDialogVue, SuiArticulationButtonComponent, SuiArticulationAdapter,
-  SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
+  SuiPartInfoDialog, SuiOrnamentDialogVue, 
+  SuiArticulationDialogVue, 
+  SuiMicrotoneDialogVue,
   SuiNoteHeadDialog,    
   SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,  
