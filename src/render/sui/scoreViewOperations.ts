@@ -286,7 +286,12 @@ export class SuiScoreViewOperations extends SuiScoreView {
             }
           }
       });
-    });   
+    });
+    // Make sure all the notes in the measure after the change are updated.  
+    // We only need to do this for the displayed score, not the storeScore.
+    SmoSelection.getMeasureList(this.tracker.selections).forEach((ms) => {
+      ms.measure.updateClefChangeNotes();
+    })
   }
   /**
    * Modify the dynamics assoicated with the specific selection

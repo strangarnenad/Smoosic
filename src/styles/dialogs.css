@@ -1,4 +1,25 @@
-
+.mw-40 {
+  max-width: 40rem;
+}
+.mw-30 {
+  max-width: 30rem;
+}
+.mw-20 {
+  max-width: 20rem;
+}
+.mw-60 {
+  max-width: 60rem;
+}
+.w-40 {
+  width: 40rem;
+}
+.w-30 {
+  width: 30rem;
+}
+.no-vertical-padding {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 #attr-modal-dialog-libraryMenu #libraryMenu-smoLibrary {
   max-height: 350px;
   overflow-y: auto;
@@ -39,16 +60,15 @@ body.showVueDialog .modal{
   position: absolute;
   left: 0.1rem;
 }
-.btn-toolbar.dialog-button-group {
-  flex-flow: row nowrap;
-}
+
 .btn-toolbar.dialog-button-group .btn {
   border-color: var(--bs-form-valid-color);
 }
 
 .dialog-button-group button.btn-sm {
   position: relative;
-  height:2rem;
+  height:2.3rem;
+  min-width:2.3rem;
 }
 .dialog-button-group button.btn-lg {
   position: relative;
@@ -56,7 +76,7 @@ body.showVueDialog .modal{
   max-height: 50px;
 }
 .dialog-button-group button.btn .icon-bravura {
-  font-size: 2rem;
+  font-size: 2.3rem;
   top:0;
   left: 0;
   position: relative
@@ -260,9 +280,7 @@ body.showAttributeDialog .attributeDialog {
 button.nav-link {
   width: 100%;
 }
-.vueDialogContainer .btn-toolbar {
-  justify-content:center;
-}
+
 .attributeModal {
 	position:absolute;
   min-width:380px;

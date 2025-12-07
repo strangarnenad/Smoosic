@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
+import draggableComp from './draggableComp.vue';
 import DialogButtons from './dialogButtons.vue';
 interface Props {
   domId: string,

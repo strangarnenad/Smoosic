@@ -1,5 +1,7 @@
 
-button .icon-bravura,.icon-bravura {
+button .icon-bravura,.icon-bravura, 
+button.icon-bravura,
+li.dropdown-item span.icon-bravura {
   font-family: 'Bravura'!important;
   position:absolute;
   pointer-events: none;

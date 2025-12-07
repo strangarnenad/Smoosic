@@ -37,13 +37,13 @@ const getLocString = () => {
       <div class="row mb-3">
         <h2 class="dialog-label">Ornaments</h2>
       </div>
-        <div class="row mb-3">
+        <div class="row mb-3 w-40">
           <buttonGroup :label="'Basic'" :buttonDefs="basic" :domId="getId('shape-buttons')"
-            :commonClasses="'btn btn-sm btn-outline-dark'" />
+            :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
         </div>
-        <div class="row mb-3">
+        <div class="row mb-3 w-40">
           <buttonGroup :label="'Jazz'" :buttonDefs="jazz" :domId="getId('head-buttons')"
-            :commonClasses="'btn btn-sm btn-outline-dark'" />
+            :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
         </div>
       <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
     </div>

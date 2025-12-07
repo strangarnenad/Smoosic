@@ -3,6 +3,8 @@ import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
 import { DialogButtonDefinition } from '../../buttons/button';
 import buttonGroup from './buttonGroup.vue';
+import { SelectOption } from '../../common';
+import selectComp from './select.vue';
 import { ref, Ref } from 'vue';
 interface Props {
   domId: string,
@@ -17,7 +19,7 @@ const props = defineProps<Props>();
 const { domId, articulations, commitCb, cancelCb } = { ...props };
 const enable = ref(true);
 const position = ref(props.initialValue);
-const positions = [
+const positions: SelectOption[] = [
   { label: 'Above Note', value: 'above' },
   { label: 'Below Note', value: 'below' },
   { label: 'Auto', value: 'auto' }
@@ -42,20 +44,20 @@ const getLocString = () => {
     <div class="text-center" :id="getId('modal-content')">
       <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
       <div class="row mb-3">
-        <h2 class="dialog-label">Ornaments</h2>
+        <h2 class="dialog-label">Articulations</h2>
       </div>
-      <div class="row mb-3">
+      <div class="row mb-3 w-40">
         <buttonGroup :label="'Glyph'" :buttonDefs="articulations" :domId="getId('shape-buttons')"
-          :commonClasses="'btn btn-sm btn-outline-dark'" />
+          :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
       </div>
-      <div class="col-md-6">
-
-        <select :id="getId('clef-select')" v-model="position" @change="positionChangeCb(position)"
-          class="form-control">
-          <option v-for="pos in positions" :key="pos.value" :value="pos.value">
-            {{ pos.label }}
-          </option>
-        </select>
+      <div class="row mb-3 align-items-center">
+        <div class="col col-2 float-end pe-0">
+          <span class="float-end" :for="getId('clef-select')">Position</span>
+        </div>
+        <div class="col col-10 text-start">
+          <selectComp :domId="getId('art-select')" label="Select" :initialValue="initialValue"
+            :selections="positions" :changeCb="positionChangeCb" />
+        </div>
       </div>
       <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
     </div>

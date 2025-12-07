@@ -4,7 +4,7 @@ interface Props {
   closeFunction: () => void,
   timer?: number
 }
-const props = defineProps < Props > ();
+const props = defineProps<Props>();
 const closeFunction = props.closeFunction;
 const timer = props.timer || 0;
 const imageLoc = '../styles/images/logo.png';
@@ -22,11 +22,12 @@ onMounted(() => {
     <div class="modal-dialog modal-lg modal-dialog-centered">
       <div class="modal-content">
         <div class="row">
-          <div class="help-closer"><button class="icon-cross close" @click.prevent="closeFunction"
-              aria-label="Close"></button></div>
+          <div class="help-closer py-1 modal-header">
+            <button type="button" class="btn-close" @click.prevent="closeFunction" data-bs-dismiss="modal"
+              aria-label="Close"></button>
+          </div>
         </div>
-        <div class="row align-items-center justify-content-center">
-
+        <div class="row align-items-center justify-content-center py-2">
           <div class="col-md-4">
             <img :src="imageLoc" width="200px" height="200px" alt="Smoosic Logo" />
           </div>

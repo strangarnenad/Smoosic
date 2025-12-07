@@ -13,7 +13,7 @@ const getClasses = (button: DialogButtonDefinition) => {
   let rv = button.classes + ' ' + props.commonClasses;
   if (button.state === 'selected' || button.state === 'partiallySelected') {
     rv += ' active';
-  } 
+  }
   return rv;
 }
 const getIconClasses = (button: DialogButtonDefinition) => {
@@ -33,18 +33,19 @@ const ariaPressed = (button: DialogButtonDefinition) => {
 }
 </script>
 <template>
-  <label class="center-text">{{ label }}</label>
-  <div class="btn-toolbar dialog-button-group" role="group" :id="domId">
-    <button v-for="btnDef in buttonDefs" 
-      data-bs-toggle="button"
-      :key="btnDef.id" 
-      :id="getId(btnDef.id)" 
-      :class="getClasses(btnDef)"
-      :aria-pressed="ariaPressed(btnDef)"
-      :aria-label="btnDef.label"      
-      @click.prevent="btnDef.callback(btnDef)">
-      <span :class="getIconClasses(btnDef)"></span>
-      <span v-if="btnDef.hotkey" class="ms-3">({{ btnDef.hotkey }})</span>
-    </button>
+  <div class="row mb-3 align-items-center">
+    <div class="col col-2">
+      <span class="float-end">{{ label }}</span>
+    </div>
+    <div class="col col-10">
+      <div class="btn-toolbar dialog-button-group float-start" role="group" :id="domId">
+        <button v-for="btnDef in buttonDefs" data-bs-toggle="button" :key="btnDef.id" :id="getId(btnDef.id)"
+          :class="getClasses(btnDef)" :aria-pressed="ariaPressed(btnDef)" :aria-label="btnDef.label"
+          @click.prevent="btnDef.callback(btnDef)">
+          <span :class="getIconClasses(btnDef)"></span>
+          <span v-if="btnDef.hotkey" class="ms-3">({{ btnDef.hotkey }})</span>
+        </button>
+      </div>
+    </div>
   </div>
 </template>

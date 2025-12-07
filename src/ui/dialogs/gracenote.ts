@@ -1,10 +1,4 @@
-import {SuiButtonComposite } from './components/button';
-import {  buildDom } from '../../common/htmlHelpers';
-import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { DialogDefinition, SuiDialogParams, InstallDialog } from './dialog';
-import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import {  SuiDialogNotifier, 
-  SuiComponentParent, SuiBaseComponentParams } from './components/baseComponent';
+import { SuiDialogParams, InstallDialog } from './dialog';
 import { replaceVueRoot, modalContainerId } from '../common';
 import graceNotes from '../components/dialogs/graceNotes.vue';
 

@@ -30,7 +30,13 @@ export interface RibbonLayout {
   ribbon: RibbonLayout,
   ribbonButtons: ButtonDefinition[]
 }
-
+export interface SelectOption {
+  label: string,
+  value: string,
+  classes?: string,
+  icon?: string,
+  active?: boolean
+}
 export const modalContainerId = '#vue-modal-container';
 /**
  * Remove and replace an element, so we can reattach Vue to it
@@ -50,6 +56,7 @@ export const replaceVueRoot = (element: string | HTMLElement): string => {
     $('body').append(el);    
   }
   $(element).empty();
+  $('#attribute-modal-container').empty();
   const parentId = $(element)[0].id;
   const newId = `${parentId}-1`;
   const newElement = $(`<div id="${newId}"></div>`);

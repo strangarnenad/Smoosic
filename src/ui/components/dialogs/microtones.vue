@@ -36,9 +36,9 @@ const getLocString = () => {
       <div class="row mb-3">
         <h2 class="dialog-label">Microtones</h2>
       </div>
-        <div class="row mb-3">
+        <div class="row mb-3 w-30">
           <buttonGroup :label="'Value'" :buttonDefs="accidentals" :domId="getId('shape-buttons')"
-            :commonClasses="'btn btn-sm btn-outline-dark'" />
+            :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
         </div>       
       <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
     </div>

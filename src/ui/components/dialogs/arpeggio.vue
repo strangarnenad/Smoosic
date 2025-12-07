@@ -2,10 +2,9 @@
 import { ref, Ref } from 'vue';
 import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
-interface ArpOption {
-  value: string;
-  text: string;
-}
+import { SelectOption } from '../../common';
+import selectComp from './select.vue';
+
 interface Props {
   domId: string,
   enable: Ref<boolean>,
@@ -30,30 +29,30 @@ const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
   return { topRef: top, leftRef: left };
 }
 const arpValue = ref(initialValue);
-const arpValues: ArpOption[] = [{
+const arpValues: SelectOption[] = [{
   value: 'directionless',
-  text: 'Plain'
+  label: 'Plain'
 }, {
   value: 'rasquedo_up',
-  text: 'Rasquedo Up'
+  label: 'Rasquedo Up'
 }, {
   value: 'rasquedo_down',
-  text: 'Rasquedo Down'
+  label: 'Rasquedo Down'
 }, {
   value: 'roll_up',
-  text: 'Roll Up'
+  label: 'Roll Up'
 }, {
   value: 'roll_down',
-  text: 'Roll Down'
+  label: 'Roll Down'
 }, {
   value: 'brush_up',
-  text: 'Brush Up'
+  label: 'Brush Up'
 }, {
   value: 'brush_down',
-  text: 'Brush Down'
+  label: 'Brush Down'
 }, {
   value: 'none',
-  text: 'None'
+  label: 'None'
 }];
 const getDomId = () => {
   return `attr-modal-dialog-${domId}`;
@@ -78,15 +77,12 @@ const getLocString = () => {
         <h2 class="dialog-label">Arpeggio</h2>
       </div>
       <div class="row align-items-baseline" :id="getId('arp-row')">
-        <div class="col-md-6">
+        <div class="col col-2 float-end pe-0">
           <label :for="getId('arp-select')" class="form-label">Type:</label>
         </div>
-        <div class="col-md-6">
-          <select :id="getId('arp-select')" v-model="arpValue" @change="arpCb(arpValue)" class="form-control">
-            <option v-for="option in arpValues" :key="option.value" :value="option.value">
-              {{ option.text }}
-            </option>
-          </select>
+        <div class="col col-10 text-start">
+          <selectComp :domId="getId('arp-select')" label="Select" :initialValue="initialValue"
+            :selections="arpValues" :changeCb="arpCb" />
         </div>
       </div>
       <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />

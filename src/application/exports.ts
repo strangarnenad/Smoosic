@@ -164,7 +164,7 @@ import { SmoToVex } from '../render/vex/toVex';
 import { buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer } from '../common/htmlHelpers';
 
 import { renderVexTests } from './generateVexTests';
-import { SuiDurationAdapter, SuiDurationButtonComponent, SuiDurationDialog } from '../ui/dialogs/durations';
+import { SuiDurationNoteVue } from '../ui/dialogs/durations';
 import { SuiPitchAdapter, SuiPitchDialog, SuiLetterButtonComponent, SuiIntervalButtonComponent, SuiTransposeButtonComponent } from '../ui/dialogs/pitch';
 const getClass = (jsonString: string) => {
     return eval('Smo.' + jsonString);
@@ -351,8 +351,7 @@ export const Smo = {
   SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SuiHelpMenu,SuiEditMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
   SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
   // Dialogs
-  SuiGraceNoteDialog,
-  SuiDurationAdapter, SuiDurationDialog, SuiDurationButtonComponent,
+  SuiGraceNoteDialog,  SuiDurationNoteVue,
   SuiComponentAdapter, SuiDialogAdapterBase,
   SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
