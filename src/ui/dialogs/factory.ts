@@ -33,7 +33,6 @@ import { SuiTextInputComponentParams, SuiTextInputComponent,
 import { TieMappingComponentParams, TieMappingComponent } from './components/tie';
 import { SuiToggleComponentParams, SuiToggleComponent, SuiToggleCompositeParams, SuiToggleComposite } from './components/toggle';
 import { SuiTreeComponent, SuiTreeComponentParams } from './components/tree';
-import { SuiIntervalButtonComponent, SuiTransposeButtonComponent, SuiLetterButtonComponent } from './pitch';
 import { SmoLyric } from '../../smo/data/noteModifiers';
 import { SuiExceptionHandler } from '../exceptions';
 
@@ -163,10 +162,4 @@ export const initDialogConstructors = () => {
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiStartBarButtonComponent(dialog, params);
   SmoDynamicComponentCtor['SuiRepeatSymbolButtonComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiRepeatSymbolButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiTransposeButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiTransposeButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiIntervalButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiIntervalButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiLetterButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiLetterButtonComponent(dialog, params);
 }

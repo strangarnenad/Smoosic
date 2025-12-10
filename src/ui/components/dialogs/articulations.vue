@@ -41,16 +41,16 @@ const getLocString = () => {
 </script>
 <template>
   <div class="attributeModal" :id="getDomId()" :style="getLocString()">
-    <div class="text-center" :id="getId('modal-content')">
+    <div class="text-center nw-30" :id="getId('modal-content')">
       <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
-      <div class="row mb-3">
+      <div class="row">
         <h2 class="dialog-label">Articulations</h2>
       </div>
-      <div class="row mb-3 w-40">
+      <div class="row w-40">
         <buttonGroup :label="'Glyph'" :buttonDefs="articulations" :domId="getId('shape-buttons')"
           :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
       </div>
-      <div class="row mb-3 align-items-center">
+      <div class="row align-items-center">
         <div class="col col-2 float-end pe-0">
           <span class="float-end" :for="getId('clef-select')">Position</span>
         </div>

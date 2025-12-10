@@ -25,12 +25,17 @@
 
 @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
 
-body.refresh-1 #refresh span.icon {
+body.refresh-1 .refresh-button span.icon-refresh {
   animation: spin 4s linear infinite;
 }
 
-body.refresh-1 #refresh  {
+body.refresh-1 .refresh-button  {
   background: #deeedd;
+}
+.refresh-button span.icon-refresh{
+  position:absolute;
+  top:0.5rem;
+  left:1.5rem;
 }
 
 .ribbonButtonContainer[data-group="debug"] {
@@ -269,6 +274,7 @@ button.text-icon .left-text .icon-smo {
   font-size: 1.2rem;
   display: inline-block;
   padding-top:0.2rem;
+  min-width:20px;
 }
 .ribbonButtonContainer button.icon .left-text .text-span {
   display: none;

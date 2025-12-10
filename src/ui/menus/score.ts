@@ -1,9 +1,9 @@
 import { MenuDefinition, MenuChoiceDefinition, SuiMenuBase, SuiMenuParams } from './menu';
-import { SuiScorePreferencesDialog } from '../dialogs/preferences';
+import { SuiScorePreferencesDialogVue } from '../dialogs/preferences';
 import { SuiScoreIdentificationDialog } from '../dialogs/scoreId';
-import { SuiPageLayoutDialog } from '../dialogs/pageLayout';
+import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
 import { SuiScoreFontDialog } from '../dialogs/fonts';
-import { SuiGlobalLayoutDialog } from '../dialogs/globalLayout';
+import { SuiGlobalLayoutDialogVue } from '../dialogs/globalLayout';
 import { SuiTransposeScoreDialog } from '../dialogs/transposeScore';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiStaffGroupDialog } from '../dialogs/staffGroup';
@@ -114,7 +114,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execPageLayout() {
-    createAndDisplayDialog(SuiPageLayoutDialog,
+    SuiPageLayoutDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -140,7 +140,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execGlobalLayout() {
-    createAndDisplayDialog(SuiGlobalLayoutDialog, 
+    SuiGlobalLayoutDialogVue( 
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -153,7 +153,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execPreferences() {
-    createAndDisplayDialog(SuiScorePreferencesDialog, 
+    SuiScorePreferencesDialogVue( 
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,

@@ -16,13 +16,13 @@ export const SuiArticulationDialogVue = (parameters: SuiDialogParams) => {
   let position = 'auto';
   let notesCount = 0;
   parameters.view.tracker.selections.forEach((sel) => {
-    const ornaments = sel.note!.getOrnaments();
+    const articulations = sel.note!.getArticulations();
     notesCount += 1;
-    ornaments.forEach((ornament) => {
-      if (!setForAll[ornament.ornament]) {
-        setForAll[ornament.ornament] = 0;
+    articulations.forEach((articulation) => {
+      if (!setForAll[articulation.articulation]) {
+        setForAll[articulation.articulation] = 0;
       }
-      setForAll[ornament.ornament] = setForAll[ornament.ornament] + 1;
+      setForAll[articulation.articulation] = setForAll[articulation.articulation] + 1;
     });
   });
   const keys = Object.keys(setForAll);

@@ -11,6 +11,7 @@ interface Props {
 const props = defineProps<Props>();
 const domId = props.domId;
 const showDropdown = ref(false);
+const collapsing = ref(false);
 const selections: SelectOption[] = reactive([]);
 props.selections.forEach((sel: SelectOption) => {
   sel.active = (sel.value === props.initialValue);
@@ -34,6 +35,12 @@ const getId = (str: string) => {
 }
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
+  if (!collapsing.value) {
+    collapsing.value = true;
+    setTimeout(() => {
+      collapsing.value = false;
+    }, 500);
+  }  
 }
 const outsideClickListener = (event: MouseEvent) => {
   const target = event.target as HTMLElement;
@@ -46,7 +53,13 @@ const outsideClickListener = (event: MouseEvent) => {
 const selectLabel = computed(() => {
   const sel = selections.find((s) => s.value === selection.value);
   return sel ? sel.label : props.label;
-})
+});
+const ulClasses = computed(() => {
+  const showString = showDropdown.value === true ? 'show' : '';
+  const collapsingString = collapsing.value ? 'collapsing' : 'collapse';
+  return `${showString} ${collapsingString}`.trim();
+});
+
 onMounted(() => {
   watch(showDropdown, (newVal) => {
     if (newVal) {
@@ -59,9 +72,10 @@ onMounted(() => {
 </script>
 <template>
   <div class="dropdown">
-    <button :id="getId('select-button')" class="btn btn-secondary dropdown-toggle" type="button"
-      :aria-expanded="showDropdown" data-bs-toggle="dropdown" @click="toggleDropdown">{{ selectLabel }}</button>
-    <ul :id="getId('select')" class="dropdown-menu" :class="{ show: showDropdown }">
+    <button :id="getId('select-button')" class="btn btn-outline-dark dropdown-toggle w-100 py-0" type="button"
+      :aria-expanded="showDropdown" data-bs-toggle="dropdown" @click="toggleDropdown">
+      {{ selectLabel }}</button>
+    <ul :id="getId('select')" class="dropdown-menu" :class="ulClasses" >
       <li v-for="selection in selections" :key="selection.value" :value="selection.value" class="dropdown-item"
       :class="{ active: selection.active }"  @click="handleSelect(selection)">
         {{ selection.label }}

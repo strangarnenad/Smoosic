@@ -47,7 +47,7 @@ export class defaultRibbonLayout {
     }, {
       leftText: 'Refresh',
       rightText: '',
-      classes: 'icon',
+      classes: 'icon refresh-button',
       icon: 'icon-smo icon-refresh',
       action: 'collapseChild',
       ctor: 'DisplaySettings',

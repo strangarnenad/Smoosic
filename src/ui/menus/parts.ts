@@ -4,7 +4,7 @@ import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiScoreViewDialog } from '../dialogs/scoreView';
 import { SuiInstrumentDialog } from '../dialogs/instrument';
 import { SuiPartInfoDialog } from '../dialogs/partInfo';
-import { SuiPageLayoutDialog } from '../dialogs/pageLayout';
+import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
 import { SuiNewPartDialog } from '../dialogs/newPart';
 import { SuiTabStaveDialog } from '../dialogs/tabStave';
 declare var $: any;
@@ -83,7 +83,7 @@ export const pageLayoutMenuOption: SuiConfiguredMenuOption = {
     value: 'pageLayout'
   }, display: (menu: SuiMenuBase) => menu.view.isPartExposed(),
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiPageLayoutDialog,
+    SuiPageLayoutDialogVue(
       {
         completeNotifier: menu.completeNotifier!,
         view: menu.view,

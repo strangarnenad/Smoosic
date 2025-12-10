@@ -1,473 +1,352 @@
-import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { buildDom } from '../../common/htmlHelpers';
-import { SuiButtonComposite } from './components/button';
-import { SuiComponentParent } from './components/baseComponent';
 import { IsPitchLetter } from '../../smo/data/common';
-import { DialogDefinition, SuiDialogParams } from './dialog';
-import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { getButtonsFcn, SuiButtonArrayComponent, SuiButtonArrayParameters } from './components/buttonArray';
-import { SuiDialogNotifier, SuiBaseComponentParams } from './components/baseComponent';
+import { SuiDialogParams, InstallDialog } from './dialog';
+import { replaceVueRoot, modalContainerId } from '../common';
+import { DialogButtonDefinition } from '../buttons/button';
+import { reactive } from 'vue';
+import pitchApp from '../components/dialogs/pitch.vue';
 
-/**
- * Pitch and chord manipulation components.
- * @category SuiDialog
- */
-export class SuiTransposeButtonComponent extends SuiComponentParent {
-  upOctaveComponent: SuiButtonComposite;
-  downOctaveComponent: SuiButtonComposite;
-  upStepComponent: SuiButtonComposite;
-  downStepComponent: SuiButtonComposite;
-  toggleEnharmonicComponent: SuiButtonComposite;
-  toggleCourtesyComponent: SuiButtonComposite;
-  constructor(dialog: SuiDialogNotifier, params: SuiBaseComponentParams) {
-    super(dialog, params);
-    this.upOctaveComponent = new SuiButtonComposite(this.dialog,
-      {
-        id: this.id + 'upOctave',
-        smoName: 'upOctave',
-        parentControl: this,
-        icon: 'ribbon-button-text icon-bravura icon-ottavaAlta',
-        classes: 'icon collapseParent button-hotkey',
-        control: 'SuiButtonComponent',
-        label: 'Up Octave',
-        text: '+'
-      });
-    this.downOctaveComponent = new SuiButtonComposite(this.dialog,
-      {
-        id: this.id + 'downOctave',
-        smoName: 'downOctave',
-        parentControl: this,
-        icon: 'ribbon-button-text icon-bravura icon-ottavaBassa',
-        classes: 'icon collapseParent button-hotkey',
-        control: 'SuiButtonComponent',
-        label: 'Down Octave',
-        text: '_'
-      });
-    this.upStepComponent = new SuiButtonComposite(this.dialog,
-      {
-        id: this.id + 'upStep',
-        smoName: 'upStep',
-        parentControl: this,
-        icon: 'ribbon-button-text icon-bravura icon-accidentalSharp',
-        classes: 'icon collapseParent button-hotkey',
-        control: 'SuiButtonComponent',
-        label: 'Add Dot',
-        text: '='
-      });
-    this.downStepComponent = new SuiButtonComposite(this.dialog,
-      {
-        id: this.id + 'downStep',
-        smoName: 'downStep',
-        parentControl: this,
-        icon: 'ribbon-button-text icon-bravura icon-accidentalFlat',
-        classes: 'icon collapseParent button-hotkey',
-        control: 'SuiButtonComponent',
-        label: 'Remove Dot',
-        text: '-'
-      });
-    this.toggleEnharmonicComponent = new SuiButtonComposite(this.dialog,
-      {
-        id: this.id + 'toggleEnharmonic',
-        smoName: 'toggleEnharmonic',
-        parentControl: this,
-        icon: 'icon-smo ribbon-button-text icon-accident',
-        classes: 'icon collapseParent button-hotkey',
-        control: 'SuiButtonComponent',
-        label: 'Remove Dot',
-        text: 'Shift-E'
-      });
-    this.toggleCourtesyComponent = new SuiButtonComposite(this.dialog,
-      {
-        id: this.id + 'toggleCourtesy',
-        smoName: 'toggleCourtesy',
-        parentControl: this,
-        icon: 'icon-smo ribbon-button-text icon-courtesy',
-        classes: 'icon collapseParent button-hotkey',
-        control: 'SuiButtonComponent',
-        label: 'Toggle Courtesy Accidental',
-        text: 'Shift-F'
-      });        
-  }
-  getValue(): string {
-    if (this.upOctaveComponent.changeFlag) {
-      return this.upOctaveComponent.smoName;
-    }
-    if (this.downOctaveComponent.changeFlag) {
-      return this.downOctaveComponent.smoName;
-    }
-    if (this.upStepComponent.changeFlag) {
-      return this.upStepComponent.smoName;
-    }
-    if (this.downStepComponent.changeFlag) {
-      return this.downStepComponent.smoName;
-    }
-    if (this.toggleEnharmonicComponent.changeFlag) {
-      return this.toggleEnharmonicComponent.smoName;
-    }
-    if (this.toggleCourtesyComponent.changeFlag) {
-      return this.toggleCourtesyComponent.smoName;
-    }
-    return '';
-  }  
-  setValue(value: string) {
-    // ignore
-  }
-  async changed() {
-    this.handleChanged();
-  }
-  get html() {
-    const b = buildDom;
-    const q = b('div').classes(this.makeClasses('multiControl smoControl buttonArray'))
-      .attr('id', this.parameterId);
-    q.append(this.upOctaveComponent.html);
-    q.append(this.downOctaveComponent.html);
-    q.append(this.upStepComponent.html);
-    q.append(this.downStepComponent.html);
-    q.append(this.toggleEnharmonicComponent.html);
-    q.append(this.toggleCourtesyComponent.html);
-    return q;
-  }
-  bind() {
-    this.upOctaveComponent.bind();
-    this.downOctaveComponent.bind();
-    this.upStepComponent.bind();
-    this.downStepComponent.bind();
-    this.toggleEnharmonicComponent.bind();
-    this.toggleCourtesyComponent.bind();
-  }
-}
-
-/**
- * Interval buttons
- * @category SuiDialog
- * @returns SuiButtonArrayParameters
- */
-const intervalButtonFactory: getButtonsFcn = () => {
-  const params: SuiButtonArrayParameters = {
-    label: 'Intervals',
-    rows: [{
-      label: 'Intervals Up',
-      classes: 'pad-span',
-      buttons: [
-        { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordsecond',
-          text: '2nd',
-          label:'2nd',
-          smoName: 'chordsecond'
-        },
-        { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordthird',
-          text: '3rd',
-          label:'3rd',
-          smoName: 'chordthird'
-        }, { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordfourth',
-          text: '4th',
-          label:'4th',
-          smoName: 'chordfourth'
-        }, { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordfifth',
-          text: '5th',
-          label:'5th',
-          smoName: 'chordfifth'
-        }, { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordsixth',
-          text: '6th',
-          label:'6th',
-          smoName: 'chordsixth'
-        }, { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordseventh',
-          text: '7th',
-          label:'7th',
-          smoName: 'chordseventh'
-        }, { classes: 'icon collapseParent button-array repetext',
-          control: 'SuiButtonArrayButton',
-          icon: '',
-          id: 'chordoctave',
-          text: '8va',
-          label:'8va',
-          smoName: 'chordoctave'
-        }
-      ]}, 
-      {
-        label: 'Intervals Down',
-        classes: 'pad-span',
-        buttons: [
-          { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordsecond',
-            text: '2nd',
-            label:'2nd',
-            smoName: 'downchordsecond'
-          },
-          { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordthird',
-            text: '3rd',
-            label:'3rd',
-            smoName: 'downchordthird'
-          }, { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordfourth',
-            text: '4th',
-            label:'4th',
-            smoName: 'downchordfourth'
-          }, { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordfifth',
-            text: '5th',
-            label:'5th',
-            smoName: 'downchordfifth'
-          }, { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordsixth',
-            text: '6th',
-            label:'6th',
-            smoName: 'downchordsixth'
-          }, { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordseventh',
-            text: '7th',
-            label:'7th',
-            smoName: 'downchordseventh'
-          }, { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'downchordoctave',
-            text: '8va',
-            label:'8va',
-            smoName: 'downchordoctave'
-          }
-        ]}]
-    };
-    return params;
-  }
-/**
- * Note letter name buttons
- * @category SuiDialog
- * @returns SuiButtonArrayParameters
- */
-const letterButtonFactory: getButtonsFcn = () => {
-    const params: SuiButtonArrayParameters = {
-      label: 'Pitches',
-      rows: [{
-        label: 'Pitches',
-        classes: 'pad-span',
-        buttons: [
-          { classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchA',
-            text: 'A',
-            label:'A',
-            smoName: 'a'
-          },{ classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchB',
-            text: 'B',
-            label:'B',
-            smoName: 'b'
-          },{ classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchC',
-            text: 'C',
-            label:'C',
-            smoName: 'c'
-          },{ classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchD',
-            text: 'D',
-            label:'D',
-            smoName: 'd'
-          },{ classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchE',
-            text: 'E',
-            label:'E',
-            smoName: 'e'
-          },{ classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchF',
-            text: 'F',
-            label:'F',
-            smoName: 'f'
-          },{ classes: 'icon collapseParent button-array repetext',
-            control: 'SuiButtonArrayButton',
-            icon: '',
-            id: 'pitchG',
-            text: 'G',
-            label:'G',
-            smoName: 'g'
-          },
-        ]
-      }]
-    };
-    return params;
-  }
-  /**
-   * @category SuiDialog
-   */
-  export class SuiIntervalButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams) {
-      super(dialog, parameter, intervalButtonFactory);
-    }
-  }  
-  /**
-   * @category SuiDialog
-   */
-  export class SuiLetterButtonComponent extends SuiButtonArrayComponent {
-    constructor(dialog: SuiDialogNotifier, parameter: SuiBaseComponentParams) {
-      super(dialog, parameter, letterButtonFactory);
-    }
-  }  
-/**
- * UI to manage SmoNote pitch arrays
- * @category SuiDialog
- */
-export class SuiPitchAdapter extends SuiComponentAdapter {
-  static intervalUp = ['chordsecond', 'chordthird', 'chordfourth', 'chordfifth', 'chordsixth', 'chordseventh', 'chordoctave'];
-  static intervalDown = ['downchordsecond', 'downchordthird', 'downchordfourth', 'downchordfifth', 'downchordsixth',
+export const SuiPitchDialogVue = (parameters: SuiDialogParams) => {
+  const intervalUp = ['chordsecond', 'chordthird', 'chordfourth', 'chordfifth', 'chordsixth', 'chordseventh', 'chordoctave'];
+  const intervalDown = ['downchordsecond', 'downchordthird', 'downchordfourth', 'downchordfifth', 'downchordsixth',
      'downchordseventh', 'downchordoctave'];
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-    this.view.groupUndo(true);
+  const rootId = replaceVueRoot(modalContainerId);
+
+  const intervalCb = async (button: DialogButtonDefinition) => {
+    const intervalUpIx = intervalUp.findIndex((xx) => xx === button.id);
+    const intervalDownIx = intervalDown.findIndex((xx) => xx === button.id);
+    if (intervalUpIx >= 0) {
+      await parameters.view.setInterval(intervalUpIx + 1);
+    }
+    if (intervalDownIx >= 0) {
+      await parameters.view.setInterval((intervalDownIx + 1) * -1);
+    }
   }
-  get transposeButtons() {
-    return '';
-  }
-  set transposeButtons(value: string) {
+  const pitchCb = async (button: DialogButtonDefinition): Promise<void> => {
+    const value = button.id;
     if (value === 'upOctave') {
-      this.view.transposeScore(12);
+      await parameters.view.transposeSelections(12);
     }
     if (value === 'downOctave') {
-      this.view.transposeScore(-12);
+      await parameters.view.transposeSelections(-12);
     }
     if (value === 'upStep') {
-      this.view.transposeScore(1);
+      await parameters.view.transposeSelections(1);
     }
     if (value === 'downStep') {
-      this.view.transposeScore(-1);
+      await parameters.view.transposeSelections(-1);
     }
     if (value === 'toggleEnharmonic') {
-      this.view.toggleEnharmonic();  
+      await parameters.view.toggleEnharmonic();  
     }
     if (value === 'toggleCourtesy') {
-      this.view.toggleCourtesyAccidentals();
+      await parameters.view.toggleCourtesyAccidentals();
     }
   }
-  get intervalButtons() {
-    return '';
-  }
-  set intervalButtons(value: string) {
-    const intervalUp = SuiPitchAdapter.intervalUp.indexOf(value);
-    const intervalDown = SuiPitchAdapter.intervalDown.indexOf(value);
-    if (intervalUp >= 0) {
-      this.view.setInterval(intervalUp + 1);
-    }
-    if (intervalDown >= 0) {
-      this.view.setInterval((intervalDown + 1) * -1);
-    }
-  }
-  get pitchButtons() {
-    return '';
-  }
-  set pitchButtons(value: string) {
+  const letterCb = async (button: DialogButtonDefinition): Promise<void> => {
+    const value = button.id[button.id.length - 1].toLowerCase();
     if (IsPitchLetter(value)) {
-      this.view.setPitch(value);
+      await parameters.view.setPitch(value);
     }
   }
-  async cancel() {
-    await this.view.undo();
+  const pitches: DialogButtonDefinition[] = reactive([{
+    classes: '',
+    icon: 'icon-bravura icon-ottavaAlta fs-3',
+    id: 'upOctave',
+    hotkey: '+',
+    label: '8va Up',
+    callback: pitchCb,
+    state: 'unselected',
+    group: 'Pitches'
+  }, {
+    classes: '',
+    icon: 'icon-bravura icon-ottavaBassa fs-3',
+    id: 'downOctave',
+    hotkey: '_',
+    label: '8va Down',
+    callback: pitchCb,
+    state: 'unselected',
+    group: 'Pitches'
+  },{
+    classes: '',
+    icon: 'icon-bravura icon-accidentalSharp fs-3',
+    id: 'upStep',
+    hotkey: '=',
+    label: '1/2 step Up',
+    callback: pitchCb,
+    state: 'unselected',
+    group: 'Pitches'
+  },{
+    classes: '',
+    icon: 'icon-bravura icon-accidentalFlat fs-3',
+    id: 'downStep',
+    hotkey: '-',
+    label: '1/2 step Down',
+    callback: pitchCb,
+    state: 'unselected',
+    group: 'Pitches'
+  },{
+    classes: '',
+    icon: 'icon-smo icon-accident fs-4',
+    id: 'toggleEnharmonic',
+    hotkey: 'Shift-E',
+    label: 'Select a different spelling of the pitch',
+    callback: pitchCb,
+    state: 'unselected',
+    group: 'Pitches'
+  },{
+    classes: '',
+    icon: 'icon-smo icon-courtesy fs-4',
+    id: 'toggleCourtesy',
+    hotkey: 'Shift-F',
+    label: 'Courtesy accidental',
+    callback: pitchCb,
+    state: 'unselected',
+    group: 'Pitches'
   }
-  async commit() {
+  ]);
+  const intervals: DialogButtonDefinition[] = reactive([ {
+    classes: '',
+    icon: '',
+    id: 'chordsecond',
+    hotkey: '2',
+    label: '2nd',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'chordthird',
+    hotkey: '3',
+    label: '3rd',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'chordfourth',
+    hotkey: '4',
+    label: '4th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'chordfifth',
+    hotkey: '5',
+    label: '5th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'chordsixth',
+    hotkey: '6',
+    label: '6th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'chordseventh',
+    hotkey: '7',
+    label: '7th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'chordoctave',
+    hotkey: '8',
+    label: '8va',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'downchordsecond',
+    hotkey: '@',
+    label: 'Down 2nd',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'downchordthird',
+    hotkey: '#',
+    label: 'Down 3rd',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'downchordfourth',
+    hotkey: '$',
+    label: 'Down 4th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'downchordfifth',
+    hotkey: '%',
+    label: 'Down 5th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'downchordsixth',
+    hotkey: '^',
+    label: 'Down 6th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'downchordseventh',
+    hotkey: '&',
+    label: 'Down 7th',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  },{
+    classes: '',
+    icon: '',
+    id: 'downchordoctave',
+    hotkey: '*',
+    label: 'Down 8va',
+    callback: intervalCb,
+    state: 'unselected',
+    group: 'Intervals'
+  }]);
+  const letters: DialogButtonDefinition[] = reactive([{
+    classes: '',
+    icon: '',
+    id: 'pitchA',
+    hotkey: 'A',
+    label: 'A',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'pitchB',
+    hotkey: 'B',
+    label: 'B',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  },
+  {
+    classes: '',
+    icon: '',
+    id: 'pitchC',
+    hotkey: 'C',
+    label: 'C',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'pitchD',
+    hotkey: 'D',
+    label: 'D',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+
+    icon: '',
+    id: 'pitchE',
+    hotkey: 'E',
+    label: 'E',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'pitchF',
+    hotkey: 'F',
+    label: 'F',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'pitchG',
+    hotkey: 'G',
+    label: 'G',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }  
+  ]);
+  const cursor: DialogButtonDefinition[] = reactive([{
+    classes: '',
+    icon: '',
+    id: 'moveRight',
+    hotkey: '\u2192',
+    label: 'Advance cursor',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'growRight',
+    hotkey: 'Shift \u2192',
+    label: 'Grow selection',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'moveLeft',
+    hotkey: '\u2190',
+    label: 'Cursor Left',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }, {
+    classes: '',
+    icon: '',
+    id: 'moveLeft',
+    hotkey: 'Shift \u2190',
+    label: 'Grow Left',
+    callback: letterCb,
+    state: 'unselected',
+    group: 'Letters'
+  }]);
+  parameters.view.tracker.moveSelectionRight();
+  // Undo on cancel for any changes made
+  parameters.view.groupUndo(true);
+  const commitCb = async () => {
   }
-}
-/**
- * @category SuiDialog
- */
-export class SuiPitchDialog extends SuiDialogAdapterBase<SuiPitchAdapter> {
-  static get applyTo() {
-    return {
-      score: 0, selected: 1, remaining: 3
-    };
+  const cancelCb = async () => {
+    await parameters.view.undo();
   }
-  // export type Clef = 'treble' | 'bass' | 'tenor' | 'alto' | 'soprano' | 'percussion'
-    //| 'mezzo-soprano' | 'baritone-c' | 'baritone-f' | 'subbass' | 'french';
-  static dialogElements: DialogDefinition = 
-      {
-        label: 'Pitch',
-        elements:
-          [{
-            smoName: 'transposeButtons',
-            control: 'SuiTransposeButtonComponent',
-            label: 'Pitch and Transposition'
-          }, {
-            smoName: 'intervalButtons',
-            control: 'SuiIntervalButtonComponent',
-            label: 'Intervals'
-          }, {
-            smoName: 'pitchButtons',
-            control: 'SuiLetterButtonComponent',
-            label: 'Letter Names'
-          },{
-            smoName: 'textMessage4',
-            control: 'SuiReadOnlyTextComponent',
-            label: 'Use a-g on the keyboard for notes with those letter names',
-            classes: 'hide-input'
-          }, {
-            smoName: 'textMessage1',
-            control: 'SuiReadOnlyTextComponent',
-            label: `Learn the keyboard shortcuts, they're much faster!`,
-            classes: 'hide-input'
-          }, {
-            smoName: 'textMessage5',
-            control: 'SuiReadOnlyTextComponent',
-            label: 'Use - = keys to move pitch up/down 1/2 step',
-            classes: 'hide-input'
-          }, {
-            smoName: 'textMessage2',
-            control: 'SuiReadOnlyTextComponent',
-            label: 'Use _ (shift minus) + (shift = ) keys to move pitch up/down octaves',
-            classes: 'hide-input'
-          }, {
-            smoName: 'textMessage3',
-            control: 'SuiReadOnlyTextComponent',
-            label: 'Use 2-8 on the keyboard for intervals (Shift for interval below)',
-            classes: 'hide-input'
-          }, {
-            smoName: 'textMessage2',
-            control: 'SuiReadOnlyTextComponent',
-            label: 'Use shift + arrow keys to navigate and select notes',
-            classes: 'hide-input'
-          }],
-          staticText: []
-      };
-  constructor(parameters: SuiDialogParams) {
-    const adapter = new SuiPitchAdapter(parameters.view);
-    super(SuiPitchDialog.dialogElements, { adapter, ...parameters });
-    this.displayOptions = ['BINDCOMPONENTS', 'DRAGGABLE', 'KEYBOARD_CAPTURE', 'MODIFIERPOS', 'HIDEREMOVE'];
-  }
+  const appParams = {
+    domId: rootId,
+    pitches, pitchCb, letters, letterCb, intervals, intervalCb
+  };
+
+  InstallDialog({ root: rootId, app: pitchApp, appParams, dialogParams: parameters, commitCb, cancelCb });
 }

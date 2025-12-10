@@ -33,10 +33,10 @@ const getLocString = () => {
   <div class="attributeModal" :id="getDomId()" :style="getLocString()">
     <div class="text-center" :id="getId('modal-content')">
       <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
-      <div class="row mb-3">
+      <div class="row">
         <h2 class="dialog-label">Microtones</h2>
       </div>
-        <div class="row mb-3 w-30">
+        <div class="row nw-30">
           <buttonGroup :label="'Value'" :buttonDefs="accidentals" :domId="getId('shape-buttons')"
             :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
         </div>       

@@ -7,11 +7,11 @@ import { SuiDurationNoteVue } from '../dialogs/durations';
 import { SuiArticulationDialogVue } from '../dialogs/articulation';
 import { SuiGraceNoteDialog } from '../dialogs/gracenote';
 import { SuiMicrotoneDialogVue } from '../dialogs/microtones';
-import { SuiPitchDialog } from '../dialogs/pitch';
+import { SuiPitchDialogVue } from '../dialogs/pitch';
 import { SmoPedalMarking } from '../../smo/data/staffModifiers';
 import { SmoSelector } from '../../smo/xform/selections';
-import { SuiMenuBase, SuiMenuParams, MenuDefinition, SuiMenuHandler, SuiMenuShowOption, 
-  SuiConfiguredMenuOption, SuiConfiguredMenu, customizeMenuOptionsFcn } from './menu';
+import { SuiMenuBase, SuiMenuParams, 
+  SuiConfiguredMenuOption, SuiConfiguredMenu } from './menu';
   import { addOrReplacePedalMarking } from './staffModifier';
 declare var $: any;
 /**
@@ -85,7 +85,7 @@ const noteHeadMenuOption: SuiConfiguredMenuOption = {
  */
 const pitchMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiPitchDialog, {
+    SuiPitchDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,

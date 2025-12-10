@@ -34,14 +34,14 @@ const getLocString = () => {
   <div class="attributeModal" :id="getDomId()" :style="getLocString()">
     <div class="text-center" :id="getId('modal-content')">
       <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
-      <div class="row mb-3">
+      <div class="row">
         <h2 class="dialog-label">Ornaments</h2>
       </div>
-        <div class="row mb-3 w-40">
+        <div class="row nw-40">
           <buttonGroup :label="'Basic'" :buttonDefs="basic" :domId="getId('shape-buttons')"
             :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
         </div>
-        <div class="row mb-3 w-40">
+        <div class="row nw-40">
           <buttonGroup :label="'Jazz'" :buttonDefs="jazz" :domId="getId('head-buttons')"
             :commonClasses="'btn btn-sm btn-outline-dark me-2'" />
         </div>

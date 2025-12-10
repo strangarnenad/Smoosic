@@ -44,11 +44,11 @@ import { SuiNoteHeadDialog } from '../ui/dialogs/noteHead';
 import { SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from '../ui/dialogs/endings';
 import { SuiScoreIdentificationDialog } from '../ui/dialogs/scoreId';
-import { SuiScorePreferencesDialog } from '../ui/dialogs/preferences';
-import { SuiPageLayoutDialog } from '../ui/dialogs/pageLayout';
+import { SuiScorePreferencesDialogVue } from '../ui/dialogs/preferences';
+import { SuiPageLayoutDialogVue } from '../ui/dialogs/pageLayout';
 import { SuiTextBracketDialog } from '../ui/dialogs/textBracket';
 import { SuiScoreFontDialog } from '../ui/dialogs/fonts';
-import { SuiGlobalLayoutDialog } from '../ui/dialogs/globalLayout';
+import { SuiGlobalLayoutDialogVue } from '../ui/dialogs/globalLayout';
 import { SuiScoreViewDialog } from '../ui/dialogs/scoreView';import { SuiLibraryDialog } from '../ui/dialogs/library';
 import { SuiChordChangeDialog } from '../ui/dialogs/chordChange';
 import { SuiLyricDialog } from '../ui/dialogs/lyric';
@@ -165,7 +165,7 @@ import { buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, get
 
 import { renderVexTests } from './generateVexTests';
 import { SuiDurationNoteVue } from '../ui/dialogs/durations';
-import { SuiPitchAdapter, SuiPitchDialog, SuiLetterButtonComponent, SuiIntervalButtonComponent, SuiTransposeButtonComponent } from '../ui/dialogs/pitch';
+import { SuiPitchDialogVue } from '../ui/dialogs/pitch';
 const getClass = (jsonString: string) => {
     return eval('Smo.' + jsonString);
 };
@@ -355,13 +355,13 @@ export const Smo = {
   SuiComponentAdapter, SuiDialogAdapterBase,
   SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
-  SuiScoreViewDialog, SuiGlobalLayoutDialog, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
+  SuiScoreViewDialog, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
   SuiTransposeScoreDialog,
-  SuiScoreFontDialog, SuiPageLayoutDialog, SuiMeasureDialog, SuiInsertMeasures,
+  SuiScoreFontDialog, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasures,
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
   SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
-  SuiScorePreferencesDialog,
+  SuiScorePreferencesDialogVue,
   SuiPartInfoDialog, SuiOrnamentDialogVue, 
   SuiArticulationDialogVue, 
   SuiMicrotoneDialogVue,
@@ -370,8 +370,7 @@ export const Smo = {
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,  
   SuiFileSaveDialog, SuiPrintDialog,
   SuiDialogBase, createAndDisplayDialog,  SuiFileUploadDialog,
-  SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
-  SuiTransposeButtonComponent,
+  SuiPitchDialogVue,
   // Dialog components
   SuiTreeComponent,
   SuiDropdownComponent,
