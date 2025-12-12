@@ -3,18 +3,20 @@
 import { SmoGlobalLayout } from '../../smo/data/scoreModifiers';
 import { SuiDialogParams, InstallDialog } from './dialog';
 import { replaceVueRoot, modalContainerId } from '../common';
+import { reactive, ref, watch } from 'vue';
 import  scoreLayoutApp from '../components/dialogs/scoreLayout.vue';
 
 declare var $: any;
 export const SuiGlobalLayoutDialogVue = (parameters: SuiDialogParams) => {
   const rootId = replaceVueRoot(modalContainerId);
-  const initialValue = parameters.view.score.layoutManager!.globalLayout;
-  const backup = JSON.parse(JSON.stringify(initialValue));
+  const currentValue = reactive(parameters.view.score.layoutManager!.globalLayout);
+  const getLayout = () => currentValue;
+  const backup = JSON.parse(JSON.stringify(currentValue));
   let changed = false;
-  const changeCb = async (newValue: SmoGlobalLayout) => {
+  watch(currentValue, async (newValue) => {
     await parameters.view.setGlobalLayout(newValue);
     changed = true;
-  }
+  });
   const cancelCb = async () => {
     if (changed) {
       await parameters.view.setGlobalLayout(backup);
@@ -24,8 +26,7 @@ export const SuiGlobalLayoutDialogVue = (parameters: SuiDialogParams) => {
   const appParams = {
     domId: rootId,
     label: 'Score Layout',
-    initialValue: parameters.view.score.layoutManager!.globalLayout,
-    changeCb,
+    getLayout,
     commitCb,
     cancelCb
   };

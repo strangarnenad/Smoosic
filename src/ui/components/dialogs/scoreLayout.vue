@@ -11,27 +11,25 @@ import { SmoGlobalLayout } from '../../../smo/data/scoreModifiers';
 interface Props {
   domId: string,
   label: string,
-  initialValue: SmoGlobalLayout,
-  changeCb: (value: SmoGlobalLayout) => void,
+  getLayout: () => SmoGlobalLayout,
   commitCb: () => void,
   cancelCb: () => void
 }
 const props = defineProps<Props>();
-const domId: string = props.domId;
+const { domId, label, getLayout, commitCb, cancelCb } = { ...props };
+const currentLayout: SmoGlobalLayout = getLayout();
 const top = ref(100);
 const left = ref(100);
 const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
   return { topRef: top, leftRef: left };
 }
-const currentLayout: SmoGlobalLayout = reactive({
-  pageWidth: props.initialValue.pageWidth,
-  pageHeight: props.initialValue.pageHeight,
-  zoomScale: props.initialValue.zoomScale,
-  svgScale: props.initialValue.svgScale,
-  proportionality: props.initialValue.proportionality,
-  maxMeasureSystem: props.initialValue.maxMeasureSystem,
-  noteSpacing: props.initialValue.noteSpacing
-})
+type numberTypes = 'pageWidth' | 'pageHeight' | 'zoomScale' | 'svgScale' | 'noteSpacing' | 'maxMeasureSystem';
+const updateNumberType = (nt: numberTypes) => {
+  const updateNumber = async (val: number) => {
+    (currentLayout)[nt] = val;
+  }
+  return updateNumber;
+}
 const pageSizes: SelectOption[] = [
   { label: 'Letter', value: 'letter' },
   { label: 'Legal', value: 'legal' },
@@ -53,33 +51,7 @@ const pageSize = ref('custom');
 const pageChange = (val: string) => {
   pageSize.value = val;
 };
-const widthChange = async (val: number) => {
-  currentLayout.pageWidth = val;
-  await props.changeCb(currentLayout);
-  setPageSize();
-};
-const heightChange = async (val: number) => {
-  currentLayout.pageHeight = val;
-  await props.changeCb(currentLayout);
-  setPageSize();
-};
-const zoomChange = async (val: number) => {
-  currentLayout.zoomScale = val;
-  await props.changeCb(currentLayout);
-};
-const svgChange = async (val: number) => {
-  currentLayout.svgScale = val;
-  await props.changeCb(currentLayout);
-};
-const noteSpacingChange = async (val: number) => {
-  currentLayout.noteSpacing = val;
-  await props.changeCb(currentLayout);
-};
-const maxMeasureSystemChange = async (val: number) => {
-  currentLayout.maxMeasureSystem = val;
-  await props.changeCb(currentLayout);
-};
-
+;
 const lockDimensions = ref(false);
 
 const setPageSize = () => {
@@ -98,7 +70,6 @@ watch(pageSize, (newVal) => {
     const dims = predefinedDimensions[newVal];
     currentLayout.pageWidth = dims.width;
     currentLayout.pageHeight = dims.height;
-    props.changeCb(currentLayout);
   } else {
     lockDimensions.value = false;
   }
@@ -133,14 +104,14 @@ const getLocString = () => {
       <div class="row mb-2 align-items-center">
         <div class="col col-4">
           <numberInputApp :domId="getId('page-width-input')" :initialValue="currentLayout.pageWidth" :precision="0"
-            :changeCb="widthChange" :disabled="lockDimensions" />
+            :changeCb="updateNumberType('pageWidth')" :disabled="lockDimensions" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">Page Width</span>
         </div>
         <div class="col col-4 ms-n4">
           <numberInputApp :domId="getId('page-height-input')" :initialValue="currentLayout.pageHeight" :precision="0"
-            :changeCb="heightChange" :disabled="lockDimensions" />
+            :changeCb="updateNumberType('pageHeight')" :disabled="lockDimensions" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">Page Height</span>
@@ -149,14 +120,14 @@ const getLocString = () => {
         <div class="row mb-2 align-items-center">
         <div class="col col-4">
           <numberInputApp :domId="getId('zoom-scale-input')" :initialValue="currentLayout.zoomScale" :precision="0"
-            :percent=true :changeCb="zoomChange" />
+            :percent=true :changeCb="updateNumberType('zoomScale')" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">Zoom Scale (%)</span>
         </div>
         <div class="col col-4 ms-n4">
           <numberInputApp :domId="getId('svg-scale-input')" :initialValue="currentLayout.svgScale" :precision="0"
-            :percent="true" :changeCb="svgChange" />
+            :percent="true" :changeCb="updateNumberType('svgScale')" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">SVG Scale (%)</span>
@@ -165,14 +136,14 @@ const getLocString = () => {
       <div class="row mb-2 align-items-center">
         <div class="col col-4">
           <numberInputApp :domId="getId('note-spacing-input')" :initialValue="currentLayout.noteSpacing" :precision="2"
-            :changeCb="noteSpacingChange" />
+            :changeCb="updateNumberType('noteSpacing')" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">Note Spacing</span>
         </div>
         <div class="col col-4 ms-n4">
           <numberInputApp :domId="getId('max-measure-system-input')" :initialValue="currentLayout.maxMeasureSystem"
-            :precision="0" :changeCb="maxMeasureSystemChange" />
+            :precision="0" :changeCb="updateNumberType('maxMeasureSystem')" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">Max Measures/System</span>

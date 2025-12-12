@@ -114,7 +114,7 @@ body .vueDialogContainer>div {
   position:absolute;
   left: 0;
   top: 0;
-  width: 100%;
+  width: calc(100% - 100px); /* hack - expose the scrollbar */
   height: 100%;
 }
 body.showVueDialog .vueDialogContainer, 

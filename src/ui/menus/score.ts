@@ -7,7 +7,6 @@ import { SuiGlobalLayoutDialogVue } from '../dialogs/globalLayout';
 import { SuiTransposeScoreDialog } from '../dialogs/transposeScore';
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiStaffGroupDialog } from '../dialogs/staffGroup';
-import { SuiAudioSettingsDialog } from '../dialogs/audioSettings';
 
 declare var $: any;
 /**
@@ -33,10 +32,6 @@ export class SuiScoreMenu extends SuiMenuBase {
       icon: '',
       text: 'Page Layout',
       value: 'pageLayout'
-    }, {
-      icon: '',
-      text: 'Audio Settings',
-      value: 'audioSettings'
     },  {
       icon: '',
       text: 'System Groups',
@@ -165,19 +160,7 @@ export class SuiScoreMenu extends SuiMenuBase {
         startPromise: this.closePromise
       });
   }
-  execAudioSettings() {
-    createAndDisplayDialog(SuiAudioSettingsDialog, 
-      {
-        completeNotifier: this.completeNotifier!,
-        view: this.view,
-        eventSource: this.eventSource,
-        id: 'audioSettings',
-        ctor: 'SuiAudioSettingsDialog',
-        tracker: this.view.tracker,
-        modifier: null,
-        startPromise: this.closePromise
-      });
-  }
+
   execTransposeScore() {
     createAndDisplayDialog(SuiTransposeScoreDialog,
       {
@@ -207,8 +190,6 @@ export class SuiScoreMenu extends SuiMenuBase {
       this.execScoreId();
     } else if (text === 'viewAll') {
       this.view.viewAll();
-    } else if (text === 'audioSettings') {
-      this.execAudioSettings();
     } else if (text === 'transposeScore') {
       this.execTransposeScore();
     }

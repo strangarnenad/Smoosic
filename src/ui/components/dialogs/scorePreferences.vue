@@ -8,42 +8,17 @@ import selectComp from './select.vue';
 
 interface Props {
   domId: string,
-  initialValue: SmoScorePreferences,
-  doubleDurationCb: (value: string) => Promise<void>,
-  tripleDurationCb: (value: string) => Promise<void>,
-  autoAdvanceCb: (value: boolean) => Promise<void>,
-  autoPlayCb: (value: boolean) => Promise<void>,
-  showPianoCb: (value: boolean) => Promise<void>,
-  autoScrollPlaybackCb: (value: boolean) => Promise<void>,
-  hideEmptyLinesCb: (value: boolean) => Promise<void>,
-  transposeScoreCb: (value: boolean) => Promise<void>,
-  partNamesCb: (value: boolean) => Promise<void>,
+  getPreferences: () => SmoScorePreferences,
   commitCb: () => void,
   cancelCb: () => void
 }
 const props: Props = defineProps<Props>();
+const { domId, commitCb, cancelCb, getPreferences } = { ...props };
+const preferences = getPreferences();
 
-const autoAdvanceValue = ref(false);
-const autoPlayValue = ref(false);
-const showPianoValue = ref(false);
-const autoScrollPlaybackValue = ref(false);
-const hideEmptyLinesValue = ref(false);
-const transposingScoreValue = ref(false);
-const showPartsValue = ref(false);
+type booleanTypes = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'autoScrollPlayback' | 'transposingScore' | 'showPartNames';
+type numberTypes = 'defaultDupleDuration' | 'defaultTripleDuration';
 
-const resetValues = () => {
-  autoAdvanceValue.value = props.initialValue.autoAdvance;
-  autoPlayValue.value =  props.initialValue.autoPlay;
-  showPianoValue.value = props.initialValue.showPiano;
-  autoScrollPlaybackValue.value = props.initialValue.autoScrollPlayback;
-  hideEmptyLinesValue.value = props.initialValue.hideEmptyLines;
-  transposingScoreValue.value = props.initialValue.transposingScore;
-  showPartsValue.value = props.initialValue.showPartNames;
-}
-resetValues();
-const domId: string = props.domId;
-const { doubleDurationCb, tripleDurationCb, autoAdvanceCb, autoPlayCb, showPianoCb, autoScrollPlaybackCb, hideEmptyLinesCb, 
-  commitCb, cancelCb, initialValue } = { ...props };
 const top = ref(100);
 const left = ref(100);
 const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
@@ -67,6 +42,18 @@ const getId = (str: string) => {
 const getLocString = () => {
   return `top: ${top}px; left: ${left}px;`;
 }
+const updateBool = (type: booleanTypes) => {
+  const cb = (value: boolean) => {
+    (preferences as any)[type] = value;
+  }
+  return cb;
+}
+const updateNumber = (type: numberTypes) => {
+  const cb = (value: string) => {
+    (preferences as any)[type] = parseInt(value, 10);
+  }
+  return cb;
+}
 
 /* return {
   enable, arpCb, commitCb, cancelCb, getDomId, getId, getLocString,
@@ -83,14 +70,14 @@ const getLocString = () => {
       </div>
       <div class="row">
         <div class="col col-1">
-          <input class="form-check-input" type="checkbox" v-model="autoAdvanceValue" :id="getId('autoAdvance')"
-           @change="autoAdvanceCb(autoAdvanceValue)"></input>
+          <input class="form-check-input" type="checkbox" v-model="preferences.autoAdvance" :id="getId('autoAdvance')"
+           @change="updateBool('autoAdvance')"></input>
         </div>
         <div class="col col-5">
           <label class="form-check-label" :for="getId('autoAdvance')">Auto-advance on pitch change</label>
         </div>
         <div class="col col-1">
-          <input class="form-check-input" type="checkbox" v-model="autoPlayValue" :id="getId('autoPlay')" @change="autoPlayCb(autoPlayValue)"></input>
+          <input class="form-check-input" type="checkbox" v-model="preferences.autoPlay" :id="getId('autoPlay')" @change="updateBool('autoPlay')"></input>
         </div>
         <div class="col col-5">
           <label class="form-check-label" :for="getId('autoPlay')" >Auto-play sounds for pitch change</label>
@@ -98,14 +85,14 @@ const getLocString = () => {
       </div>
       <div class="row">
         <div class="col col-1">
-          <input class="form-check-input" type="checkbox" v-model="showPianoValue" :id="getId('showPiano')"
-           @change="showPianoCb(showPianoValue)"></input>
+          <input class="form-check-input" type="checkbox" v-model="preferences.showPiano" :id="getId('showPiano')"
+           @change="updateBool('showPiano')"></input>
         </div>
         <div class="col col-5">
           <label class="form-check-label" :for="getId('showPiano')">Show piano widget</label>
         </div>
         <div class="col col-1">
-          <input class="form-check-input" type="checkbox" v-model="transposingScoreValue" :id="getId('transposeScore')" @change="transposeScoreCb(transposingScoreValue)"></input>
+          <input class="form-check-input" type="checkbox" v-model="preferences.transposingScore" :id="getId('transposeScore')" @change="updateBool('transposingScore')"></input>
         </div>
         <div class="col col-5">
           <label class="form-check-label" :for="getId('transposeScore')" >Transposing score</label>
@@ -113,14 +100,14 @@ const getLocString = () => {
       </div>
       <div class="row">
         <div class="col col-1">
-          <input class="form-check-input" type="checkbox" v-model="hideEmptyLinesValue" :id="getId('hideEmptyLines')"
-           @change="hideEmptyLinesCb(hideEmptyLinesValue)"></input>
+          <input class="form-check-input" type="checkbox" v-model="preferences.hideEmptyLines" :id="getId('hideEmptyLines')"
+           @change="updateBool('hideEmptyLines')"></input>
         </div>
         <div class="col col-5">
           <label class="form-check-label" :for="getId('hideEmptyLines')">Hide empty staves</label>
         </div>
         <div class="col col-1">
-          <input class="form-check-input" type="checkbox" v-model="showPartsValue" :id="getId('partNames')" @change="partNamesCb(showPartsValue)"></input>
+          <input class="form-check-input" type="checkbox" v-model="preferences.showPartNames" :id="getId('partNames')" @change="updateBool('showPartNames')"></input>
         </div>
         <div class="col col-5">
           <label class="form-check-label" :for="getId('partNames')" >Show part names in Score</label>
@@ -131,15 +118,15 @@ const getLocString = () => {
           <span :for="getId('duration-select1')" class="form-label">Default Duration (even meter):</span>
         </div>
         <div class="col col-3 text-start">
-          <selectComp :domId="getId('duration-select1')" label="Select" :initialValue="initialValue.defaultDupleDuration.toString()"
-            :selections="defaultDoubleDurations" :changeCb="doubleDurationCb" />
+          <selectComp :domId="getId('duration-select1')" label="Select" :initialValue="preferences.defaultDupleDuration.toString()"
+            :selections="defaultDoubleDurations" :changeCb="updateNumber('defaultDupleDuration')" />
         </div>
         <div class="col col-3 float-end pe-0">
           <span :for="getId('duration-select2')" class="form-label">Default Duration (triple meter):</span>
         </div>
         <div class="col col-3 text-start">
-          <selectComp :domId="getId('duration-select2')" label="Select" :initialValue="initialValue.defaultTripleDuration.toString()"
-            :selections="defaultTripleDurations" :changeCb="tripleDurationCb" />
+          <selectComp :domId="getId('duration-select2')" label="Select" :initialValue="preferences.defaultTripleDuration.toString()"
+            :selections="defaultTripleDurations" :changeCb="updateNumber('defaultTripleDuration')" />
         </div>
       </div>
       <DialogButtons :enable="true" :commitCb="commitCb" :cancelCb="cancelCb" />
