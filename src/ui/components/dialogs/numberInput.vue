@@ -40,6 +40,7 @@ const handleChange = () => {
   const cbVal = percent ? value.value / 100 : value.value;
   props.changeCb(cbVal);
 }
+roundValue();
 </script>
 <template>
   <button class="btn btn-sm btn-outline-dark btn-square" @click.prevent="increment(1)" :disabled="disabled">

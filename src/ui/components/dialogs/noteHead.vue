@@ -3,6 +3,7 @@ import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
 import { DialogButtonDefinition } from '../../buttons/button';
 import buttonGroup from './buttonGroup.vue';
+import collapsableText from './collapsableText.vue';
 import { ref, Ref } from 'vue';
 interface Props {
   domId: string,
@@ -15,6 +16,10 @@ interface Props {
 const props = defineProps<Props>();
 const { domId, shapes, heads, stems, commitCb, cancelCb } = { ...props };
 const enable = ref(true);
+
+const lines:string[] = [];
+lines.push('<span class="text-muted">Use R to toggle note to rest. Use &lt;Delete&gt; to toggle visibility.</span>');
+lines.push('<span class="text-muted">Use keyboard shortcuts when available - they are much faster!</span>');
 
 const top = ref(100);
 const left = ref(100);
@@ -50,12 +55,7 @@ const getLocString = () => {
         <buttonGroup :label="'Note Stems'" :buttonDefs="stems" :domId="getId('stem-buttons')"
           :commonClasses="'btn btn-sm btn-outline-dark py-0  me-2'" />
       </div>
-      <div class="row mb-2 border-top pt-2">
-        <span class="text-muted">Use R to toggle note to rest. Use &lt;Delete&gt; to toggle visibility.</span>
-      </div>
-      <div class="row mb-2">
-        <span class="text-muted">Use keyboard shortcuts when available - they are much faster!</span>
-      </div>
+      <collapsableText :domId="getId('notehead-help')" :lines="lines" :initialState="false" />
     </div>
     <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
   </div>

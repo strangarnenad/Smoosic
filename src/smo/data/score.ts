@@ -1020,6 +1020,13 @@ export class SmoScore {
     );
     return exist;
   }
+  getSystemGroupForStaffId(staffId: number){
+    const sel = SmoSelection.measureSelection(this, staffId, 0);
+    if (sel) {
+      return this.getSystemGroupForStaff(sel);
+    }
+    return undefined;
+  }
 
   getStavesForGroup(group: SmoSystemGroup) {
     return this.staves.filter((staff) => staff.staffId >= group.startSelector.staff &&
@@ -1033,6 +1040,12 @@ export class SmoScore {
     // Replace this group for any groups that overlap it.
     this.systemGroups = this.systemGroups.filter((sg) => !sg.overlaps(newGroup));
     this.systemGroups.push(newGroup);
+  }
+  removeSystemGroup(group: SmoSystemGroup) {
+    this.systemGroups = this.systemGroups.filter((sg) => !sg.overlaps(group));
+  }
+  clearSystemGroups() {
+    this.systemGroups = [];
   }
 
   isPartExposed(): boolean {

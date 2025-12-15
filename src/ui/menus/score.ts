@@ -6,7 +6,7 @@ import { SuiScoreFontDialog } from '../dialogs/fonts';
 import { SuiGlobalLayoutDialogVue } from '../dialogs/globalLayout';
 import { SuiTransposeScoreDialog } from '../dialogs/transposeScore';
 import { createAndDisplayDialog } from '../dialogs/dialog';
-import { SuiStaffGroupDialog } from '../dialogs/staffGroup';
+import { SuiStaffGroupDialog, SuiStaffGroupDialogVue } from '../dialogs/staffGroup';
 
 declare var $: any;
 /**
@@ -82,7 +82,7 @@ export class SuiScoreMenu extends SuiMenuBase {
     super(params);
   }
   execStaffGroups() {
-    createAndDisplayDialog(SuiStaffGroupDialog,
+    SuiStaffGroupDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,

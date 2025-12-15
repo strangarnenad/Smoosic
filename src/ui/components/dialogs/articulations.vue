@@ -54,7 +54,7 @@ const getLocString = () => {
         <div class="col col-2 float-end pe-0">
           <span class="float-end" :for="getId('clef-select')">Position</span>
         </div>
-        <div class="col col-10 text-start">
+        <div class="col col-4 text-start">
           <selectComp :domId="getId('art-select')" label="Select" :initialValue="initialValue"
             :selections="positions" :changeCb="positionChangeCb" />
         </div>

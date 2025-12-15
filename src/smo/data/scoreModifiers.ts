@@ -709,6 +709,9 @@ export class SmoSystemGroup extends SmoScoreModifierBase {
   static get connectorTypes(): Record<string, number> {
     return { brace: 0, bracket: 1, single: 2, double: 3 };
   }
+  static get connectorTypeNames(): Record<number, string> {
+    return { 0: 'brace', 1: 'bracket', 2: 'single', 3: 'double' };
+  }
   static get mapTypes(): Record<string, number> {
     return { allMeasures: 0, range: 1 };
   }

@@ -74,7 +74,8 @@ onMounted(() => {
   <div class="dropdown">
     <button :id="getId('select-button')" class="btn btn-outline-dark dropdown-toggle w-100 py-0" type="button"
       :aria-expanded="showDropdown" data-bs-toggle="dropdown" @click="toggleDropdown">
-      {{ selectLabel }}</button>
+      {{ selectLabel }}
+    <span class="smo-icon icon-circle-down fs-6"></span></button>
     <ul :id="getId('select')" class="dropdown-menu" :class="ulClasses" >
       <li v-for="selection in selections" :key="selection.value" :value="selection.value" class="dropdown-item"
       :class="{ active: selection.active }"  @click="handleSelect(selection)">

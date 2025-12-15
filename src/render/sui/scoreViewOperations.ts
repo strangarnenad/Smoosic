@@ -531,6 +531,20 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this.renderer.setDirty();
     await this.renderer.updatePromise();
   }
+  async removeStaffGroup(staffGroup: SmoSystemGroup):Promise<void> {
+    this._undoScore('ungroup staves');
+    this.score.removeSystemGroup(staffGroup);
+    this.storeScore.removeSystemGroup(staffGroup);
+    this.renderer.setDirty();
+    await this.renderer.updatePromise();
+  }
+  async clearSystemGroups(): Promise<void>{
+    this._undoScore('clear staff groups');
+    this.score.clearSystemGroups();
+    this.storeScore.clearSystemGroups();
+    this.renderer.setDirty();
+    await this.renderer.updatePromise();
+  }
   async updateTabStave(tabStave: SmoTabStave) {
     const selections = SmoSelection.getMeasuresBetween(this.score, tabStave.startSelector, tabStave.endSelector);
     const altSelections = this._getEquivalentSelections(selections);

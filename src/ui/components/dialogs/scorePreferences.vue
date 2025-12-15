@@ -21,6 +21,9 @@ type numberTypes = 'defaultDupleDuration' | 'defaultTripleDuration';
 
 const top = ref(100);
 const left = ref(100);
+const getLocString = () => {
+  return `top: ${top}px; left: ${left}px;`;
+}
 const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
   return { topRef: top, leftRef: left };
 }
@@ -39,9 +42,7 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
+
 const updateBool = (type: booleanTypes) => {
   const cb = (value: boolean) => {
     (preferences as any)[type] = value;
@@ -113,7 +114,7 @@ const updateNumber = (type: numberTypes) => {
           <label class="form-check-label" :for="getId('partNames')" >Show part names in Score</label>
         </div>
       </div>
-      <div class="row align-items-baseline" :id="getId('arp-row')">
+      <div class="row align-items-baseline mt-3" :id="getId('arp-row')">
         <div class="col col-3 float-end pe-0">
           <span :for="getId('duration-select1')" class="form-label">Default Duration (even meter):</span>
         </div>

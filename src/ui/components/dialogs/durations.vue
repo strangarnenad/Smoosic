@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
-import { ButtonDefinition } from '../../buttons/button';
-import buttonComp from '../buttons/buttonComp.vue';
+import collapsableText from './collapsableText.vue';
 import { ref, Ref } from 'vue';
 interface Props {
   domId: string,
@@ -34,10 +33,15 @@ const getId = (str) => {
 const getLocString = () => {
   return `top: ${top}px; left: ${left}px;`;
 }
+const lines:string[] = [];
+lines.push(`<p class="text-muted">Learn the keyboard shortcuts, they're much faster!</p>`);
+lines.push(`<p class="text-muted">Use <span class="fs-4">, . </span> <span class="muted">(comma, period) </span> to          decrease/increase note length.</p>`);
+lines.push(`<p class="text-muted">Use &lt; &gt; to add/remove dots.</p>`);
+lines.push(`<p class="text-muted">Use shift + arrow keys to select notes.</p>`);
 </script>
 <template>
   <div class="attributeModal" :id="getDomId()" :style="getLocString()">
-    <div class="text-center col align-content-center mw-40" id="smo-dialog-container">
+    <div class="text-center container mw-40" id="smo-dialog-container">
       <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
       <div class="row mb-3">
         <h2 class="dialog-label">Durations</h2>
@@ -90,13 +94,7 @@ const getLocString = () => {
           </button>
         </div>
       </div>
-      <div class="row mb-3 border-top pt-2">
-        <p class="text-muted">Learn the keyboard shortcuts, they're much faster!</p>
-        <p class="text-muted">Use <span class="fs-4">, . </span> <span class="muted">(comma, period) </span> to
-          decrease/increase note length.</p>
-        <p class="text-muted">Use &lt; &gt; to add/remove dots.</p>
-        <p class="text-muted">Use shift + arrow keys to select notes.</p>
-      </div>
+      <collapsableText :domId="getId('duration-help')" :lines="lines" :initialState="false" containerClasses="nw-40"/>
     </div>
     <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
   </div>
