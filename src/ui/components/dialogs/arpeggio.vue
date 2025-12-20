@@ -4,6 +4,7 @@ import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
 import { SelectOption } from '../../common';
 import selectComp from './select.vue';
+import { draggableSession } from '../../composable/draggable';
 
 interface Props {
   domId: string,
@@ -23,11 +24,7 @@ const props: Props = defineProps<{
 }>();
 const domId: string = props.domId;
 const { arpCb, enable, initialValue, commitCb, cancelCb } = { ...props };
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
-  return { topRef: top, leftRef: left };
-}
+
 const arpValue = ref(initialValue);
 const arpValues: SelectOption[] = [{
   value: 'directionless',
@@ -60,9 +57,8 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
+
+const draggable = draggableSession(getDomId());
 /* return {
   enable, arpCb, commitCb, cancelCb, getDomId, getId, getLocString,
   domId, top, left, arpValue, arpValues
@@ -70,9 +66,9 @@ const getLocString = () => {
 
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable"/>
       <div class="row">
         <h2 class="dialog-label">Arpeggio</h2>
       </div>

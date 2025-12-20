@@ -6,13 +6,20 @@ precision: number,
 initialValue: number,
 disabled?: boolean,
 percent?: boolean,
+inputClasses?: string,
+buttonClasses?: string,
 changeCb: (value: number) => Promise<void>
 }
 const props = defineProps<Props>();
+const inputClasses = props.inputClasses ?? 'form-control d-inline-block text-center px-0 py-1 w-50 text-align-center number-click';
+const buttonClasses = props.buttonClasses ?? 'btn btn-sm btn-outline-dark btn-square px-1 mb-1 number-click';
 const value = ref(props.initialValue);
 const percent = props.percent ?? false;
 if (percent) {
   value.value = Math.round(value.value * 100);
+}
+const getId = (str: string) => {
+  return `${props.domId}-${str}`;
 }
 const disabled = toRef(props, 'disabled');
 const roundValue = () => {
@@ -43,12 +50,17 @@ const handleChange = () => {
 roundValue();
 </script>
 <template>
-  <button class="btn btn-sm btn-outline-dark btn-square" @click.prevent="increment(1)" :disabled="disabled">
+  <button @click.prevent="increment(1)" 
+    :id="getId('incButton')"
+    :class="buttonClasses"
+    :disabled="disabled">
     <span class="smo-icon icon-circle-up fs-6"></span>
     </button>
-    <button class="btn btn-sm btn-outline-dark btn-square me-2" @click.prevent="increment(-1)" :disabled="disabled">
-<span class="smo-icon icon-circle-down fs-6"></span>
+    <button @click.prevent="increment(-1)" :disabled="disabled"
+    :class="buttonClasses + ' me-2'"
+    :id="getId('decButton')">
+    <span class="smo-icon icon-circle-down fs-6"></span>
   </button>
-  <input class="form-control d-inline-block text-center w-50 pe-0 py-1 text-align-center" :disabled="disabled"
-    v-model="value" @change="handleChange" />
+  <input :class="inputClasses" :disabled="disabled"
+    v-model="value" @change="handleChange" :id="getId('text')"/>
 </template>

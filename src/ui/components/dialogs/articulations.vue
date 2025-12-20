@@ -6,6 +6,8 @@ import buttonGroup from './buttonGroup.vue';
 import { SelectOption } from '../../common';
 import selectComp from './select.vue';
 import { ref, Ref } from 'vue';
+import { draggableSession } from '../../composable/draggable';
+
 interface Props {
   domId: string,
   articulations: DialogButtonDefinition[],
@@ -24,25 +26,19 @@ const positions: SelectOption[] = [
   { label: 'Below Note', value: 'below' },
   { label: 'Auto', value: 'auto' }
 ];
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 const getDomId = () => {
   return `attr-modal-dialog-${domId}`;
 }
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top.value}px; left: ${left.value}px;`;
-}
+
+const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="text-center nw-30" :id="getId('modal-content')">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row">
         <h2 class="dialog-label">Articulations</h2>
       </div>

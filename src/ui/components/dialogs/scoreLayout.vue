@@ -6,7 +6,7 @@ import selectComp from './select.vue';
 import numberInputApp from './numberInput.vue';
 import { SelectOption } from '../../common';
 import { SmoGlobalLayout } from '../../../smo/data/scoreModifiers';
-
+import { draggableSession } from '../../composable/draggable';
 
 interface Props {
   domId: string,
@@ -18,11 +18,6 @@ interface Props {
 const props = defineProps<Props>();
 const { domId, label, getLayout, commitCb, cancelCb } = { ...props };
 const currentLayout: SmoGlobalLayout = getLayout();
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 type numberTypes = 'pageWidth' | 'pageHeight' | 'zoomScale' | 'svgScale' | 'noteSpacing' | 'maxMeasureSystem';
 const updateNumberType = (nt: numberTypes) => {
   const updateNumber = async (val: number) => {
@@ -83,14 +78,13 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
+
+const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="text-center mw-40" :id="getId('modal-content')">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row mb-2">
         <h2 class="dialog-label">{{ props.label }}</h2>
       </div>

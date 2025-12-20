@@ -34,7 +34,7 @@ import { SuiDialogBase, createAndDisplayDialog } from '../ui/dialogs/dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from '../ui/dialogs/adapter';
 import { SuiGraceNoteDialog } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
-import { SuiTransposeScoreDialog, SuiTransposeScoreAdapter } from '../ui/dialogs/transposeScore';
+import { SuiTransposeScoreDialogVue} from '../ui/dialogs/transposeScore';
 import { SuiMeasureDialog } from '../ui/dialogs/measureFormat';
 import { SuiInsertMeasures } from '../ui/dialogs/addMeasure';
 import { SuiInstrumentDialog } from '../ui/dialogs/instrument';
@@ -43,11 +43,11 @@ import { SuiTempoDialog } from '../ui/dialogs/tempo';
 import { SuiNoteHeadDialog } from '../ui/dialogs/noteHead';
 import { SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
   SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from '../ui/dialogs/endings';
-import { SuiScoreIdentificationDialog } from '../ui/dialogs/scoreId';
+import { SuiScoreIdentificationDialogVue } from '../ui/dialogs/scoreId';
 import { SuiScorePreferencesDialogVue } from '../ui/dialogs/preferences';
 import { SuiPageLayoutDialogVue } from '../ui/dialogs/pageLayout';
 import { SuiTextBracketDialog } from '../ui/dialogs/textBracket';
-import { SuiScoreFontDialog } from '../ui/dialogs/fonts';
+import { SuiScoreFontDialogVue } from '../ui/dialogs/fonts';
 import { SuiGlobalLayoutDialogVue } from '../ui/dialogs/globalLayout';
 import { SuiScoreViewDialog } from '../ui/dialogs/scoreView';import { SuiLibraryDialog } from '../ui/dialogs/library';
 import { SuiChordChangeDialog } from '../ui/dialogs/chordChange';
@@ -59,7 +59,7 @@ import { SuiPedalMarkingDialog } from '../ui/dialogs/pedalMarking';
 import { SuiTieAttributesDialog } from '../ui/dialogs/tie';
 import { SuiVoltaAttributeDialog } from '../ui/dialogs/volta';
 import { SuiHairpinAttributesDialog } from '../ui/dialogs/hairpin';
-import { SuiStaffGroupDialog } from '../ui/dialogs/staffGroup';
+import { SuiStaffGroupDialogVue } from '../ui/dialogs/staffGroup';
 import { SuiOrnamentDialogVue } from '../ui/dialogs/ornament';
 import { SuiArticulationDialogVue } from '../ui/dialogs/articulation';
 import { SuiMicrotoneDialogVue } from '../ui/dialogs/microtones';
@@ -355,12 +355,12 @@ export const Smo = {
   SuiComponentAdapter, SuiDialogAdapterBase,
   SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
-  SuiScoreViewDialog, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
-  SuiTransposeScoreDialog,
-  SuiScoreFontDialog, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasures,
+  SuiScoreViewDialog, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialogVue, 
+  SuiTransposeScoreDialogVue,
+  SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasures,
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
-  SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
+  SuiHairpinAttributesDialog, SuiStaffGroupDialogVue, helpModal,
   SuiScorePreferencesDialogVue,
   SuiPartInfoDialog, SuiOrnamentDialogVue, 
   SuiArticulationDialogVue, 

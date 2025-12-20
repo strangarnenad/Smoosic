@@ -2,6 +2,7 @@
 import { ref, watch, Ref, onMounted, useTemplateRef, computed } from 'vue';
 import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
+import { draggableSession } from '../../composable/draggable';
 interface BoxLoc {
   topRef: Ref<number>,
   leftRef: Ref<number>
@@ -17,11 +18,7 @@ interface Props {
 }
 const props = defineProps < Props > ();
 const { domId, commitCb, contents, cancelCb, extension, suggestedName } = { ...props };
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): BoxLoc => {
-  return { topRef: top, leftRef: left };
-}
+
 const url = ref('');
 const getId = (str: string) => {
   return `${domId}-${str}`;
@@ -50,9 +47,6 @@ const saveFileCb = () => {
   commitCb();
 }
 const enable = ref(true);
-const getLocString = computed(() => {
-  return `top: ${top.value}px; left: ${left.value}px;`;
-});
 watch(contents, () => {
   url.value = URL.createObjectURL(new Blob([contents.value], { type: mimeType }));
 });
@@ -79,11 +73,12 @@ onMounted(() => {
   }
   url.value = URL.createObjectURL(new Blob([contents.value], { type: mimeType }));
 });
+const draggable = draggableSession(getDomId());
 </script>
 <template>
   <div class="attributeModal" :id="getDomId()">
-    <div class="container text-center" :id="getId('dialog-container')" :style="getLocString">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+    <div class="container text-center" :id="getId('dialog-container')" :style="draggable.getLocString()">
+      <draggableComp :draggableSession="draggable" />
       <div class="row">
         <h2 class="dialog-label">Save File</h2>
       </div>

@@ -4,6 +4,7 @@ import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
 import selectComp from './select.vue';
 import { SelectOption } from '../../common';
+import { draggableSession } from '../../composable/draggable';
 
 interface Props2 {
   domId: string,
@@ -57,11 +58,12 @@ const handleSelect = (option: string) => {
 watch(clefChange, (newVal) => {
   clefChangeCb(newVal);
 });
+const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row">
         <h2 class="dialog-label">Clef Change</h2>
       </div>

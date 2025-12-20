@@ -2,6 +2,8 @@
 import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
 import collapsableText from './collapsableText.vue';
+import { draggableSession } from '../../composable/draggable';
+
 import { ref, Ref } from 'vue';
 interface Props {
   domId: string,
@@ -16,23 +18,16 @@ const props = defineProps<Props>();
 const { domId, increaseDurationCb, decreaseDurationCb, addDotCb, removeDotCb, commitCb, cancelCb } = { ...props };
 const enable = ref(true);
 
-const top = ref(100);
-const left = ref(100);
 const buttonClass = 'btn btn-outline-secondary mx-3 float-start no-vertical-padding';
 const rowClass = 'row mb-3 align-items-center';
-
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 const getDomId = () => {
   return `attr-modal-dialog-${domId}`;
 }
 const getId = (str) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
+
+const draggable = draggableSession(getDomId());
 const lines:string[] = [];
 lines.push(`<p class="text-muted">Learn the keyboard shortcuts, they're much faster!</p>`);
 lines.push(`<p class="text-muted">Use <span class="fs-4">, . </span> <span class="muted">(comma, period) </span> to          decrease/increase note length.</p>`);
@@ -40,9 +35,9 @@ lines.push(`<p class="text-muted">Use &lt; &gt; to add/remove dots.</p>`);
 lines.push(`<p class="text-muted">Use shift + arrow keys to select notes.</p>`);
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="text-center container mw-40" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row mb-3">
         <h2 class="dialog-label">Durations</h2>
       </div>

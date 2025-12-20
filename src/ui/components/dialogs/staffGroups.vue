@@ -7,6 +7,7 @@ import { SelectOption } from '../../common';
 import draggableComp from './draggableComp.vue';
 import selectComp from './select.vue';
 import DialogButtons from './dialogButtons.vue';
+import { draggableSession } from '../../composable/draggable';
 interface Props {
   staffGroups: SmoSystemGroup[],
   score: SmoScore
@@ -111,15 +112,8 @@ const getChoicesForStaff = (staffNum: number): GroupChoice => {
   rv.createGroup = false;
   return rv;
 };
+const draggable = draggableSession(getDomId());
 
-const top = ref(100);
-const left = ref(100);
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 const choices: GroupChoice[] = reactive([]);
 const updateChoices = () => {
   choices.splice(0);
@@ -134,9 +128,9 @@ watch(() => props.staffGroups, () => {
 
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row">
         <h2 class="dialog-label">{{ label }}</h2>
       </div>      

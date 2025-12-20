@@ -6,7 +6,7 @@ import selectComp from './select.vue';
 import numberInputApp from './numberInput.vue';
 import { SelectOption } from '../../common';
 import { SmoPageLayout } from '../../../smo/data/scoreModifiers';
-
+import { draggableSession } from '../../composable/draggable';
 
 interface Props {
   domId: string,
@@ -18,11 +18,7 @@ interface Props {
 const props = defineProps<Props>();
 const { currentLayout, applyTo } = props.getValues();
 const domId: string = props.domId;
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
+
 const applyToOptions: SelectOption[] = [
   { label: 'Score', value: 'all' },
   { label: 'All Remaining', value: 'remaining' },
@@ -45,15 +41,12 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
-
+const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="text-center mw-40" :id="getId('modal-content')">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row mb-2">
         <h2 class="dialog-label">Page Layouts (px)</h2>
       </div>

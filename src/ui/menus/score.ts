@@ -1,12 +1,11 @@
 import { MenuDefinition, MenuChoiceDefinition, SuiMenuBase, SuiMenuParams } from './menu';
 import { SuiScorePreferencesDialogVue } from '../dialogs/preferences';
-import { SuiScoreIdentificationDialog } from '../dialogs/scoreId';
+import { SuiScoreIdentificationDialogVue } from '../dialogs/scoreId';
 import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
-import { SuiScoreFontDialog } from '../dialogs/fonts';
+import { SuiScoreFontDialogVue } from '../dialogs/fonts';
 import { SuiGlobalLayoutDialogVue } from '../dialogs/globalLayout';
-import { SuiTransposeScoreDialog } from '../dialogs/transposeScore';
-import { createAndDisplayDialog } from '../dialogs/dialog';
-import { SuiStaffGroupDialog, SuiStaffGroupDialogVue } from '../dialogs/staffGroup';
+import { SuiTransposeScoreDialogVue } from '../dialogs/transposeScore';
+import { SuiStaffGroupDialogVue } from '../dialogs/staffGroup';
 
 declare var $: any;
 /**
@@ -96,7 +95,7 @@ export class SuiScoreMenu extends SuiMenuBase {
     );
   }
   execScoreId() {
-    SuiScoreIdentificationDialog.createAndDisplay(
+    SuiScoreIdentificationDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -122,7 +121,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execFonts() {
-    SuiScoreFontDialog.createAndDisplay(
+    SuiScoreFontDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -162,12 +161,12 @@ export class SuiScoreMenu extends SuiMenuBase {
   }
 
   execTransposeScore() {
-    createAndDisplayDialog(SuiTransposeScoreDialog,
+    SuiTransposeScoreDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
         eventSource: this.eventSource,
-        id: 'scoreIdDialog',
+        id: 'transposeScore',
         ctor: 'SuiTransposeScoreDialog',
         tracker: this.view.tracker,
         modifier: null,

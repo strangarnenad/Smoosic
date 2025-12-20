@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref, Ref } from 'vue';
 import { draggable } from '../../../common/htmlHelpers';
+import { DraggableSession } from '../../composable/draggable';
 declare var $: any;
 interface Props3 {
-  domId: string,
-  getCoordsCb: () => { topRef: Ref<number>, leftRef: Ref<number> },
+  draggableSession: DraggableSession
 }
 const props = defineProps<Props3>();
-const { topRef, leftRef } = props.getCoordsCb();
-const domId = props.domId;
+const { topRef, leftRef } = props.draggableSession.getCoordsCb();
+const session: DraggableSession = props.draggableSession;
+const domId = session.domId;
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }

@@ -2,6 +2,7 @@
 import { ref, Ref } from 'vue';
 import draggableComp from './draggableComp.vue';
 import DialogButtons from './dialogButtons.vue';
+import { draggableSession } from '../../composable/draggable';
 interface Props {
   domId: string,
   enable: any,
@@ -13,11 +14,6 @@ interface Props {
 };
 const props = defineProps < Props > ();
 const { domId, uploadCb, quantizeCb, enable, commitCb, cancelCb } = { ...props };
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
-  return { topRef: top, leftRef: left };
-}
 const quantizeValue = ref('1024');
 const quantizeValues = [
   { text: '1/8th note', value: '2048' },
@@ -30,14 +26,13 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}    
+
+const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />      
+      <draggableComp :draggableSession="draggable" />      
       <div class="row">
         <h2 class="dialog-label">Load File</h2>
       </div>

@@ -2,6 +2,7 @@
 import DialogButtons from './dialogButtons.vue';
 import draggableComp from './draggableComp.vue';
 import collapsableText from './collapsableText.vue';
+import { draggableSession } from '../../composable/draggable';
 import { ref, Ref } from 'vue';
 interface Props {
   domId: string,
@@ -14,12 +15,6 @@ interface Props {
 const props = defineProps<Props>();
 const { domId, addGraceNoteCb, removeGraceNoteCb, slashGraceNoteCb, commitCb, cancelCb } = { ...props };
 const enable = ref(true);
-
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 const getDomId = () => {
   return `attr-modal-dialog-${domId}`;
 }
@@ -28,17 +23,15 @@ const getId = (str) => {
 }
 const buttonClass = 'btn btn-outline-secondary mx-3 float-start no-vertical-padding';
 const rowClass='row mb-3 align-items-center';
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
+const draggable = draggableSession(getDomId());
 const lines:string[] = [];
 lines.push(`<p class="text-muted">Use hot keys shift-G to add, alt-G to remove.</p>`);
 lines.push(`<p class="text-muted">Use hot key alt-L to select grace notes.</p>`);
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center mw-40" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row mb-3">
         <h2 class="dialog-label">Grace Notes</h2>
       </div>

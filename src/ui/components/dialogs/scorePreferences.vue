@@ -5,6 +5,7 @@ import draggableComp from './draggableComp.vue';
 import { SmoScorePreferences } from '../../../smo/data/scoreModifiers';
 import { SelectOption } from '../../common';
 import selectComp from './select.vue';
+import { draggableSession } from '../../composable/draggable';
 
 interface Props {
   domId: string,
@@ -19,14 +20,6 @@ const preferences = getPreferences();
 type booleanTypes = 'autoPlay' | 'autoAdvance' | 'showPiano' | 'hideEmptyLines' | 'autoScrollPlayback' | 'transposingScore' | 'showPartNames';
 type numberTypes = 'defaultDupleDuration' | 'defaultTripleDuration';
 
-const top = ref(100);
-const left = ref(100);
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
-}
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
-  return { topRef: top, leftRef: left };
-}
   const defaultDoubleDurations: SelectOption[] = [
     { label: '1/4', value: '4096' },
     { label: '1/8', value: '2048' }
@@ -42,6 +35,7 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
+const draggable = draggableSession(getDomId());
 
 const updateBool = (type: booleanTypes) => {
   const cb = (value: boolean) => {
@@ -63,9 +57,9 @@ const updateNumber = (type: numberTypes) => {
 
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row">
         <h2 class="dialog-label">Score Preferences</h2>
       </div>

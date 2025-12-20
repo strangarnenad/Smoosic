@@ -4,6 +4,7 @@ import draggableComp from './draggableComp.vue';
 import { DialogButtonDefinition } from '../../buttons/button';
 import buttonGroup from './buttonGroup.vue';
 import { ref, Ref } from 'vue';
+import { draggableSession } from '../../composable/draggable';
 interface Props {
   domId: string,
   accidentals: DialogButtonDefinition[],
@@ -14,25 +15,19 @@ const props = defineProps<Props>();
 const { domId, accidentals, commitCb, cancelCb } = { ...props };
 const enable = ref(true);
 
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 const getDomId = () => {
   return `attr-modal-dialog-${domId}`;
 }
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top.value}px; left: ${left.value}px;`;
-}
+
+const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="text-center" :id="getId('modal-content')">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row">
         <h2 class="dialog-label">Microtones</h2>
       </div>

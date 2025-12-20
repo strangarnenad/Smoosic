@@ -87,6 +87,16 @@
 button.dropdown-toggle {
   position: relative;
 }
+button.number-click {
+  line-height: 1rem;
+  background: #ddd;
+}
+button.number-click:disabled {
+  background: #e5e5e5;
+}
+input.number-click {
+  line-height: 1rem;
+}
 button.collapsable-button[data-bs-toggle] {
   width: 2rem;
   height: 2rem;

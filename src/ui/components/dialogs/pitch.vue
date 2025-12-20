@@ -4,6 +4,7 @@ import draggableComp from './draggableComp.vue';
 import { DialogButtonDefinition } from '../../buttons/button';
 import buttonGroup from './buttonGroup.vue';
 import collapsableText from './collapsableText.vue';
+import { draggableSession } from '../../composable/draggable';
 import { ref, Ref, reactive } from 'vue';
 interface Props {
   domId: string,
@@ -22,30 +23,23 @@ const intervalSplit = intervals.length / 2;
 const interval1 = reactive(intervals.slice(0, intervalSplit));
 const interval2 = reactive(intervals.slice(intervalSplit));
 const enable = ref(true);
-
-const top = ref(100);
-const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> } => {
-  return { topRef: top, leftRef: left };
-}
 const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
+  return `attr-modal-dialogx-${domId}`;
 }
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const getLocString = () => {
-  return `top: ${top.value}px; left: ${left.value}px;`;
-}
+
+const draggable = draggableSession(getDomId());
 const lines:string[] = [];
 lines.push(`<span class="text-muted">Learn to use the shortcuts, they are much faster!</span>`);
 lines.push(`<div class="col">A-G note letter</div> <div class="col"> - = half-step  </div> <div class="col">  _ and + octaves </div> <div class="col"> 2-8 intervals </div>  <div class="col">      arrow keys navigate       </div>`);
 
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="getLocString()">
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
     <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :domId="getDomId()" :getCoordsCb="getCoordsCb" />
+      <draggableComp :draggableSession="draggable" />
       <div class="row mb-2">
         <h2 class="dialog-label">Change Pitches</h2>
       </div>
