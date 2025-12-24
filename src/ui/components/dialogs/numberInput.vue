@@ -3,6 +3,8 @@ import { ref, toRef, watch } from 'vue';
 interface Props {
 domId: string,
 precision: number,
+minValue?: number,
+maxValue?: number,
 initialValue: number,
 disabled?: boolean,
 percent?: boolean,
@@ -14,9 +16,20 @@ const props = defineProps<Props>();
 const inputClasses = props.inputClasses ?? 'form-control d-inline-block text-center px-0 py-1 w-50 text-align-center number-click';
 const buttonClasses = props.buttonClasses ?? 'btn btn-sm btn-outline-dark btn-square px-1 mb-1 number-click';
 const value = ref(props.initialValue);
+let minValue: number = props.minValue ?? 0;
+let maxValue: number = props.maxValue ?? 99999;
+// If percent is set,  treat values 0-1 as 0-100.  Adjust for callback when local value is changed.
 const percent = props.percent ?? false;
 if (percent) {
   value.value = Math.round(value.value * 100);
+  if  (props.minValue === undefined) {
+    minValue = 0;
+  }
+  if (props.maxValue === undefined) {
+    maxValue = 1;
+  }
+  minValue = minValue * 100;
+  maxValue = maxValue * 100;
 }
 const getId = (str: string) => {
   return `${props.domId}-${str}`;
@@ -24,6 +37,7 @@ const getId = (str: string) => {
 const disabled = toRef(props, 'disabled');
 const roundValue = () => {
   value.value = Math.round(value.value * Math.pow(10, props.precision)) / Math.pow(10, props.precision);
+  value.value = Math.min(Math.max(value.value, minValue), maxValue);
 }
 watch(() => props.initialValue, (newVal) => {
   if (percent) {

@@ -219,6 +219,28 @@ export class SmoInstrument extends StaffModifierBase {
     'pad': 89,
     'percussion': 116
   };
+   // Used default key offset
+  static instrumentKeyOffset: Record<string, number> = {
+    'piano': 0,
+    'accordion': 0,
+    'electricPiano':0,
+    'bass':0,
+    'jazzBass': 0,
+    'eGuitar': 0,
+    'cello': 0,
+    'violin': 0,
+    'trumpet': 2,
+    'horn': 7,
+    'trombone': 0,
+    'tuba': 0,
+    'clarinet': 2,
+    'flute': 0,
+    'altoSax': 9,
+    'tenorSax':14,
+    'bariSax': 21,
+    'pad': 0,
+    'percussion': 0
+  };
   // Internally, percussion clef uses treble clef pitches (since percussion clef
   // piches are not defined.).  This maps the notes from Bb3 to C6 to general midi
   // map drum parts.  There is no standard for this, and maps should be editable.

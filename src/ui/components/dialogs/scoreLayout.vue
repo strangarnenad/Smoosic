@@ -114,17 +114,17 @@ const draggable = draggableSession(getDomId());
         <div class="row mb-2 align-items-center">
         <div class="col col-4">
           <numberInputApp :domId="getId('zoom-scale-input')" :initialValue="currentLayout.zoomScale" :precision="0"
-            :percent=true :changeCb="updateNumberType('zoomScale')" />
+            :percent=true :changeCb="updateNumberType('zoomScale')" :minValue="0.25" :maxValue="8" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
           <span class="form-check-label">Zoom Scale (%)</span>
         </div>
         <div class="col col-4 ms-n4">
           <numberInputApp :domId="getId('svg-scale-input')" :initialValue="currentLayout.svgScale" :precision="0"
-            :percent="true" :changeCb="updateNumberType('svgScale')" />
+            :percent="true" :changeCb="updateNumberType('svgScale')" :minValue="0.25" :maxValue="2" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
-          <span class="form-check-label">SVG Scale (%)</span>
+          <span class="form-check-label">Note Size (%)</span>
         </div>
       </div>
       <div class="row mb-2 align-items-center">
@@ -140,7 +140,7 @@ const draggable = draggableSession(getDomId());
             :precision="0" :changeCb="updateNumberType('maxMeasureSystem')" />
         </div>
         <div class="col col-2 fs-7 ms-n4 ps-0 text-start">
-          <span class="form-check-label">Max Measures/System</span>
+          <span class="form-check-label">Measures/System</span>
         </div>
       </div>
       <DialogButtons :enable="true" :commitCb="props.commitCb" :cancelCb="props.cancelCb" />

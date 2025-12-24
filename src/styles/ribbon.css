@@ -201,7 +201,12 @@ button#MicrotoneButtons  {
   padding-top:0.3rem;
   font-style: italic;
 }
-.btn:hover {
+.smo-text-bg-light {
+    color: #000;
+    background-color: RGBA(var(--bs-light-rgb), var(--bs-bg-opacity, 1))
+}
+.btn:hover,
+.btn-group-vertical.controls-left .btn:hover {
     color: #fff;
     background-color: #213529;
     border-color: #213529;

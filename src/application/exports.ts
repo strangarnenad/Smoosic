@@ -37,7 +37,7 @@ import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
 import { SuiTransposeScoreDialogVue} from '../ui/dialogs/transposeScore';
 import { SuiMeasureDialog } from '../ui/dialogs/measureFormat';
 import { SuiInsertMeasures } from '../ui/dialogs/addMeasure';
-import { SuiInstrumentDialog } from '../ui/dialogs/instrument';
+import { SuiInstrumentDialogVue } from '../ui/dialogs/instrument';
 import { SuiTimeSignatureDialog } from '../ui/dialogs/timeSignature';
 import { SuiTempoDialog } from '../ui/dialogs/tempo';
 import { SuiNoteHeadDialog } from '../ui/dialogs/noteHead';
@@ -49,7 +49,7 @@ import { SuiPageLayoutDialogVue } from '../ui/dialogs/pageLayout';
 import { SuiTextBracketDialog } from '../ui/dialogs/textBracket';
 import { SuiScoreFontDialogVue } from '../ui/dialogs/fonts';
 import { SuiGlobalLayoutDialogVue } from '../ui/dialogs/globalLayout';
-import { SuiScoreViewDialog } from '../ui/dialogs/scoreView';import { SuiLibraryDialog } from '../ui/dialogs/library';
+import { SuiScoreViewDialogVue } from '../ui/dialogs/scoreView';import { SuiLibraryDialog } from '../ui/dialogs/library';
 import { SuiChordChangeDialog } from '../ui/dialogs/chordChange';
 import { SuiLyricDialog } from '../ui/dialogs/lyric';
 import { SuiTextBlockDialog, helpModal } from '../ui/dialogs/textBlock';
@@ -353,9 +353,9 @@ export const Smo = {
   // Dialogs
   SuiGraceNoteDialog,  SuiDurationNoteVue,
   SuiComponentAdapter, SuiDialogAdapterBase,
-  SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
+  SuiTempoDialog, SuiInstrumentDialogVue, SuiModifierDialogFactory, SuiLibraryDialog,
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
-  SuiScoreViewDialog, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialogVue, 
+  SuiScoreViewDialogVue, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialogVue, 
   SuiTransposeScoreDialogVue,
   SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasures,
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,

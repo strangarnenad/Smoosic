@@ -1,8 +1,8 @@
 import { SuiMenuBase, SuiMenuParams, MenuChoiceDefinition, MenuDefinition, 
   SuiConfiguredMenuOption, SuiConfiguredMenu } from './menu';
 import { createAndDisplayDialog } from '../dialogs/dialog';
-import { SuiScoreViewDialog } from '../dialogs/scoreView';
-import { SuiInstrumentDialog } from '../dialogs/instrument';
+import { SuiScoreViewDialogVue } from '../dialogs/scoreView';
+import { SuiInstrumentDialogVue } from '../dialogs/instrument';
 import { SuiPartInfoDialog } from '../dialogs/partInfo';
 import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
 import { SuiNewPartDialog } from '../dialogs/newPart';
@@ -102,11 +102,11 @@ export const pageLayoutMenuOption: SuiConfiguredMenuOption = {
 export const viewPartialScoreMenuOption: SuiConfiguredMenuOption = {
   menuChoice: {
     icon: '',
-    text: 'View Partial Score',
+    text: 'Show/Hide Staves',
     value: 'view'
   }, display: (menu: SuiMenuBase) => !menu.view.isPartExposed(),
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiScoreViewDialog,
+    SuiScoreViewDialogVue(
       {
         completeNotifier: menu.completeNotifier!,
         view: menu.view,
@@ -142,7 +142,7 @@ export const editInstrumentMenuOption: SuiConfiguredMenuOption = {
     value: 'editInstrument'
   }, display: (menu: SuiMenuBase) => true,
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiInstrumentDialog,
+    SuiInstrumentDialogVue(
       {
         completeNotifier: menu.completeNotifier!,
         view: menu.view,

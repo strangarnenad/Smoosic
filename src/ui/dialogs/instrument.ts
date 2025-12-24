@@ -1,247 +1,54 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-import { Clef, IsClef } from '../../smo/data/common';
 import { SmoInstrument, SmoInstrumentNumParamType, SmoInstrumentStringParamType } from '../../smo/data/staffModifiers';
 import { SmoSelection, SmoSelector } from '../../smo/xform/selections';
 
-import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { DialogDefinition, SuiDialogParams } from './dialog';
-import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { PromiseHelpers } from '../../common/promiseHelpers';
+import { SuiDialogParams, InstallDialog } from './dialog';
 import { SuiSampleMedia } from '../../render/audio/samples';
+import { replaceVueRoot, modalContainerId } from '../common';
+import { reactive, watch, ref } from 'vue';
+import instrumentPropertiesApp from '../components/dialogs/instrumentProperties.vue';
 
-/**
- * Instrument applies to some or all of a part or stave.
- * @category SuiDialog
- */
-export class SuiInstrumentAdapter extends SuiComponentAdapter {
-  instrument: SmoInstrument;
-  backup: SmoInstrument;
-  selections: SmoSelection[];
-  selector: SmoSelector;
-  applies: number = SuiInstrumentDialog.applyTo.selected;
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-    const selection = this.view.tracker.selections[0];
-    this.instrument = new SmoInstrument(this.view.score.getStaffInstrument(selection.selector));
-    this.selections = SmoSelection.getMeasureList(this.view.tracker.selections);
-    this.selector = JSON.parse(JSON.stringify(this.selections[0].selector));
-    this.backup = new SmoInstrument(this.instrument);
-  }
-  writeNumParam(paramName: SmoInstrumentNumParamType, value: number) {
-    this.instrument[paramName] = value;
-    this.view.changeInstrument(this.instrument, this.selections);
-    this.instrument = new SmoInstrument(this.instrument);
-  }
-  writeStringParam(paramName: SmoInstrumentStringParamType, value: string) {
-    this.instrument[paramName] = value as any;
-    this.view.changeInstrument(this.instrument, this.selections);
-    this.instrument = new SmoInstrument(this.instrument);
-  }
-  writeBooleanParam(paramName: 'usePercussionNoteheads', value: boolean) {
-    this.instrument[paramName] = value as any;
-    this.view.changeInstrument(this.instrument, this.selections);
-    this.instrument = new SmoInstrument(this.instrument);
-  }
-  get lines() {
-    return this.instrument.lines;
-  }
-  set lines(value: number) {
-    this.writeNumParam('lines', value);
-  }
-  get usePercussionNoteheads() {
-    return this.instrument.usePercussionNoteheads;
-  }
-  set usePercussionNoteheads(value: boolean) {
-    this.writeBooleanParam('usePercussionNoteheads', value);
-  }
-  get transposeIndex() {
-    return this.instrument.keyOffset;
-  }
-  set transposeIndex(value: number) {
-    this.writeNumParam('keyOffset', value);
-  }
-
-  get subFamily() {
-    return this.instrument.instrument;
-  }
-  set subFamily(value: string) {
-    this.writeStringParam('instrument', value);
-    this.instrument.family = SuiSampleMedia.getFamilyForInstrument(value);
-  }
-  get clef(): Clef {
-    return this.instrument.clef;
-  }
-  set clef(value: Clef) {
-    this.instrument.clef = value;
-    this.view.changeInstrument(this.instrument, this.selections);
-    this.instrument = new SmoInstrument(this.instrument);
-  }
-  get applyTo() {
-    return this.applies;
-  }
-  set applyTo(value: number) {
-    this.applies = value;
-    if (value === SuiInstrumentDialog.applyTo.score) {
-      this.selections = SmoSelection.selectionsToEnd(this.view.score, this.selector.staff, 0);
-    } else if (this.applyTo === SuiInstrumentDialog.applyTo.remaining) {
-      this.selections = SmoSelection.selectionsToEnd(this.view.score, this.selector.staff, this.selector.measure);
+export const SuiInstrumentDialogVue = (parameters: SuiDialogParams) => {
+  const selection = parameters.view.tracker.selections[0];
+  const instrument = reactive(new SmoInstrument(parameters.view.score.getStaffInstrument(selection.selector)));
+  let applies = 'Selected';
+  const setApplyTo = (value: string)  => {
+    applies = value;
+    if (value === 'Score') {
+      parameters.view.tracker.selections = SmoSelection.selectionsToEnd(parameters.view.score, parameters.view.tracker.selections[0].selector.staff, 0);
+    } else if (applies === 'Remaining') {
+      parameters.view.tracker.selections = SmoSelection.selectionsToEnd(parameters.view.score, parameters.view.tracker.selections[0].selector.staff, parameters.view.tracker.selections[0].selector.measure);
     } else {
-      this.selections = this.view.tracker.selections;
+      parameters.view.tracker.selections = parameters.view.tracker.selections;
     }
   }
-  async commit() {
+  setApplyTo(applies);
+  const commitCb = async () => {
     // hack: the family name for musicxml purposes is here.
-    this.instrument.family = SuiSampleMedia.getFamilyForInstrument(this.instrument.instrument);
-    await this.view.changeInstrument(this.instrument, this.selections);
+    instrument.family = SuiSampleMedia.getFamilyForInstrument(instrument.instrument);
+    await parameters.view.changeInstrument(instrument, parameters.view.tracker.selections);
   }
-  async cancel() {
-    await this.view.changeInstrument(this.backup, this.selections);
+  const cancelCb = async () => {    
   }
-  async remove() {
-    return PromiseHelpers.emptyPromise();
+  watch(instrument, async (newVal) => {
+    console.log('Instrument changed');
+  });
+  const getInstrument = () => instrument;
+  const appParams = {
+    domId: replaceVueRoot(modalContainerId),
+    label: 'Instrument Properties',
+    applyToInitial: applies,
+    getInstrument,
+    updateApplyToCb: setApplyTo,
   }
-}
-/**
- * Instrument applies to some or all of a part or stave.
- * @category SuiDialog
- */
-export class SuiInstrumentDialog extends SuiDialogAdapterBase<SuiInstrumentAdapter> {
-  static get applyTo() {
-    return {
-      score: 0, selected: 1, remaining: 3
-    };
-  }
-  // export type Clef = 'treble' | 'bass' | 'tenor' | 'alto' | 'soprano' | 'percussion'
-  //| 'mezzo-soprano' | 'baritone-c' | 'baritone-f' | 'subbass' | 'french';
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Instrument Properties',
-      elements:
-        [{
-          smoName: 'lines',
-          defaultValue: 5,
-          control: 'SuiRockerComponent',
-          label: 'Staff lines (1-5)'
-        }, {
-          smoName: 'transposeIndex',
-          defaultValue: 0,
-          control: 'SuiRockerComponent',
-          label: 'Transpose Index (1/2 steps)',
-        }, {
-          smoName: 'subFamily',
-          control: 'SuiDropdownComponent',
-          label: 'Sample Sound',
-          options: [{
-            value: 'piano',
-            label: 'Grand Piano'
-          }, {
-            value: 'electricPiano',
-            label: 'Electric Piano'
-          }, {
-            value: 'accordion',
-            label: 'Accordion'
-          }, {
-            value: 'piano',
-            label: 'Grand Piano'
-          }, {
-            value: 'bass',
-            label: 'Bass (bowed)'
-          }, {
-            value: 'jazzBass',
-            label: 'Bass (plucked)'
-          }, {
-            value: 'eGuitar',
-            label: 'Electric Guitar'
-          }, {
-            value: 'cello',
-            label: 'Cello'
-          }, {
-            value: 'violin',
-            label: 'Violin'
-          }, {
-            value: 'trumpet',
-            label: 'Bb Trumpet'
-          }, {
-            value: 'horn',
-            label: 'F Horn'
-          }, {
-            value: 'trombone',
-            label: 'Trombone'
-          }, {
-            value: 'tuba',
-            label: 'Tuba'
-          }, {
-            value: 'clarinet',
-            label: 'Bb Clarinet'
-          }, {
-            value: 'flute',
-            label: 'Flute'
-          }, {
-            value: 'altoSax',
-            label: 'Eb Alto Sax'
-          }, {
-            value: 'tenorSax',
-            label: 'Bb Tenor Sax'
-          }, {
-            value: 'bariSax',
-            label: 'Eb Bari Sax'
-          }, {
-            value: 'pad',
-            label: 'Synth Pad'
-          }, {
-            value: 'percussion',
-            label: 'Percussion'
-          }, {
-            value: 'none',
-            label: 'None'
-          }]
-        }, {
-          smoName: 'clef',
-          control: 'SuiDropdownComponent',
-          label: 'Clef',
-          options: [{
-            value: 'treble',
-            label: 'Treble'
-          }, {
-            value: 'bass',
-            label: 'Bass'
-          }, {
-            value: 'tenor',
-            label: 'Tenor'
-          }, {
-            value: 'alto',
-            label: 'Alto'
-          }, {
-            label: 'Percussion',
-            value: 'percussion'
-          }]
-        }, {
-          smoName: 'usePercussionNoteheads',
-          control: 'SuiToggleComponent',
-          label: 'Use Percussion Symbols (Percussion Clef Only)'
-        }, {
-          smoName: 'applyTo',
-          defaultValue: SuiInstrumentDialog.applyTo.score,
-          dataType: 'int',
-          control: 'SuiDropdownComponent',
-          label: 'Apply To',
-          options: [{
-            value: SuiInstrumentDialog.applyTo.score,
-            label: 'Score'
-          }, {
-            value: SuiInstrumentDialog.applyTo.selected,
-            label: 'Selected Measures'
-          }, {
-            value: SuiInstrumentDialog.applyTo.remaining,
-            label: 'Remaining Measures'
-          }]
-        }
-        ],
-      staticText: []
-    };
-  constructor(parameters: SuiDialogParams) {
-    const adapter = new SuiInstrumentAdapter(parameters.view);
-    super(SuiInstrumentDialog.dialogElements, { adapter, ...parameters });
-  }
+  const rootId = replaceVueRoot(modalContainerId);
+  InstallDialog({
+      app: instrumentPropertiesApp,
+      appParams,
+      root: rootId,
+      dialogParams: parameters,
+      commitCb, 
+      cancelCb
+    });
 }

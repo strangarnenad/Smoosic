@@ -2,12 +2,7 @@
 // Copyright (c) Aaron David Newman 2021.
 import { FontInfo } from '../../common/vex';
 import { SmoScore, isEngravingFont } from '../../smo/data/score';
-import { FontPurpose } from '../../smo/data/scoreModifiers';
-import { SmoScoreText } from '../../smo/data/scoreText';
-import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { DialogDefinition, SuiDialogParams, InstallDialog } from './dialog';
-import { PromiseHelpers } from '../../common/promiseHelpers';
+import { SuiDialogParams, InstallDialog } from './dialog';
 import { replaceVueRoot, modalContainerId } from '../common';
 import { reactive, watch, ref } from 'vue';
 import scoreFontsApp from '../components/dialogs/scoreFonts.vue';
@@ -51,13 +46,6 @@ export const SuiScoreFontDialogVue = (parameters: SuiDialogParams) => {
       chordFont: chordFontInfo
     }
   }
-  const appParams = {
-    domId: replaceVueRoot(modalContainerId),
-    label: 'Score Fonts',
-    getFonts,
-    updateLyricFontCb: lyricFontCb,
-    updateChordFontCb: chordFontCb,
-  };
   const commitCb = async () => {}
   const cancelCb = async () => {
     if (changed) {
@@ -75,6 +63,13 @@ export const SuiScoreFontDialogVue = (parameters: SuiDialogParams) => {
     }
   }
   const rootId = replaceVueRoot(modalContainerId);
+  const appParams = {
+    domId: rootId,
+    label: 'Score Fonts',
+    getFonts,
+    updateLyricFontCb: lyricFontCb,
+    updateChordFontCb: chordFontCb,
+  };
   InstallDialog({
     app: scoreFontsApp,
     appParams,

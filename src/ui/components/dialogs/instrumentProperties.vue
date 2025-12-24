@@ -1,0 +1,211 @@
+<script setup lang="ts">
+import DialogButtons from './dialogButtons.vue';
+import draggableComp from './draggableComp.vue';
+import { SelectOption } from '../../common';
+import { IsClef } from '../../../smo/data/common';
+import { SmoInstrument, SmoInstrumentNumParamType, SmoInstrumentStringParamType } from '../../../smo/data/staffModifiers';
+import { draggableSession } from '../../composable/draggable';
+import selectComp from './select.vue';
+
+import numberInputApp from './numberInput.vue';
+import { computed, ref, Ref, reactive, watch } from 'vue';
+interface Props {
+  domId: string,
+  label: string,
+  getInstrument: () => SmoInstrument,
+  applyToInitial: string,
+  updateApplyToCb: (value: string) => Promise<void>,
+  commitCb: () => void,
+  cancelCb: () => void
+};
+const props = defineProps<Props>();
+
+const { domId, getInstrument } = { ...props };
+const applyToOptions: SelectOption[] = [{
+  value: "Score",
+  label: 'Score'
+}, {
+  value: "Selected",
+  label: 'Selected Measures'
+}, {
+  value: "Remaining",
+  label: 'Remaining Measures'
+}]
+const instrumentChoices: SelectOption[] = [{
+  value: 'piano',
+  label: 'Grand Piano'
+}, {
+  value: 'electricPiano',
+  label: 'Electric Piano'
+}, {
+  value: 'accordion',
+  label: 'Accordion'
+}, {
+  value: 'piano',
+  label: 'Grand Piano'
+}, {
+  value: 'bass',
+  label: 'Bass (bowed)'
+}, {
+  value: 'jazzBass',
+  label: 'Bass (plucked)'
+}, {
+  value: 'eGuitar',
+  label: 'Electric Guitar'
+}, {
+  value: 'cello',
+  label: 'Cello'
+}, {
+  value: 'violin',
+  label: 'Violin'
+}, {
+  value: 'trumpet',
+  label: 'Bb Trumpet'
+}, {
+  value: 'horn',
+  label: 'F Horn'
+}, {
+  value: 'trombone',
+  label: 'Trombone'
+}, {
+  value: 'tuba',
+  label: 'Tuba'
+}, {
+  value: 'clarinet',
+  label: 'Bb Clarinet'
+}, {
+  value: 'flute',
+  label: 'Flute'
+}, {
+  value: 'altoSax',
+  label: 'Eb Alto Sax'
+}, {
+  value: 'tenorSax',
+  label: 'Bb Tenor Sax'
+}, {
+  value: 'bariSax',
+  label: 'Eb Bari Sax'
+}, {
+  value: 'pad',
+  label: 'Synth Pad'
+}, {
+  value: 'percussion',
+  label: 'Percussion'
+}, {
+  value: 'none',
+  label: 'None'
+}];
+const clefOptions = [{
+  value: 'treble',
+  label: 'Treble'
+}, {
+  value: 'bass',
+  label: 'Bass'
+}, {
+  value: 'tenor',
+  label: 'Tenor'
+}, {
+  value: 'alto',
+  label: 'Alto'
+}, {
+  label: 'Percussion',
+  value: 'percussion'
+}]
+const instrument: SmoInstrument = getInstrument();
+
+const applyTo = ref(props.applyToInitial);
+type numberParams = 'lines' | 'keyOffset';
+
+const updateNumberCb = (param: numberParams) => {
+  const cb = async (value: number) => {
+    (instrument as any)[param] = value;
+  }
+  return cb;
+}
+const usePercussionSymbols = ref(instrument.usePercussionNoteheads ?? false);
+watch(usePercussionSymbols, (newVal) => {
+  instrument.usePercussionNoteheads = newVal;
+});
+
+const updateInstrumentCb = async (value: string) => {
+  instrument.instrument = value;
+  if (typeof (SmoInstrument.instrumentKeyOffset[value]) === 'number') {
+    instrument.keyOffset = SmoInstrument.instrumentKeyOffset[value];
+  }
+}
+const showPercussionSymbols = computed(() => {
+  return instrument.instrument === 'percussion';
+});
+const updateClefCb = async (value: string) => {
+  if (IsClef(value)) {
+    instrument.clef = value;
+  }
+}
+const getDomId = () => {
+  return `attr-modal-dialog-${domId}`;
+}
+const getId = (str: string) => {
+  return `${domId}-${str}`;
+}
+const draggable = draggableSession(getDomId());
+
+</script>
+<template>
+  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
+    <div class="text-center" :id="getId('modal-content')">
+      <draggableComp :draggableSession="draggable" />
+      <div class="row mb-2">
+        <h2 class="dialog-label">{{ label }}</h2>
+      </div>
+      <div class="row mb-2 ms-2 align-items-center">
+        <div class="col col-8 mb-2">
+          <selectComp :domId="getId('instrument-select')" :label="'Sound'" :selections="instrumentChoices"
+            :initialValue="instrument.instrument" :changeCb="updateInstrumentCb" />
+        </div>
+        <div class="col col-4 fs-6 ps-0 text-start">
+          <span class="form-check-label">Instrument</span>
+        </div>
+        <div class="col col-8 mb-2">
+          <selectComp :domId="getId('clef-select')" :label="'Clef'" :selections="clefOptions"
+            :initialValue="instrument.clef" :changeCb="updateClefCb" />
+        </div>
+        <div class="col col-4 fs-6 ps-0 text-start">
+          <span class="form-check-label">Clef</span>
+        </div>
+      </div>
+      <div class="row mb-2" :class="{ hide: !showPercussionSymbols }">
+        <div class="col col-12">
+          <input class="form-check-input me-2" type="checkbox" v-model="usePercussionSymbols"
+            :id="getId('font-weight')"></input>
+          <label class="form-check-label" :for="getId('font-weight')">Use Percussion Symbols</label>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col col-8 ps-0">
+          <numberInputApp :domId="getId('stafflines')" :initialValue="instrument.lines" :precision="0"
+            :changeCb="updateNumberCb('lines')"></numberInputApp>
+        </div>
+        <div class="col col-4 fs-6 ps-0 text-start">
+          <span class="form-check-label">Staff Lines</span>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col col-8 ps-0">
+          <numberInputApp :domId="getId('keyOffset')" :initialValue="instrument.keyOffset" :precision="0"
+            :changeCb="updateNumberCb('keyOffset')"></numberInputApp>
+        </div>
+        <div class="col col-4 fs-6 ps-0 text-start">
+          <span class="form-check-label">Transpose Index</span>
+        </div>
+      </div>
+      <div class="row mb-2 ms-2 align-items-center">
+        <div class="col col-8">
+          <selectComp :domId="getId('page-size-select')" :label="''" :selections="applyToOptions"
+            :initialValue="applyTo" :changeCb="updateApplyToCb" />
+        </div>
+        <div class="col col-4 text-start ms-n4">Apply To</div>
+      </div>
+      <DialogButtons :enable="true" :commitCb="props.commitCb" :cancelCb="props.cancelCb" />
+    </div>
+  </div>
+</template>
