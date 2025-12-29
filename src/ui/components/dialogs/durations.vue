@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import DialogButtons from './dialogButtons.vue';
-import draggableComp from './draggableComp.vue';
 import collapsableText from './collapsableText.vue';
 import { draggableSession } from '../../composable/draggable';
+import dialogContainer from './dialogContainer.vue';
 
-import { ref, Ref } from 'vue';
 interface Props {
   domId: string,
   increaseDurationCb: () => Promise<void>,
@@ -16,18 +14,13 @@ interface Props {
 }
 const props = defineProps<Props>();
 const { domId, increaseDurationCb, decreaseDurationCb, addDotCb, removeDotCb, commitCb, cancelCb } = { ...props };
-const enable = ref(true);
 
 const buttonClass = 'btn btn-outline-secondary mx-3 float-start no-vertical-padding';
 const rowClass = 'row mb-3 align-items-center';
-const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
-}
 const getId = (str) => {
   return `${domId}-${str}`;
 }
 
-const draggable = draggableSession(getDomId());
 const lines:string[] = [];
 lines.push(`<p class="text-muted">Learn the keyboard shortcuts, they're much faster!</p>`);
 lines.push(`<p class="text-muted">Use <span class="fs-4">, . </span> <span class="muted">(comma, period) </span> to          decrease/increase note length.</p>`);
@@ -35,12 +28,8 @@ lines.push(`<p class="text-muted">Use &lt; &gt; to add/remove dots.</p>`);
 lines.push(`<p class="text-muted">Use shift + arrow keys to select notes.</p>`);
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="text-center container mw-40" id="smo-dialog-container">
-      <draggableComp :draggableSession="draggable" />
-      <div class="row mb-3">
-        <h2 class="dialog-label">Durations</h2>
-      </div>
+  <dialogContainer :domId="domId" label="Durations" :commitCb="commitCb" :cancelCb="cancelCb" 
+     :classes="'text-center container mw-40'">
       <div :class="rowClass">
         <div class="col col-6">
           <span class="float-end" :for="getId('add-button')">Increase Duration</span>
@@ -90,7 +79,5 @@ lines.push(`<p class="text-muted">Use shift + arrow keys to select notes.</p>`);
         </div>
       </div>
       <collapsableText :domId="getId('duration-help')" :lines="lines" :initialState="false" containerClasses="nw-40"/>
-    </div>
-    <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
-  </div>
+    </dialogContainer>
 </template>

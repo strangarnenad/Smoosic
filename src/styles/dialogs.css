@@ -1,3 +1,4 @@
+
 .mw-40 {
   max-width: 40rem;
 }
@@ -74,6 +75,12 @@
   position:absolute;
   height:1.5rem;
   border-left: 2px solid #333;
+}
+.modal .btn {
+  border-color: var(--button-border-color);
+}
+.modal .dropdown .dropdown-item.active {
+  background-color: var(--button-border-color);
 }
 .btn-square {
   border-radius: 0;

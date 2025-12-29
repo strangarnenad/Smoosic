@@ -1,20 +1,18 @@
 <script setup lang="ts">
 import { ref, Ref, watch } from 'vue';
-import DialogButtons from './dialogButtons.vue';
-import draggableComp from './draggableComp.vue';
 import selectComp from './select.vue';
 import { SelectOption } from '../../common';
-import { draggableSession } from '../../composable/draggable';
+import dialogContainer from './dialogContainer.vue';
 
-interface Props2 {
+interface Props {
   domId: string,
   enable: any,
   initialValue: string,
   clefChangeCb: (value: string) => void,
-  commitCb: () => void,
-  cancelCb: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
 }
-const props = defineProps<Props2>();
+const props = defineProps<Props>();
 const { domId, clefChangeCb, enable, initialValue, commitCb, cancelCb } = { ...props };
 const clefChange:Ref<string> = ref(initialValue);
 const clefChanges:SelectOption[] = [{
@@ -40,17 +38,9 @@ const clefChanges:SelectOption[] = [{
 }];
 const top = ref(100);
 const left = ref(100);
-const getCoordsCb = (): { topRef: Ref<number>, leftRef: Ref<number> }=> {
-  return { topRef: top, leftRef: left };
-}
-const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
-}
+
 const getId = (str: string) => {
   return `${domId}-${str}`;
-}
-const getLocString = () => {
-  return `top: ${top}px; left: ${left}px;`;
 }
 const handleSelect = (option: string) => {  
   clefChange.value = option;
@@ -58,15 +48,9 @@ const handleSelect = (option: string) => {
 watch(clefChange, (newVal) => {
   clefChangeCb(newVal);
 });
-const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :draggableSession="draggable" />
-      <div class="row">
-        <h2 class="dialog-label">Clef Change</h2>
-      </div>
+  <dialogContainer :domId="domId" :label="'Clef Change'" :commitCb="commitCb" :cancelCb="cancelCb" :enable="enable" :classes="'container text-center'">
       <div class="row align-items-baseline" :id="getId('clef-row')">
         <div class="col-2 float-end">
           <label :for="getId('clef-select')" class="form-label">Clef:</label>
@@ -76,7 +60,5 @@ const draggable = draggableSession(getDomId());
             :selections="clefChanges" :changeCb="handleSelect" />
         </div>
       </div>
-      <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
-    </div>
-  </div>
+  </dialogContainer>
 </template>

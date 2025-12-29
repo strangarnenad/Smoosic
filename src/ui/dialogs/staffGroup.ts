@@ -3,9 +3,6 @@
 import { DialogDefinition, SuiDialogParams, InstallDialog } from './dialog';
 import { SmoSystemGroup } from '../../smo/data/scoreModifiers';
 import { SmoSelection } from '../../smo/xform/selections';
-import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { PromiseHelpers } from '../../common/promiseHelpers';
 import { replaceVueRoot, modalContainerId } from '../common';
 import { reactive, createApp } from 'vue';
 import staffGroupsComp from '../components/dialogs/staffGroups.vue';

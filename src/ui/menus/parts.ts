@@ -5,8 +5,8 @@ import { SuiScoreViewDialogVue } from '../dialogs/scoreView';
 import { SuiInstrumentDialogVue } from '../dialogs/instrument';
 import { SuiPartInfoDialog } from '../dialogs/partInfo';
 import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
-import { SuiNewPartDialog } from '../dialogs/newPart';
-import { SuiTabStaveDialog } from '../dialogs/tabStave';
+import { SuiCreatePartVue } from '../dialogs/instrument';
+import { SuiTabStaveDialogVue } from '../dialogs/tabStave';
 declare var $: any;
 /**
  * @category SuiMenu
@@ -18,7 +18,7 @@ export const createNotePartMenuOption: SuiConfiguredMenuOption = {
         value: 'createPart'
   }, display: () => true,
   handler: async(menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiNewPartDialog,
+    SuiCreatePartVue(
       {
         completeNotifier: menu.completeNotifier!,
         view: menu.view,
@@ -165,7 +165,7 @@ export const tabStaveMenuOption: SuiConfiguredMenuOption = {
     value: 'tabStave'
   }, display: (menu: SuiMenuBase) => true,
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog<SuiTabStaveDialog>(SuiTabStaveDialog, {
+    SuiTabStaveDialogVue({
       ctor: 'SuiTabStaveDialog',
       id: 'tabStaveDialog',
       tracker: menu.view.tracker,

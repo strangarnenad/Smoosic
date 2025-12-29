@@ -4,10 +4,9 @@ import { SmoSystemGroup } from '../../../smo/data/scoreModifiers'
 import { SmoSystemStaff } from '../../../smo/data/systemStaff';
 import { SmoScore } from '../../../smo/data/score';
 import { SelectOption } from '../../common';
-import draggableComp from './draggableComp.vue';
 import selectComp from './select.vue';
-import DialogButtons from './dialogButtons.vue';
-import { draggableSession } from '../../composable/draggable';
+import dialogContainer from './dialogContainer.vue';
+
 interface Props {
   staffGroups: SmoSystemGroup[],
   score: SmoScore
@@ -17,8 +16,8 @@ interface Props {
   removeFromGroupCb: (staffId: number) => Promise<void>,
   addToGroupCb: (staffId: number) => Promise<void>,
   createStaffGroupCb: (staffId: number) => Promise<void>,
-  commitCb: () => void,
-  cancelCb: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
 }
 const connectorTypeOptions: SelectOption[] = [
   { label: 'Brace', value: '0' },
@@ -89,14 +88,14 @@ const getChoicesForStaff = (staffNum: number): GroupChoice => {
     removeCb: async () => {
       await removeFromGroupCb(staffNum);
     },
-    addCb: async() => {
+    addCb: async () => {
       await props.addToGroupCb(staffNum);
     },
-    createCb: async() => {
+    createCb: async () => {
       await props.createStaffGroupCb(staffNum);
     }
   };
-  const lsg = (staffNum > 0 ) ? getGroupForStaff(staffNum - 1) : undefined;
+  const lsg = (staffNum > 0) ? getGroupForStaff(staffNum - 1) : undefined;
   const sg = getGroupForStaff(staffNum);
   if (!sg) {
     if (lsg) {
@@ -112,7 +111,6 @@ const getChoicesForStaff = (staffNum: number): GroupChoice => {
   rv.createGroup = false;
   return rv;
 };
-const draggable = draggableSession(getDomId());
 
 const choices: GroupChoice[] = reactive([]);
 const updateChoices = () => {
@@ -128,64 +126,55 @@ watch(() => props.staffGroups, () => {
 
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :draggableSession="draggable" />
-      <div class="row">
-        <h2 class="dialog-label">{{ label }}</h2>
-      </div>      
-      <div class="row nw-50">
-        <div class="col col-4">
-          <h4 class="h5">Connector Type</h4>
-        </div>
-        <div class="col col-2">
-          <h4 class="h5">Stave</h4>
-        </div>
-        <div class="col col-2">
-          <span class="fs-5">Add</span>
-        </div>
-        <div class="col col-2">
-          <span class="fs-5">Create</span>
-        </div>
-        <div class="col col-2">
-          <span class="fs-5">Remove</span>
-        </div>
+  <dialogContainer :domId="domId" :label="label" :commitCb="commitCb" :cancelCb="cancelCb"
+    :classes="'text-center container'">
+    <div class="row nw-50">
+      <div class="col col-4">
+        <h4 class="h5">Connector Type</h4>
       </div>
-      <div v-for="choice in choices" class="row">
-        <div class="col col-4">
-          <div v-if="choice.startsGroup">
-            <selectComp :domId="getId('connectorSelect', choice.staffId)" :label="'Connector Type'" :initialValue="choice.selectedValue"
-              :selections="choice.options" :changeCb="choice.connectorCb" />
-          </div>
-          <div v-if="choice.inGroup && !choice.startsGroup" class="group-line-container">
-            <span class="show-group-line"></span>
-          </div>
-        </div>
-        <div class="col col-2 ">{{ choice.staffName }}</div>
-        <div class="col col-2">
-          <span :class="{ hide: !choice.addToGroup }">
-          <input class="form-check-input" type="checkbox" v-model="choice.inGroup" :id="getId('group-checkbox', choice.staffId)"
-          @change="choice.addCb"
-            ></input>
-          </span>
-        </div>
-        <div class="col col-2">
-          <span :class="{ hide: !choice.createGroup }">
-          <input class="form-check-input" type="checkbox" v-model="choice.inGroup" :id="getId('group-checkbox', choice.staffId)"
-            @change="choice.createCb"
-            ></input>
-          </span>
-        </div>
-        <div class="col col-2">
-          <span :class="{ hide: !choice.endsGroup }">
-          <input class="form-check-input" type="checkbox" v-model="choice.inGroup" :id="getId('group-checkbox', choice.staffId)"
-            @change="choice.removeCb"
-            ></input>
-          </span>
-        </div>
-        <div v-if="choice.inGroup && choice.endsGroup" class="col col-12 mb-2 border-bottom"></div>
+      <div class="col col-2">
+        <h4 class="h5">Stave</h4>
       </div>
-      <DialogButtons :enable="true" :commitCb="commitCb" :cancelCb="cancelCb" />
+      <div class="col col-2">
+        <span class="fs-5">Add</span>
+      </div>
+      <div class="col col-2">
+        <span class="fs-5">Create</span>
+      </div>
+      <div class="col col-2">
+        <span class="fs-5">Remove</span>
+      </div>
     </div>
-  </div>
+    <div v-for="choice in choices" class="row">
+      <div class="col col-4">
+        <div v-if="choice.startsGroup">
+          <selectComp :domId="getId('connectorSelect', choice.staffId)" :label="'Connector Type'"
+            :initialValue="choice.selectedValue" :selections="choice.options" :changeCb="choice.connectorCb" />
+        </div>
+        <div v-if="choice.inGroup && !choice.startsGroup" class="group-line-container">
+          <span class="show-group-line"></span>
+        </div>
+      </div>
+      <div class="col col-2 ">{{ choice.staffName }}</div>
+      <div class="col col-2">
+        <span :class="{ hide: !choice.addToGroup }">
+          <input class="form-check-input" type="checkbox" v-model="choice.inGroup"
+            :id="getId('group-checkbox', choice.staffId)" @change="choice.addCb"></input>
+        </span>
+      </div>
+      <div class="col col-2">
+        <span :class="{ hide: !choice.createGroup }">
+          <input class="form-check-input" type="checkbox" v-model="choice.inGroup"
+            :id="getId('group-checkbox', choice.staffId)" @change="choice.createCb"></input>
+        </span>
+      </div>
+      <div class="col col-2">
+        <span :class="{ hide: !choice.endsGroup }">
+          <input class="form-check-input" type="checkbox" v-model="choice.inGroup"
+            :id="getId('group-checkbox', choice.staffId)" @change="choice.removeCb"></input>
+        </span>
+      </div>
+      <div v-if="choice.inGroup && choice.endsGroup" class="col col-12 mb-2 border-bottom"></div>
+    </div>
+  </dialogContainer>
 </template>

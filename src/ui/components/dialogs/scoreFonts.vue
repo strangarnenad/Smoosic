@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, Ref, watch, reactive } from 'vue';
-import DialogButtons from './dialogButtons.vue';
-import draggableComp from './draggableComp.vue';
 import selectComp from './select.vue';
 import fontPickerApp from './fontPicker.vue';
 import { SelectOption } from '../../common';
-import { draggableSession } from '../../composable/draggable';
 import { FontInfo } from '../../../common/vex';
+import dialogContainer from './dialogContainer.vue';
 
 type scoreFontInfo = {
   lyricFont: FontInfo,
@@ -19,8 +17,8 @@ interface Props {
   getFonts: () => scoreFontInfo,
   updateLyricFontCb: (font: FontInfo) => void,
   updateChordFontCb: (font: FontInfo) => void,
-  commitCb: () => void,
-  cancelCb: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
 }
 const props = defineProps<Props>();
 const { domId, label, getFonts, updateLyricFontCb, updateChordFontCb, commitCb, cancelCb } = { ...props };
@@ -39,24 +37,15 @@ const engravingFonts: SelectOption[] = [{
   value: 'Leland',
   label: 'Leland'
 }]
-const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
-}
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
 const engravingFontChange = (val: string) => {
   fontInfo.engravingFont.value = val;
 }
-const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="text-center mw-40" :id="getId('modal-content')">
-      <draggableComp :draggableSession="draggable" />
-      <div class="row mb-2">
-        <h2 class="dialog-label">{{ label }}</h2>
-      </div>
+  <dialogContainer :domId="domId" :commitCb="commitCb" :cancelCb="cancelCb" :label="label">
       <div class="row mb-2 ms-2">
         <div class="col-6 col">
         <selectComp :domId="getId('score-font-select')" :label="'Engraving Font'" :selections="engravingFonts" :initialValue="engravingFontValue"
@@ -74,7 +63,5 @@ const draggable = draggableSession(getDomId());
         <fontPickerApp :domId="getId('lyric-font-picker')" :font="fontInfo.lyricFont" :label="'Lyrics'"/>
       <div class="row mb-2 border-top dropdown-divider">
       </div>
-      <DialogButtons :enable="true" :commitCb="props.commitCb" :cancelCb="props.cancelCb" />
-    </div>
-  </div>
+  </dialogContainer>
 </template>

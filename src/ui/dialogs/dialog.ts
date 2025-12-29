@@ -100,7 +100,9 @@ export const InstallDialog = async (params: DialogInstallParams) => {
   $('#' + params.root).addClass('modal show fade');
   params.appParams.commitCb = commitCb;
   params.appParams.cancelCb = cancelCb;
-  params.appParams.removeCb = removeCb;
+  if (params.removeCb) {
+    params.appParams.removeCb = removeCb;
+  }
   createApp(params.app as any, params.appParams).mount('#' + params.root);
 
   // allow a dialog to be dismissed by esc.

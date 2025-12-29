@@ -10,24 +10,15 @@ interface Props {
   domId: string,
   label: string,
   getInstrument: () => SmoInstrument,
-  applyToInitial: string,
   updateApplyToCb: (value: string) => Promise<void>,
+  addStaveCb: () => Promise<void>,
   commitCb: () => Promise<void>,
   cancelCb: () => Promise<void>
 };
 const props = defineProps<Props>();
 
 const { domId, getInstrument } = { ...props };
-const applyToOptions: SelectOption[] = [{
-  value: "Score",
-  label: 'Score'
-}, {
-  value: "Selected",
-  label: 'Selected Measures'
-}, {
-  value: "Remaining",
-  label: 'Remaining Measures'
-}]
+
 const instrumentChoices: SelectOption[] = [{
   value: 'piano',
   label: 'Grand Piano'
@@ -109,21 +100,18 @@ const clefOptions = [{
   value: 'percussion'
 }]
 const instrument: SmoInstrument = getInstrument();
-
-const applyTo = ref(props.applyToInitial);
 type numberParams = 'lines' | 'keyOffset';
-
 const updateNumberCb = (param: numberParams) => {
   const cb = async (value: number) => {
     (instrument as any)[param] = value;
   }
   return cb;
 }
+const addStave: Ref<boolean> = ref(false);
 const usePercussionSymbols = ref(instrument.usePercussionNoteheads ?? false);
 watch(usePercussionSymbols, (newVal) => {
   instrument.usePercussionNoteheads = newVal;
 });
-
 const updateInstrumentCb = async (value: string) => {
   instrument.instrument = value;
   if (typeof (SmoInstrument.instrumentKeyOffset[value]) === 'number') {
@@ -138,14 +126,17 @@ const updateClefCb = async (value: string) => {
     instrument.clef = value;
   }
 }
-
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-
 </script>
 <template>
   <dialogContainer :domId="domId" :label="label" :commitCb="props.commitCb" :cancelCb="props.cancelCb">
+    <div class="row mb-2">
+      <div class="col col-12 fs-5 text-center">Initial Instrument 
+        <span class="fs-6">(can be changed later)</span>
+      </div>
+    </div>
       <div class="row mb-2 ms-2 align-items-center">
         <div class="col col-8 mb-2">
           <selectComp :domId="getId('instrument-select')" :label="'Sound'" :selections="instrumentChoices"
@@ -187,12 +178,12 @@ const getId = (str: string) => {
           <span class="form-check-label">Transpose Index</span>
         </div>
       </div>
-      <div class="row mb-2 ms-2 align-items-center">
-        <div class="col col-8">
-          <selectComp :domId="getId('page-size-select')" :label="''" :selections="applyToOptions"
-            :initialValue="applyTo" :changeCb="updateApplyToCb" />
+      <div class="row mb-2 mt-2">
+        <div class="col col-4">
+        <input class="form-check-input" type="checkbox" v-model="addStave" :id="getId('toggleStems')"
+          @change="addStaveCb"></input>
+        <label class="form-check-label ps-2" :for="getId('toggleStems')"> 2-Stave part </label>
         </div>
-        <div class="col col-4 text-start ms-n4">Apply To</div>
       </div>
     </dialogContainer>
   </template>

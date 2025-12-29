@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
-import draggableComp from './draggableComp.vue';
-import DialogButtons from './dialogButtons.vue';
-import { draggableSession } from '../../composable/draggable';
+import dialogContainer from './dialogContainer.vue';
 interface Props {
   domId: string,
   enable: any,
   quantizeCb?: (value: string) => void,
   uploadCb: (event: Event) => void,
-  commitCb: () => void,
-  cancelCb: () => void,
-  removeCb?: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>,
 };
-const props = defineProps < Props > ();
+const props = defineProps<Props>();
 const { domId, uploadCb, quantizeCb, enable, commitCb, cancelCb } = { ...props };
 const quantizeValue = ref('1024');
 const quantizeValues = [
@@ -27,12 +24,17 @@ const getId = (str: string) => {
   return `${domId}-${str}`;
 }
 
-const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :draggableSession="draggable" />      
+  <dialogContainer :domId="domId" label="Load File" :commitCb="commitCb" :cancelCb="cancelCb"
+    :classes="'text-center container'">
+    <div class="row" :id="getId('loadFile')" data-param="loadFile" :class="{ hide: quantizeCb}">
+      <div class="col">
+        <input type="file" class="form-control" accept=".json,.mid,.midi,.xml,.mxl" @change="uploadCb"
+          :id="getId('loadFile-input')">
+      </div>
+    </div>
+    <div class="row align-items-baseline" :class="{ hide: !quantizeCb }" id="quantize-row">
       <div class="row">
         <h2 class="dialog-label">Load File</h2>
       </div>
@@ -55,7 +57,6 @@ const draggable = draggableSession(getDomId());
           </select>
         </div>
       </div>
-      <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
     </div>
-  </div>
+  </dialogContainer>
 </template>

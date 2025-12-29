@@ -5,9 +5,75 @@ import { Pitch } from '../../smo/data/common';
 import { SmoSelection, SmoSelector } from '../../smo/xform/selections';
 
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { DialogDefinition, SuiDialogParams } from './dialog';
+import { DialogDefinition, SuiDialogParams, InstallDialog, DialogInstallParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-
+import { replaceVueRoot, modalContainerId } from '../common';
+import { reactive, createApp } from 'vue';
+import guitarTabApp from '../components/dialogs/guitarTab.vue';
+export const  SuiTabStaveDialogVue= async(parameters: SuiDialogParams) => {
+    const selections = SmoSelection.getMeasureList(parameters.view.tracker.selections);
+    let changed = false;
+    let existing = true;
+    let tabStave = selections[0].staff.getTabStaveForMeasure(selections[0].selector);    
+    if (!tabStave) {
+      existing = false;
+      tabStave = new SmoTabStave(SmoTabStave.defaults);
+    }
+    const backup = new SmoTabStave(tabStave)
+    const commitCb = async () => {
+      // If we are creating the default, make sure it is created
+      if (!existing && !changed) {
+        parameters.view.updateTabStave(tabStave);
+      }
+    }
+    const cancelCb = async () => {
+      if (!existing) {
+        // If this was created just now, remove it
+        await removeCb();
+      } else {
+        // If it existed, restore previous values
+        await parameters.view.updateTabStave(backup);
+      }
+    }
+    const removeCb = async () => {
+      await parameters.view.removeTabStave();      
+    }
+    const toggleStemsCb = async () => {
+      tabStave.showStems = !tabStave.showStems;
+      await parameters.view.updateTabStave(tabStave);
+    }
+    const updatePitchesCb = async (pitches: Pitch[]) => {
+      tabStave.stringPitches = pitches;
+      tabStave.numLines = pitches.length;
+      await parameters.view.updateTabStave(tabStave);
+      changed = true;
+    }
+    const changeLineDistanceCb = async (lines: number) => {
+      tabStave.spacing = lines;
+      await updatePitchesCb(tabStave.stringPitches);
+    }
+    const rootId = replaceVueRoot(modalContainerId);
+    const appParams = {
+      domId: rootId,
+      label: 'Guitar Tab Properties',
+      tabStave,
+      toggleStemsCb,
+      updatePitchesCb,
+      changeLineDistanceCb
+    }
+    const ctor: DialogInstallParams = {
+        app: guitarTabApp,
+        appParams,
+        root: rootId,
+        dialogParams: parameters,
+        commitCb, 
+        cancelCb
+      };
+    if (existing) {
+      ctor.removeCb = removeCb;
+    }
+    InstallDialog(ctor);    
+}
 /**
  * Create or edit guitar tablature settings for a stave
  * @category SuiDialog

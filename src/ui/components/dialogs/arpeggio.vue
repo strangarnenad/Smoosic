@@ -1,31 +1,28 @@
 <script setup lang="ts">
 import { ref, Ref } from 'vue';
-import DialogButtons from './dialogButtons.vue';
-import draggableComp from './draggableComp.vue';
 import { SelectOption } from '../../common';
 import selectComp from './select.vue';
-import { draggableSession } from '../../composable/draggable';
+import dialogContainer from './dialogContainer.vue';
 
 interface Props {
   domId: string,
-  enable: Ref<boolean>,
+  enable: Boolean,
   initialValue: string,
   arpCb: (value: string) => void,
-  commitCb: () => void,
-  cancelCb: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
 }
 const props: Props = defineProps<{
   domId: string,
-  enable: Ref<boolean>,
+  enable: Boolean,
   initialValue: string,
   arpCb: (value: string) => void,
-  commitCb: () => void,
-  cancelCb: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
 }>();
+
 const domId: string = props.domId;
 const { arpCb, enable, initialValue, commitCb, cancelCb } = { ...props };
-
-const arpValue = ref(initialValue);
 const arpValues: SelectOption[] = [{
   value: 'directionless',
   label: 'Plain'
@@ -51,14 +48,10 @@ const arpValues: SelectOption[] = [{
   value: 'none',
   label: 'None'
 }];
-const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
-}
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
 
-const draggable = draggableSession(getDomId());
 /* return {
   enable, arpCb, commitCb, cancelCb, getDomId, getId, getLocString,
   domId, top, left, arpValue, arpValues
@@ -66,12 +59,8 @@ const draggable = draggableSession(getDomId());
 
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="container text-center" id="smo-dialog-container">
-      <draggableComp :draggableSession="draggable"/>
-      <div class="row">
-        <h2 class="dialog-label">Arpeggio</h2>
-      </div>
+  <dialogContainer :domId="domId" label="Arpeggio" :commitCb="commitCb" :cancelCb="cancelCb" 
+    :classes="'text-center container'" :enable="enable">
       <div class="row align-items-baseline" :id="getId('arp-row')">
         <div class="col col-2 float-end pe-0">
           <label :for="getId('arp-select')" class="form-label">Type:</label>
@@ -81,7 +70,5 @@ const draggable = draggableSession(getDomId());
             :selections="arpValues" :changeCb="arpCb" />
         </div>
       </div>
-      <DialogButtons :enable="enable" :commitCb="commitCb" :cancelCb="cancelCb" />
-    </div>
-  </div>
+    </dialogContainer>
 </template>

@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import DialogButtons from './dialogButtons.vue';
-import draggableComp from './draggableComp.vue';
 import { draggableSession } from '../../composable/draggable';
-
+import dialogContainer from './dialogContainer.vue';
 import numberInputApp from './numberInput.vue';
 import { ref, Ref, reactive, watch } from 'vue';
 interface Props {
   domId: string,
   label: string,
   getTranspose: () => Ref<number>,
-  commitCb: () => void,
-  cancelCb: () => void
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>
 };
 const props = defineProps<Props>();
 
@@ -26,16 +24,9 @@ const getDomId = () => {
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
-const draggable = draggableSession(getDomId());
-
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()" :style="draggable.getLocString()">
-    <div class="text-center" :id="getId('modal-content')">
-      <draggableComp :draggableSession="draggable" />
-      <div class="row mb-2">
-        <h2 class="dialog-label">{{ label }}</h2>
-      </div>
+  <dialogContainer :domId="domId" :label="label" :commitCb="props.commitCb" :cancelCb="props.cancelCb">
       <div class="row mb-2 ms-2">
         <div class="col col-9 pe-0 me-n2">
           <numberInputApp :domId="getId('page-width-input')" :initialValue="transposeIndex" :precision="0"
@@ -45,7 +36,5 @@ const draggable = draggableSession(getDomId());
           <label class="form-label" :for="getId('page-width-input-text')">Semitones</label>
         </div>
       </div>
-      <DialogButtons :enable="true" :commitCb="props.commitCb" :cancelCb="props.cancelCb" />
-    </div>
-  </div>
+  </dialogContainer>
 </template>

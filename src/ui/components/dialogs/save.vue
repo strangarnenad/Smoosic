@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { ref, watch, Ref, onMounted, useTemplateRef, computed } from 'vue';
-import DialogButtons from './dialogButtons.vue';
-import draggableComp from './draggableComp.vue';
-import { draggableSession } from '../../composable/draggable';
-interface BoxLoc {
-  topRef: Ref<number>,
-  leftRef: Ref<number>
-}
+import dialogContainer from './dialogContainer.vue';
+
 interface Props {
   domId: string,
   contents: Ref<string>,
   suggestedName: string,
   extension: Ref<string>,
-  commitCb: () => void,
-  cancelCb: () => void,
+  commitCb: () => Promise<void>,
+  cancelCb: () => Promise<void>,
   changeExtensionCb: (value: string) => void
 }
 const props = defineProps < Props > ();
@@ -73,15 +68,10 @@ onMounted(() => {
   }
   url.value = URL.createObjectURL(new Blob([contents.value], { type: mimeType }));
 });
-const draggable = draggableSession(getDomId());
 </script>
 <template>
-  <div class="attributeModal" :id="getDomId()">
-    <div class="container text-center" :id="getId('dialog-container')" :style="draggable.getLocString()">
-      <draggableComp :draggableSession="draggable" />
-      <div class="row">
-        <h2 class="dialog-label">Save File</h2>
-      </div>
+  <dialogContainer :domId="domId" :commitCb="commitCb" :cancelCb="cancelCb" :classes="'container text-center'" 
+    label="Save File">
       <div class="input-group mb-3" id="save-saveFileName" data-param="saveFileName">
         <label class="input-group-text" for="save-saveFileName-input">File Name</label>
         <input type="text" class="form-control" id="save-saveFileName-input" v-model="filename" />
@@ -99,8 +89,6 @@ const draggable = draggableSession(getDomId());
       </div>
       <div class="saveLink hide" aria-hidden="true">
         <a :href="url" :download="filename" class="btn btn-primary" id="save-download-link" ref="saveLink">Download File</a>
-      </div>      
-        <DialogButtons :enable="enable" :commitCb="saveFileCb" :cancelCb="cancelCb" />
-    </div>
-  </div>
+</div>
+  </dialogContainer>
 </template>

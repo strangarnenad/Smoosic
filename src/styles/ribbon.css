@@ -1,4 +1,7 @@
-
+:root {
+  --button-border-color: #229111;
+  --button-shadow-color: #798;
+}
 
 .control-bar {
   display:flex;
@@ -213,12 +216,23 @@ button#MicrotoneButtons  {
 }
 .btn-group-vertical.controls-left .btn,
 .ribbonButtonContainer .btn {
-  border-color: #315529;
-  border-width: 2px;
-  border-style:outset;
+  border-color: var(--button-border-color);
+  border-width: 2px 2px 2px 1px;
   transition: background-color 0.5s 
     ease-in-out, transform 0.5s 
     ease-in-out;  
+}
+.ribbonButtonContainer .btn {
+  box-shadow: 0 0.25rem var(--button-shadow-color);
+}
+.ribbonButtonContainer .btn:last-of-type {
+    box-shadow: 0.25rem 0.25rem 0.3rem var(--button-shadow-color);
+}
+.btn-group-vertical.controls-left .btn  {
+  box-shadow:0.25rem 0 var(--button-shadow-color);
+}
+.btn-group-vertical.controls-left .btn:last-of-type {
+    box-shadow: 0.25rem 0.25rem 0.1rem var(--button-shadow-color);
 }
 button.icon {
   height: 40px;
