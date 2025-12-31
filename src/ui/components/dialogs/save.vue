@@ -31,11 +31,8 @@ if (!filename.value.endsWith(extension.value)) {
   filename.value = filename.value + extension.value;
 }
 const mimeType = 'application/octet-stream'
-const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
-}
 const saveLink = useTemplateRef('saveLink');
-const saveFileCb = () => {
+const saveFileCb = async () => {
   if (saveLink.value) {
     (saveLink.value as any).click();
   }
@@ -70,7 +67,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <dialogContainer :domId="domId" :commitCb="commitCb" :cancelCb="cancelCb" :classes="'container text-center'" 
+  <dialogContainer :domId="domId" :commitCb="saveFileCb" :cancelCb="cancelCb" :classes="'container text-center'" 
     label="Save File">
       <div class="input-group mb-3" id="save-saveFileName" data-param="saveFileName">
         <label class="input-group-text" for="save-saveFileName-input">File Name</label>
