@@ -29,6 +29,13 @@ export interface RibbonDefinition {
     ribbon: RibbonLayout;
     ribbonButtons: ButtonDefinition[];
 }
+export interface SelectOption {
+    label: string;
+    value: string;
+    classes?: string;
+    icon?: string;
+    active?: boolean;
+}
 export declare const modalContainerId = "#vue-modal-container";
 /**
  * Remove and replace an element, so we can reattach Vue to it

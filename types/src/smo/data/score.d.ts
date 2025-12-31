@@ -343,8 +343,11 @@ export declare class SmoScore {
      */
     replaceMeasure(selector: SmoSelector, measure: SmoMeasure): void;
     getSystemGroupForStaff(selection: SmoSelection): SmoSystemGroup | undefined;
+    getSystemGroupForStaffId(staffId: number): SmoSystemGroup | undefined;
     getStavesForGroup(group: SmoSystemGroup): SmoSystemStaff[];
     addOrReplaceSystemGroup(newGroup: SmoSystemGroup): void;
+    removeSystemGroup(group: SmoSystemGroup): void;
+    clearSystemGroups(): void;
     isPartExposed(): boolean;
     /**
      * Probably due to an undo operation, replace the staff at the given index.

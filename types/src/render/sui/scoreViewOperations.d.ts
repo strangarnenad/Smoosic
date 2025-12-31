@@ -161,6 +161,8 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * @param staffGroup
      */
     addOrUpdateStaffGroup(staffGroup: SmoSystemGroup): Promise<void>;
+    removeStaffGroup(staffGroup: SmoSystemGroup): Promise<void>;
+    clearSystemGroups(): Promise<void>;
     updateTabStave(tabStave: SmoTabStave): Promise<void>;
     removeTabStave(): Promise<void>;
     /**

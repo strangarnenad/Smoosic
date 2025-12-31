@@ -57,7 +57,6 @@ export declare class SuiEventHandler implements ModalEventHandler {
     piano: SuiPiano | null;
     exhandler: SuiExceptionHandler;
     constructor(params: EventHandlerParams);
-    static get scrollable(): string;
     private static handleScrollEventDefer;
     handleScrollEvent(): void;
     createPiano(): void;

@@ -1,7 +1,8 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
 import { FontInfo } from '../../common/vex';
-import { SmoScore, isEngravingFont } from '../../smo/data/score';
+import { SmoScore, isEngravingFont, engravingFontType } from '../../smo/data/score';
+import { FontPurpose } from '../../smo/data/scoreModifiers';
 import { SuiDialogParams, InstallDialog } from './dialog';
 import { replaceVueRoot, modalContainerId } from '../common';
 import { reactive, watch, ref } from 'vue';
@@ -10,17 +11,17 @@ import scoreFontsApp from '../components/dialogs/scoreFonts.vue';
 declare var $: any;
 export const SuiScoreFontDialogVue = (parameters: SuiDialogParams) => {
   const currentFonts = parameters.view.score.fonts;
-  const backupFonts = JSON.parse(JSON.stringify(currentFonts));
+  const backupFonts: FontPurpose[] = JSON.parse(JSON.stringify(currentFonts));
   let changed = false;
-  const engravingFontInfo = currentFonts.find((ff) => ff.purpose === SmoScore.fontPurposes.ENGRAVING);
+  const engravingFontInfo = currentFonts.find((ff: any) => ff.purpose === SmoScore.fontPurposes.ENGRAVING);
   if (!engravingFontInfo) {
     throw new Error('No engraving font found in score');
   }
-  const chordFontInfo = currentFonts.find((ff) => ff.purpose === SmoScore.fontPurposes.CHORDS);
+  const chordFontInfo = currentFonts.find((ff: any) => ff.purpose === SmoScore.fontPurposes.CHORDS);
   if (!chordFontInfo) {
     throw new Error('No chord font found in score');
   }
-  const lyricFontInfo = currentFonts.find((ff) => ff.purpose === SmoScore.fontPurposes.LYRICS);
+  const lyricFontInfo = currentFonts.find((ff: any) => ff.purpose === SmoScore.fontPurposes.LYRICS);
   if (!lyricFontInfo) {
     throw new Error('No lyric font found in score');
   }
@@ -46,19 +47,28 @@ export const SuiScoreFontDialogVue = (parameters: SuiDialogParams) => {
       chordFont: chordFontInfo
     }
   }
-  const commitCb = async () => {}
+  const commitCb = async () => {
+    if (changed) {
+      parameters.view.resetPartView();
+    }
+    await parameters.view.refreshViewport();
+  }
   const cancelCb = async () => {
     if (changed) {
-      await parameters.view.setEngravingFontFamily(backupFonts.find((ff) => ff.purpose === SmoScore.fontPurposes.ENGRAVING)?.family ?? 'Bravura');
+      const currentEngraving = backupFonts.find((ff: FontPurpose) => ff.purpose  === SmoScore.fontPurposes.ENGRAVING)?.family ?? 'Bravura';
+      if (!isEngravingFont(currentEngraving)) {
+        throw new Error('Invalid engraving font in backup');
+      }
+      await parameters.view.setEngravingFontFamily(currentEngraving);
       await parameters.view.setChordFont({
         weight: 'normal',
         style: 'normal',
-        ...backupFonts.find((ff) => ff.purpose === SmoScore.fontPurposes.CHORDS)
+        ...backupFonts.find((ff: FontPurpose) => ff.purpose === SmoScore.fontPurposes.CHORDS)
       });
       await parameters.view.setLyricFont({
         weight: 'normal',
         style: 'normal',
-        ...backupFonts.find((ff) => ff.purpose === SmoScore.fontPurposes.LYRICS)
+        ...backupFonts.find((ff: FontPurpose) => ff.purpose === SmoScore.fontPurposes.LYRICS)
       });
     }
   }

@@ -151,6 +151,7 @@ export declare const SmoInstrumentBooleanParams: SmoInstrumentBooleanParamType[]
 export declare class SmoInstrument extends StaffModifierBase {
     static get attributes(): string[];
     static instrumentMidiMap: Record<string, number>;
+    static instrumentKeyOffset: Record<string, number>;
     static defaultDrumMidiMap: Record<number, number>;
     static xNoteheadInstruments: number[];
     static triNoteheadInstruments: number[];

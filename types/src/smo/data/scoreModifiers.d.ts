@@ -410,6 +410,7 @@ export interface SmoSystemGroupParamsSer extends SmoSystemGroupParams {
  *  */
 export declare class SmoSystemGroup extends SmoScoreModifierBase {
     static get connectorTypes(): Record<string, number>;
+    static get connectorTypeNames(): Record<number, string>;
     static get mapTypes(): Record<string, number>;
     static get attributes(): string[];
     static get defaults(): SmoSystemGroupParams;
