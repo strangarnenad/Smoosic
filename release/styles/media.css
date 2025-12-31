@@ -95,21 +95,22 @@
   display: none;
 }
 #link-hdr {
-  position: relative;
-  background: #aaa;
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
   padding-left: 8px;
+  font-size: 1rem
+}
+#link-hdr a {
+  color: #000;
+  text-decoration: none;
 }
 #link-hdr.hide {
   display: none;
 }
 #link-hdr button {
-  position: absolute;
   right: 8px;
   border: 0;
   background: #aaa;
-  color: #990808;
   cursor: pointer;
 }
 body {
@@ -325,6 +326,7 @@ body.printing .printFrame {
   flex-flow:row nowrap;
   flex-basis:100%;
   overflow-y:auto;
+  z-index: 1;
 }
 
 .saveLink {
