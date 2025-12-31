@@ -3,12 +3,48 @@
 import { SmoMeasure } from '../../smo/data/measure';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SuiToggleComponent } from './components/toggle';
-
+import { replaceVueRoot, modalContainerId } from '../common';
+import addMeasuresApp from '../../ui/components/dialogs/addMeasures.vue';
 import { SuiRockerComponent } from './components/rocker';
-import { DialogDefinition, SuiDialogBase, SuiDialogParams } from './dialog';
+import { watch, ref, Ref } from 'vue';
+import { DialogDefinition, SuiDialogBase, SuiDialogParams, InstallDialog } from './dialog';
 
 declare var $: any;
+export const SuiInsertMeasuresVue =  async (parameters: SuiDialogParams) => {
+  const selection = parameters.view.tracker.selections[0];
+  const measure = selection.measure;
+  let numberMeasures = ref(1);
+  let append = ref(false);
+  const getNumberMeasures = (): Ref<number> => {
+    return numberMeasures;
+  }
+  const getAppend = (): Ref<boolean> => {
+    return append;
+  }
+  const commitCb = async () => {
+    await parameters.view.addMeasures(append.value, numberMeasures.value);
+  }
+  const cancelCb = async () => {
 
+  }
+  const rootId = replaceVueRoot(modalContainerId);
+  const appParams = {
+    domId: rootId,
+    label: 'Insert Measures',
+    getNumberMeasures,
+    getAppend,
+    commitCb,
+    cancelCb
+  };
+  InstallDialog({
+    app: addMeasuresApp,
+    appParams,
+    root: rootId,
+    dialogParams: parameters,
+    commitCb, 
+    cancelCb
+  });
+}
 /**
  * Insert some number of measures
  * @category SuiDialog

@@ -10,7 +10,6 @@ interface Props {
   domId: string,
   label: string,
   getInstrument: () => SmoInstrument,
-  updateApplyToCb: (value: string) => Promise<void>,
   addStaveCb: () => Promise<void>,
   commitCb: () => Promise<void>,
   cancelCb: () => Promise<void>

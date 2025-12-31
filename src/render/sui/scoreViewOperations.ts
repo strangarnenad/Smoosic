@@ -1769,9 +1769,15 @@ export class SuiScoreViewOperations extends SuiScoreView {
         nmeasure.measureNumber.measureIndex = pos;
         nmeasure.setActiveVoice(0);
         this.score.addMeasure(pos);
-        this.storeScore.addMeasure(pos);
+        this.storeScore.addMeasure(pos);        
       }
     }
+    const startMeasure = pos - (ix - 1);
+    const startSelector = SmoSelector.default;
+    const endSelector = SmoSelector.default;
+    startSelector.measure = startMeasure;
+    endSelector.measure = pos;
+    this._renderRectangle(startSelector, endSelector);
     this.renderer.setRefresh();
     return this.renderer.updatePromise();
   }

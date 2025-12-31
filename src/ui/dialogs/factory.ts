@@ -12,7 +12,6 @@ import { SuiTieAttributesDialog } from './tie';
 import { SuiDynamicModifierDialog } from './dynamics';
 import { SuiTextBlockDialog } from './textBlock';
 import { SuiTextBracketDialog } from './textBracket';
-import { SuiInsertMeasures } from './addMeasure';
 import { SuiArpeggioDialog } from './arpeggio';
 import { SuiDialogNotifier, SmoDynamicComponentCtor, SuiBaseComponentParams } from './components/baseComponent';
 import { SuiButtonComponent, SuiButtonComposite, SuiButtonCompositeParams, SuiButtonComponentParams } from './components/button';
@@ -97,7 +96,6 @@ export const initDialogTranslationElements = () => {
   DialogTranslations.push(suiDialogTranslate(SuiTextBlockDialog.dialogElements, 'SuiTextBlockDialog'));
   DialogTranslations.push(suiDialogTranslate(SuiTextBlockDialog.dialogElements, 'SuiTextBracketDialog'));
   DialogTranslations.push(suiDialogTranslate(SuiLyricDialog.dialogElements, 'SuiLyricDialog'));
-  DialogTranslations.push(suiDialogTranslate(SuiInsertMeasures.dialogElements, 'SuiInsertMeasures'));
   // DialogTranslations.push(suiDialogTranslate(SuiArpeggioDialog.dialogElements, 'SuiArpeggioDialog'));
 }
 export const initDialogConstructors = () => {

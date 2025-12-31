@@ -3,7 +3,7 @@ import { SuiMenuBase, SuiMenuParams, MenuChoiceDefinition, MenuDefinition,
 import { createAndDisplayDialog } from '../dialogs/dialog';
 import { SuiScoreViewDialogVue } from '../dialogs/scoreView';
 import { SuiInstrumentDialogVue } from '../dialogs/instrument';
-import { SuiPartInfoDialog } from '../dialogs/partInfo';
+import { SuiPartInfoDialogVue } from '../dialogs/partInfo';
 import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
 import { SuiCreatePartVue } from '../dialogs/instrument';
 import { SuiTabStaveDialogVue } from '../dialogs/tabStave';
@@ -59,7 +59,7 @@ export const partPropertiesMenuOption: SuiConfiguredMenuOption = {
       menu.view.exposePart(selection.staff);
     }
     await menu.view.renderPromise();
-    createAndDisplayDialog(SuiPartInfoDialog,
+    SuiPartInfoDialogVue(
       {
         completeNotifier: menu.completeNotifier!,
         view: menu.view,

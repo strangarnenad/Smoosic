@@ -36,7 +36,7 @@ import { SuiGraceNoteDialog } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
 import { SuiTransposeScoreDialogVue} from '../ui/dialogs/transposeScore';
 import { SuiMeasureDialog } from '../ui/dialogs/measureFormat';
-import { SuiInsertMeasures } from '../ui/dialogs/addMeasure';
+import { SuiInsertMeasuresVue } from '../ui/dialogs/addMeasure';
 import { SuiInstrumentDialogVue } from '../ui/dialogs/instrument';
 import { SuiTimeSignatureDialog } from '../ui/dialogs/timeSignature';
 import { SuiTempoDialog } from '../ui/dialogs/tempo';
@@ -65,7 +65,7 @@ import { SuiArticulationDialogVue } from '../ui/dialogs/articulation';
 import { SuiMicrotoneDialogVue } from '../ui/dialogs/microtones';
 import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
-import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
+import { SuiPartInfoDialogVue } from '../ui/dialogs/partInfo';
 import { SuiNavigation } from '../ui/navigation';
 import { SuiFileUploadDialog, SuiFileSaveDialog, SuiPrintDialog } from '../ui/dialogs/fileDialogs';
     // Dialog components
@@ -281,7 +281,6 @@ export * from '../ui/dialogs/library';
 export * from '../ui/dialogs/lyric';
 export * from '../ui/dialogs/measureFormat';
 export * from '../ui/dialogs/microtones';
-export * from '../ui/dialogs/newPart';
 export * from '../ui/dialogs/noteHead';
 export * from '../ui/dialogs/ornament';
 export * from '../ui/dialogs/pageLayout';
@@ -357,12 +356,12 @@ export const Smo = {
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
   SuiScoreViewDialogVue, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialogVue, 
   SuiTransposeScoreDialogVue,
-  SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasures,
+  SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasuresVue,
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
   SuiHairpinAttributesDialog, SuiStaffGroupDialogVue, helpModal,
   SuiScorePreferencesDialogVue,
-  SuiPartInfoDialog, SuiOrnamentDialogVue, 
+  SuiPartInfoDialogVue, SuiOrnamentDialogVue, 
   SuiArticulationDialogVue, 
   SuiMicrotoneDialogVue,
   SuiNoteHeadDialog,    
