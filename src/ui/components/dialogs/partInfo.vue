@@ -18,26 +18,8 @@ interface Props {
 const props = defineProps<Props>();
 const { domId, label, commitCb, cancelCb, updatePartInfoCb } = { ...props };
 const partInfo = reactive(new SmoPartInfo(props.partInfo));
-type numberTypes = 'pageWidth' | 'pageHeight' | 'zoomScale' | 'svgScale' | 'noteSpacing' | 'maxMeasureSystem';
 
-const writeStringValue = async (attr: SmoPartInfoStringType, value: string) => {
-  if (partInfo[attr] === value) {
-    return;
-  }
-  partInfo[attr] = value;
-  await updatePartInfoCb(partInfo);
-}
-const writeNumberValue = async (attr: SmoPartInfoNumType, value: number) => {
-  if (partInfo[attr] === value) {
-    return;
-  }
-  partInfo[attr] = value;
-  await updatePartInfoCb(partInfo);
-}
 const writeBooleanValue = async (attr: SmoPartInfoBooleanType, value: boolean) => {
-  if (partInfo[attr] === value) {
-    return;
-  }
   partInfo[attr] = value;
   await updatePartInfoCb(partInfo);
 }

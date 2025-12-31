@@ -20,13 +20,14 @@ export const SuiPartInfoDialogVue = async (parameters: SuiDialogParams) => {
     // Since update will change the displayed score, wait for any display change to complete first.
     await parameters.view.renderer.updatePromise();
     
+    await parameters.view.updatePartInfo(partInfo);
     // If we are expanding rests, we need to reload the part after setting the 
     // part change.  So we update the part display a second time with the new value.
     if (current.expandMultimeasureRests !== partInfo.expandMultimeasureRests) {
       parameters.view.resetPartView();
+      await parameters.view.refreshViewport();
     }
-    await parameters.view.updatePartInfo(partInfo);
-    current = backup;
+    current = new SmoPartInfo(partInfo);
   }
 
   const commitCb = async () => {

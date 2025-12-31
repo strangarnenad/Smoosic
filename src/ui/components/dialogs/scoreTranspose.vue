@@ -18,9 +18,6 @@ const transposeIndex: Ref<number> = getTranspose();
 const xposeCb = async (val: number) => {
   transposeIndex.value = val;
 };
-const getDomId = () => {
-  return `attr-modal-dialog-${domId}`;
-}
 const getId = (str: string) => {
   return `${domId}-${str}`;
 }
@@ -30,6 +27,7 @@ const getId = (str: string) => {
       <div class="row mb-2 ms-2">
         <div class="col col-9 pe-0 me-n2">
           <numberInputApp :domId="getId('page-width-input')" :initialValue="transposeIndex" :precision="0"
+            :minValue="-12" :maxValue="12"
             :changeCb="xposeCb" :disabled="false"/>
         </div>
         <div class="col col-3 text-start ps-0 pe-0 ms-n4">

@@ -209,6 +209,10 @@ export abstract class SuiMapper {
 
   _copySelectionsByMeasure(staffIndex: number, measureIndex: number) {
     const rv = this.selections.filter((sel) => sel.selector.staff === staffIndex && sel.selector.measure === measureIndex);
+    const missingNotes = rv.filter((sel) => !sel.note);
+    if (rv.length < 1 || missingNotes.length > 0) {
+      return { ticks: 0, selectors: []};
+    }
     const ticks = rv.length < 1 ? 0 : rv.map((sel) => (sel.note as SmoNote).tickCount).reduce((a, b) => a + b);
     const selectors: SmoSelector[] = [];
     rv.forEach((sel) => {
