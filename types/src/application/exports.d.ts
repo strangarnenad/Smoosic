@@ -247,6 +247,7 @@ export * from '../ui/fileio/xhrLoader';
 export * from '../ui/help';
 export * from '../ui/common';
 export * from '../ui/i18n/language';
+export * from '../ui/i18n/language_en';
 export * from '../ui/i18n/translationEditor';
 export * from '../ui/keyBindings/default/editorKeys';
 export * from '../ui/keyBindings/default/trackerKeys';
