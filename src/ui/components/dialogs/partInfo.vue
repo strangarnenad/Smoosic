@@ -51,6 +51,7 @@ const predefinedDimensions: { [key: string]: dimensions } = {
 // Page size is in pixels, but if it matches a preset we just show that.
 // User chooses 'custom' to unlock width/height editing.
 const pageSize = ref('custom');
+
 const pageChange = () => {
  Object.keys(predefinedDimensions).forEach((key) => {
     const dims = predefinedDimensions[key];
@@ -60,6 +61,15 @@ const pageChange = () => {
     }
   });
 };
+const pageSizeCb = async (val: string) => {
+  const dims = predefinedDimensions[val];
+  if (dims) {
+    partInfo.layoutManager.globalLayout.pageWidth = dims.width;
+    partInfo.layoutManager.globalLayout.pageHeight = dims.height;
+  }
+  pageSize.value = val;
+  // The watch will trigger the callback
+}
 const lockDimensions = ref(false);
 pageChange();
 watch (pageSize, async (newVal) => {
@@ -142,18 +152,17 @@ const getId = (str: string) => {
     </div>
     <div class="row mb-2 align-items-center">
       <div class="col col-1">
-        <input class="form-check-input" type="checkbox" v-model="partInfo.preserveTextGroups" :id="getId('preserveText')"
-          @change="writeBooleanValue('preserveTextGroups', partInfo.preserveTextGroups)"></input>
+        <input class="form-check-input" type="checkbox" v-model="includeNext" :id="getId('includeNext')"></input>
       </div>
       <div class="col col-5">
-        <label class="form-check-label" :for="getId('preserveText')">Include Next Stave</label>
+        <label class="form-check-label" :for="getId('includeNext')">Include Next Stave</label>
       </div>
     </div>
     <div class="row mb-2">
       <div class="col col-3 text-end">Page Size</div>
       <div class="col col-6">
         <selectComp :domId="getId('page-size-select')" :label="''" :selections="pageSizes" :initialValue="pageSize"
-          :changeCb="pageChange" />
+          :changeCb="pageSizeCb" />
       </div>
     </div>
     <div class="row mb-2 align-items-center">

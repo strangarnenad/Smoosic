@@ -23,7 +23,8 @@ export const SuiPartInfoDialogVue = async (parameters: SuiDialogParams) => {
     await parameters.view.updatePartInfo(partInfo);
     // If we are expanding rests, we need to reload the part after setting the 
     // part change.  So we update the part display a second time with the new value.
-    if (current.expandMultimeasureRests !== partInfo.expandMultimeasureRests) {
+    if (current.expandMultimeasureRests !== partInfo.expandMultimeasureRests ||
+      current.stavesAfter !== partInfo.stavesAfter) {
       parameters.view.resetPartView();
       await parameters.view.refreshViewport();
     }
