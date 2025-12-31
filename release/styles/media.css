@@ -278,9 +278,8 @@ body.printing .media div.d-flex
 
 }
 
-body.printing .workspace-container {
-    display:none;
-}
+body.printing .workspace-container,
+body.printing #top-bar ,
 body.printing .controls-left,
 body.printing .control-bar
  {

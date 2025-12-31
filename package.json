@@ -1,6 +1,6 @@
 {
   "name": "smoosic",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "devDependencies": {
     "copy-webpack-plugin": "^12.0.2",
     "jquery": "^3.6.0",
@@ -26,7 +26,7 @@
     "xmldom": "^0.6.0"
   },
   "main": "build/smoosic.js",
-  "description": "<sub>[Github site](https://github.com/Smoosic/smoosic) | [source documentation](https://smoosic.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [application](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub>",
+  "description": "<sub>[Github site](https://github.com/Smoosic/smoosic) | [source documentation](https://smoosic.github.io/Smoosic/release/docs/modules.html) | [change notes](https://aarondavidnewman.github.io/Smoosic/changes.html) | [demo](https://smoosic.github.io/Smoosic/release/html/smoosic.html)<sub>",
   "directories": {
     "test": "tests"
   },
