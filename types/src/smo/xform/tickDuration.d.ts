@@ -93,9 +93,11 @@ export declare class SmoStretchNoteActor extends TickIteratorBase {
     notesToInsert: SmoNote[];
     numberOfNotesToDelete: number;
     constructor(params: SmoStretchNoteParams);
+    private calculateNewTicks;
+    private determineNotesToDelete;
+    private prepareNotesToInsert;
     static apply(params: SmoStretchNoteParams): void;
     iterateOverTick(note: SmoNote, tickmap: TickMap, index: number): SmoNote[] | null;
-    private areNotesInSameTuplet;
 }
 /**
  * constructor parameters for {@link SmoMakeTupletActor}
@@ -151,4 +153,3 @@ export declare class SmoUnmakeTupletActor extends TickIteratorBase {
     static apply(params: SmoUnmakeTupletParams): void;
     iterateOverTick(note: SmoNote, tickmap: TickMap, index: number): SmoNote[] | null;
 }
-//# sourceMappingURL=tickDuration.d.ts.map

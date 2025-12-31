@@ -1,3 +1,4 @@
+import { TimeSignature, SmoTempoText } from '../data/measureModifiers';
 import { SmoScore } from '../data/score';
 /**
  * @category serialization
@@ -5,6 +6,9 @@ import { SmoScore } from '../data/score';
 export interface MidiTrackHash {
     track: any;
     lastMeasure: number;
+    timeSignature?: TimeSignature;
+    tempo?: SmoTempoText;
+    keySignature?: string;
 }
 /**
  * Convert a {@link SmoScore} object to MIDI
@@ -15,6 +19,5 @@ export declare class SmoToMidi {
      * @param score
      * @returns Midi byte array that can be sent to a file upload widget
      */
-    static convert(score: SmoScore): any;
+    static convert(score: SmoScore): Uint8Array<ArrayBufferLike>;
 }
-//# sourceMappingURL=smoToMidi.d.ts.map

@@ -150,7 +150,7 @@ export class SmoContractNoteActor extends TickIteratorBase {
 
       const replacingNote = SmoNote.cloneWithDuration(note, newTicks, this.newStemTicks);
       const oldStemTicks = note.stemTicks;
-      const notes = [];
+      const notes: SmoNote[] = [];
       const remainderStemTicks = oldStemTicks - this.newStemTicks;
 
       notes.push(replacingNote);

@@ -93,13 +93,6 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      */
     addDynamic(selection: SmoSelection, dynamic: SmoDynamicText): Promise<void>;
     /**
-     * Remove dynamics from the selection
-     * @param selection
-     * @param dynamic
-     * @returns
-     */
-    _removeDynamic(selection: SmoSelection, dynamic: SmoDynamicText): Promise<void>;
-    /**
      * Remove dynamics from the current selection
      * @param dynamic
      * @returns
@@ -143,6 +136,7 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * @returns
      */
     populateVoice(index: number): Promise<void>;
+    swapVoices(voice1: number, voice2: number): Promise<void>;
     /**
      * Assign an instrument to a set of measures
      * @param instrument the instrument to assign to the selections
@@ -167,6 +161,8 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * @param staffGroup
      */
     addOrUpdateStaffGroup(staffGroup: SmoSystemGroup): Promise<void>;
+    removeStaffGroup(staffGroup: SmoSystemGroup): Promise<void>;
+    clearSystemGroups(): Promise<void>;
     updateTabStave(tabStave: SmoTabStave): Promise<void>;
     removeTabStave(): Promise<void>;
     /**
@@ -266,7 +262,7 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * toggle the 'end beam' flag for selected notes
      * @returns
      */
-    toggleBeamGroup(): Promise<void>;
+    unbeamSelections(): Promise<void>;
     toggleCue(): Promise<void>;
     /**
     * up or down
@@ -315,6 +311,10 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * @returns
      */
     paste(): Promise<void>;
+    /**
+     * Paste only the chords.
+     */
+    pasteChords(): Promise<void>;
     /**
      * specify a note head other than the default for the duration
      * @param head
@@ -501,7 +501,7 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * Play the music from the starting selection
      * @returns
      */
-    playFromSelection(): void;
+    playFromSelection(): Promise<void>;
     stopPlayer(): void;
     pausePlayer(): void;
     /**
@@ -546,7 +546,7 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      * @param ev
      * @returns
      */
-    moveSelectionRight(toPlay?: boolean): Promise<any>;
+    moveSelectionRight(): Promise<any>;
     /**
      * Advance cursor backwards, if possible
      * @param ev
@@ -592,4 +592,3 @@ export declare class SuiScoreViewOperations extends SuiScoreView {
      *  */
     intersectingArtifact(evData: SvgBox): Promise<any>;
 }
-//# sourceMappingURL=scoreViewOperations.d.ts.map

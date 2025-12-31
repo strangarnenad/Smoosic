@@ -1,6 +1,15 @@
 import { SmoNoteModifierBase, SmoArticulation, SmoLyric, SmoGraceNote, SmoMicrotone, SmoOrnament, SmoDynamicText, SmoArpeggio, SmoArticulationParametersSer, GraceNoteParamsSer, SmoOrnamentParamsSer, SmoMicrotoneParamsSer, SmoClefChangeParamsSer, SmoClefChange, SmoLyricParamsSer, SmoDynamicTextSer, SmoTabNote, SmoTabNoteParamsSer, SmoTabNoteParams } from './noteModifiers';
 import { Ticks, Pitch, SmoAttrs, Transposable, SvgBox } from './common';
 import { FontInfo } from '../../common/vex';
+export interface PlayedNote {
+    pitches: Pitch[];
+    duration: number;
+    durationPct: number;
+}
+export interface SmoAudioData {
+    volume: number[];
+    playedNotes: PlayedNote[];
+}
 /**
  * @category SmoObject
  */
@@ -10,9 +19,9 @@ export interface TupletInfo {
 export type NoteType = 'n' | 'r' | '/';
 export type NoteStringParam = 'noteHead' | 'clef';
 export declare const NoteStringParams: NoteStringParam[];
-export type NoteNumberParam = 'beamBeats' | 'flagState';
+export type NoteNumberParam = 'beamBeats' | 'flagState' | 'beamState';
 export declare const NoteNumberParams: NoteNumberParam[];
-export type NoteBooleanParam = 'hidden' | 'endBeam' | 'isCue';
+export type NoteBooleanParam = 'hidden' | 'isCue';
 export declare const NoteBooleanParams: NoteBooleanParam[];
 /**
  * Constructor parameters for a note.  Usually you will call
@@ -30,6 +39,7 @@ export declare const NoteBooleanParams: NoteBooleanParam[];
  * @param fillStyle for special effects, for instance to highlight active voice
  * @param hidden indicates the note (usually a rest) is invisible (transparent)
  * @param beamBeats how many ticks to use before beaming a group
+ * @param beamState the beaming configuration
  * @param flagState up down auto
  * @param ticks duration
  * @param stemTicks visible duration (todo update this comment)
@@ -78,10 +88,6 @@ export interface SmoNoteParams {
     tupletId: string | null;
     tabNote?: SmoTabNote;
     /**
-     * does this note force the end of a beam group
-     */
-    endBeam: boolean;
-    /**
      * fill, for the pretty
      */
     fillStyle: string | null;
@@ -93,6 +99,10 @@ export interface SmoNoteParams {
      * how many notes to beam before creating a new beam group
      */
     beamBeats: number;
+    /**
+     * auto-beam, force end or secondary
+     */
+    beamState: number;
     /**
      * up, down, auto
      */
@@ -173,9 +183,9 @@ export interface SmoNoteParamsSer {
      */
     tabNote?: SmoTabNoteParamsSer;
     /**
-      * does this note force the end of a beam group
+      * does this note end the secondary beam group
       */
-    endBeam: boolean;
+    endSecondaryBeam: boolean;
     /**
       * fill, for the pretty
       */
@@ -188,6 +198,10 @@ export interface SmoNoteParamsSer {
       * how many notes to beam before creating a new beam group
       */
     beamBeats: number;
+    /**
+     * auto, end, secondary, continue
+     */
+    beamState: number;
     /**
       * up, down, auto
       */
@@ -227,8 +241,19 @@ export declare class SmoNote implements Transposable {
         up: number;
         down: number;
     };
+    static get beamStates(): {
+        auto: number;
+        continue: number;
+        end: number;
+        secondary: number;
+    };
+    static get beamStateMax(): number;
+    static get defaultAudioData(): {
+        volume: never[];
+    };
     attrs: SmoAttrs;
     flagState: number;
+    beamState: number;
     textModifiers: SmoNoteModifierBase[];
     articulations: SmoArticulation[];
     ornaments: SmoOrnament[];
@@ -245,6 +270,7 @@ export declare class SmoNote implements Transposable {
     tupletId: string | null;
     tones: SmoMicrotone[];
     endBeam: boolean;
+    endSecondaryBeam: boolean;
     ticks: Ticks;
     stemTicks: number;
     beamBeats: number;
@@ -252,6 +278,7 @@ export declare class SmoNote implements Transposable {
     renderId: string | null;
     keySignature: string;
     logicalBox: SvgBox | null;
+    audioData: SmoAudioData;
     isCue: boolean;
     hasTabNote: boolean;
     accidentalsRendered: string[];
@@ -271,9 +298,12 @@ export declare class SmoNote implements Transposable {
     get dots(): number;
     private _addModifier;
     setArticulation(articulation: SmoArticulation, set: boolean): void;
+    clearArticulations(): void;
     getArticulations(): SmoArticulation[];
     getArticulation(stringCode: string): SmoArticulation | undefined;
     getOrnament(stringCode: string): SmoOrnament | undefined;
+    hasMordent(): boolean;
+    hasTurn(): boolean;
     /**
      * Add a new dynamic to thisnote
      * @param dynamic
@@ -351,7 +381,8 @@ export declare class SmoNote implements Transposable {
      * @param note
      */
     static sortPitches(note: Transposable): void;
-    setNoteHead(noteHead: string): void;
+    setNoteHead(notehead: string): void;
+    toggleNoteHead(noteHead: string): void;
     /**
      *
      * @param graceNote
@@ -452,4 +483,3 @@ export declare class SmoNote implements Transposable {
      */
     static deserialize(jsonObj: any): SmoNote;
 }
-//# sourceMappingURL=note.d.ts.map

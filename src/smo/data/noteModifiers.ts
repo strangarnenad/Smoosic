@@ -286,12 +286,12 @@ export class SmoArpeggio extends SmoNoteModifierBase {
   static get types() {
     if (typeof(SmoArpeggio._types['directionless']) === 'undefined') {
       SmoArpeggio._types['directionless'] = 7;
-      SmoArpeggio._types['rasquedo_up'] = 6;
-      SmoArpeggio._types['rasquedo_down'] = 5;
-      SmoArpeggio._types['roll_up'] = 4;
-      SmoArpeggio._types['roll_down'] = 3;
-      SmoArpeggio._types['brush_up'] = 2;
-      SmoArpeggio._types['brush_down'] = 1;
+      SmoArpeggio._types['rasquedo_up'] = 5;
+      SmoArpeggio._types['rasquedo_down'] = 6;
+      SmoArpeggio._types['roll_up'] = 3;
+      SmoArpeggio._types['roll_down'] = 4;
+      SmoArpeggio._types['brush_up'] = 1;
+      SmoArpeggio._types['brush_down'] = 2;
       SmoArpeggio._types['none'] = 0;
     }
     return SmoArpeggio._types;

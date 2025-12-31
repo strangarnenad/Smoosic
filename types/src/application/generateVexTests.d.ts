@@ -8,4 +8,3 @@ export interface ScoreToRender {
     pages: number[];
 }
 export declare function renderVexTests(config: Partial<SmoConfigurationParams>): Promise<void>;
-//# sourceMappingURL=generateVexTests.d.ts.map

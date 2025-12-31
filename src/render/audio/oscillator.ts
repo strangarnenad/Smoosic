@@ -174,7 +174,7 @@ export abstract class SuiOscillator {
     let frequency = 0;
     let duration = 0;
     // Just make all the notes same length, since we are not in tempo
-    duration = 0.5;
+    duration = 0.25;
     const ar: SuiOscillator[] = [];
     gain = isNaN(gain) ? 0.2 : gain;
     if (note.noteType === 'r') {
@@ -261,7 +261,7 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
       }
       const currentTime = SuiOscillator.audio.currentTime;
       this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 
-        velocity: this.velocity, detune: this.offset});
+        velocity: this.velocity, detune: this.detune});
     }
   }
 }

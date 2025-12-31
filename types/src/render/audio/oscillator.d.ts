@@ -2,8 +2,8 @@ import { SmoMeasure } from '../../smo/data/measure';
 import { SmoNote } from '../../smo/data/note';
 import { SmoSelection } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
-import { SmoOscillatorInfo } from '../../smo/data/staffModifiers';
-import { AudioSample } from './samples';
+import { SmoInstrument } from '../../smo/data/staffModifiers';
+import { Soundfont } from 'smplr';
 /**
  * Create audio reverb node.
  * @category SuiAudio
@@ -39,7 +39,9 @@ export interface WaveTable {
  */
 export interface SuiOscillatorParams {
     duration: number;
+    delayTime: number;
     frequency: number;
+    detune?: number;
     attackEnv: number;
     decayEnv: number;
     sustainEnv: number;
@@ -59,68 +61,38 @@ export declare const SynthWavetable: WaveTable;
  * @category SuiAudio
  */
 export declare abstract class SuiOscillator {
-    static audio: AudioContext;
-    static created: number;
+    abstract play(): void;
     static get defaults(): SuiOscillatorParams;
-    static sampleFiles: string[];
-    static samples: AudioSample[];
-    static playSelectionNow(selection: SmoSelection, score: SmoScore, gain: number): void;
-    static get attackTime(): number;
-    static get decayTime(): number;
-    static fromNote(measure: SmoMeasure, note: SmoNote, score: SmoScore, soundInfo: SmoOscillatorInfo, gain: number): SuiOscillator[];
-    static get attributes(): string[];
-    static resolveAfter(time: number): Promise<void>;
-    _playPromise(duration: number, gain: GainNode): Promise<void>;
-    static toFloatArray(ar: number[]): Float32Array;
-    reverb: SuiReverb | null;
-    attack: number;
-    decay: number;
-    sustain: number;
-    release: number;
-    waveform: OscillatorType;
-    attackEnv: number;
+    static audio: AudioContext;
     duration: number;
-    decayEnv: number;
-    sustainEnv: number;
-    releaseEnv: number;
-    gain: number;
-    sustainLevel: number;
-    releaseLevel: number;
-    frequency: number;
-    wavetable: WaveTable | null;
-    useReverb: boolean;
-    gainNode: GainNode | undefined;
-    delayNode: DelayNode | undefined;
-    instrument: string;
-    osc: AudioScheduledSourceNode | undefined;
-    constructor(parameters: SuiOscillatorParams);
-    abstract play(): Promise<any>;
-    abstract createAudioNode(): AudioScheduledSourceNode;
-    disconnect(): void;
+    constructor(params: SuiOscillatorParams);
     /**
-     * Connect the audio sound source to the output, combining other
-     * nodes in the mix such as convolver (reverb), delay, and gain.
-     * Also set up the envelope
-     * @returns - a promise that tis resolved when `duration` time has expired
+     * Generate a tone from a note selected or added
+     * @param measure
+     * @param note
+     * @param score
+     * @param instrument
+     * @param gain
+     * @returns
      */
-    createAudioGraph(): Promise<any>;
-    playPromise(duration: number): Promise<void>;
+    static fromNote(measure: SmoMeasure, note: SmoNote, score: SmoScore, instrument: SmoInstrument, gain: number): SuiOscillator[];
+    static playSelectionNow(selection: SmoSelection, score: SmoScore, gain: number): void;
 }
-/**
- * An audio output that uses browser audio api OscillatorNode as a sound source
- * @category SuiAudio
- */
-export declare class SuiWavetable extends SuiOscillator {
-    createAudioNode(): AudioScheduledSourceNode;
-    play(): Promise<any>;
+export declare class SuiOscillatorSoundfont extends SuiOscillator {
+    instrument: string;
+    samples: Soundfont;
+    midinumber: number;
+    offset: number;
+    velocity: number;
+    delayTime: number;
+    detune: number;
+    constructor(params: SuiOscillatorParams);
+    play(): void;
 }
 /**
  * An audio output primitive that uses frequency-adjusted sampled sounds
  * @category SuiAudio
  */
-export declare class SuiSampler extends SuiOscillator {
+export declare class SuiSampler extends SuiOscillatorSoundfont {
     constructor(params: SuiOscillatorParams);
-    createAudioNode(): AudioScheduledSourceNode;
-    play(): Promise<void>;
 }
-//# sourceMappingURL=oscillator.d.ts.map

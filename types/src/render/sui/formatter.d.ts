@@ -99,8 +99,12 @@ export declare class SuiLayoutFormatter {
     estimateMeasureWidth(measure: SmoMeasure, scoreLayout: ScaledPageLayout, tickContexts: Record<number, SuiTickContext>): void;
     static _beamGroupForNote(measure: SmoMeasure, note: SmoNote): ISmoBeamGroup | null;
     /**
-     * A system has gone beyond the page width.  Lop the last measure off the end and move it to the first measure of the
-     * next system.  Then seal the last system by justifying the measures vertically and horinzontally
+     * Format a full system:
+     * 1.  Lop the last measure off the end and move it to the first measure of the
+     * next system, if it doesn't fit
+     * 2. Justify the measures vertically
+     * 3. Justify the columns horizontally
+     * 4. Hide lines if they don't contain music
      * @param scoreLayout
      * @param measureEstimate
      * @param currentLine
@@ -145,4 +149,3 @@ export declare class SuiLayoutFormatter {
         belowBaseline: number;
     };
 }
-//# sourceMappingURL=formatter.d.ts.map

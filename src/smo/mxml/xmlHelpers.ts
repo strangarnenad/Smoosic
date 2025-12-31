@@ -4,6 +4,7 @@ import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoArticulation, SmoNoteModifierBase, SmoOrnament } from '../data/noteModifiers';
 import { SmoMusic } from '../data/music';
 import { SmoNote } from '../data/note';
+import { SmoTuplet } from '../data/tuplet'
 import { Pitch, PitchLetter, createXmlAttributes, createXmlAttribute, SmoDynamicCtor } from '../data/common';
 import { SmoSelector } from '../xform/selections';
 import { SmoBarline } from '../data/measureModifiers';
@@ -477,8 +478,8 @@ export class XmlHelpers {
           data: null
         };
         if (type === 'start') {
-          let tupletActual = null;
-          let tupletNormal = null;
+          let tupletActual: any = null;
+          let tupletNormal: any = null;
           const tupletActualNode = tupletNode.querySelector('tuplet-actual');
           if (tupletActualNode) {
             const tupletNumberNode = tupletActualNode.querySelector('tuplet-number');

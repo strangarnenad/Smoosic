@@ -61,4 +61,3 @@ export declare class BrowserEventSource {
     bindMouseClickHandler(method: methodType): EventHandler;
     domClick(selector: string, method: () => Promise<any>): void;
 }
-//# sourceMappingURL=eventSource.d.ts.map

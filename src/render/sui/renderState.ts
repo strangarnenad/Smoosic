@@ -18,6 +18,7 @@ import { SuiScoreRender, ScoreRenderParams } from './scoreRender';
 import { SuiExceptionHandler } from '../../ui/exceptions';
 import { VexFlow, setFontStack } from '../../common/vex';
 import { layoutDebug } from './layoutDebug';
+import { SuiNavigation } from '../../ui/navigation';
 declare var $: any;
 
 
@@ -109,7 +110,7 @@ export class SuiRenderState {
     setFontStack(this.score!.engravingFont);
   }
   addToReplaceQueue(selection: SmoSelection | SmoSelection[]) {
-    let selections = [];
+    let selections: SmoSelection[] = [];
     if (!Array.isArray(selection)) {
       selections = [selection];
     } else {
@@ -334,7 +335,7 @@ export class SuiRenderState {
             $('body').removeClass('print-render');
             $('.vf-selection').remove();
             $('body').addClass('printing');
-            $('.musicRelief').css('height', '');
+            $(SuiNavigation.scrollable).css('height', '');
             resolve();
           } else {
             poll();

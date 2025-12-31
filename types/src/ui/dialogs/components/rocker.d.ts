@@ -64,4 +64,3 @@ export declare class SuiRockerComposite extends SuiRockerComponent {
     constructor(dialog: SuiDialogNotifier, parameters: SuiRockerCompositeParams);
     handleChanged(): void;
 }
-//# sourceMappingURL=rocker.d.ts.map

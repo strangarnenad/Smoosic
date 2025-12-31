@@ -236,7 +236,7 @@ export function createStave(params: SmoVexStaveParams) {
     });
   }
   if (params.lines < 5) {
-    const linesAr = [];
+    const linesAr: any = [];
     for (let i = 0; i < lineDefaults.length; ++i) {
       const visible = lineDefaults[i] < params.lines;
       linesAr.push({ visible });

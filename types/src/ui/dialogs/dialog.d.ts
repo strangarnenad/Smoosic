@@ -9,6 +9,33 @@ import { SuiDialogNotifier, DialogDefinitionElement, SuiComponentBase, DialogDef
 import { SuiScroller } from '../../render/sui/scroller';
 import { EventHandler } from '../eventSource';
 import { SmoUiConfiguration } from '../configuration';
+export type DialogCallback = () => Promise<void>;
+/**
+ * Parameters for installing a dialog.  VUE-based dialog logic.
+ * complete is a Ref that is set to true when the dialog is finished, used to
+ * hand off keyboard control between dialogs and menus.
+ * app is a VUE app, appParams are the parameters to pass to the app.
+ * we override commitCb, cancelCb, and removeCb to manage the dialog lifetime.
+ * root is the DOM id to mount the dialog in (without the '#')
+ * @category SuiDialog
+ */
+export interface DialogInstallParams {
+    root: string;
+    app: any;
+    appParams: any;
+    dialogParams: SuiDialogParams;
+    commitCb: DialogCallback;
+    cancelCb: DialogCallback;
+    removeCb?: DialogCallback;
+}
+/**
+ * The callbacks can be confusing.  Dialog CB button calls this callback,
+ * which in turn calls the user-supplied callback, and then hides the dialog.
+ * params.commitCb is the supplied callback,
+ * but appParams.commitCb is set to this function.
+ * @param params
+ */
+export declare const InstallDialog: (params: DialogInstallParams) => Promise<void>;
 /**
  * The JSON dialog template is a declaritive structore for the html of the dialog
  * and components.
@@ -172,4 +199,3 @@ export declare function dialogConstructor<T extends SuiDialogBase>(type: {
  * @returns
  */
 export declare function createAndDisplayDialog<T extends SuiDialogBase>(ctor: new (parameters: SuiDialogParams) => T, parameters: SuiDialogParams): T;
-//# sourceMappingURL=dialog.d.ts.map

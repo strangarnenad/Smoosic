@@ -99,4 +99,3 @@ export declare class SuiButtonArrayMSComponent extends SuiButtonArrayBase {
     bind(): void;
 }
 export {};
-//# sourceMappingURL=buttonArray.d.ts.map

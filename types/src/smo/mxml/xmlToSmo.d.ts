@@ -90,4 +90,3 @@ export declare class XmlToSmo {
      */
     static measure(measureElement: Element, xmlState: XmlState): void;
 }
-//# sourceMappingURL=xmlToSmo.d.ts.map

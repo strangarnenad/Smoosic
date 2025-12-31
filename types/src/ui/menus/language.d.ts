@@ -10,4 +10,3 @@ export declare class SuiLanguageMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=language.d.ts.map

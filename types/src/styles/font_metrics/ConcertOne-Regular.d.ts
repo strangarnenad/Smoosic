@@ -869,4 +869,3 @@ export namespace Concert_OneFont {
     let resolution: number;
     let generatedOn: string;
 }
-//# sourceMappingURL=ConcertOne-Regular.d.ts.map

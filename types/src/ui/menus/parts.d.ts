@@ -48,4 +48,3 @@ export declare const SuiPartMenuOptions: SuiConfiguredMenuOption[];
 export declare class SuiPartMenu extends SuiConfiguredMenu {
     constructor(params: SuiMenuParams);
 }
-//# sourceMappingURL=parts.d.ts.map

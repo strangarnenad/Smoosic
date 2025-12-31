@@ -5,4 +5,3 @@ import { KeyBinding } from '../../../application/common';
 export declare class defaultTrackerKeys {
     static get keys(): KeyBinding[];
 }
-//# sourceMappingURL=trackerKeys.d.ts.map

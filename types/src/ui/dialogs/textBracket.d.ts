@@ -33,4 +33,3 @@ export declare class SuiTextBracketDialog extends SuiDialogAdapterBase<SuiTextBr
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=textBracket.d.ts.map

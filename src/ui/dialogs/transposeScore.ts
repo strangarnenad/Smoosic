@@ -4,64 +4,36 @@ import { SmoScore } from '../../smo/data/score';
 import { GlobalLayoutAttributes, SmoLayoutManager, SmoGlobalLayout } from '../../smo/data/scoreModifiers';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
-import { DialogDefinition, SuiDialogBase, SuiDialogParams } from './dialog';
-
+import { DialogDefinition, SuiDialogBase, SuiDialogParams, InstallDialog } from './dialog';
+import { reactive, watch, ref } from 'vue';
+import { replaceVueRoot, modalContainerId } from '../common';
+import scoreTransposeApp from '../components/dialogs/scoreTranspose.vue';
 
 declare var $: any;
-/**
- * change editor and formatting defaults for this score.
- * @category SuiDialog
- */
-export class SuiTransposeScoreAdapter extends SuiComponentAdapter {
-  transposeOffset: number = 0;
-  constructor(view: SuiScoreViewOperations) {
-    super(view);
-    this.view = view;
-  }
-  // TODO: writeValue is not called in a global context
-  get offset() {
-    return this.transposeOffset;
-  }
-  set offset(value: number) {
-    if (value > -13 && value < 13) {
-      this.transposeOffset = value;
+
+export const SuiTransposeScoreDialogVue = (parameters: SuiDialogParams) => {
+  const offset = ref(0);
+  let delta = 0;
+  const getTranspose = () => offset
+
+  watch(offset, async (newVal, oldVal) => {
+    delta += offset.value;
+    await parameters.view.transposeScore(offset.value);
+    offset.value = 0;
+  });
+  const rootId = replaceVueRoot(modalContainerId);
+  const appParams = {
+    domId: rootId,
+    getTranspose,
+    label: 'Transpose Score'
+  };
+
+  const cancelCb = async () => {
+    if (delta !== 0) {
+      await parameters.view.transposeScore(-delta);
     }
   }
-  async commit() { 
-    if (this.transposeOffset !== 0) {
-      this.view.transposeScore(this.transposeOffset);
-    }
+  const commitCb = async () => {
   }
-  async cancel() {
-  }
-}
-/**
- * change editor and formatting defaults for this score.
- * @category SuiDialog
- */
-export class SuiTransposeScoreDialog extends SuiDialogAdapterBase<SuiTransposeScoreAdapter> {
-  static dialogElements: DialogDefinition =
-    {
-      label: 'Transpose Score', elements:
-        [{
-          smoName: 'offset',
-          defaultValue: 0,
-          control: 'SuiRockerComponent',
-          label: 'Transpose (1/2 steps)'
-        }],
-      staticText: []
-    };
-  get dimensionControls() {
-    return [this.cmap.offsetCtrl];
-  }
-  constructor(params: SuiDialogParams) {
-    const adapter = new SuiTransposeScoreAdapter(params.view);
-    super(SuiTransposeScoreDialog.dialogElements, { adapter, ...params });
-  }
-  async changed() {
-    await super.changed();
-    if (this.dimensionControls.find((x) => x.changeFlag)) {
-      this.initialValue();
-    }
-  }
+  InstallDialog({ root: rootId, app: scoreTransposeApp, appParams, dialogParams: parameters, commitCb, cancelCb });
 }

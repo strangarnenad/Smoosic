@@ -27,4 +27,3 @@ export class smoSerialize {
     static stringifyAttrs(attrs: any, obj: any): string;
     static printTranslate(_class: any): void;
 }
-//# sourceMappingURL=serializationHelpers.d.ts.map

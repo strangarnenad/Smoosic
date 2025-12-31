@@ -10,4 +10,3 @@ export declare class SuiExceptionHandler {
     static get instance(): SuiExceptionHandler;
     exceptionHandler(e: any): void;
 }
-//# sourceMappingURL=exceptions.d.ts.map

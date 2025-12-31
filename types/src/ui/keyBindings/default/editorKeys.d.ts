@@ -5,4 +5,3 @@ import { KeyBinding } from '../../../application/common';
 export declare class defaultEditorKeys {
     static get keys(): KeyBinding[];
 }
-//# sourceMappingURL=editorKeys.d.ts.map

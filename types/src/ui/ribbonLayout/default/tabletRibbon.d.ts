@@ -20,4 +20,3 @@ export declare class simpleRibbonLayout {
     static get navigationButtons(): ButtonDefinition[];
     static get leftRibbonButtons(): ButtonDefinition[];
 }
-//# sourceMappingURL=tabletRibbon.d.ts.map

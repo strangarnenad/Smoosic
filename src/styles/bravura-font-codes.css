@@ -1,17 +1,17 @@
 
-.icon-bravura {
+button .icon-bravura,.icon-bravura, 
+button.icon-bravura,
+li.dropdown-item span.icon-bravura {
   font-family: 'Bravura'!important;
-  font-size: 24px;
-  position: absolute;
-  top: calc(50% - 8px);
+  position:absolute;
   pointer-events: none;
 }
 .oversize .icon-bravura {
-  font-size: 16px;
+  font-size: 16px;  
   left: 4px;
 }
 /* not in file */
-.icon-note:before {content: "\2669";}
+.icon-note:before {content: "\266a";}
 .icon-grace-note:before {content: "\e562";}
 .icon-grace-note-strike:before {content: "\e560";}
 

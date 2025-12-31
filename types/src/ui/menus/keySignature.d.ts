@@ -11,4 +11,3 @@ export declare class SuiKeySignatureMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=keySignature.d.ts.map

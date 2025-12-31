@@ -17,8 +17,116 @@ import { SmoNote } from '../../smo/data/note';
 import { EventHandler } from '../eventSource';
 import { SmoUiConfiguration } from '../configuration';
 import { PromiseHelpers } from '../../common/promiseHelpers';
+import { createApp, ref, Ref, watch } from 'vue';
+import { SuiNavigation } from '../navigation';
+
 
 declare var $: any;
+/**
+ * The key/mouse event handlers take this as a parameter when we are switching control
+ * of the input, due to a modal menu or dialog.
+ */
+class closeModalPromiser {
+  closeModalPromise: Promise<void>;
+  closeEvent: Ref<boolean>;
+  createUnbindPromise = async () => {
+    return new Promise<void>((resolve) => {
+      watch(this.closeEvent, () => {
+        resolve();
+      });
+    })
+  }
+  constructor(closeEvent: Ref<boolean>) {
+    this.closeEvent = closeEvent;
+    this.closeModalPromise = this.createUnbindPromise();
+  }
+}
+export type DialogCallback = () => Promise<void>;
+/**
+ * Parameters for installing a dialog.  VUE-based dialog logic.
+ * complete is a Ref that is set to true when the dialog is finished, used to 
+ * hand off keyboard control between dialogs and menus.
+ * app is a VUE app, appParams are the parameters to pass to the app.
+ * we override commitCb, cancelCb, and removeCb to manage the dialog lifetime.
+ * root is the DOM id to mount the dialog in (without the '#')
+ * @category SuiDialog 
+ */
+export interface DialogInstallParams {
+  root: string,
+  app: any, 
+  appParams: any,
+  dialogParams: SuiDialogParams,
+  commitCb: DialogCallback, 
+  cancelCb: DialogCallback,
+  removeCb?: DialogCallback
+};
+/**
+ * The callbacks can be confusing.  Dialog CB button calls this callback, 
+ * which in turn calls the user-supplied callback, and then hides the dialog.
+ * params.commitCb is the supplied callback, 
+ * but appParams.commitCb is set to this function.
+ * @param params 
+ */
+export const InstallDialog = async (params: DialogInstallParams) => {
+  // If the dialog is raised from another dialog or menu that hasn't closed, wait for it
+  // to close.  This is required so we can keep keyboard/mouse event manager in sync.
+  if (params.dialogParams.startPromise) {
+    await params.dialogParams.startPromise;
+  }
+  const complete: Ref<boolean> = ref(false);
+
+  const trapper = new InputTrapper('#vue-modal-container');
+  trapper.trap();
+  const commitCb = async () => {
+    complete.value = true;
+    await params.commitCb();
+    trapper.close();
+    SuiNavigation.instance.hideDialogModal();
+  }
+  const cancelCb = async () => {
+    complete.value = true;
+    await params.cancelCb();
+    trapper.close();
+    SuiNavigation.instance.hideDialogModal();
+  }
+  const removeCb = async () => {
+    if (params.removeCb) {
+      await params.removeCb();
+    }
+    trapper.close();
+    SuiNavigation.instance.hideDialogModal();
+    complete.value = true;
+  }
+  $('#' + params.root).addClass('modal show fade');
+  params.appParams.commitCb = commitCb;
+  params.appParams.cancelCb = cancelCb;
+  if (params.removeCb) {
+    params.appParams.removeCb = removeCb;
+  }
+  createApp(params.app as any, params.appParams).mount('#' + params.root);
+
+  // allow a dialog to be dismissed by esc.
+  const evKey = async (evdata: any) => {
+    if (evdata.key === 'Escape') {
+      cancelCb();
+      evdata.preventDefault();
+    }
+  }
+  // We take over he keyboard for the modal dialog so the user doesn't change the score
+  // while typing into the dialog.  the 'completeNotifier' takes it back when we are done
+  params.dialogParams.completeNotifier.unbindKeyboardForModal(new closeModalPromiser(complete));
+  params.dialogParams.eventSource.bindKeydownHandler(evKey);
+  SuiNavigation.instance.showDialogModal();
+  /* const cb = () => { };
+  draggable({
+    parent: $('#' + params.root).find('.attributeModal'),
+    handle: $('#' + params.root).find('.jsDbMove'),
+    animateDiv: '.draganime',
+    cb,
+    moveParent: true
+  });*/  
+}
+
 /**
  * The JSON dialog template is a declaritive structore for the html of the dialog
  * and components.  
@@ -209,8 +317,8 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
 
     this.dialogElements = dialogElements;
 
-    const left = $('.musicRelief').offset().left + $('.musicRelief').width() / 2;
-    const top = $('.musicRelief').offset().top + $('.musicRelief').height() / 2;
+    const left = $('#smo-scroll-region').offset().left + $('#smo-scroll-region').width() / 2;
+    const top = $('#smo-scroll-region').offset().top + $('#smo-scroll-region').height() / 2;
 
     this.dgDom = this._constructDialog(dialogElements, {
       id: 'dialog-' + this.id,
@@ -303,8 +411,8 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
     // TODO: adjust if db is clipped by the browser.
     const dge = $(dgDom.element).find('.attributeModal');
     const dgeHeight: number = $(dge).height();
-    const maxY: number = $('.musicRelief').height();
-    const maxX: number = $('.musicRelief').width();
+    const maxY: number = $('#smo-scroll-region').height();
+    const maxX: number = $('#smo-scroll-region').width();
     const offset: any = $('.dom-container').offset();
     y = y - (offset.top as number);
 
@@ -370,7 +478,7 @@ export const suiDialogTranslate = (dialog: DialogDefinition, ctor: string): Dial
   _constructDialog(dialogElements: DialogDefinition, parameters: SuiDomParams) {
     createTopDomContainer('.attributeDialog');
     const id = parameters.id;
-    const b = buildDom;
+     const b = buildDom;
     const r = b('div').classes('attributeModal').attr('id', 'attr-modal-' + id)
       .css('top', parameters.top + 'px').css('left', parameters.left + 'px')
       .append(b('spanb').classes('draggable button').append(b('span').classes('icon icon-move jsDbMove')))

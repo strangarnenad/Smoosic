@@ -160,4 +160,3 @@ export declare class SmoPartInfo extends StaffModifierBase {
     removeTextGroup(textGroup: SmoTextGroup): void;
     addTextGroup(textGroup: SmoTextGroup): void;
 }
-//# sourceMappingURL=partInfo.d.ts.map

@@ -592,8 +592,8 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
    * @param tupletTree 
    */
   static fixTupletLengths(voices: SmoVoice[], tupletTree: SmoTupletTree) {
-    const voice = voices[tupletTree.voice];
-    const notear = [];
+    const voice: SmoVoice = voices[tupletTree.voice];
+    const notear: SmoNote[] = [];
     for (let i = tupletTree.startIndex; i <= tupletTree.endIndex; ++i) {
       if (voice.notes.length > i) {
         notear.push(voice.notes[i]);
@@ -1213,7 +1213,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     }
   }
   getSwapVoicePairs() {
-    const rv = [];
+    const rv: number[][] = [];
     for (let i = 0; i < this.voices.length; ++i) {
       for (let j = i + 1; j < this.voices.length; ++j) {
         rv.push([i, j]);
@@ -1675,7 +1675,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
   }
 
   private _getBarline(pos: number): SmoBarline {
-    let rv = null;
+    let rv: SmoMeasureModifierBase | null = null;
     this.modifiers.forEach((modifier) => {
       if (modifier.ctor === 'SmoBarline' && (modifier as SmoBarline).position === pos) {
         rv = modifier;
@@ -1684,7 +1684,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     if (rv === null) {
       return new SmoBarline(SmoBarline.defaults);
     }
-    return rv;
+    return rv as SmoBarline;
   }
 
   getEndBarline(): SmoBarline {    

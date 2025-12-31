@@ -138,4 +138,3 @@ export declare class XmlHelpers {
     static createAttributes(element: Element, obj: any): void;
     static createAttribute(element: Element, name: string, value: any): void;
 }
-//# sourceMappingURL=xmlHelpers.d.ts.map

@@ -33,13 +33,9 @@ export declare class TieMappingComponent extends SuiComponentParent {
     controlRows: PitchTieControlRow[];
     constructor(dialog: SuiDialogNotifier, parameter: TieMappingComponentParams);
     bind(): void;
-    _generateOptions(note: SmoNote): {
-        value: number;
-        label: string;
-    }[];
+    _generateOptions(note: SmoNote): any;
     getValue(): TieLine[];
     setValue(modifier: TieLine[]): void;
     changed(): void;
     get html(): import("../../../common/htmlHelpers").DomBuilder;
 }
-//# sourceMappingURL=tie.d.ts.map

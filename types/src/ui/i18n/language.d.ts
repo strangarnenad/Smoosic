@@ -35,4 +35,3 @@ export declare class SmoLanguage {
     static get ar(): LanguageTranslation;
     static get de(): LanguageTranslation;
 }
-//# sourceMappingURL=language.d.ts.map

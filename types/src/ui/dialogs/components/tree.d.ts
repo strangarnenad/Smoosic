@@ -44,4 +44,3 @@ export declare class SuiTreeComponent extends SuiComponentBase {
     bindTreeControls(): void;
     bind(): void;
 }
-//# sourceMappingURL=tree.d.ts.map

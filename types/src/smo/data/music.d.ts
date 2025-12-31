@@ -21,7 +21,10 @@ export interface ClefSign {
 export declare class SmoAudioPitch {
     static _computeFrequencies(): Record<string, number>;
     static frequencies: Record<string, number> | null;
+    static frequencyKeys: string[] | null;
+    static get pitchFrequencyKeys(): string[];
     static get pitchFrequencyMap(): Record<string, number>;
+    static frequencyToVexPitch(freq: number): string;
     static _rawPitchToFrequency(smoPitch: Pitch, offset: number): number;
     /**
      *
@@ -91,6 +94,10 @@ export interface KeySignatureRole {
  * @category SmoTransform
  */
 export declare class SmoMusic {
+    /**
+     *Normalized gain from dynamics
+     */
+    static get dynamicVolumeMap(): Record<string, number>;
     /**
      * Ported from vex, used to convert pitches to numerical values
      * */
@@ -221,8 +228,8 @@ export declare class SmoMusic {
      * @param smoPitch pitch to convert
      * @returns pitch in MIDI string format.
      */
-    static smoPitchToMidiString(smoPitch: Pitch): string;
-    static smoPitchesToMidiStrings(smoPitches: Pitch[]): string[];
+    static smoPitchToMidiString(smoPitch: Pitch, offset: number): string;
+    static smoPitchesToMidiStrings(smoPitches: Pitch[], offset: number): string[];
     /**
      * filled in from the midi routines borrowed from
      * // https://github.com/grimmdude/MidiWriterJS
@@ -231,6 +238,12 @@ export declare class SmoMusic {
      */
     static midiPitchToSmoPitch(midiPitch: string): Pitch;
     static midiPitchToMidiNumber(midiPitch: string): number;
+    static midiNumberAndDetuneFromPitch(pitch: Pitch, xpose: number, microtone?: SmoMicrotone): {
+        midinumber: number;
+        detune: number;
+        frequency: number;
+    };
+    static midiNumberToMidiPitch(midiNumber: number): string;
     static pitchToVexKey(smoPitch: Pitch, head?: string | null): string;
     /**
      *  Turns vex pitch string into smo pitch, e.g.
@@ -369,11 +382,12 @@ export declare class SmoMusic {
     static _validDurationKeys: number[];
     static get validDurations(): Record<number, SimpleDuration>;
     /**
-     * Get the closest duration from ticks
+     * Get the closest valid duration for this number of ticks, but not going over
      * @param ticks
      * @returns
      */
     static closestSmoDurationFromTicks(ticks: number): SimpleDuration | null;
+    static closestSimpleDurationFromTicks(ticks: number): number;
     static _ticksToDuration: Record<string, string>;
     static get ticksToDuration(): Record<string, string>;
     static timeSignatureToTicks(timeSignature: string): number;
@@ -422,4 +436,3 @@ export declare class SmoMusic {
     static gcdMap(duration: number): number[];
     static notesFromLetters(startPitch: Pitch, clef: Clef, keySignature: string, duration: number, letters: string): SmoNote[];
 }
-//# sourceMappingURL=music.d.ts.map

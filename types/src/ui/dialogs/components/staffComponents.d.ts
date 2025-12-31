@@ -75,4 +75,3 @@ export declare class StaffCheckComponent extends SuiComponentBase {
     changed(): void;
     bind(): void;
 }
-//# sourceMappingURL=staffComponents.d.ts.map

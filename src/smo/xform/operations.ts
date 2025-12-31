@@ -859,7 +859,7 @@ export class SmoOperation {
     const lastIndex = selections.length - 1;
     const note1 = selections[0].note;
     const note2 = selections[lastIndex].note;
-    const inners = [];
+    const inners: SmoSelection[] = [];
     let minLine = -1;
     let maxLine = 0;
     if (selections.length > 2) {

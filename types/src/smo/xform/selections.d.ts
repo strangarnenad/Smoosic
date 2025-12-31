@@ -43,11 +43,23 @@ export declare class SmoSelector {
      * @param sel2
      */
     static gtInTime(sel1: SmoSelector, sel2: SmoSelector): boolean;
+    /**
+     * return true if sel1 > sel2
+     */
     static gt(sel1: SmoSelector, sel2: SmoSelector): boolean;
     static eq(sel1: SmoSelector, sel2: SmoSelector): boolean;
     static neq(sel1: SmoSelector, sel2: SmoSelector): boolean;
+    /**
+     * return true if sel1 < sel2
+     */
     static lt(sel1: SmoSelector, sel2: SmoSelector): boolean;
+    /**
+     * return true if sel1 >= sel2
+     */
     static gteq(sel1: SmoSelector, sel2: SmoSelector): boolean;
+    /**
+     * return true if sel1 <= sel2
+     */
     static lteq(sel1: SmoSelector, sel2: SmoSelector): boolean;
     static order(a: SmoSelector, b: SmoSelector): SmoSelector[];
     static getNoteKey(selector: SmoSelector): string;
@@ -107,6 +119,14 @@ export declare class SmoSelection {
      * @param sel2
      * @returns
      */
+    static countTickIndices(score: SmoScore, sel1: SmoSelector, sel2: SmoSelector): number;
+    /**
+       * Count the number of tick indices between selector 1 and selector 2;
+       * @param score
+       * @param sel1
+       * @param sel2
+       * @returns
+       */
     static countTicks(score: SmoScore, sel1: SmoSelector, sel2: SmoSelector): number;
     static nextNoteSelection(score: SmoScore, staffIndex: number, measureIndex: number, voiceIndex: number, tickIndex: number): SmoSelection | null;
     /**
@@ -131,4 +151,3 @@ export declare class SmoSelection {
     get note(): SmoNote | null;
     get pitches(): number[];
 }
-//# sourceMappingURL=selections.d.ts.map

@@ -869,4 +869,3 @@ export namespace SourceSansProFont {
         };
     };
 }
-//# sourceMappingURL=ssp-sans-metrics.d.ts.map

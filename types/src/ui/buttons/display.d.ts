@@ -21,4 +21,3 @@ export declare class DisplaySettings extends SuiButton {
     selectPart(): Promise<void>;
     bind(): void;
 }
-//# sourceMappingURL=display.d.ts.map

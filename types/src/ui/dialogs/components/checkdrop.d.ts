@@ -25,4 +25,3 @@ export declare class CheckboxDropdownComponent extends SuiComponentParent {
     bind(): void;
     changed(): void;
 }
-//# sourceMappingURL=checkdrop.d.ts.map

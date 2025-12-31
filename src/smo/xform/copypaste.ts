@@ -317,7 +317,7 @@ export class PasteBuffer {
     let voice = this._populatePre(this.destination.voice, measure, this.destination.tick, tickmap);
     let startSelector = JSON.parse(JSON.stringify(this.destination));
     this.measureIndex = 0;
-    const measureVoices = [];
+    const measureVoices: SmoVoice[] = [];
     measureVoices.push(voice);
     while (this.measureIndex < measures.length) {
       measure = measures[this.measureIndex];

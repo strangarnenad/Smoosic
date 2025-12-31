@@ -38,4 +38,3 @@ export declare class SmoLibrary {
     load(): Promise<any>;
     _inheritMetadata(parent: any): void;
 }
-//# sourceMappingURL=library.d.ts.map

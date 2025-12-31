@@ -30,4 +30,3 @@ export declare class SuiTabNoteDialog extends SuiDialogAdapterBase<SuiTabNoteAda
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=tabNote.d.ts.map

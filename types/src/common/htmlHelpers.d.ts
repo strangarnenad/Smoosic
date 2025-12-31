@@ -1,3 +1,4 @@
+import { Ref } from 'vue';
 /**
 * returns an object that  lets you build a DOM in a somewhat readable way.
 *
@@ -66,12 +67,22 @@ export declare function createTopDomContainer(selector: string | HTMLElement, el
  * @returns
  */
 export declare function draggable(parameters: any): Draggable;
+export interface DraggableParameters {
+    parent: HTMLElement;
+    handle: HTMLElement;
+    animateDiv: string;
+    dragParent: boolean;
+    svg: any;
+    cb: () => void;
+    topRef?: Ref<number>;
+    leftRef?: Ref<number>;
+}
 /**
  * @internal
  */
 export declare class Draggable {
-    parent: any;
-    handle: any;
+    parent: HTMLElement;
+    handle: HTMLElement;
     animeClass: any;
     dragParent: any;
     domOffset: any;
@@ -83,6 +94,8 @@ export declare class Draggable {
     cb: any;
     moveParent: boolean;
     dragging: boolean;
+    topRef?: Ref<number>;
+    leftRef?: Ref<number>;
     constructor(parameters: any);
     _animate(e: any): void;
     mousedown(e: any): void;
@@ -90,4 +103,3 @@ export declare class Draggable {
     mouseup(e: any): void;
     mousemove(e: any): void;
 }
-//# sourceMappingURL=htmlHelpers.d.ts.map

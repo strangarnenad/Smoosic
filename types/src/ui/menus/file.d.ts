@@ -24,4 +24,3 @@ export declare class SuiFileMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=file.d.ts.map

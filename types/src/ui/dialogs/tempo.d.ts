@@ -48,4 +48,3 @@ export declare class SuiTempoDialog extends SuiDialogAdapterBase<SuiTempoAdapter
     initialValue(): void;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=tempo.d.ts.map

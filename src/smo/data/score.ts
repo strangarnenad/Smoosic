@@ -592,7 +592,7 @@ export class SmoScore {
   static deserialize(jsonString: string): SmoScore {
     let jsonObj: Partial<SmoScoreParamsSer> = JSON.parse(jsonString);
     let upconvertFormat = false;
-    let formattingManager = null;
+    let formattingManager: SmoFormattingManager|null = null;
     if (jsonObj.dictionary) {
       jsonObj = smoSerialize.detokenize(jsonObj, jsonObj.dictionary);
     }
@@ -1020,6 +1020,13 @@ export class SmoScore {
     );
     return exist;
   }
+  getSystemGroupForStaffId(staffId: number){
+    const sel = SmoSelection.measureSelection(this, staffId, 0);
+    if (sel) {
+      return this.getSystemGroupForStaff(sel);
+    }
+    return undefined;
+  }
 
   getStavesForGroup(group: SmoSystemGroup) {
     return this.staves.filter((staff) => staff.staffId >= group.startSelector.staff &&
@@ -1033,6 +1040,12 @@ export class SmoScore {
     // Replace this group for any groups that overlap it.
     this.systemGroups = this.systemGroups.filter((sg) => !sg.overlaps(newGroup));
     this.systemGroups.push(newGroup);
+  }
+  removeSystemGroup(group: SmoSystemGroup) {
+    this.systemGroups = this.systemGroups.filter((sg) => !sg.overlaps(group));
+  }
+  clearSystemGroups() {
+    this.systemGroups = [];
   }
 
   isPartExposed(): boolean {
@@ -1051,7 +1064,7 @@ export class SmoScore {
    * @param staff 
    */
   replaceStaff(index: number, staff: SmoSystemStaff) {
-    const staves = [];
+    const staves: SmoSystemStaff[] = [];
     let i = 0;
     for (i = 0; i < this.staves.length; ++i) {
       if (i !== index) {
@@ -1154,7 +1167,7 @@ export class SmoScore {
       parameters = SmoSystemStaff.defaults;
     }
     const proto = this.staves[0];
-    const measures = [];
+    const measures: SmoMeasure[] = [];
     for (i = 0; i < proto.measures.length; ++i) {
       const measure: SmoMeasure = proto.measures[i];
       const jsonObj: SmoMeasureParamsSer = measure.serialize();

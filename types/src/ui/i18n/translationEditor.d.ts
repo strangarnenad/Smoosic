@@ -9,9 +9,6 @@ export declare class SmoTranslationEditor {
     static _getDialogComponentHtml(element: DialogDefinitionElement, enDb: DialogTranslation, langDb: DialogTranslation, container: HTMLElement): void;
     static getDialogTranslationHtml(dialogCtor: string, enStrings: TranslationStrings, langStrings: TranslationStrings): HTMLElement | undefined;
     static getAllTranslationHtml(lang: string): HTMLElement;
-    static parseDom(): {
-        ribbonText: any[];
-    }[];
+    static parseDom(): any;
     static startEditor(lang: string): void;
 }
-//# sourceMappingURL=translationEditor.d.ts.map

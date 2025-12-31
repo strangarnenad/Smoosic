@@ -1,13 +1,11 @@
 import { MenuDefinition, MenuChoiceDefinition, SuiMenuBase, SuiMenuParams } from './menu';
-import { SuiScorePreferencesDialog } from '../dialogs/preferences';
-import { SuiScoreIdentificationDialog } from '../dialogs/scoreId';
-import { SuiPageLayoutDialog } from '../dialogs/pageLayout';
-import { SuiScoreFontDialog } from '../dialogs/fonts';
-import { SuiGlobalLayoutDialog } from '../dialogs/globalLayout';
-import { SuiTransposeScoreDialog } from '../dialogs/transposeScore';
-import { createAndDisplayDialog } from '../dialogs/dialog';
-import { SuiStaffGroupDialog } from '../dialogs/staffGroup';
-import { SuiAudioSettingsDialog } from '../dialogs/audioSettings';
+import { SuiScorePreferencesDialogVue } from '../dialogs/preferences';
+import { SuiScoreIdentificationDialogVue } from '../dialogs/scoreId';
+import { SuiPageLayoutDialogVue } from '../dialogs/pageLayout';
+import { SuiScoreFontDialogVue } from '../dialogs/fonts';
+import { SuiGlobalLayoutDialogVue } from '../dialogs/globalLayout';
+import { SuiTransposeScoreDialogVue } from '../dialogs/transposeScore';
+import { SuiStaffGroupDialogVue } from '../dialogs/staffGroup';
 
 declare var $: any;
 /**
@@ -33,10 +31,6 @@ export class SuiScoreMenu extends SuiMenuBase {
       icon: '',
       text: 'Page Layout',
       value: 'pageLayout'
-    }, {
-      icon: '',
-      text: 'Audio Settings',
-      value: 'audioSettings'
     },  {
       icon: '',
       text: 'System Groups',
@@ -87,7 +81,7 @@ export class SuiScoreMenu extends SuiMenuBase {
     super(params);
   }
   execStaffGroups() {
-    createAndDisplayDialog(SuiStaffGroupDialog,
+    SuiStaffGroupDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -101,7 +95,7 @@ export class SuiScoreMenu extends SuiMenuBase {
     );
   }
   execScoreId() {
-    SuiScoreIdentificationDialog.createAndDisplay(
+    SuiScoreIdentificationDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -114,7 +108,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execPageLayout() {
-    createAndDisplayDialog(SuiPageLayoutDialog,
+    SuiPageLayoutDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -127,7 +121,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execFonts() {
-    SuiScoreFontDialog.createAndDisplay(
+    SuiScoreFontDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -140,7 +134,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execGlobalLayout() {
-    createAndDisplayDialog(SuiGlobalLayoutDialog, 
+    SuiGlobalLayoutDialogVue( 
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -153,7 +147,7 @@ export class SuiScoreMenu extends SuiMenuBase {
       });
   }
   execPreferences() {
-    createAndDisplayDialog(SuiScorePreferencesDialog, 
+    SuiScorePreferencesDialogVue( 
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
@@ -165,26 +159,14 @@ export class SuiScoreMenu extends SuiMenuBase {
         startPromise: this.closePromise
       });
   }
-  execAudioSettings() {
-    createAndDisplayDialog(SuiAudioSettingsDialog, 
-      {
-        completeNotifier: this.completeNotifier!,
-        view: this.view,
-        eventSource: this.eventSource,
-        id: 'audioSettings',
-        ctor: 'SuiAudioSettingsDialog',
-        tracker: this.view.tracker,
-        modifier: null,
-        startPromise: this.closePromise
-      });
-  }
+
   execTransposeScore() {
-    createAndDisplayDialog(SuiTransposeScoreDialog,
+    SuiTransposeScoreDialogVue(
       {
         completeNotifier: this.completeNotifier!,
         view: this.view,
         eventSource: this.eventSource,
-        id: 'scoreIdDialog',
+        id: 'transposeScore',
         ctor: 'SuiTransposeScoreDialog',
         tracker: this.view.tracker,
         modifier: null,
@@ -207,8 +189,6 @@ export class SuiScoreMenu extends SuiMenuBase {
       this.execScoreId();
     } else if (text === 'viewAll') {
       this.view.viewAll();
-    } else if (text === 'audioSettings') {
-      this.execAudioSettings();
     } else if (text === 'transposeScore') {
       this.execTransposeScore();
     }

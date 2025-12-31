@@ -39,4 +39,3 @@ export declare class Qwerty {
     static hideKb(): void;
     static displayKb(): void;
 }
-//# sourceMappingURL=qwerty.d.ts.map

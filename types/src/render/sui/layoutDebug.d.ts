@@ -16,6 +16,7 @@ export declare class layoutDebug {
     static get values(): Record<string, number>;
     static get classes(): Record<number, string>;
     static get codeRegions(): Record<string, number>;
+    static testThrow: boolean;
     static get codeRegionStrings(): string[];
     static mask: number;
     static _textDebug: number[];
@@ -40,4 +41,3 @@ export declare class layoutDebug {
     static addDialogDebug(value: string): void;
     static measureHistory(measure: SmoMeasure, oldVal: string, newVal: any, description: string): void;
 }
-//# sourceMappingURL=layoutDebug.d.ts.map

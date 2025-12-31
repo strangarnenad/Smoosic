@@ -9,6 +9,7 @@ import { SmoMeasure, SmoMeasureParamsSer } from '../data/measure';
 import { smoSerialize } from '../../common/serializationHelpers';
 import { SmoTextGroup, SmoTextGroupContainer } from '../data/scoreText';
 import { SmoSelector } from './selections';
+import { SmoMeasureParams } from 'smoosic';
 /**
  * @category SmoTransform
  */
@@ -172,7 +173,7 @@ export class UndoBuffer {
     if (type === UndoBuffer.bufferTypes.RECTANGLE) {
       // RECTANGLE obj is {score, topLeft, bottomRight}
       // where the last 2 are selectors
-      const measures = [];
+      const measures: SmoMeasureParamsSer[] = [];
       for (let i = obj.topLeft.staff; i <= obj.bottomRight.staff; ++i) {
         for (let j = obj.topLeft.measure; j <= obj.bottomRight.measure; ++j) {
           measures.push(UndoBuffer.serializeMeasure(obj.score.staves[i].measures[j]));

@@ -28,4 +28,3 @@ export declare class PromiseHelpers {
     static promiseChainThen(params: PromiseParameters[]): Promise<void>;
     static emptyPromise(): Promise<any>;
 }
-//# sourceMappingURL=promiseHelpers.d.ts.map

@@ -13,15 +13,23 @@ export interface SuiAudioPlayerParams {
     score: SmoScore;
     audioAnimation: SuiAudioAnimationParams;
 }
+export interface midiFrequency {
+    midinumber: number;
+    detune: number;
+}
+export interface OscAudioData {
+    pitches: midiFrequency[];
+    duration: number;
+    durationPct: number;
+    delay: number;
+}
 /**
  * Parameters used to create just-in-time oscillators
  * @category SuiAudio
  */
 export interface SoundParams {
-    frequencies: number[];
-    duration: number;
-    offsetPct: number;
-    durationPct: number;
+    frequencies: OscAudioData[];
+    overallDuration: number;
     volume: number;
     noteType: string;
     instrument: string;
@@ -34,6 +42,7 @@ export interface SoundParams {
 export interface SoundParamMeasureLink {
     soundParams: Record<number, SoundParams[]>;
     endTicks: number;
+    measureIndex: number;
     next: SoundParamMeasureLink | null;
 }
 /**
@@ -70,8 +79,6 @@ export declare class CuedAudioContexts {
     paramLinkTail: SoundParamMeasureLink | null;
     soundListLength: number;
     playWaitTimer: number;
-    playMeasureIndex: number;
-    cueMeasureIndex: number;
     complete: boolean;
     addToTail(cuedSound: CuedAudioContext): void;
     advanceHead(): CuedAudioContext | null;
@@ -99,21 +106,36 @@ export declare class SuiAudioPlayer {
     score: SmoScore;
     cuedSounds: CuedAudioContexts;
     audioDefaults: import("./oscillator").SuiOscillatorParams;
-    openTies: Record<string, SoundParams | null>;
+    volumeMap: Record<string, number>;
     audioAnimation: SuiAudioAnimationParams;
     constructor(parameters: SuiAudioPlayerParams);
-    getNoteSoundData(measureIndex: number): {
-        endTicks: number;
-        measureNotes: Record<number, SoundParams[]>;
-    };
+    /**
+     * Popuate the SoundData structures used to create the oscillators
+     *  from the notes in this measure.
+     * @param measureIndex
+     * @returns
+     */
+    private getNoteSoundData;
+    /**
+     * Create the audio resources to be played.
+     * @param measureIndex
+     * @returns
+     */
     createCuedSound(measureIndex: number): void;
-    populateSounds(measureIndex: number): void;
-    playSounds(): void;
-    playAfter(milliseconds: number, oscs: SuiOscillator[]): void;
-    startPlayer(measureIndex: number): void;
+    private delaySilence;
+    /**
+     * Get the next sound from the oscillator cue and play it.  Stop if either the
+     * player was stopped, or if we run out of sounds.
+     */
+    playSounds(): Promise<void>;
+    waitForDoneOrFull(): Promise<void>;
+    /**
+     * Create all the audio samples and start the player until done.
+     * @param measureIndex
+     */
+    startPlayer(measureIndex: number): Promise<void>;
     static stopPlayer(): void;
     static get playingInstance(): SuiAudioPlayer | null;
-    static _playChord(oscAr: SuiOscillator[]): Promise<void[]>;
-    play(): void;
+    static _playChord(oscAr: SuiOscillator[]): void;
+    play(): Promise<void>;
 }
-//# sourceMappingURL=player.d.ts.map

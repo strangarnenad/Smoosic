@@ -3,7 +3,6 @@ import { ButtonDefinition, ButtonAction } from './button';
 import { BrowserEventSource } from '../eventSource';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { CompleteNotifier, RibbonLayout } from '../common';
-export { RibbonLayout } from '../common';
 import { SuiTracker } from '../../render/sui/tracker';
 import { SuiMenuManager } from '../menus/manager';
 import { ButtonLabel } from './button';
@@ -60,6 +59,7 @@ export declare class RibbonButtons {
     collapsables: CollapseRibbonControl[];
     collapseChildren: any[];
     constructor(params: SuiRibbonParams);
+    executeQuickButton(button: ButtonDefinition): Promise<void>;
     executeButtonModal(buttonElement: string, buttonData: ButtonDefinition): Promise<void>;
     executeButtonMenu(buttonElement: string, buttonData: ButtonDefinition): void;
     executeButton(buttonElement: string, buttonData: ButtonDefinition): Promise<void>;
@@ -74,4 +74,3 @@ export declare class RibbonButtons {
     handleKeyDown(ev: KeyEvent): Promise<void>;
     display(): void;
 }
-//# sourceMappingURL=ribbon.d.ts.map

@@ -286,7 +286,12 @@ export class SuiScoreViewOperations extends SuiScoreView {
             }
           }
       });
-    });   
+    });
+    // Make sure all the notes in the measure after the change are updated.  
+    // We only need to do this for the displayed score, not the storeScore.
+    SmoSelection.getMeasureList(this.tracker.selections).forEach((ms) => {
+      ms.measure.updateClefChangeNotes();
+    })
   }
   /**
    * Modify the dynamics assoicated with the specific selection
@@ -523,6 +528,20 @@ export class SuiScoreViewOperations extends SuiScoreView {
     // Assume that the view is now set to full score
     this.score.addOrReplaceSystemGroup(staffGroup);
     this.storeScore.addOrReplaceSystemGroup(staffGroup);
+    this.renderer.setDirty();
+    await this.renderer.updatePromise();
+  }
+  async removeStaffGroup(staffGroup: SmoSystemGroup):Promise<void> {
+    this._undoScore('ungroup staves');
+    this.score.removeSystemGroup(staffGroup);
+    this.storeScore.removeSystemGroup(staffGroup);
+    this.renderer.setDirty();
+    await this.renderer.updatePromise();
+  }
+  async clearSystemGroups(): Promise<void>{
+    this._undoScore('clear staff groups');
+    this.score.clearSystemGroups();
+    this.storeScore.clearSystemGroups();
     this.renderer.setDirty();
     await this.renderer.updatePromise();
   }
@@ -1750,9 +1769,15 @@ export class SuiScoreViewOperations extends SuiScoreView {
         nmeasure.measureNumber.measureIndex = pos;
         nmeasure.setActiveVoice(0);
         this.score.addMeasure(pos);
-        this.storeScore.addMeasure(pos);
+        this.storeScore.addMeasure(pos);        
       }
     }
+    const startMeasure = pos - (ix - 1);
+    const startSelector = SmoSelector.default;
+    const endSelector = SmoSelector.default;
+    startSelector.measure = startMeasure;
+    endSelector.measure = pos;
+    this._renderRectangle(startSelector, endSelector);
     this.renderer.setRefresh();
     return this.renderer.updatePromise();
   }

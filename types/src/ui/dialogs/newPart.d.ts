@@ -35,4 +35,3 @@ export declare class SuiNewPartDialog extends SuiDialogAdapterBase<SuiNewPartAda
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=newPart.d.ts.map

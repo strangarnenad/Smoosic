@@ -3,6 +3,7 @@ import { SmoSelection } from '../../smo/xform/selections';
 import { SuiToggleComponent } from './components/toggle';
 import { SuiRockerComponent } from './components/rocker';
 import { DialogDefinition, SuiDialogBase, SuiDialogParams } from './dialog';
+export declare const SuiInsertMeasuresVue: (parameters: SuiDialogParams) => Promise<void>;
 /**
  * Insert some number of measures
  * @category SuiDialog
@@ -17,4 +18,3 @@ export declare class SuiInsertMeasures extends SuiDialogBase {
     get appendCtrl(): SuiToggleComponent;
     populateInitial(): void;
 }
-//# sourceMappingURL=addMeasure.d.ts.map
