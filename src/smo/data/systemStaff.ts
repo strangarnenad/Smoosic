@@ -987,20 +987,20 @@ export class SmoSystemStaff implements SmoObjectParams {
   // After anything that might change the measure numbers, update them iteratively
   numberMeasures() {
     let i: number = 0;
-    let localIndex = 0;
+    let displayMeasure = 0;
     for (i = 0; i < this.measures.length; ++i) {
       const measure = this.measures[i];
       
       if (typeof(this.renumberingMap[i]) === 'number') {
-        localIndex = this.renumberingMap[i];
+        displayMeasure = this.renumberingMap[i];
       } else if (i > 0) {  // Auto-increment the custom numbering, but make sure we don't increment 0
-        localIndex += 1;
+        displayMeasure += 1;
       }
       // since systemIndex is a render-time decision, we don't update it here.
       const systemIndex = measure.measureNumber.systemIndex;
       // If this is the first full measure, call it '1'
       const numberObj: MeasureNumber = {
-        localIndex,
+        displayMeasure,
         measureIndex: i,
         systemIndex,
         staffId: this.staffId

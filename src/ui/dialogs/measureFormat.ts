@@ -3,11 +3,76 @@
 import { SmoMeasure } from '../../smo/data/measure';
 import { SmoMeasureFormat, SmoMeasureFormatNumberAttributes, SmoMeasueFormatBooleanAttributes } from '../../smo/data/measureModifiers';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
-import { DialogDefinition, SuiDialogParams } from './dialog';
+import { DialogDefinition, SuiDialogParams, InstallDialog } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
 import { PromiseHelpers } from '../../common/promiseHelpers';
+import { replaceVueRoot, modalContainerId } from '../common';
+import measureFormatApp from '../../ui/components/dialogs/measureFormat.vue';
+import MeasureFormat from '../../ui/components/dialogs/measureFormat.vue';
 
 declare var $: any;
+
+export const SuiMeasureFormatDialogVue = async (parameters: SuiDialogParams) => {
+  const selection = parameters.view.tracker.selections[0];
+  const measure = selection.measure;
+  let measureCount = 0;
+  if (parameters.view.score.isPartExposed()) {
+    const partInfo = parameters.view.score.staves[0].partInfo;
+    measureCount = partInfo.layoutManager.globalLayout.maxMeasureSystem;
+  } else {
+    measureCount = parameters.view.score.layoutManager?.globalLayout.maxMeasureSystem || 0;
+  }
+  const isPart = parameters.view.score.isPartExposed();
+  const measureFormat = new SmoMeasureFormat(measure.format);
+  let changed = false;
+  const backup = new SmoMeasureFormat(measureFormat);
+
+  // Default the measure index to the first selected measure
+  measureFormat.measureIndex = measure.measureNumber.displayMeasure;
+  const measureNumberCb = async (newIndex: number) => {
+    // Renumber measures to reflect new index
+    if (newIndex !== measure.measureNumber.displayMeasure) {
+      changed = true;
+    }
+    await parameters.view.renumberMeasures(measure.measureNumber.measureIndex, newIndex);
+  }
+  const updateMeasureFormatCb = async (mf: SmoMeasureFormat) => {
+    changed = true;
+    const newValue = new SmoMeasureFormat(mf);
+    // The default index value is 0, so restore to default if unchanged
+    if (mf.measureIndex === measure.measureNumber.displayMeasure) {
+      newValue.measureIndex = 0;
+    }
+    await parameters.view.setMeasureFormat(newValue);
+  }
+  const commitCb = async() => {}
+  const cancelCb = async() => {
+    if (changed) {
+      await parameters.view.setMeasureFormat(backup);
+    }
+  }
+  const rootId = replaceVueRoot(modalContainerId);
+  const appParams = {
+    domId: rootId,
+    measureFormat,
+    isPart,
+    measureNumberCb,
+    commitCb,
+    cancelCb,
+    label: 'Measure Formatting',
+    measureCount,
+    updateMeasureFormatCb
+  }
+  InstallDialog({
+    app: measureFormatApp,
+    appParams,
+    root: rootId,
+    dialogParams: parameters,
+    commitCb,
+    cancelCb
+  });
+
+}
 
 /**
  * @category SuiDialog
@@ -18,11 +83,19 @@ export class SuiMeasureFormatAdapter extends SuiComponentAdapter {
   measure: SmoMeasure;
   renumberIndex: number;
   originalIndex: number;
+  measureCount: number;
   edited: boolean = false;
   constructor(view: SuiScoreViewOperations, measure: SmoMeasure) {
     super(view);
     this.format = measure.format;
-    this.renumberIndex = this.originalIndex = measure.measureNumber.localIndex;
+    this.measureCount = 0;
+    if (this.view.score.isPartExposed()) {
+      const partInfo = this.view.score.staves[0].partInfo;
+      this.measureCount = partInfo.layoutManager.globalLayout.maxMeasureSystem;
+    } else {
+      this.measureCount = this.view.score.layoutManager?.globalLayout.maxMeasureSystem || 0;
+    }
+    this.renumberIndex = this.originalIndex = measure.measureNumber.displayMeasure;
     this.backup = new SmoMeasureFormat(this.format);
     this.measure = measure;
   }

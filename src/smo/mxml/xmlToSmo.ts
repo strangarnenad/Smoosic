@@ -783,7 +783,7 @@ export class XmlToSmo {
       xmlState.formattingManager.updateMeasureFormat(smoMeasure.format);
       smoMeasure.keySignature = xmlState.keySignature.toLowerCase();
       smoMeasure.timeSignature = SmoMeasure.convertLegacyTimeSignature(xmlState.timeSignature);
-      smoMeasure.measureNumber.localIndex = xmlState.measureNumber;
+      smoMeasure.measureNumber.displayMeasure = xmlState.measureNumber;
       smoMeasure.measureNumber.measureIndex = xmlState.measureIndex;
       smoMeasure.measureNumber.staffId = staffData.clefInfo.staffId + xmlState.smoStaves.length;
       const startBarDefs = SmoBarline.defaults;

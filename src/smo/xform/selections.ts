@@ -49,7 +49,7 @@ export class SmoSelector {
     return { staff, measure, voice: 0, tick: 0, pitches: [] };
   }
   static fromMeasure(measure: SmoMeasure) {
-    return SmoSelector.measureSelector(measure.measureNumber.staffId, measure.measureNumber.localIndex);
+    return SmoSelector.measureSelector(measure.measureNumber.staffId, measure.measureNumber.measureIndex);
   }
   // TODO:  tick in selector s/b tickIndex
   static sameNote(sel1: SmoSelector, sel2: SmoSelector): boolean {
@@ -440,7 +440,29 @@ export class SmoSelection {
     }
     return ticks;
   }
+  static nextNoteSelectionIncludeVoice(score: SmoScore, 
+    staffIndex: number, 
+    measureIndex: number, voiceIndex: number, tickIndex: number): SmoSelection | null {
+    const nextTick = tickIndex + 1;
+    const nextVoice = voiceIndex + 1;
+    const nextMeasure = measureIndex + 1;
+    const staff = score.staves[staffIndex];
+    const measure = staff.measures[measureIndex];
+    // If there are ticks left in this voice
+    if (measure.voices[voiceIndex].notes.length > nextTick) {
+      return SmoSelection.noteSelection(score, staffIndex, measureIndex, voiceIndex, nextTick);
+    }
+    // Last tick in voice, try the next voice if there is one
+    if (measure.voices.length > nextVoice) {
+      return SmoSelection.noteSelection(score, staffIndex, measureIndex, nextVoice, 0);
+    }
+    // else, next measure, first voice in the staff if there is one
+    if (staff.measures.length > nextMeasure) {
+      return SmoSelection.noteSelection(score, staffIndex, nextMeasure, 0, 0);
+    }
+    return null;
 
+  }
   // ## nextNoteSelection
   // ## Description:
   // Return the next note in this measure, or the first note of the next measure, if it exists.

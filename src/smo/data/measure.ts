@@ -258,7 +258,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     modifiers: [],
     // bars: [1, 1], // follows enumeration in VF.Barline
     measureNumber: {
-      localIndex: 0,
+      displayMeasure: 0,
       systemIndex: 0,
       measureIndex: 0,
       staffId: 0
@@ -318,7 +318,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
    * Row, column, and custom numbering information about this measure.
    */
   measureNumber: MeasureNumber = {
-    localIndex: 0,
+    displayMeasure: 0,
     systemIndex: 0,
     measureIndex: 0,
     staffId: 0

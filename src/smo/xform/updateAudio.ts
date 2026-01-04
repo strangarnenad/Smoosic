@@ -121,66 +121,69 @@ const setDynamics = (score: SmoScore) => {
   score.staves.forEach((staff) => {
     let dynamic = SmoMusic.dynamicVolumeMap['mp'];
     let overallTick = 0;
-    staff.measures.forEach((mm) => {
-      mm.voices.forEach((voice, vix: number) => {
-        let selection = SmoSelection.noteSelection(score, 
-            staff.staffId, mm.measureNumber.localIndex, vix, 0
-            );
-        // assign volume based on dynamic markings alone
-        let measureTick = 0;
-        while (selection) {
-          const note = selection.note;
-          const curTick = overallTick + measureTick;
-          if (note) {
-            if (!note?.isRest()) {
-              if (!normalizationNotes[curTick]) {
-                normalizationNotes[curTick] = [];
-              }
-              normalizationNotes[curTick].push(note!);
+    const mm = staff.measures[0];
+    mm.voices.forEach((voice, vix: number) => {
+      // selection is for dynamics text, selection 2 is for dynamic lines (cresc. etc)
+      let selection = SmoSelection.noteSelection(score, 
+          staff.staffId, mm.measureNumber.measureIndex, vix, 0
+          );
+      let selection2 = SmoSelection.noteSelection(score, 
+          staff.staffId, mm.measureNumber.measureIndex, vix, 0
+          );
+      // assign volume based on dynamic markings alone
+      let measureTick = 0;
+      while (selection) {
+        const note = selection.note;
+        const curTick = overallTick + measureTick;
+        if (note) {
+          if (!note?.isRest()) {
+            if (!normalizationNotes[curTick]) {
+              normalizationNotes[curTick] = [];
             }
-            note.audioData.volume.splice(0);
-            if (note.isRest()) {
-              note.audioData.volume = [0];
+            normalizationNotes[curTick].push(note!);
+          }
+          note.audioData.volume.splice(0);
+          if (note.isRest()) {
+            note.audioData.volume = [0];
+          } else {
+            const curDynamics = note.getModifiers('SmoDynamicText');
+            if (curDynamics.length > 0) {
+              note.audioData.volume = curDynamics.map((dd) => 
+                SmoMusic.dynamicVolumeMap[(dd as SmoDynamicText).text]);
+              dynamic = note.audioData.volume[0];
             } else {
-              const curDynamics = note.getModifiers('SmoDynamicText');
-              if (curDynamics.length > 0) {
-                note.audioData.volume = curDynamics.map((dd) => 
-                  SmoMusic.dynamicVolumeMap[(dd as SmoDynamicText).text]);
-                dynamic = note.audioData.volume[0];
-              } else {
-                note.audioData.volume.push(dynamic);
-              }
-              const articulations: SmoArticulation[] = note.getArticulations();
-              const marcato = 
-                articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.marcato) >= 0;
-              const accent = 
-                articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.accent) >= 0;
-              for (let av = 0; av < note.audioData.volume.length; ++av) {
-                if (marcato) {
-                  note.audioData.volume[av] += 0.1;
-                } else if (accent) {
-                  note.audioData.volume[av] += 0.1;
-                }
+              note.audioData.volume.push(dynamic);
+            }
+            const articulations: SmoArticulation[] = note.getArticulations();
+            const marcato = 
+              articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.marcato) >= 0;
+            const accent = 
+              articulations.findIndex((xx) => xx.articulation === SmoArticulation.articulations.accent) >= 0;
+            for (let av = 0; av < note.audioData.volume.length; ++av) {
+              if (marcato) {
+                note.audioData.volume[av] += 0.1;
+              } else if (accent) {
+                note.audioData.volume[av] += 0.1;
               }
             }
           }
-          const selector = selection.selector;
-          selection = SmoSelection.nextNoteSelection(score,
-            selector.staff, selector.measure, selector.voice, selector.tick);
-          measureTick += note? note.tickCount: 0;
         }
-        selection =SmoSelection.noteSelection(score, 
-            staff.staffId, mm.measureNumber.localIndex, vix, 0
-            );
-        // adjust for hairpin/crescendo etc.
-        while (selection) {
-          assignHairpinDynamics(score, selection);
-          assignTextBracketDynamics(score, selection);
-          const selector = selection.selector;
-          selection = SmoSelection.nextNoteSelection(score,
-            selector.staff, selector.measure, selector.voice, selector.tick);
-        }
-      });
+        const selector = selection.selector;
+        selection = SmoSelection.nextNoteSelectionIncludeVoice(score,
+          selector.staff, selector.measure, selector.voice, selector.tick);
+        measureTick += note? note.tickCount: 0;
+      }
+      selection2 = SmoSelection.noteSelection(score, 
+          staff.staffId, mm.measureNumber.measureIndex, vix, 0
+          );
+      // adjust for hairpin/crescendo etc.
+      while (selection2) {
+        assignHairpinDynamics(score, selection2);
+        assignTextBracketDynamics(score, selection2);
+        const selector = selection2.selector;
+        selection2 = SmoSelection.nextNoteSelectionIncludeVoice(score,
+          selector.staff, selector.measure, selector.voice, selector.tick);
+      }
       overallTick += mm.getMaxTicksVoice();
     });
   });
@@ -330,7 +333,7 @@ export const PopulateAudioData = (score: SmoScore, roadMap: ScoreRoadMapBuilder)
             const voice = mm.voices[v];
             for (let n = 0; n < voice.notes.length; ++n) {
               let selection = SmoSelection.noteSelection(score, 
-                  staff.staffId, mm.measureNumber.localIndex, v, n
+                  staff.staffId, mm.measureNumber.measureIndex, v, n
                   );
               if (selection && selection.note) {
                 const note = selection.note;
