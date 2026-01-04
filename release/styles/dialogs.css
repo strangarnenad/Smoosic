@@ -50,25 +50,29 @@
 .me-n4 {
   margin-right:-1rem;
 }
-.number-input-column-div {
+.row .number-input-column-div,
+.attributeDialog .number-input-column-div {
   margin-right: -1rem;
   flex: 0 0 auto;
   width: 25%;
 }
-.number-input-label-div {
+.row .number-input-label-div,
+.attributeDialog .number-input-label-div {
   margin-left: -1rem;
   text-align: left;
   flex: 0 0 auto;
   width: 25%;
 }
-.checkbox-input-column-div {
+.row .checkbox-input-column-div,
+.attributeDialog .checkbox-input-column-div {
   margin-right: -1rem;
   flex: 0 0 auto;
   width: 25%;
   text-align:end;
   padding-right: 3rem;
 }
-.checkbox-input-label-div {
+.row .checkbox-input-label-div,
+.attributeDialog .checkbox-input-label-div {
   margin-left: -1rem;
   text-align: left;
   flex: 0 0 auto;
