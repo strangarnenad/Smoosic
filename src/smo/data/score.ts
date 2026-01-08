@@ -1255,7 +1255,7 @@ export class SmoScore {
     if (toAdd) {
       this.textGroups.push(textGroup);
       // If this is attached to music, push the group to the part
-      if (textGroup.attachToSelector && selector) {
+      if (textGroup.attachToSelector && selector) {        
         const stave = this.staves[selector.staff];
         if (stave.partInfo.preserveTextGroups) {
           const partGroup = SmoTextGroup.deserializePreserveId(textGroup);

@@ -8,7 +8,6 @@ import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
 import { PromiseHelpers } from '../../common/promiseHelpers';
 import { replaceVueRoot, modalContainerId } from '../common';
 import measureFormatApp from '../../ui/components/dialogs/measureFormat.vue';
-import MeasureFormat from '../../ui/components/dialogs/measureFormat.vue';
 
 declare var $: any;
 
@@ -28,11 +27,13 @@ export const SuiMeasureFormatDialogVue = async (parameters: SuiDialogParams) => 
   const backup = new SmoMeasureFormat(measureFormat);
 
   // Default the measure index to the first selected measure
-  measureFormat.measureIndex = measure.measureNumber.displayMeasure;
+  let displayMeasure = measure.measureNumber.displayMeasure;
+  const initialDisplayMeasure = measure.measureNumber.displayMeasure;
   const measureNumberCb = async (newIndex: number) => {
     // Renumber measures to reflect new index
     if (newIndex !== measure.measureNumber.displayMeasure) {
       changed = true;
+      displayMeasure = newIndex;
     }
     await parameters.view.renumberMeasures(measure.measureNumber.measureIndex, newIndex);
   }
@@ -45,7 +46,12 @@ export const SuiMeasureFormatDialogVue = async (parameters: SuiDialogParams) => 
     }
     await parameters.view.setMeasureFormat(newValue);
   }
-  const commitCb = async() => {}
+  const commitCb = async() => {
+    if (changed) {
+      parameters.view.resetPartView();
+      await parameters.view.refreshViewport();
+    }
+  }
   const cancelCb = async() => {
     if (changed) {
       await parameters.view.setMeasureFormat(backup);
@@ -56,6 +62,7 @@ export const SuiMeasureFormatDialogVue = async (parameters: SuiDialogParams) => 
     domId: rootId,
     measureFormat,
     isPart,
+    initialDisplayMeasure,
     measureNumberCb,
     commitCb,
     cancelCb,

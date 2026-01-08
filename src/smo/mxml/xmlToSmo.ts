@@ -780,7 +780,7 @@ export class XmlToSmo {
       smoMeasure.format.systemBreak = XmlHelpers.isSystemBreak(measureElement);
       smoMeasure.tempo = xmlState.tempo;
       smoMeasure.format.proportionality = XmlToSmo.customProportionDefault;
-      xmlState.formattingManager.updateMeasureFormat(smoMeasure.format);
+      xmlState.formattingManager.updateMeasureFormat(smoMeasure.format, xmlState.measureNumber);
       smoMeasure.keySignature = xmlState.keySignature.toLowerCase();
       smoMeasure.timeSignature = SmoMeasure.convertLegacyTimeSignature(xmlState.timeSignature);
       smoMeasure.measureNumber.displayMeasure = xmlState.measureNumber;

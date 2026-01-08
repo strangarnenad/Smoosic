@@ -274,8 +274,8 @@ export class SmoFormattingManager extends SmoScoreModifierBase {
    * Update the measure format for the measure at the given index
    * @param format 
    */
-  updateMeasureFormat(format: SmoMeasureFormat) {
-    this.measureFormats[format.measureIndex] = format;
+  updateMeasureFormat(format: SmoMeasureFormat, measureIndex: number) {
+    this.measureFormats[measureIndex] = format;
   }
   /**
    * Update the measure format based on the format of a given measure
@@ -293,7 +293,10 @@ export class SmoFormattingManager extends SmoScoreModifierBase {
     const keys = Object.keys(this.measureFormats);
     keys.forEach((key: any) => {
       if (!this.measureFormats[key].isDefault) {
-        rv.push(this.measureFormats[key].serialize());
+        const mf = this.measureFormats[key];
+        // Keep track of where this formatting went in the score.
+        mf.measureIndex = parseInt(key, 10);
+        rv.push(mf.serialize());
       }
     });
     return rv;

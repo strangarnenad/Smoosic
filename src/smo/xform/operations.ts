@@ -47,9 +47,9 @@ export class SmoOperation {
       return;
     }
     score.staves.forEach((staff: SmoSystemStaff) => {
-      value.formatMeasure(staff.measures[selection.selector.measure]);
+      staff.measures[selection.selector.measure].format = new SmoMeasureFormat(value);
     });
-    score.formattingManager.updateMeasureFormat(value);
+    score.formattingManager.updateMeasureFormat(value, selection.selector.measure);
   }
 
   static addKeySignature(score: SmoScore, selection: SmoSelection, keySignature: string) {

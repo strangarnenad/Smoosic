@@ -135,6 +135,11 @@ export class SuiScoreViewOperations extends SuiScoreView {
     const altSelector = JSON.parse(JSON.stringify(selector)); // for full score
     const isPartExposed = this.isPartExposed();
     const partInfo = this.score.staves[0].partInfo;
+
+    // If this text was attached to a staff that is not in the part, ignore the update
+    if (newVersion.selector && newVersion.selector.staff >= this.score.staves.length) {
+      return;
+    }
     // Back up the original score text
     let ogtg = this.storeScore.textGroups.find((tg) => tg.attrs.id === newVersion.attrs.id);
     if (isPartExposed && partInfo.preserveTextGroups) {
@@ -1967,6 +1972,16 @@ export class SuiScoreViewOperations extends SuiScoreView {
       SmoOperation.setMeasureFormat(this.score, m, format);
       if (isPart) {
         m.staff.partInfo.measureFormatting[m.measure.measureNumber.measureIndex] = new SmoMeasureFormat(format);
+        const alt = this._getEquivalentSelection(m);
+        SmoOperation.setMeasureFormat(this.storeScore, alt!, format);
+      } else {
+        // If we are seeing some set of staves that is not a part, make sure the whole column in the 
+        // score is updated.
+        const firstRow = SmoSelection.selectionFromSelector(
+          this.storeScore, {
+            staff: 0, measure: m.selector.measure, voice: m.selector.voice, tick: m.selector.tick, pitches: [] }
+        )
+        SmoOperation.setMeasureFormat(this.storeScore, firstRow!, format);
       }
       const alt = this._getEquivalentSelection(m);
       SmoOperation.setMeasureFormat(this.storeScore, alt!, format);
@@ -2005,9 +2020,9 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this._renderRectangle(fromSelector, toSelector);
     return this.renderer.updatePromise();
   }
-  renumberMeasures(measureIndex: number, localIndex: number) {
-    this.score.updateRenumberingMap(measureIndex, localIndex);
-    this.storeScore.updateRenumberingMap(measureIndex, localIndex);
+  renumberMeasures(measureIndex: number, displayIndex: number) {
+    this.score.updateRenumberingMap(measureIndex, displayIndex);
+    this.storeScore.updateRenumberingMap(measureIndex, displayIndex);
     const mmsel = SmoSelection.measureSelection(this.score, 0, measureIndex);
     if (mmsel) {
       this._renderChangedMeasures([mmsel]);

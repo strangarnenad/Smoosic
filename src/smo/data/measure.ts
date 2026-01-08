@@ -537,8 +537,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     const params: Partial<SmoMeasureParamsSer> = { "ctor": "SmoMeasure" };
     let ser = true;
     smoSerialize.serializedMergeNonDefault(SmoMeasure.defaults, SmoMeasure.serializableAttributes, this, params);
-    // Don't serialize default things
-    const fmt = this.format.serialize();
+
     // measure number can't be defaulted b/c tempos etc. can map to default measure
     params.measureNumber = JSON.parse(JSON.stringify(this.measureNumber));
     params.tupletTrees = [];

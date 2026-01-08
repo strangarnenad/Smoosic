@@ -85,7 +85,10 @@ export interface SmoMeasureFormatParams {
    */
   padAllInSystem: boolean | null,
   /**
-   * renumber measures
+   * When serialized, the measure index of the original measure.  
+   * In the score it is not used because the measure index is in the 
+   * measure itself. Note: this is NOT the display measure, even though
+   * the UI might set measure formatting and numbering together.
    */
   measureIndex: number | null,
 }
@@ -197,10 +200,6 @@ export class SmoMeasureFormat extends SmoMeasureModifierBase implements SmoMeasu
     SmoMeasureFormatBooleanKeys.forEach((param) => {
       this[param] = parameters[param] ? parameters[param] : (def as any)[param];
     });
-  }
-  formatMeasure(mm: ISmoMeasureFormatMgr) {
-    mm.format = new SmoMeasureFormat(this);
-    mm.format.measureIndex = mm.measureNumber.measureIndex;
   }
   serialize(): SmoMeasureFormatParamsSer {
     const params: Partial<SmoMeasureFormatParamsSer> = { ctor: 'SmoMeasureFormat' };
