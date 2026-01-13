@@ -20,7 +20,8 @@ li.dropdown-item span.icon-bravura {
 .icon-barlineTick:before {content: "\e039";}
 .icon-breathMarkTick:before {content: "\e4cf";}
 .icon-segno:before {content: "\e047";}
-.icon-coda:before {content: "\e048";}
+.icon-bravura.icon-segno:before {content: "\e047";}
+.icon-bravura.icon-coda:before {content: "\e048";}
 .icon-gClef:before {content: "\e050";}
 .icon-cClef:before {content: "\e05c";}
 .icon-fClef:before {content: "\e062";}

@@ -141,7 +141,7 @@ h1 {
 }
 
 .dom-container {
-	background-color:#999;
+	background: color #99a;;
 }
 .bold-italic {
   font-weight: bold;
@@ -267,7 +267,7 @@ body.printing .media div.d-flex
         padding-top: 0;
         position:relative;
         padding-left: 0;
-        background: #999;
+        background: #99a;
     }
     iframe {
         border:0;
@@ -310,14 +310,14 @@ body.printing .printFrame {
   .workspace {
     padding-top: 2px;
     position:relative;
-    background: #999;
+    background: #99a;
     display:flex;
     flex-flow:row wrap;
   }
 }
 
 .musicRelief {
-	background:#999;
+	background:#99a;
 
 }
 .media {

@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { ref, Ref, watch, reactive } from 'vue';
-import selectComp from './select.vue';
 import numberInputApp from './numberInput.vue';
 import collapsableRow from './collapsableRow.vue';
-import { SelectOption } from '../../common';
 import {
   SmoMeasureFormat, SmoMeasureFormatNumberAttributes, SmoMeasureFormatNumberKeys
 } from '../../../smo/data/measureModifiers';

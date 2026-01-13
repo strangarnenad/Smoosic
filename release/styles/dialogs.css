@@ -51,28 +51,28 @@
   margin-right:-1rem;
 }
 .top-4 {
-  top: 2rem;
+  top: 2rem !important;
 }
 .top-3 {
-  top: 1.5rem;
+  top: 1.5rem !important;
 }
 .top-2 {
-  top: 1rem;
+  top: 1rem !important;
 }
 .top-1 {
-  top: 0.5rem;
+  top: 0.5rem !important;
 }
 .top-n4 {
-  top: -2rem;
+  top: -2rem !important;
 }
 .top-n3 {
-  top: -1.5rem;
+  top: -1.5rem !important;
 }
 .top-n2 {
-  top: -1rem;
+  top: -1rem !important;
 }
 .top-n1 {
-  top: -0.5rem;
+  top: -0.5rem !important;
 }
 .row .number-input-column-div,
 .attributeDialog .number-input-column-div {

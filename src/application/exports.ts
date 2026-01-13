@@ -35,14 +35,13 @@ import { SuiComponentAdapter, SuiDialogAdapterBase } from '../ui/dialogs/adapter
 import { SuiGraceNoteDialog } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
 import { SuiTransposeScoreDialogVue} from '../ui/dialogs/transposeScore';
-import { SuiMeasureDialog } from '../ui/dialogs/measureFormat';
+import { SuiMeasureFormatDialogVue } from '../ui/dialogs/measureFormat';
 import { SuiInsertMeasuresVue } from '../ui/dialogs/addMeasure';
 import { SuiInstrumentDialogVue } from '../ui/dialogs/instrument';
 import { SuiTimeSignatureDialog } from '../ui/dialogs/timeSignature';
 import { SuiTempoDialog } from '../ui/dialogs/tempo';
 import { SuiNoteHeadDialog } from '../ui/dialogs/noteHead';
-import { SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
-  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from '../ui/dialogs/endings';
+import { SuiEndingsDialogVue } from '../ui/dialogs/endings';
 import { SuiScoreIdentificationDialogVue } from '../ui/dialogs/scoreId';
 import { SuiScorePreferencesDialogVue } from '../ui/dialogs/preferences';
 import { SuiPageLayoutDialogVue } from '../ui/dialogs/pageLayout';
@@ -357,7 +356,7 @@ export const Smo = {
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
   SuiScoreViewDialogVue, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialogVue, 
   SuiTransposeScoreDialogVue,
-  SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureDialog, SuiInsertMeasuresVue,
+  SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureFormatDialogVue, SuiInsertMeasuresVue,
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
   SuiHairpinAttributesDialog, SuiStaffGroupDialogVue, helpModal,
@@ -366,8 +365,7 @@ export const Smo = {
   SuiArticulationDialogVue, 
   SuiMicrotoneDialogVue,
   SuiNoteHeadDialog,    
-  SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
-  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,  
+  SuiEndingsDialogVue,  
   SuiFileSaveDialog, SuiPrintDialog,
   SuiDialogBase, createAndDisplayDialog,  SuiFileUploadDialog,
   SuiPitchDialogVue,

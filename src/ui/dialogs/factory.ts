@@ -15,7 +15,6 @@ import { SuiTextBracketDialog } from './textBracket';
 import { SuiArpeggioDialog } from './arpeggio';
 import { SuiDialogNotifier, SmoDynamicComponentCtor, SuiBaseComponentParams } from './components/baseComponent';
 import { SuiButtonComponent, SuiButtonComposite, SuiButtonCompositeParams, SuiButtonComponentParams } from './components/button';
-import { SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from './endings';
 import { CheckboxDropdownComponent, CheckboxDropdownComponentParams } from './components/checkdrop';
 import { SuiDragText } from './components/dragText';
 import { SuiDropdownComponent, SuiDropdownComponentParams, SuiDropdownCompositeParams, SuiDropdownComposite } from './components/dropdown';
@@ -154,10 +153,4 @@ export const initDialogConstructors = () => {
   (dialog: SuiDialogNotifier, params: SuiToggleCompositeParams) => new SuiToggleComposite(dialog, params);
   SmoDynamicComponentCtor['SuiTreeComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiTreeComponentParams) => new SuiTreeComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiEndBarButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiEndBarButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiStartBarButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiStartBarButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiRepeatSymbolButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiRepeatSymbolButtonComponent(dialog, params);
 }

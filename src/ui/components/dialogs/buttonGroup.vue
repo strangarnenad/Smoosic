@@ -47,6 +47,7 @@ const ariaPressed = (button: DialogButtonDefinition) => {
           
           <span v-if="btnDef.icon.length" :class="getIconClasses(btnDef)"></span>
           <span v-if="btnDef.hotkey" class="font-monospace" :class="{ 'ms-1': btnDef.icon.length > 0 }">{{ btnDef.hotkey }}</span>
+          <span v-if="btnDef.icon.length === 0">{{  btnDef.label }}</span>
         </button>
       </div>
     </div>

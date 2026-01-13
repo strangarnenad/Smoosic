@@ -1,6 +1,6 @@
 :root {
-  --button-border-color: #229111;
-  --button-shadow-color: #798;
+  --button-border-color: #221191;
+  --button-shadow-color: #346;
 }
 
 .control-bar {
@@ -35,12 +35,6 @@ body.refresh-1 .refresh-button span.icon-refresh {
 body.refresh-1 .refresh-button  {
   background: #deeedd;
 }
-.refresh-button span.icon-refresh{
-  position:absolute;
-  top:0.5rem;
-  left:1.5rem;
-}
-
 .ribbonButtonContainer[data-group="debug"] {
     display:none;
 }
@@ -70,14 +64,7 @@ div.ribbonButtonContainer.expanded {
 	margin-right:5px;
 }
 
-.controls-left {
-	background-color: #fff;
-	display:flex;
-  border-radius:0.25rem;
-  flex: 0 1 auto;
-	flex-direction:column;
-  justify-content:flex-start;
-}
+
 
 .controls-left .ribbonButtonContainer {
   display:flex;
@@ -87,10 +74,7 @@ button.menu-button .left-text,
 button.menu-button .text-span {
   display: inline-block;
 }
-button.menu-button .text-span  {
-  text-align: left;
-  min-width: 70px;
-}
+
 button.menu-button .right-text{
   display: none;
 }
@@ -121,13 +105,117 @@ body.alt-key button.menu-button .right-text{
   padding: 0 10px;
 }
 .controls-left .menu-icon {
+  text-align:right;
+}
+.left-text {
+  text-align:left;
+}
+.controls-left {
+	background-color: #fff;
+	display:flex;
+  border-radius:0.25rem;
+  flex: 0 1 auto;
+	flex-direction:column;
+  justify-content:flex-start;
+  overflow: auto;
+}
+button.text-icon .left-text .text-span{
+  padding-right: 0.3rem;
+  font-size: 1.3rem;
+}
+button.text-icon .left-text .icon-smo {
+  padding-left: 0.3rem;
+  font-size:1.3rem;
+}
+.ribbonButtonContainer button.drop-down.btn {
+  position:static;
+  max-width: 10rem;
+}
+.ribbonButtonContainer button.text-icon.btn {
+  max-width: 8rem;
+}
+.ribbonButtonContainer button.icon.btn {
+  max-width: 4rem;
+}
+.ribbonButtonContainer[data-group="quickButtons"] {
+    margin-left:10px;
+    display: flex;
+    flex-flow: row wrap;
+    background-color: transparent;
+}
+.ribbonButtonContainer[data-group="quickButtons"] button {
+  background-color:var(--bs-body-bg);
+}
+@media (width >= 1745px) {
+  .controls-left {
+    height: 80vh;
+  }
+.controls-left .menu-icon {
   min-width: 100px;
   display: inline-block;
+  font-size: 1.25rem;
 }
+  button.menu-button .text-span  {
+    text-align: left;
+    min-width: 70px;
+  }
+}@media (1745px > width >= 1536px) {
+  .controls-left {
+    height: 80vh;
+  }
+  .controls-left .menu-icon {
+    min-width: 40px;
+  }
+  button.menu-button .text-span  {
+    text-align: left;
+    min-width: 70px;
+  }
+}
+@media (1536px > width >= 1300px) {
+  .controls-left {
+    height: 70vh;
+  }
+  .controls-left .menu-icon {
+    min-width: auto;
+    position:absolute;
+    right:1rem;
+  }
+  button.menu-button .text-span  {
+    text-align: left;
+    min-width: auto;
+  }
+}
+@media (width < 1300px) {
+  .controls-left {
+    height: 70vh;
+  }
+  .controls-left .menu-icon {
+    min-width: auto;
+    position:absolute;
+    right:1rem;
+  }
+  button.menu-button .text-span  {
+    text-align: left;
+    min-width: auto;
+  }
+  button.text-icon .left-text .text-span{
+    padding-right: 0.3rem;
+    font-size: 1rem;
+    display: inline-block;
+    padding-top:0.25rem;
+  }
+  button.text-icon .left-text .icon-bravura.menu-icon {
+    font-size:2rem;
+  }
+}
+
 .controls-top button.button-wide {
   font-size: 1em;
 }
-
+#controls-left .btn-group-vertical button.btn.menu-button {
+  height: 3rem;
+  text-align: left;
+}
 #controls-left .nav-item {
   min-width: 150px;
 }
@@ -193,12 +281,7 @@ button.addChord .left-text .icon {
 button#MicrotoneButtons  {
     width:35px;
 }
-.ribbonButtonContainer[data-group="quickButtons"] {
-    margin-left:10px;
-    display: flex;
-    flex-flow: row wrap;
-    background-color: var(--bs-body-bg);
-}
+
 .controls-top .titleText {
   padding-top:0.3rem;
   font-style: italic;
@@ -210,8 +293,8 @@ button#MicrotoneButtons  {
 .btn:hover,
 .btn-group-vertical.controls-left .btn:hover {
     color: #fff;
-    background-color: #213529;
-    border-color: #213529;
+    background-color: #212935;
+    border-color: #212935;
 }
 .btn-group-vertical.controls-left .btn,
 .ribbonButtonContainer .btn {
@@ -254,14 +337,7 @@ button.text-icon .icon-bravura {
 button.text-icon .left-text {
   position:relative;
 }
-button.text-icon .left-text .text-span{
-  padding-right: 0.3rem;
-  font-size: 1.3rem;
-}
-button.text-icon .left-text .icon-smo {
-  padding-left: 0.3rem;
-  font-size:1.3rem;
-}
+
 .ribbonButtonContainer[data-group="quickButtons"] .button-wide button {
   font-size: 1.2em;
 }
@@ -464,9 +540,7 @@ button.hover-text .ribbon-button-hotkey {
 #ToggleAccidental .ribbon-button-hotkey,#ToggleCourtesy .ribbon-button-hotkey  {
 	font-size:0.7em;
 }
-#controls-left .btn-group-vertical button.btn.menu-button {
-  height: 3rem;
-}
+
 .controls-left button.icon span.icon:before,
 .controls-top button.icon span.icon:before{
 	font-size:1.6em;

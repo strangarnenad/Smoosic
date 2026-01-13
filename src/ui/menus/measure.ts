@@ -1,7 +1,6 @@
 import { SuiMenuBase, SuiMenuParams, MenuDefinition,  SuiConfiguredMenuOption, 
-  customizeMenuOptionsFcn, SuiConfiguredMenu } from './menu';
-import { createAndDisplayDialog } from '../dialogs/dialog';
-import { SuiEndingsDialog } from '../dialogs/endings';
+  SuiConfiguredMenu } from './menu';
+import { SuiEndingsDialogVue } from '../dialogs/endings';
 import { SuiInsertMeasuresVue } from '../dialogs/addMeasure';
 import { SuiMeasureFormatDialogVue } from '../dialogs/measureFormat';
 import { SmoMeasureFormat } from '../../smo/data/measureModifiers';
@@ -69,7 +68,7 @@ const addMeasureMenuOption: SuiConfiguredMenuOption = {
  */
 const endingsMeasureMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiEndingsDialog, {
+    SuiEndingsDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,

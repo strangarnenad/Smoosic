@@ -37,7 +37,7 @@ onMounted(() => {
           </div>
           <div class="key-right-ctrl"></div>
         </div>
-        <div class="col-6" id="controls-top">
+        <div class="col-8" id="controls-top">
         </div>
       </div>
       <div class="media" id="media">
