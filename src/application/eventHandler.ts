@@ -331,7 +331,6 @@ export class SuiEventHandler implements ModalEventHandler {
       caret.handleMouseClick(ev);
       return;
     } else {
-      console.log('MOUSE CLICK');
       this.view.tracker.selectSuggestion(dataCopy);
       var modifier = this.view.tracker.getSelectedModifier();
       if (modifier) {
@@ -348,7 +347,6 @@ export class SuiEventHandler implements ModalEventHandler {
 
   async mouseDown(ev: any) {
     if (this.noteEntryCaret && this.noteEntryCaret.containsPoint(ev)) {
-      console.log('EventHandler::Mouse down inside note entry caret');
       this.noteEntryCaret.handleMouseDown(ev);
     }
   }

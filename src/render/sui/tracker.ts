@@ -806,35 +806,15 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
   }
 
   highlightSelection() {
-    console.log('HIGHLIGHT SELECTION!!!');
     let i = 0;
     let prevSel: SmoSelection | null = null;
     let curBox: SvgBox = SvgBox.default;
     this.idleTimer = Date.now();
-    // const grace = this.getSelectedGraceNotes();
-    // If this is not a note with grace notes, logically unselect the grace notes
-    // if (grace && grace.length && grace[0].selection && this.selections.length) {
-    //   if (!SmoSelector.sameNote(grace[0].selection.selector, this.selections[0].selector)) {
-    //     this.clearModifierSelections();
-    //   } else {
-    //     this._highlightModifier();
-    //     return;
-    //   }
-    // }
     // If there is a race condition with a change, avoid referencing null note
     if (!this.selections[0].note) {
       return;
     }
     const note = this.selections[0].note as SmoNote;
-    // if (this.pitchIndex >= 0 && this.selections.length === 1 &&
-    //   this.pitchIndex < note.pitches.length) {
-    //   this._highlightPitchSelection(note, this.pitchIndex);
-    //   this._highlightActiveVoice(this.selections[0]);
-    //   return;
-    // }
-    // this.removePitchSelection();
-    // this.pitchIndex = -1;
-
     // Reset pitch index if not in a valid pitch selection scenario
     if (this.pitchIndex < 0 || this.selections.length !== 1 || this.pitchIndex >= note.pitches.length) {
       this.pitchIndex = -1;

@@ -341,7 +341,7 @@ export abstract class SuiMapper {
 
   // ### _setModifierBoxes
   // Create the DOM modifiers for the lyrics and other modifiers
-  _setModifierBoxes(measure: SmoMeasure, vxMeasure: VxMeasure) {
+  _setModifierBoxes(measure: SmoMeasure) {
     const context = this.renderer.pageMap.getRenderer(measure.svg.logicalBox);
     measure.voices.forEach((voice: SmoVoice) => {
       voice.notes.forEach((smoNote: SmoNote) =>  {
@@ -405,7 +405,7 @@ export abstract class SuiMapper {
   /**
    * This is the logic that stores the screen location of music after it's rendered
    */
-  mapMeasure(staff: SmoSystemStaff, measure: SmoMeasure, vxMeasure: VxMeasure, printing: boolean) {
+  mapMeasure(staff: SmoSystemStaff, measure: SmoMeasure, printing: boolean) {
     let voiceIx = 0;
     let selectedTicks = 0;
 
@@ -419,7 +419,7 @@ export abstract class SuiMapper {
     if (!measure.svg.logicalBox) {
       return;
     }
-    this._setModifierBoxes(measure, vxMeasure);
+    this._setModifierBoxes(measure);
     const timestamp = new Date().valueOf();
     // Keep track of any current selections in this measure, we will try to restore them.
     const sels = this._copySelectionsByMeasure(staff.staffId, measure.measureNumber.measureIndex);
