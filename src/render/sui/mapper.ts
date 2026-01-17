@@ -340,8 +340,6 @@ export abstract class SuiMapper {
   }
 
   // ### _setModifierBoxes
-  // todo: rename this function
-  // potential name _updateNoteAndModifierPositions
   // Create the DOM modifiers for the lyrics and other modifiers
   _setModifierBoxes(measure: SmoMeasure, vxMeasure: VxMeasure) {
     const context = this.renderer.pageMap.getRenderer(measure.svg.logicalBox);
