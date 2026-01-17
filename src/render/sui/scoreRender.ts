@@ -259,14 +259,14 @@ export class SuiScoreRender {
             modifier.logicalBox = pageContext.offsetBbox(modifier.element);
           }
         });
-      }
-      // unit test codes don't have tracker.
-      if (this.measureMapper) {
-        const tmpStaff: SmoSystemStaff | undefined = this.score!.staves.find((ss) => ss.staffId === smoMeasure.measureNumber.staffId);
-        if (tmpStaff) {
-          this.measureMapper.mapMeasure(tmpStaff, smoMeasure, printing);
+        // unit test codes don't have tracker.
+        if (this.measureMapper) {
+          const tmpStaff: SmoSystemStaff | undefined = this.score!.staves.find((ss) => ss.staffId === smoMeasure.measureNumber.staffId);
+          if (tmpStaff) {
+            this.measureMapper.mapMeasure(tmpStaff, smoMeasure, vxMeasure, printing);
+          }
         }
-      }  
+      }
     });
     modifiers.forEach((modifier) => {
       if (modifier.element) {
@@ -372,7 +372,8 @@ export class SuiScoreRender {
       this.lyricsToOffset.forEach((vv) => {
         vv.updateLyricOffsets();
       });
-      this.measuresToMap = [];
+      // Don't clear measuresToMap here - keep it available for querying
+      // It will be cleared at the start of the next render pass in layout()
       this.lyricsToOffset = new Map();
       // We pro-rate the background render timer on how long it takes
       // to actually render the score, so we are not thrashing on a large

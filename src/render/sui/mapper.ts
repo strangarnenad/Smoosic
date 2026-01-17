@@ -12,6 +12,8 @@ import { SvgBox } from '../../smo/data/common';
 import { SmoNote } from '../../smo/data/note';
 import { SmoScore, SmoModifier } from '../../smo/data/score';
 import { SvgPageMap } from './svgPageMap';
+import { VxMeasure } from '../vex/vxMeasure';
+import {SuiScoreRender} from "./scoreRender";
 
 /**
  * DI information about renderer, so we can notify renderer and it can contain
@@ -32,7 +34,8 @@ export interface SuiRendererBase {
   passState: number,
   renderPromise(): Promise<any>,
   addToReplaceQueue(mm: SmoSelection[]): void,
-  renderElement: Element
+  renderElement: Element,
+  renderer: SuiScoreRender
 }
 /**
  * used to perform highlights in the backgroundd
@@ -68,6 +71,7 @@ export abstract class SuiMapper {
   selectionRects: Record<number, OutlineInfo[]> = {};
   outlines: Record<string, OutlineInfo> = {};
   mapping: boolean = false;
+
   constructor(renderer: SuiRendererBase, scroller: SuiScroller) {
     // renderer renders the music when it changes
     this.renderer = renderer;
@@ -336,8 +340,10 @@ export abstract class SuiMapper {
   }
 
   // ### _setModifierBoxes
+  // todo: rename this function
+  // potential name _updateNoteAndModifierPositions
   // Create the DOM modifiers for the lyrics and other modifiers
-  _setModifierBoxes(measure: SmoMeasure) {
+  _setModifierBoxes(measure: SmoMeasure, vxMeasure: VxMeasure) {
     const context = this.renderer.pageMap.getRenderer(measure.svg.logicalBox);
     measure.voices.forEach((voice: SmoVoice) => {
       voice.notes.forEach((smoNote: SmoNote) =>  {
@@ -401,7 +407,7 @@ export abstract class SuiMapper {
   /**
    * This is the logic that stores the screen location of music after it's rendered
    */
-  mapMeasure(staff: SmoSystemStaff, measure: SmoMeasure, printing: boolean) {
+  mapMeasure(staff: SmoSystemStaff, measure: SmoMeasure, vxMeasure: VxMeasure, printing: boolean) {
     let voiceIx = 0;
     let selectedTicks = 0;
 
@@ -415,7 +421,7 @@ export abstract class SuiMapper {
     if (!measure.svg.logicalBox) {
       return;
     }
-    this._setModifierBoxes(measure);
+    this._setModifierBoxes(measure, vxMeasure);
     const timestamp = new Date().valueOf();
     // Keep track of any current selections in this measure, we will try to restore them.
     const sels = this._copySelectionsByMeasure(staff.staffId, measure.measureNumber.measureIndex);
@@ -633,19 +639,33 @@ export abstract class SuiMapper {
       // const artifacts = SvgHelpers.findIntersectingArtifactFromMap(bb, this.measureNoteMap, SvgHelpers.smoBox(this.scroller.scrollState.scroll));
       // TODO: handle overlapping suggestions
       const modifiers = this.renderer.pageMap.findModifierTabs(logicalBox);
+
       if (modifiers.length) {
+        // this.eraseMousePositionBox();
         this._setModifierAsSuggestion(modifiers[0]);
-        this.eraseMousePositionBox();
       } else if (artifacts.length) {
         const artifact = artifacts[0];
-        this.eraseMousePositionBox();
+        // this.eraseMousePositionBox();
         this._setArtifactAsSuggestion(artifact);
       } else {
         // no intersection, show mouse hint
-        this.createMousePositionBox(logicalBox);
+        // this.createMousePositionBox(logicalBox);
       }
     }
   }
+
+  getIntersectingArtifact(bb: SvgBox): SmoSelection | null {
+    const scrollState = this.scroller.scrollState;
+    bb = SvgHelpers.boxPoints(bb.x + scrollState.x, bb.y + scrollState.y, bb.width ? bb.width : 1, bb.height ? bb.height : 1);
+    const logicalBox = this.renderer.pageMap.clientToSvg(bb);
+    const { selections, page } = this.renderer.pageMap.findArtifact(logicalBox);
+    if (page && selections.length) {
+      return selections[0];
+    }
+
+    return null
+  }
+
   _getRectangleChain(selection: SmoSelection) {
     const rv: number[] = [];
     if (!selection.note) {

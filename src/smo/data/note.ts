@@ -16,6 +16,7 @@ import { SmoMusic } from './music';
 import { Ticks, Pitch, SmoAttrs, Transposable, PitchLetter, SvgBox, getId } from './common';
 import { FontInfo, vexCanonicalNotes } from '../../common/vex';
 import { SmoTupletParamsSer } from './tuplet';
+import {Note} from "vexflow_smoosic";
 
 export interface SmoAudioData {
   volume: number[],
@@ -356,13 +357,14 @@ export class SmoNote implements Transposable {
   renderId: string | null = null;
   keySignature: string = 'c';
   logicalBox: SvgBox | null = null;
+  vexNote: Note | null = null;
   // mixin for real-time audio playback
   audioData: SmoAudioData = {
     volume: [],
     tiedDuration: 0,
     durationPct: 0
   };
-  
+
   isCue: boolean = false;
   hasTabNote: boolean = true;
   accidentalsRendered: string[] = [];// set by renderer if accidental is to display
