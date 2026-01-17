@@ -138,4 +138,3 @@ export declare class TextFormatter {
     get fontSizeInPixels(): number;
     getResolution(): number;
 }
-//# sourceMappingURL=textformatter.d.ts.map

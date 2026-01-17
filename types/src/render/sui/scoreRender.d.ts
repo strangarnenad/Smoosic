@@ -91,4 +91,3 @@ export declare class SuiScoreRender {
      */
     layout(): Promise<void>;
 }
-//# sourceMappingURL=scoreRender.d.ts.map

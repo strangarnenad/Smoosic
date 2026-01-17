@@ -31,4 +31,3 @@ export declare class SuiKeySignatureDialog extends SuiDialogAdapterBase<SuiKeySi
     changed(): Promise<void>;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=keySignature.d.ts.map

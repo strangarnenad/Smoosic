@@ -14,9 +14,7 @@ export declare class SuiScoreMenu extends SuiMenuBase {
     execFonts(): void;
     execGlobalLayout(): void;
     execPreferences(): void;
-    execAudioSettings(): void;
     execTransposeScore(): void;
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=score.d.ts.map

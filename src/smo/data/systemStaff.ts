@@ -548,6 +548,19 @@ export class SmoSystemStaff implements SmoObjectParams {
   isRehearsal(index: number) {
     return !(typeof(this.measures[index].getRehearsalMark()) === 'undefined');
   }
+  hasNonRestNotes(): boolean {
+    const nonrv = this.measures.find((mm) => mm.hasNonRestNotes());
+    return !!nonrv;
+  }
+  hasInstrument():boolean {
+    for (let i = 0; i < this.measures.length; ++i) {
+      const inst = this.getStaffInstrument(i);
+      if (inst.instrument !== 'none') {
+        return true;
+      }
+    }
+    return false;
+  }
   findSimlarOverlap(modifier: StaffModifierBase) {
     const overlap = this.modifiers.filter((ff) => 
       SmoSelector.overlaps(ff.startSelector, ff.endSelector, modifier.startSelector, modifier.endSelector) &&
@@ -974,19 +987,20 @@ export class SmoSystemStaff implements SmoObjectParams {
   // After anything that might change the measure numbers, update them iteratively
   numberMeasures() {
     let i: number = 0;
-    let localIndex = 0;
+    let displayMeasure = 0;
     for (i = 0; i < this.measures.length; ++i) {
       const measure = this.measures[i];
+      
       if (typeof(this.renumberingMap[i]) === 'number') {
-        localIndex = this.renumberingMap[i];
-      } else {
-        localIndex += 1;
+        displayMeasure = this.renumberingMap[i];
+      } else if (i > 0) {  // Auto-increment the custom numbering, but make sure we don't increment 0
+        displayMeasure += 1;
       }
       // since systemIndex is a render-time decision, we don't update it here.
       const systemIndex = measure.measureNumber.systemIndex;
       // If this is the first full measure, call it '1'
       const numberObj: MeasureNumber = {
-        localIndex,
+        displayMeasure,
         measureIndex: i,
         systemIndex,
         staffId: this.staffId

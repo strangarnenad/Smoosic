@@ -64,6 +64,7 @@ export class SuiLayoutFormatter {
   svg: SvgPageMap;
   renderedPages: Record<number,RenderedPage | null>;
   lines: number[] = [];
+  measuresRenderedThisPage: number = 0;
   constructor(score: SmoScore, svg: SvgPageMap, renderedPages: Record<number, RenderedPage | null>) {
     this.score = score;
     this.svg = svg;
@@ -124,7 +125,9 @@ export class SuiLayoutFormatter {
     const lm: SmoLayoutManager = this.score!.layoutManager!;
     // See if this measure breaks a page.
     const maxY = bottomMeasure.lowestY;
-    if (maxY > ((this.currentPage + 1) * scoreLayout.pageHeight) - scoreLayout.bottomMargin) {
+    const forceBreak = currentLine[0].format.pageBreak && this.measuresRenderedThisPage > 0;
+    if (maxY > ((this.currentPage + 1) * scoreLayout.pageHeight) - scoreLayout.bottomMargin ||
+      forceBreak) {
       this.currentPage += 1;
       // If this is a new page, make sure there is a layout for it.
       lm.addToPageLayouts(this.currentPage);
@@ -335,6 +338,7 @@ export class SuiLayoutFormatter {
     let lineIndex = 0;
     this.lines = [];
     let pageCheck = 0;
+    this.measuresRenderedThisPage = 0;
     // let firstMeasureOnPage = 0;
     this.lines.push(lineIndex);
     let currentLine: SmoMeasure[] = []; // the system we are esimating
@@ -369,6 +373,7 @@ export class SuiLayoutFormatter {
         if (renderedPage) {
           if (pageCheck !== this.currentPage) {
             // The last measure in the last system of the previous page
+            this.measuresRenderedThisPage = 0;
             const previousSystem = currentLine[0].measureNumber.measureIndex - 1;
             if (renderedPage.endMeasure !== previousSystem) {
               this.renderedPages[pageCheck] = null;
@@ -376,7 +381,7 @@ export class SuiLayoutFormatter {
             const nextPage = this.renderedPages[this.currentPage];
             if (nextPage && nextPage.startMeasure !== previousSystem + 1) {
               this.renderedPages[this.currentPage] = null;
-            }          
+            }
           }
         }
         pageCheck = this.currentPage;
@@ -415,6 +420,7 @@ export class SuiLayoutFormatter {
       currentLine = currentLine.concat(measureEstimate.measures);
       measureIx += 1;      
       systemIndex += 1;
+      this.measuresRenderedThisPage += 1;
       // If this is the last measure but we have not filled the x extent,
       // still justify the vertical staves and check for page break.
       if (this.isLastVisibleMeasure(measureIx) && measureEstimate !== null) {

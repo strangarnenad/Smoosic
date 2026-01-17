@@ -196,4 +196,3 @@ export declare class MidiToSmo {
      */
     convert(): SmoScore;
 }
-//# sourceMappingURL=midiToSmo.d.ts.map

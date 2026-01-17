@@ -37,4 +37,3 @@ export declare class SuiLyricDialog extends SuiDialogBase {
     mouseMove(ev: any): void;
     mouseClick(ev: any): void;
 }
-//# sourceMappingURL=lyric.d.ts.map

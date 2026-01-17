@@ -6,4 +6,3 @@ import { SuiMenuParams, SuiConfiguredMenu } from './menu';
 export declare class SuiVoiceMenu extends SuiConfiguredMenu {
     constructor(params: SuiMenuParams);
 }
-//# sourceMappingURL=voices.d.ts.map

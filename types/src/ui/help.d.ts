@@ -20,4 +20,3 @@ export declare class SuiHelp {
     static _buildElements(helps: HtmlHelpBlock): import("../common/htmlHelpers").DomBuilder;
     static get helpHtml(): HtmlHelpBlock[];
 }
-//# sourceMappingURL=help.d.ts.map

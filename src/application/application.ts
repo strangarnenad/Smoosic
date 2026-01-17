@@ -1,9 +1,7 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
 import { smoSerialize } from '../common/serializationHelpers';
-import { _MidiWriter } from '../common/midiWriter';
 import { dynamicCtorInit } from './dynamicInit';
-
 import { SmoConfiguration, SmoConfigurationParams } from './configuration';
 import { SmoScore } from '../smo/data/score';
 import { UndoBuffer } from '../smo/xform/undo';
@@ -113,6 +111,13 @@ export class SuiApplication {
   static async configure(params: Partial<SmoConfigurationParams>): Promise<SuiApplication> {
     const config: SmoConfiguration = new SmoConfiguration(params);
     (window as any).SmoConfig = config;
+    // If there is a DOM container but the DOM not created yet, create the default version.
+    if (params.domContainer && typeof(params.domContainer) === 'string') {
+      config.leftControls ='controls-left';
+      config.topControls= 'controls-top';
+      config.scoreDomContainer = 'smo-scroll-region';
+      config.domContainer = SuiDom.createUiDom(params.domContainer as string);
+    }
     const application = new SuiApplication(config);
     SuiApplication.registerFonts();
     return application.initialize();
@@ -244,8 +249,6 @@ export class SuiApplication {
     }
   }
   _startApplication() {
-    // Initialize the midi writer library
-    _MidiWriter();
     const queryString = new QueryParser();
     const languageSelect = queryString.pairs.find((x) => x['language']) ?? {'language': 'en'}
     if (this.config.mode === 'translate') {
@@ -316,7 +319,6 @@ export class SuiApplication {
     // eslint-disable-next-line
     SuiApplication.instance = this.instance;
     ribbon.display();
-    SuiDom.splash(this.config);
   }
   static async loadMusicFont(face: string, url: string) {
     const new_font = new FontFace('Bravura', `url(${url})`);

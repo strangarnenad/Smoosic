@@ -23,6 +23,7 @@ import { SuiStaffModifierMenu } from './staffModifier';
 import { SuiMeasureMenu } from './measure';
 import { SuiVoiceMenu } from './voices';
 import { SuiNoteMenu } from './note';
+import { SuiHelpMenu } from './help';
 import { SuiEditMenu } from './edit';
 import { SuiTextMenu } from './text';
 import { SuiPartSelectionMenu } from './partSelection';
@@ -270,8 +271,9 @@ export class SuiMenuManager {
       undoBuffer: this.undoBuffer,
       ctor: action
     };
-  
-    if (action === 'SuiLanguageMenu') {
+    if (action === 'SuiHelpMenu') {
+      this.displayMenu(new SuiHelpMenu(params));
+    } else if (action === 'SuiLanguageMenu') {
       this.displayMenu(new SuiLanguageMenu(params));
     } else if (action === 'SuiFileMenu') {
       this.displayMenu(new SuiFileMenu(params));

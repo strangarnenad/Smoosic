@@ -17,4 +17,3 @@ export declare class SuiPartSelectionMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=partSelection.d.ts.map

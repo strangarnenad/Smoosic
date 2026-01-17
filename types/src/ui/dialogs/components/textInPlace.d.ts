@@ -88,4 +88,3 @@ export declare class SuiTextBlockComponent extends SuiComponentParent {
     setValue(value: SuiTextBlockValue): void;
     bind(): void;
 }
-//# sourceMappingURL=textInPlace.d.ts.map

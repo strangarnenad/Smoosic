@@ -32,4 +32,3 @@ export declare class SuiTimeSignatureDialog extends SuiDialogAdapterBase<SuiTime
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=timeSignature.d.ts.map

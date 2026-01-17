@@ -36,4 +36,3 @@ export declare class TextCheckComponent extends SuiComponentBase {
     changed(): void;
     bind(): void;
 }
-//# sourceMappingURL=textCheck.d.ts.map

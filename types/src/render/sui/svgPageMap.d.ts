@@ -1,8 +1,9 @@
 import { StrokeInfo } from "./svgHelpers";
-import { SvgPoint, SvgBox, Renderable } from '../../smo/data/common';
+import { SvgPoint, SvgBox, Renderable, ElementLike } from '../../smo/data/common';
 import { SmoGlobalLayout, SmoPageLayout } from '../../smo/data/scoreModifiers';
 import { SmoSelection } from '../../smo/xform/selections';
 import { ModifierTab } from '../../smo/xform/selections';
+import { Renderer, SVGContext } from '../../common/vex';
 /**
  * A selection map maps a sub-section of music (a measure, for instance) to a region
  * on the screen.  SelectionMap can contain other SelectionMaps with
@@ -102,7 +103,7 @@ export declare class MappedSystems extends SelectionMap<MappedMeasures, number> 
  * @category SuiRender
  */
 export declare class SvgPage {
-    _renderer: any;
+    _renderer: Renderer;
     pageNumber: number;
     box: SvgBox;
     systemMap: MappedSystems;
@@ -121,9 +122,9 @@ export declare class SvgPage {
      * This is the VextFlow renderer context (SVGContext)
      * @returns
      */
-    getContext(): any;
+    getContext(): SVGContext;
     get divSize(): number;
-    constructor(renderer: any, pageNumber: number, box: SvgBox);
+    constructor(renderer: Renderer, pageNumber: number, box: SvgBox);
     /**
      * Given SVG y, return the div for modifiers
      * @param y
@@ -170,7 +171,7 @@ export declare class SvgPage {
      * @param element
      * @returns
      */
-    offsetBbox(element: SVGSVGElement): SvgBox;
+    offsetBbox(element: ElementLike): SvgBox;
     /**
      * Adjust the bounding box to local coordinates for this page.
      * @param box
@@ -315,4 +316,3 @@ export declare class SvgPageMap {
      */
     getRendererFromModifier(modifier?: Renderable): SvgPage;
 }
-//# sourceMappingURL=svgPageMap.d.ts.map

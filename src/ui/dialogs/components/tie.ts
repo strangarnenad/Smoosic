@@ -93,7 +93,7 @@ export class TieMappingComponent extends SuiComponentParent {
   }
 
   _generateOptions(note: SmoNote) {
-    const options = [];
+    const options: any = [];
     let index = 0;
     let label = '';
     options.push({ value: -1, label: 'No Line' });

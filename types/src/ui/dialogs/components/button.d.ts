@@ -52,4 +52,3 @@ export declare class SuiButtonComposite extends SuiButtonComponent {
     constructor(dialog: SuiDialogNotifier, parameters: SuiButtonCompositeParams);
     handleChanged(): void;
 }
-//# sourceMappingURL=button.d.ts.map

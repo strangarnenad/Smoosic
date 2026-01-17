@@ -869,4 +869,3 @@ export namespace SourceSerifProFont {
     };
     let generatedOn: string;
 }
-//# sourceMappingURL=ssp-serif-metrics.d.ts.map

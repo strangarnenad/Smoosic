@@ -288,12 +288,12 @@ export class SmoArpeggio extends SmoNoteModifierBase {
   static get types() {
     if (typeof(SmoArpeggio._types['directionless']) === 'undefined') {
       SmoArpeggio._types['directionless'] = 7;
-      SmoArpeggio._types['rasquedo_up'] = 6;
-      SmoArpeggio._types['rasquedo_down'] = 5;
-      SmoArpeggio._types['roll_up'] = 4;
-      SmoArpeggio._types['roll_down'] = 3;
-      SmoArpeggio._types['brush_up'] = 2;
-      SmoArpeggio._types['brush_down'] = 1;
+      SmoArpeggio._types['rasquedo_up'] = 5;
+      SmoArpeggio._types['rasquedo_down'] = 6;
+      SmoArpeggio._types['roll_up'] = 3;
+      SmoArpeggio._types['roll_down'] = 4;
+      SmoArpeggio._types['brush_up'] = 1;
+      SmoArpeggio._types['brush_down'] = 2;
       SmoArpeggio._types['none'] = 0;
     }
     return SmoArpeggio._types;
@@ -503,6 +503,12 @@ export class SmoOrnament extends SmoNoteModifierBase {
     prallup: 'schleifer',
     tr: 'trill-mark'
   }
+  static get mordents(): string[] {
+    return ['mordent', 'mordent_inverted', 'upmordent', 'downmordent', 'upprall', 'pralldown', 'prallup'];
+  }
+  static get turns(): string[] {
+    return ['turn', 'turn_inverted'];
+  }
   static readonly textNoteOrnaments: Record<string, string>  = {
     breath: 'breath',
     caesura: 'caesura_straight'
@@ -532,6 +538,12 @@ export class SmoOrnament extends SmoNoteModifierBase {
   }
   isJazz() {
     return SmoOrnament.jazzOrnaments.indexOf(this.ornament) >= 0;
+  }
+  isMordent() {
+    return SmoOrnament.mordents.indexOf(this.ornament) >= 0;
+  }
+  isTurn() {
+    return SmoOrnament.turns.indexOf(this.ornament) >= 0;
   }
   position: string = SmoOrnament.positions.above;
   offset: string = 'on';

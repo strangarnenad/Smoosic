@@ -68,4 +68,3 @@ export declare class SuiLibraryDialog extends SuiDialogAdapterBase<SuiLibraryAda
     get smoLibraryCtrl(): SuiTreeComponent;
     changed(): Promise<void>;
 }
-//# sourceMappingURL=library.d.ts.map

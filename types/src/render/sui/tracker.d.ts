@@ -2,28 +2,46 @@ import { SuiMapper, SuiRendererBase } from './mapper';
 import { StrokeInfo } from './svgHelpers';
 import { SmoSelection, SmoSelector, ModifierTab } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
-import { SvgBox, KeyEvent } from '../../smo/data/common';
+import { SvgBox, KeyEvent, keyHandler } from '../../smo/data/common';
 import { SuiScroller } from './scroller';
 import { SmoNote } from '../../smo/data/note';
 import { SmoMeasure } from '../../smo/data/measure';
+export interface TrackerKeyHandler {
+    moveHome: keyHandler;
+    moveEnd: keyHandler;
+    moveSelectionRight: keyHandler;
+    moveSelectionLeft: keyHandler;
+    moveSelectionUp: keyHandler;
+    moveSelectionDown: keyHandler;
+    moveSelectionRightMeasure: keyHandler;
+    moveSelectionLeftMeasure: keyHandler;
+    advanceModifierSelection: keyHandler;
+    growSelectionRight: keyHandler;
+    growSelectionLeft: keyHandler;
+    moveSelectionPitchUp: keyHandler;
+    moveSelectionPitchDown: keyHandler;
+}
 /**
  * SuiTracker
  * A tracker maps the UI elements to the logical elements ,and allows the user to
  *  move through the score and make selections, for navigation and editing.
  * @category SuiRender
  */
-export declare class SuiTracker extends SuiMapper {
+export declare class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     idleTimer: number;
     musicCursorGlyph: SVGSVGElement | null;
+    deferPlayAdvance: boolean;
     static get strokes(): Record<string, StrokeInfo>;
     constructor(renderer: SuiRendererBase, scroller: SuiScroller);
     get renderElement(): Element;
     get score(): SmoScore | null;
     getIdleTime(): number;
+    playSelection(artifact: SmoSelection): void;
+    deferNextAutoPlay(): void;
     getSelectedModifier(): ModifierTab | null;
     getSelectedModifiers(): ModifierTab[];
     static serializeEvent(evKey: KeyEvent | null): any;
-    advanceModifierSelection(score: SmoScore, keyEv: KeyEvent | null): void;
+    advanceModifierSelection(keyEv?: KeyEvent): void;
     static stringifyBox(box: SvgBox): string;
     _getOffsetSelection(offset: number): SmoSelector;
     getSelectedGraceNotes(): ModifierTab[];
@@ -32,11 +50,11 @@ export declare class SuiTracker extends SuiMapper {
     get autoPlay(): boolean;
     growSelectionRight(): void;
     _growSelectionRight(skipPlay: boolean): number;
-    moveHome(score: SmoScore, evKey: KeyEvent): void;
-    moveEnd(score: SmoScore, evKey: KeyEvent): void;
+    moveHome(keyEvent?: KeyEvent): void;
+    moveEnd(keyEvent?: KeyEvent): void;
     growSelectionRightMeasure(): void;
     growSelectionLeft(): number;
-    moveSelectionRight(skipPlay: boolean): void;
+    moveSelectionRight(): void;
     moveSelectionLeft(): void;
     moveSelectionLeftMeasure(): void;
     moveSelectionRightMeasure(): void;
@@ -53,9 +71,8 @@ export declare class SuiTracker extends SuiMapper {
     getFirstMeasureOfSelection(): SmoMeasure | null;
     getSelectedMeasures(): SmoSelection[];
     _addSelection(selection: SmoSelection): void;
-    _selectFromToInStaff(score: SmoScore, sel1: SmoSelection, sel2: SmoSelection): void;
-    _selectBetweenSelections(score: SmoScore, s1: SmoSelection, s2: SmoSelection): void;
-    selectSuggestion(score: SmoScore, ev: KeyEvent): void;
+    _selectBetweenSelections(s1o: SmoSelection, s2o: SmoSelection): void;
+    selectSuggestion(ev: KeyEvent): void;
     _setModifierAsSuggestion(artifact: ModifierTab): void;
     _setArtifactAsSuggestion(artifact: SmoSelection): void;
     _highlightModifier(): void;
@@ -71,4 +88,3 @@ export declare class SuiTracker extends SuiMapper {
     drawSelectionRects(boxes: SvgBox[]): void;
     _drawRect(pBox: SvgBox | SvgBox[], strokeName: string): void;
 }
-//# sourceMappingURL=tracker.d.ts.map

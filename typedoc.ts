@@ -108,7 +108,6 @@ export * from './src/ui/dialogs/library';
 export * from './src/ui/dialogs/lyric';
 export * from './src/ui/dialogs/measureFormat';
 export * from './src/ui/dialogs/microtones';
-export * from './src/ui/dialogs/newPart';
 export * from './src/ui/dialogs/noteHead';
 export * from './src/ui/dialogs/ornament';
 export * from './src/ui/dialogs/pageLayout';

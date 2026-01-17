@@ -274,8 +274,8 @@ export class SmoFormattingManager extends SmoScoreModifierBase {
    * Update the measure format for the measure at the given index
    * @param format 
    */
-  updateMeasureFormat(format: SmoMeasureFormat) {
-    this.measureFormats[format.measureIndex] = format;
+  updateMeasureFormat(format: SmoMeasureFormat, measureIndex: number) {
+    this.measureFormats[measureIndex] = format;
   }
   /**
    * Update the measure format based on the format of a given measure
@@ -293,7 +293,10 @@ export class SmoFormattingManager extends SmoScoreModifierBase {
     const keys = Object.keys(this.measureFormats);
     keys.forEach((key: any) => {
       if (!this.measureFormats[key].isDefault) {
-        rv.push(this.measureFormats[key].serialize());
+        const mf = this.measureFormats[key];
+        // Keep track of where this formatting went in the score.
+        mf.measureIndex = parseInt(key, 10);
+        rv.push(mf.serialize());
       }
     });
     return rv;
@@ -708,6 +711,9 @@ function isSmoSystemGroupParamsSer(params: Partial<SmoSystemGroupParamsSer>): pa
 export class SmoSystemGroup extends SmoScoreModifierBase {
   static get connectorTypes(): Record<string, number> {
     return { brace: 0, bracket: 1, single: 2, double: 3 };
+  }
+  static get connectorTypeNames(): Record<number, string> {
+    return { 0: 'brace', 1: 'bracket', 2: 'single', 3: 'double' };
   }
   static get mapTypes(): Record<string, number> {
     return { allMeasures: 0, range: 1 };

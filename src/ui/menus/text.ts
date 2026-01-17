@@ -120,7 +120,7 @@ const lyricsDialogMenuOption: SuiConfiguredMenuOption = {
 const dynamicsDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
     const sel = menu.view.tracker.selections;
-    let modifier = null;
+    let modifier: any = null;
     if (sel[0].note) {
       const dynamics = sel[0].note.getModifiers('SmoDynamicText');
       if (dynamics.length) {

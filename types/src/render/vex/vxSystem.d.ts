@@ -60,6 +60,5 @@ export declare class VxSystem {
     renderModifier(scroller: SuiScroller, modifier: StaffModifierBase, vxStart: Note | null, vxEnd: Note | null, smoStart: SmoSelection, smoEnd: SmoSelection): void;
     renderEndings(scroller: SuiScroller): void;
     getMeasureByIndex(measureIndex: number, staffId: number): SmoMeasure | null;
-    renderMeasure(smoMeasure: SmoMeasure, printing: boolean): void;
+    renderMeasure(smoMeasure: SmoMeasure, printing: boolean, firstInColumn: boolean): void;
 }
-//# sourceMappingURL=vxSystem.d.ts.map

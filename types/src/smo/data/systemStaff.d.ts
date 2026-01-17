@@ -3,10 +3,10 @@
  * staff modifiers.
  * @module /smo/data/systemStaff
  * **/
-import { SmoObjectParams, SmoAttrs } from './common';
+import { SmoObjectParams, SmoAttrs, Pitch, ElementLike } from './common';
 import { SmoMeasure, SmoMeasureParamsSer } from './measure';
 import { SmoRehearsalMarkParams, SmoTempoTextParams, SmoVolta } from './measureModifiers';
-import { SmoInstrumentParams, StaffModifierBase, SmoInstrument, SmoInstrumentMeasure, SmoTie, SmoStaffTextBracket, SmoStaffTextBracketParamsSer, StaffModifierBaseSer, SmoTabStave } from './staffModifiers';
+import { SmoInstrumentParams, StaffModifierBase, SmoInstrument, SmoInstrumentMeasure, SmoTie, SmoStaffTextBracket, SmoStaffTextBracketParamsSer, StaffModifierBaseSer, SmoTabStave, SmoStaffHairpin } from './staffModifiers';
 import { SmoPartInfo, SmoPartInfoParamsSer } from './partInfo';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
@@ -18,6 +18,7 @@ import { FontInfo } from '../../common/vex';
 export interface SmoStaffSerializationOptions {
     skipMaps: boolean;
     preserveIds: boolean;
+    transposeInstruments: boolean;
 }
 /**
  * Constructor parameters for {@link SmoSystemStaff}.
@@ -134,7 +135,7 @@ export declare class SmoSystemStaff implements SmoObjectParams {
     measures: SmoMeasure[];
     modifiers: StaffModifierBase[];
     textBrackets: SmoStaffTextBracket[];
-    bracketMap: Record<number, SVGSVGElement[]>;
+    bracketMap: Record<number, ElementLike[]>;
     tabStaves: SmoTabStave[];
     attrs: SmoAttrs;
     ctor: string;
@@ -155,7 +156,7 @@ export declare class SmoSystemStaff implements SmoObjectParams {
     static get defaultParameters(): string[];
     get renderableModifiers(): StaffModifierBase[];
     serialize(options: SmoStaffSerializationOptions): SmoSystemStaffParamsSer;
-    static deserialize(jsonObj: SmoSystemStaffParamsSer): SmoSystemStaff;
+    static deserialize(jsonObj: SmoSystemStaffParamsSer, transposeInstruments: boolean): SmoSystemStaff;
     /**
      * We have created a score with staff mappings.  Update the selectors in staff modifiers so that
      * 'from' in the staff slot is 'to'
@@ -169,6 +170,7 @@ export declare class SmoSystemStaff implements SmoObjectParams {
      */
     getStaffInstrument(measureIndex: number): SmoInstrument;
     getInstrumentList(): SmoInstrument[];
+    consolidateInstruments(): void;
     updateInstrumentOffsets(): void;
     isRest(index: number): boolean;
     /**
@@ -180,9 +182,19 @@ export declare class SmoSystemStaff implements SmoObjectParams {
     isRepeat(index: number): boolean;
     isRepeatSymbol(index: number): boolean;
     isRehearsal(index: number): boolean;
+    hasNonRestNotes(): boolean;
+    hasInstrument(): boolean;
     findSimlarOverlap(modifier: StaffModifierBase): StaffModifierBase[];
     removeTabStaves(delList: SmoTabStave[]): void;
     updateTabStave(ts: SmoTabStave): void;
+    get maxVoiceCount(): number;
+    /**
+     * Get all the pitches that start ties to the next measure, so that their
+     * accidentals may be preserved
+     * @param selector
+     * @returns
+     */
+    getTiedPitchesForNextMeasure(measureIndex: number): Pitch[];
     getTabStaveForMeasure(selector: SmoSelector): SmoTabStave | undefined;
     getTabStavesForMeasureRow(measures: SmoMeasure[]): SmoTabStave[];
     addStaffModifier(modifier: StaffModifierBase): void;
@@ -202,6 +214,7 @@ export declare class SmoSystemStaff implements SmoObjectParams {
     getSlursEndingAt(selector: SmoSelector): StaffModifierBase[];
     getTiesStartingAt(selector: SmoSelector): SmoTie[];
     getTiesEndingAt(selector: SmoSelector): StaffModifierBase[];
+    getHairpinsStartingAt(selector: SmoSelector): SmoStaffHairpin[];
     getPedalMarkingsContaining(selector: SmoSelector): StaffModifierBase[];
     getModifiers(): StaffModifierBase[];
     applyBeams(): void;
@@ -223,4 +236,3 @@ export declare class SmoSystemStaff implements SmoObjectParams {
     addDefaultMeasure(index: number, params: SmoMeasure): void;
     addMeasure(index: number, measure: SmoMeasure): void;
 }
-//# sourceMappingURL=systemStaff.d.ts.map

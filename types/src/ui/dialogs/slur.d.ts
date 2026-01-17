@@ -55,4 +55,3 @@ export declare class SuiSlurAttributesDialog extends SuiDialogAdapterBase<SuiSlu
     changed(): Promise<void>;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=slur.d.ts.map

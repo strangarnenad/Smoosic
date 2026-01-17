@@ -138,7 +138,7 @@ export declare class SuiTextBlockEditor extends SuiTextEditor {
     constructor(params: SuiTextEditorParams);
     _highlightEditor(): void;
     getText(): string;
-    evKey(evdata: KeyEvent): Promise<boolean>;
+    evKey(evdata: any): Promise<boolean>;
     stopEditor(): void;
 }
 export declare class SuiLyricEditor extends SuiTextEditor {
@@ -177,7 +177,7 @@ export declare class SuiChordEditor extends SuiTextEditor {
     getText(): string;
     _addGlyphAt(ix: number, code: string): void;
     unrender(): void;
-    evKey(evdata: KeyEvent): Promise<boolean>;
+    evKey(evdata: any): Promise<boolean>;
     lyric: SmoLyric;
     constructor(params: SuiLyricEditorParams);
     stopEditor(): void;
@@ -293,7 +293,7 @@ export declare class SuiLyricSession {
     advanceSelection(isShift: boolean): Promise<void>;
     removeLyric(): Promise<void>;
     _updateLyricFromEditor(): Promise<void>;
-    evKey(evdata: KeyEvent): Promise<boolean>;
+    evKey(evdata: any): Promise<boolean>;
     get textType(): number;
     set textType(type: number);
     handleMouseEvent(ev: any): void;
@@ -308,4 +308,3 @@ export declare class SuiChordSession extends SuiLyricSession {
     _setLyricForNote(): void;
     _startSessionForNote(): void;
 }
-//# sourceMappingURL=textEdit.d.ts.map

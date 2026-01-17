@@ -1,16 +1,14 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-import { SuiOscillator, SuiSampler, SuiOscillatorSoundfont} from './oscillator';
+import { SuiOscillator, SuiSampler, SuiOscillatorSoundfont } from './oscillator';
 import { SuiScoreView } from '../sui/scoreView';
 import { SmoScore } from '../../smo/data/score';
 import { SmoSelector, SmoSelection } from '../../smo/xform/selections';
-import { SmoTie, SmoStaffHairpin, SmoStaffTextBracket } from '../../smo/data/staffModifiers';
 import { SmoAudioPitch, SmoMusic } from '../../smo/data/music';
-import { SmoNote } from '../../smo/data/note';
 import { SuiAudioAnimationParams } from './musicCursor';
 import { ScoreRoadMapBuilder } from '../../smo/xform/roadmap';
-import { SmoDynamicText } from '../../smo/data/noteModifiers';
 import { PopulateAudioData } from '../../smo/xform/updateAudio';
+import { layoutDebug } from '../sui/layoutDebug';
 
 /**
  * Create audio player for the score from the start point
@@ -22,15 +20,23 @@ export interface SuiAudioPlayerParams {
   score: SmoScore,
   audioAnimation: SuiAudioAnimationParams
 }
+export interface midiFrequency {
+  midinumber: number,
+  detune: number
+}
+export interface OscAudioData {
+  pitches: midiFrequency[],
+  duration: number,
+  durationPct: number,
+  delay: number
+}
 /**
  * Parameters used to create just-in-time oscillators
  * @category SuiAudio
  */
 export interface SoundParams {
-  frequencies: number[],
-  duration: number,
-  offsetPct: number,
-  durationPct: number,
+  frequencies: OscAudioData[],
+  overallDuration: number,
   volume: number,
   noteType: string,
   instrument: string,
@@ -122,8 +128,8 @@ export class CuedAudioContexts {
 export class SuiAudioPlayer {
   static _playing: boolean = false;
   static instanceId: number = 0;
-  static duplicatePitchThresh = 4;
-  static voiceThresh = 16;
+  static duplicatePitchThresh = 8;
+  static voiceThresh = 32;
   static _playingInstance: SuiAudioPlayer | null = null;
   static set playing(val) {
     SuiAudioPlayer._playing = val;
@@ -171,69 +177,77 @@ export class SuiAudioPlayer {
     this.audioAnimation = parameters.audioAnimation;
   }
 
-  getNoteSoundData(measureIndex: number) {
+  /**
+   * Popuate the SoundData structures used to create the oscillators
+   *  from the notes in this measure.
+   * @param measureIndex 
+   * @returns 
+   */
+  private getNoteSoundData(measureIndex: number) {
     const measureNotes: Record<number, SoundParams[]> = {};
     let measureTicks = this.score.staves[0].measures[measureIndex].getMaxTicksVoice();
     const freqDuplicates: Record<number, Record<number, number>> = {};
     const voiceCount: Record<number, number> = {};
+    const smoTemp = this.score.staves[0].measures[measureIndex].getTempo();
+    const sPerTick = 60.0 / (smoTemp.bpm * 4096); // milliseconds per SMO tick
+
     this.score.staves.forEach((staff, staffIx) => {
       const measure = staff.measures[measureIndex];
       measure.voices.forEach((voice, voiceIx) => {
         let curTick = 0;
         const instrument = staff.getStaffInstrument(measure.measureNumber.measureIndex);
+        const xpose = -1 * measure.transposeIndex;
         voice.notes.forEach((smoNote, tickIx) => {
-          const frequencies: number[] = [];
-          const xpose = -1 * measure.transposeIndex;
+          let delay = 0;
+          const noteId = smoNote.attrs.id;
           const selector: SmoSelector = SmoSelector.default;
           selector.measure = measureIndex;
           selector.staff = staffIx;
           selector.voice = voiceIx;
           selector.tick = tickIx;
-          const silent = instrument.instrument === 'none';
-          smoNote.pitches.forEach((pitch, pitchIx) => {
-            const freq = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, smoNote.getMicrotone(pitchIx) ?? null);
-            const freqRound = Math.round(freq);
-            if (!freqDuplicates[curTick]) {
-              freqDuplicates[curTick] = {};
-              voiceCount[curTick] = 0;
-            }
-            const freqBeat = freqDuplicates[curTick];
-            if (!freqBeat[freqRound]) {
-              freqBeat[freqRound] = 0;
-            }
-            if (freqBeat[freqRound] < SuiAudioPlayer.duplicatePitchThresh && voiceCount[curTick] < SuiAudioPlayer.voiceThresh) {
-              frequencies.push(freq);
-              freqBeat[freqRound] += 1;
-              voiceCount[curTick] += 1;
-            }
-          });
-          const duration = smoNote.audioData.tiedDuration;
-          const durationPct = smoNote.audioData.durationPct;
-          const noteId = smoNote.attrs.id;
-          let volume = smoNote.audioData.volume.length > 0 ? smoNote.audioData.volume[0] : 0;
-          if (this.volumeMap[noteId]) {
-            const ix = this.volumeMap[noteId];
-            if (smoNote.audioData.volume.length > ix + 1) {
-              volume = smoNote.audioData.volume[ix + 1];
-            }
-            this.volumeMap[noteId] = ix + 1;
-          } else {
-            this.volumeMap[noteId] = 1;
-          }
-          // console.log(`creating soundData for ${selector.staff}/${selector.measure}/${selector.tick} time ${curTick}`);
-          if (smoNote.isRest()) {
-            volume = 0;
-          }
           const soundData: SoundParams = {
-            frequencies,
-            volume,
-            offsetPct: curTick / measureTicks,
-            durationPct,
+            frequencies: [],
+            overallDuration: smoNote.tickCount,
+            volume: 0,
             noteType: smoNote.noteType,
-            duration,
             instrument: instrument.instrument,
-            selector
-          };
+            selector 
+          }
+
+          for (let x = 0; x < smoNote.audioData.playedNotes.length; ++x) {
+            const playedNote = smoNote.audioData.playedNotes[x];
+            const noteDuration = (playedNote.duration * sPerTick);
+            smoNote.getMicrotones();
+            const volume = smoNote.audioData.volume.length > x ? smoNote.audioData.volume[x] : 0;
+            soundData.volume = Math.max(soundData.volume, volume);
+            const oscData: OscAudioData = {
+              pitches: [],
+              duration: noteDuration,
+              durationPct: playedNote.durationPct,
+              delay
+            };
+            playedNote.pitches.forEach((pitch, pitchIx:number) => {
+              const { midinumber, detune, frequency } = SmoMusic.midiNumberAndDetuneFromPitch(pitch, xpose, smoNote.getMicrotone(pitchIx));
+              const midiFreq: midiFrequency = { midinumber, detune };
+              const freqRound = Math.round(frequency);
+              if (!freqDuplicates[curTick]) {
+                freqDuplicates[curTick] = {};
+                voiceCount[curTick] = 0;
+              }
+              const freqBeat = freqDuplicates[curTick];
+              if (!freqBeat[freqRound]) {
+                freqBeat[freqRound] = 0;
+              }
+              if (freqBeat[freqRound] < SuiAudioPlayer.duplicatePitchThresh && voiceCount[curTick] < SuiAudioPlayer.voiceThresh) {
+                oscData.pitches.push(midiFreq);
+                freqBeat[freqRound] += 1;
+                voiceCount[curTick] += 1;
+              }
+            });
+            soundData.frequencies.push(oscData);
+            delay += noteDuration;
+          }
+          
           const pushTickArray = (curTick: number, soundData: SoundParams) => {
             if (typeof(measureNotes[curTick]) === 'undefined') {
               measureNotes[curTick] = [];
@@ -248,6 +262,9 @@ export class SuiAudioPlayer {
     const keys = Object.keys(measureNotes).map((x) => parseInt(x, 10));
     if (keys.length) {
       measureTicks -= keys.reduce((a, b) => a > b ? a : b);
+    }
+    if (layoutDebug.mask & layoutDebug.values.oscillators) {
+      console.log(`player:  ${measureIndex} ${JSON.stringify(measureNotes, null, ' ')}`);
     }
     return { endTicks: measureTicks, measureNotes };
   }
@@ -267,7 +284,7 @@ export class SuiAudioPlayer {
       { endTicks: this.cuedSounds.paramLinkHead.endTicks, measureNotes: this.cuedSounds.paramLinkHead.soundParams };
     this.cuedSounds.paramLinkHead = this.cuedSounds.paramLinkHead.next;
     const smoTemp = this.score.staves[0].measures[measureIndex].getTempo();
-    const msPerTick = 60000 / (smoTemp.bpm * 4096); // milliseconds per SMO tick
+    const msPerTick = 60000 / (smoTemp.bpm * 4096 * (smoTemp.beatDuration / 4096)); // milliseconds per SMO tick
     const keys: number[] = [];
     Object.keys(measureNotes).forEach((key) => {
       keys.push(parseInt(key, 10));
@@ -287,20 +304,28 @@ export class SuiAudioPlayer {
            offsetPct, durationPct, selector: soundData[0].selector };
         // If there is complete silence here, put a silent beat
         this.cuedSounds.addToTail(cuedSound);
+        // each note at this point in the music.
         soundData.forEach((sound) => {
-          const adjDuration = Math.round(sound.duration * msPerTick * sound.durationPct);
-          let gain = sound.duration === 0 ? 0 : sound.volume;
+          const adjDuration = Math.round(sound.overallDuration * msPerTick);
+          let gain = adjDuration === 0 ? 0 : sound.volume;
           gain = Math.min(1.0, gain);
+          // for each sound that plays as part of this note.  Usually one per pitch, but could be more for trills etc.
           for (i = 0; i < sound.frequencies.length && sound.noteType === 'n'; ++i) {
             const freq = sound.frequencies[i];
             const params = this.audioDefaults;
-            params.frequency = freq;
-            params.duration = adjDuration;
-            params.sustainEnv = sound.durationPct;
-            params.gain = gain;
+            params.duration = freq.duration;
+            params.sustainEnv = freq.durationPct;
             params.instrument = sound.instrument;
+            params.gain = gain;
             params.useReverb = this.score.audioSettings.reverbEnable;
-            cuedSound.oscs.push(new SuiSampler(params));
+            params.delayTime = freq.delay
+            // oscillator in html 5 is a single pitch, create one per pitch in the chord
+            for (var k = 0; k < freq.pitches.length; ++k) {
+              const midiFreq = freq.pitches[k];
+              params.frequency = midiFreq.midinumber
+              params.detune = midiFreq.detune;
+              cuedSound.oscs.push(new SuiSampler(params));
+            }
           }
         });
         if (j + 1 < keys.length) {
@@ -370,6 +395,9 @@ export class SuiAudioPlayer {
       await this.delaySilence(cuedSound.waitTime);
       this.cuedSounds.playWaitTimer = cuedSound.waitTime; // still needed?
       cuedSound = this.cuedSounds.advanceHead();
+    }
+    if (SuiAudioPlayer.playing) {
+      SuiAudioPlayer.stopPlayer();
     }
   }
   // Resolve promise when either the buffer is low enough that we need to add more things to it, or
@@ -460,8 +488,7 @@ export class SuiAudioPlayer {
   // each inner oscillator is a promise, the combined promise is resolved when all
   // the beats have completed.
   static _playChord(oscAr: SuiOscillator[]) {
-    // var par: Promise<void>[] = [];
-    const now = SuiOscillatorSoundfont.audio.currentTime;
+    // var par: Promise<void>[] = [];    
     for (let i = 0; i < oscAr.length; ++i) {
       oscAr[i].play();
     }

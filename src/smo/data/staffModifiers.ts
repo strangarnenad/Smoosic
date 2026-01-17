@@ -197,6 +197,53 @@ export class SmoInstrument extends StaffModifierBase {
       'keyOffset', 'midichannel', 'midiport', 'instrumentName', 
       'abbreviation', 'instrument', 'family', 'lines'];
   }
+  // Used for midi export
+  static instrumentMidiMap: Record<string, number> = {
+    'piano': 1,
+    'accordion': 22,
+    'electricPiano':5,
+    'bass':33,
+    'jazzBass': 34,
+    'eGuitar': 27,
+    'cello': 43,
+    'violin': 41,
+    'trumpet': 57,
+    'horn': 61,
+    'trombone': 58,
+    'tuba': 59,
+    'clarinet': 72,
+    'flute': 74,
+    'altoSax': 66,
+    'tenorSax':67,
+    'bariSax': 68,
+    'pad': 89,
+    'percussion': 116
+  };
+   // Used default key offset
+  static instrumentKeyOffset: Record<string, number> = {
+    'piano': 0,
+    'accordion': 0,
+    'electricPiano':0,
+    'bass':0,
+    'jazzBass': 0,
+    'eGuitar': 0,
+    'cello': 0,
+    'violin': 0,
+    'trumpet': 2,
+    'horn': 7,
+    'trombone': 0,
+    'tuba': 0,
+    'clarinet': 2,
+    'flute': 0,
+    'altoSax': 9,
+    'tenorSax':14,
+    'bariSax': 21,
+    'pad': 0,
+    'percussion': 0
+  };
+  // Internally, percussion clef uses treble clef pitches (since percussion clef
+  // piches are not defined.).  This maps the notes from Bb3 to C6 to general midi
+  // map drum parts.  There is no standard for this, and maps should be editable.
   static defaultDrumMidiMap: Record<number, number> = {
     58: 54, // Bb3 Tambourine
     59: 56, // B3 Cowbell
@@ -242,6 +289,12 @@ export class SmoInstrument extends StaffModifierBase {
   midichannel: number;
   midiport: number;
   family: string;
+  get midiInstrumentDefault() {
+    if (SmoInstrument.instrumentMidiMap[this.instrument]) {
+      return SmoInstrument.instrumentMidiMap[this.instrument] - 1;
+    }
+    return 1; // default to piano
+  }
   instrument: string;
   articulation?: string;
   mutes?: string;
@@ -299,6 +352,7 @@ export class SmoInstrument extends StaffModifierBase {
     this.clef = params.clef;
     this.midiport = params.midiport;
     this.midichannel = params.midichannel;
+    this.midiInstrument = this.midiInstrumentDefault;
     this.usePercussionNoteheads = params.usePercussionNoteheads ?? false;
     this.startSelector = params.startSelector;
     this.endSelector = params.endSelector;

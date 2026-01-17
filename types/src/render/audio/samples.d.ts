@@ -1,4 +1,7 @@
 import { SmoOscillatorInfo } from '../../smo/data/staffModifiers';
+import { Soundfont } from 'smplr';
+export declare const instrumentSampleMap: Record<string, string>;
+export declare const loadedSoundfonts: Record<string, Soundfont>;
 /**
  * A set of parameters from the instrument interface used to create audio from samples.
  * @category SuiAudio
@@ -35,29 +38,6 @@ export interface InstrumentSampleChooser {
     samples: SmoOscillatorInfo[];
 }
 /**
- * @category SuiAudio
- * @param params
- * @param samples
- * @returns
- */
-export declare const sampleForPercussion: (params: SampleChooserParams, samples: SmoOscillatorInfo[]) => AudioSample | null;
-/**
- * For instruments like violin that require different samples depending on note duration
- * @param params
- * @param samples
- * @returns
- * @category SuiAudio
- */
-export declare const sampleFromMinDuration: (params: SampleChooserParams, samples: SmoOscillatorInfo[]) => AudioSample | null;
-/**
- * Give a set of samples, return the one that closest matches the frequency
- * @param params
- * @param samples
- * @returns
- * @category SuiAudio
-*/
-export declare const sampleFromFrequency: (params: SampleChooserParams, samples: SmoOscillatorInfo[]) => AudioSample | null;
-/**
  * Logic to create audio nodes out of HTML5 media elements
  * @category SuiAudio
  */
@@ -68,15 +48,9 @@ export declare class SuiSampleMedia {
     static instrumentChooser: Record<string, InstrumentSampleChooser>;
     static receivedBuffer: boolean;
     static getFamilyForInstrument(instKey: string): string;
-    static insertIntoMap(sample: Partial<SmoOscillatorInfo>): void;
-    static populateSampleMap(): void;
-    static getSmoOscillatorInfo(instrument: string): SmoOscillatorInfo[];
     /**
     * Load samples so we can play the music
     * @returns - promise, resolved when loaded
     */
     static samplePromise(audio: AudioContext): Promise<any>;
-    static sampleForFrequency(f: number, oscs: SmoOscillatorInfo[]): AudioSample | null;
-    static matchedSample(params: SampleChooserParams): AudioSample | null;
 }
-//# sourceMappingURL=samples.d.ts.map

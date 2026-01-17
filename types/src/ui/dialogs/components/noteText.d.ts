@@ -96,4 +96,3 @@ export declare class SuiChordComponent extends SuiNoteTextComponent {
     setTextType(type: string | number): void;
     getTextType(): number;
 }
-//# sourceMappingURL=noteText.d.ts.map

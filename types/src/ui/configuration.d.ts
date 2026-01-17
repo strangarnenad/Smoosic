@@ -1,5 +1,5 @@
 import { ButtonDefinition } from './buttons/button';
-import { RibbonLayout } from './buttons/ribbon';
+import { RibbonLayout } from './common';
 import { KeyBinding } from '../application/common';
 /**
  * @internal
@@ -29,4 +29,3 @@ export interface SmoUiConfiguration {
     topControls?: HTMLElement | string;
     scoreDomContainer: string | HTMLElement;
 }
-//# sourceMappingURL=configuration.d.ts.map

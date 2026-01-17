@@ -1,6 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
-
+import { Ref } from 'vue';
 declare var $: any;
 /**
 * returns an object that  lets you build a DOM in a somewhat readable way.
@@ -239,12 +239,22 @@ export function createTopDomContainer(selector: string | HTMLElement, elementTyp
 export function draggable(parameters: any) {
   return new Draggable(parameters);
 }
+export interface DraggableParameters {
+  parent: HTMLElement;
+  handle: HTMLElement;
+  animateDiv: string;
+  dragParent: boolean;
+  svg: any;
+  cb: () => void;
+  topRef?: Ref<number>;
+  leftRef?: Ref<number>;
+}
 /**
  * @internal
  */
 export class Draggable {
-  parent: any;
-  handle: any;
+  parent: HTMLElement;
+  handle: HTMLElement;
   animeClass: any;
   dragParent: any;
   domOffset: any;
@@ -256,12 +266,16 @@ export class Draggable {
   cb: any;
   moveParent: boolean;
   dragging: boolean = false;
+  topRef?: Ref<number>;
+  leftRef?: Ref<number>;
 
   constructor(parameters: any) {
     this.parent = parameters.parent;
     this.handle = parameters.handle;
     this.animeClass = parameters.animateDiv;
     this.dragParent = parameters.dragParent;
+    this.topRef = parameters.topRef;
+    this.leftRef = parameters.leftRef;
 
     // TODO: make '.dom-container' a part of the configuration
     this.domOffset = $('.dom-container').offset();
@@ -269,12 +283,19 @@ export class Draggable {
     this.svg = parameters['svg'];
     this.width = $(this.parent).outerWidth();
     this.height = $(this.parent).outerHeight();
-    this.lastX = $(this.handle).offset().left - this.domOffset.left;
-    this.lastY = $(this.handle).offset().top - this.domOffset.top;
+    this.lastX =  $(this.parent).parent().width()/2 - ($(this.parent).width()/2);
+    this.lastY = $(this.parent).parent().height()/2 - ($(this.parent).height()/2);
+    if (this.topRef) {
+      this.topRef.value = this.lastY;
+    }
+    if (this.leftRef) {
+      this.leftRef.value = this.lastX;
+    }
     this.cb = parameters.cb;
     this.moveParent = parameters.moveParent;
 
     var self = this;
+    this.enddrag();
 
     // $('.itemMenu input[name="itemTitle"]').css('width','60%');
     $(this.handle)
@@ -302,12 +323,17 @@ export class Draggable {
     if (this.dragParent) {
       $(this.parent).css('left', this.lastX + 'px');
       $(this.parent).css('top', this.lastY + 'px');
+      if(this.leftRef) {
+        this.leftRef.value = this.lastX;
+      }
+      if(this.topRef) {
+        this.topRef.value = this.lastY;
+      }
     }
   }
   mousedown(e: any) {
     if (!this.dragging) {
       $(this.animeClass).removeClass('hide');
-
       $(this.animeClass).css('width', this.width);
       $(this.animeClass).css('height', this.height);
     }
@@ -321,6 +347,12 @@ export class Draggable {
     if (this.moveParent) {
       $(this.parent).css('left', this.lastX + 'px');
       $(this.parent).css('top', this.lastY + 'px');
+      if(this.leftRef) {
+        this.leftRef.value = this.lastX;
+      }
+      if(this.topRef) {
+        this.topRef.value = this.lastY;
+      }
     }
     $(this.animeClass).addClass('hide');
     this.cb(this.lastX, this.lastY);

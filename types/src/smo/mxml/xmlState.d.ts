@@ -255,4 +255,3 @@ export declare class XmlState {
     buildSmoTupletTreesFromXmlTupletStateTrees(xmlTupletStateTrees: XmlTupletStateTreeNode[], notes: SmoNote[]): SmoTupletTree[];
     getSystems(): SmoSystemGroup[];
 }
-//# sourceMappingURL=xmlState.d.ts.map

@@ -39,6 +39,7 @@ export interface MeasureTick {
  */
 export interface ISmoBeamGroup {
     notes: SmoNote[];
+    secondaryBeamBreaks: number[];
     voice: number;
     attrs: SmoAttrs;
 }
@@ -278,6 +279,12 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
      */
     serialize(): SmoMeasureParamsSer;
     /**
+     * Due to a bug, some tuplets have incorrect ticks.  Fix it when we are deserializing the measure
+     * @param voices
+     * @param tupletTree
+     */
+    static fixTupletLengths(voices: SmoVoice[], tupletTree: SmoTupletTree): void;
+    /**
      * restore a serialized measure object.  Usually called as part of deserializing a score,
      * but can also be used to restore a measure due to an undo operation.  Recursively
      * deserialize all the notes and modifiers to construct a new measure.
@@ -287,6 +294,7 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
     static deserialize(jsonObj: SmoMeasureParamsSer): SmoMeasure;
     static clone(measure: SmoMeasure): SmoMeasure;
     static cloneForPasteOrUndo(measure: SmoMeasure): SmoMeasure;
+    hasNonRestNotes(): boolean;
     /**
      * When creating a new measure, the 'default' settings can vary depending on
      * what comes before/after the measure.  This determines the default pitch
@@ -352,7 +360,7 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
      * A time signature has possibly changed.  add/remove notes to
      * match the new length
      */
-    alignNotesWithTimeSignature(): void;
+    alignNotesWithTimeSignature(): true | undefined;
     get measureNumberDbg(): string;
     /**
      * Get rendered or estimated start y
@@ -407,6 +415,8 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
     getNotes(): SmoNote[];
     getActiveVoice(): number;
     setActiveVoice(vix: number): void;
+    getSwapVoicePairs(): number[][];
+    swapVoices(voice1: number, voice2: number): void;
     tickmapForVoice(voiceIx: number): TickMap;
     createMeasureTickmaps(): MeasureTickmaps;
     static createRestNoteWithDuration(duration: number, clef: Clef): SmoNote;
@@ -415,6 +425,13 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
      * @returns
      */
     getMaxTicksVoice(): number;
+    /**
+     * For pasting, paste into the target measure if the voice exists, else paste into
+     * voice 0
+     * @param voiceIndex
+     * @returns
+     */
+    getTicksFromThisOrAnyVoice(voiceIndex: number): number;
     /**
      * Count the number of ticks in a specific voice
      * @param voiceIndex
@@ -473,6 +490,12 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
     removeMeasureText(id: string): void;
     setRepeatSymbol(rs: SmoRepeatSymbol): void;
     getRepeatSymbol(): SmoRepeatSymbol | null;
+    get isToDc(): boolean;
+    get isToDs(): boolean;
+    get isSegno(): boolean;
+    get isCoda(): boolean;
+    get isToCoda(): boolean;
+    get isFine(): boolean;
     clearRepeatSymbols(): void;
     setBarline(barline: SmoBarline): void;
     private _getBarline;
@@ -485,4 +508,3 @@ export declare class SmoMeasure implements SmoMeasureParams, TickMappable {
     setMeasureNumber(num: MeasureNumber): void;
     getBeamGroupForNote(note: SmoNote): ISmoBeamGroup | null;
 }
-//# sourceMappingURL=measure.d.ts.map

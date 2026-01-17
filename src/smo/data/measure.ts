@@ -258,7 +258,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     modifiers: [],
     // bars: [1, 1], // follows enumeration in VF.Barline
     measureNumber: {
-      localIndex: 0,
+      displayMeasure: 0,
       systemIndex: 0,
       measureIndex: 0,
       staffId: 0
@@ -318,7 +318,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
    * Row, column, and custom numbering information about this measure.
    */
   measureNumber: MeasureNumber = {
-    localIndex: 0,
+    displayMeasure: 0,
     systemIndex: 0,
     measureIndex: 0,
     staffId: 0
@@ -537,8 +537,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     const params: Partial<SmoMeasureParamsSer> = { "ctor": "SmoMeasure" };
     let ser = true;
     smoSerialize.serializedMergeNonDefault(SmoMeasure.defaults, SmoMeasure.serializableAttributes, this, params);
-    // Don't serialize default things
-    const fmt = this.format.serialize();
+
     // measure number can't be defaulted b/c tempos etc. can map to default measure
     params.measureNumber = JSON.parse(JSON.stringify(this.measureNumber));
     params.tupletTrees = [];
@@ -592,8 +591,8 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
    * @param tupletTree 
    */
   static fixTupletLengths(voices: SmoVoice[], tupletTree: SmoTupletTree) {
-    const voice = voices[tupletTree.voice];
-    const notear = [];
+    const voice: SmoVoice = voices[tupletTree.voice];
+    const notear: SmoNote[] = [];
     for (let i = tupletTree.startIndex; i <= tupletTree.endIndex; ++i) {
       if (voice.notes.length > i) {
         notear.push(voice.notes[i]);
@@ -752,7 +751,18 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     clonedMeasure.tempo = new SmoTempoText(measure.tempo);
     return clonedMeasure;
   }
-
+  hasNonRestNotes(): boolean {
+    for (let i = 0; i < this.voices.length; ++i) {
+      const voice = this.voices[i];
+      for (let j = 0; j < voice.notes.length; ++j) {
+        const smoNote = voice.notes[j];
+        if (!smoNote.isRest()) {
+          return true;
+        }
+      } 
+    }
+    return false;
+  }
   /**
    * When creating a new measure, the 'default' settings can vary depending on
    * what comes before/after the measure.  This determines the default pitch
@@ -1202,7 +1212,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     }
   }
   getSwapVoicePairs() {
-    const rv = [];
+    const rv: number[][] = [];
     for (let i = 0; i < this.voices.length; ++i) {
       for (let j = i + 1; j < this.voices.length; ++j) {
         rv.push([i, j]);
@@ -1664,7 +1674,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
   }
 
   private _getBarline(pos: number): SmoBarline {
-    let rv = null;
+    let rv: SmoMeasureModifierBase | null = null;
     this.modifiers.forEach((modifier) => {
       if (modifier.ctor === 'SmoBarline' && (modifier as SmoBarline).position === pos) {
         rv = modifier;
@@ -1673,7 +1683,7 @@ export class SmoMeasure implements SmoMeasureParams, TickMappable {
     if (rv === null) {
       return new SmoBarline(SmoBarline.defaults);
     }
-    return rv;
+    return rv as SmoBarline;
   }
 
   getEndBarline(): SmoBarline {    

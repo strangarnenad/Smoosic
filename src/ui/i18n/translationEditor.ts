@@ -249,7 +249,7 @@ export class SmoTranslationEditor {
     return container;
   }
   static parseDom() {
-    var json = [];
+    var json: any = [];
     // $('.top-translate-container .db-translate-container[data-dbcontainer] [data-component="staticText"]')
     $('.top-translate-container .db-translate-container[data-dbcontainer]').each((ix: number, dbEl: any) => {
       var db = $(dbEl).attr('data-dbcontainer');

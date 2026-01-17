@@ -18,10 +18,14 @@ import { FontInfo, vexCanonicalNotes } from '../../common/vex';
 import { SmoTupletParamsSer } from './tuplet';
 import {Note} from "vexflow_smoosic";
 
+export interface PlayedNote {
+  pitches: Pitch[],
+  duration: number,
+  durationPct: number
+}
 export interface SmoAudioData {
   volume: number[],
-  tiedDuration: number,
-  durationPct: number
+  playedNotes: PlayedNote[]
 }
 /**
  * @category SmoObject
@@ -361,8 +365,7 @@ export class SmoNote implements Transposable {
   // mixin for real-time audio playback
   audioData: SmoAudioData = {
     volume: [],
-    tiedDuration: 0,
-    durationPct: 0
+    playedNotes: []
   };
 
   isCue: boolean = false;
@@ -426,10 +429,10 @@ export class SmoNote implements Transposable {
   }
 
   private _addModifier(dynamic: SmoDynamicText, toAdd: boolean) {
-    var tms = [];
+    var tms: SmoDynamicText[] = [];
     this.textModifiers.forEach((tm) => {
       if (tm.attrs.type !== dynamic.attrs.type) {
-        tms.push(tm);
+        tms.push(tm as SmoDynamicText);
       }
     });
     if (toAdd) {
@@ -439,7 +442,7 @@ export class SmoNote implements Transposable {
   }
 
   setArticulation(articulation: SmoArticulation, set: boolean) {
-    var tms = [];
+    var tms: SmoArticulation[] = [];
     this.articulations.forEach((tm) => {
       if (tm.articulation !== articulation.articulation) {
         tms.push(tm);
@@ -461,6 +464,12 @@ export class SmoNote implements Transposable {
   }
   getOrnament(stringCode: string) {
     return this.ornaments.find((aa) => aa.ornament === stringCode);
+  }
+  hasMordent() {
+    return this.ornaments.find((aa) => aa.isMordent()) !== undefined;
+  }
+  hasTurn() {
+    return this.ornaments.find((aa) => aa.isTurn()) !== undefined;
   }
 
   /**

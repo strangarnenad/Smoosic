@@ -13,4 +13,3 @@ export declare class SuiModifierDialogFactory {
 }
 export declare const initDialogTranslationElements: () => void;
 export declare const initDialogConstructors: () => void;
-//# sourceMappingURL=factory.d.ts.map

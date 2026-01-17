@@ -19,4 +19,3 @@ export declare class SuiStaffModifierMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=staffModifier.d.ts.map

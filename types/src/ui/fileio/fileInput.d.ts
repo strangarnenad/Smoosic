@@ -10,4 +10,3 @@ export declare class SuiFileInput {
     _handleZip(): Promise<void>;
     loadAsync(): Promise<void>;
 }
-//# sourceMappingURL=fileInput.d.ts.map

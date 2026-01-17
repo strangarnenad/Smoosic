@@ -39,4 +39,3 @@ export declare class SuiTieAttributesDialog extends SuiDialogAdapterBase<SuiTieA
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=tie.d.ts.map

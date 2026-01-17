@@ -1,17 +1,17 @@
 import { createAndDisplayDialog } from '../dialogs/dialog';
-import {SuiArpeggioDialog } from '../dialogs/arpeggio';
+import { SuiArpeggioDialog } from '../dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../dialogs/clefChange';
 import { SuiNoteHeadDialog } from '../dialogs/noteHead';
-import { SuiOrnamentDialog } from '../dialogs/ornament';
-import { SuiDurationDialog } from '../dialogs/durations';
-import { SuiArticulationDialog } from '../dialogs/articulation';
+import { SuiOrnamentDialogVue } from '../dialogs/ornament';
+import { SuiDurationNoteVue } from '../dialogs/durations';
+import { SuiArticulationDialogVue } from '../dialogs/articulation';
 import { SuiGraceNoteDialog } from '../dialogs/gracenote';
-import { SuiMicrotoneDialog } from '../dialogs/microtones';
-import { SuiPitchDialog } from '../dialogs/pitch';
+import { SuiMicrotoneDialogVue } from '../dialogs/microtones';
+import { SuiPitchDialogVue } from '../dialogs/pitch';
 import { SmoPedalMarking } from '../../smo/data/staffModifiers';
 import { SmoSelector } from '../../smo/xform/selections';
-import { SuiMenuBase, SuiMenuParams, MenuDefinition, SuiMenuHandler, SuiMenuShowOption, 
-  SuiConfiguredMenuOption, SuiConfiguredMenu, customizeMenuOptionsFcn } from './menu';
+import { SuiMenuBase, SuiMenuParams, 
+  SuiConfiguredMenuOption, SuiConfiguredMenu } from './menu';
   import { addOrReplacePedalMarking } from './staffModifier';
 declare var $: any;
 /**
@@ -41,7 +41,7 @@ const toggleCueMenuOption: SuiConfiguredMenuOption = {
  */
 const arpeggioMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiArpeggioDialog, {
+    SuiArpeggioDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -63,7 +63,7 @@ const arpeggioMenuOption: SuiConfiguredMenuOption = {
  */
 const noteHeadMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiNoteHeadDialog, {
+    SuiNoteHeadDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -85,7 +85,7 @@ const noteHeadMenuOption: SuiConfiguredMenuOption = {
  */
 const pitchMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiPitchDialog, {
+    SuiPitchDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -107,7 +107,7 @@ const pitchMenuOption: SuiConfiguredMenuOption = {
  */
 const graceNotesMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiGraceNoteDialog, {
+    SuiGraceNoteDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -129,7 +129,7 @@ const graceNotesMenuOption: SuiConfiguredMenuOption = {
  */
 const clefNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiClefChangeDialog, {
+    SuiClefChangeDialog({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -158,7 +158,7 @@ const togglePedalRelease: SuiConfiguredMenuOption = {
       
       pms.forEach(async (mod) => {
         const pm = mod as SmoPedalMarking;
-        const releaseAr = [];
+        const releaseAr: any = [];
         pm.releases.forEach((rr) => {
           if (SmoSelector.eq(rr, selectorToAdd)) {
             shouldAdd = false;
@@ -169,7 +169,7 @@ const togglePedalRelease: SuiConfiguredMenuOption = {
         if (shouldAdd) {
           releaseAr.push(selectorToAdd);
         }
-        pm.releases = releaseAr.sort((a, b) => SmoSelector.gt(a, b) ? 1 : -1);
+        pm.releases = releaseAr.sort((a: SmoSelector, b: SmoSelector) => SmoSelector.gt(a, b) ? 1 : -1);
         await addOrReplacePedalMarking(menu.view, pm);
       });
     });
@@ -194,7 +194,7 @@ const togglePedalRelease: SuiConfiguredMenuOption = {
  */
 const ornamentNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiOrnamentDialog, {
+    SuiOrnamentDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -216,7 +216,7 @@ const ornamentNoteDialogMenuOption: SuiConfiguredMenuOption = {
  */
 const durationDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiDurationDialog, {
+    SuiDurationNoteVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
@@ -238,14 +238,14 @@ const durationDialogMenuOption: SuiConfiguredMenuOption = {
  */
 const articulationNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiArticulationDialog, {
+    SuiArticulationDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,
       eventSource: menu.eventSource,
       tracker: menu.tracker,
       ctor: 'SuiArticulationDialog',
-      id: 'ornament-dialog',
+      id: 'articulation-dialog',
       modifier: null
     });
   }, display: (menu: SuiMenuBase) => true,
@@ -260,7 +260,7 @@ const articulationNoteDialogMenuOption: SuiConfiguredMenuOption = {
  */
 const microtoneNoteDialogMenuOption: SuiConfiguredMenuOption = {
   handler: async (menu: SuiMenuBase) => {
-    createAndDisplayDialog(SuiMicrotoneDialog, {
+    SuiMicrotoneDialogVue({
       view: menu.view,
       completeNotifier: menu.completeNotifier,
       startPromise: menu.closePromise,

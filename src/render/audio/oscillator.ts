@@ -10,6 +10,7 @@ import { SmoSelection } from '../../smo/xform/selections';
 import { SmoScore } from '../../smo/data/score';
 import { SmoInstrument } from '../../smo/data/staffModifiers';
 import { loadedSoundfonts } from './samples';
+import { layoutDebug } from '../sui/layoutDebug';
 import {
   getSoundfontKits,
   Soundfont,
@@ -92,6 +93,7 @@ export interface WaveTable {
  */
 export interface SuiOscillatorParams {
   duration: number,
+  delayTime: number,
   frequency: number,
   detune?: number,
   attackEnv: number,
@@ -172,17 +174,21 @@ export abstract class SuiOscillator {
     let frequency = 0;
     let duration = 0;
     // Just make all the notes same length, since we are not in tempo
-    duration = 500;
+    duration = 0.25;
     const ar: SuiOscillator[] = [];
     gain = isNaN(gain) ? 0.2 : gain;
     if (note.noteType === 'r') {
       gain = 0.001;
     }
     note.pitches.forEach((pitch, pitchIx) => {
-      const mtone: SmoMicrotone | null = note.getMicrotone(pitchIx) ?? null;
-      frequency = SmoAudioPitch.smoPitchToFrequency(pitch, -1 * measure.transposeIndex, mtone);
+      const mtone: SmoMicrotone | undefined = note.getMicrotone(pitchIx);
+      // Get the midi frequency and offset from the pitch.  true frequency is ignored here
+      const { midinumber, detune, frequency } = SmoMusic.midiNumberAndDetuneFromPitch(pitch, 
+        -1 * measure.transposeIndex, 
+        mtone);
       const def = SuiOscillator.defaults;
-      def.frequency = frequency;
+      def.frequency = midinumber;
+      def.detune = detune;
       def.duration = duration;
       def.gain = gain;
       def.instrument = instrument.instrument;
@@ -215,21 +221,18 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   midinumber: number;
   offset: number = 0;
   velocity: number;
+  delayTime: number = 0;
+  detune: number = 0;
   constructor(params: SuiOscillatorParams) {
     super(params);
+    this.delayTime = params.delayTime ?? 0;
+    this.detune = params.detune ?? 0;
     this.instrument = params.instrument;
     this.samples = loadedSoundfonts[this.instrument];
-    const vex: string = SmoAudioPitch.frequencyToVexPitch(params.frequency);
-    const pitch = SmoMusic.vexToSmoPitch(vex);
+    this.midinumber = params.frequency;
+
     if (params.gain !== 0) {
       let midiStr = '';
-      try {
-      midiStr = SmoMusic.smoPitchToMidiString(pitch);
-      } catch (exp) {
-        const pstr = JSON.stringify(pitch);
-        console.warn(`bad pitch ${pstr}`);
-      }
-      this.midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
       let gain = params.gain;
       // hack: should have different logic for percussion sampler
       // Since we treat pitches in non-pitched percussion as if treble clef,
@@ -249,8 +252,16 @@ export class SuiOscillatorSoundfont extends SuiOscillator {
   }
   play() {
     const note = this.midinumber;
+    if (SuiOscillator.audio.state === 'suspended') {
+      SuiOscillator.audio.resume();
+    }
     if (this.velocity > 0 && this.samples) {
-      this.samples.start({ note, time: 0, duration: this.duration / 1000, velocity: this.velocity });
+      if (layoutDebug.mask & layoutDebug.values.oscillators) {
+        console.log(`osc: mn/dur/del/time  ${note} /${this.duration}/ ${this.delayTime} / ${SuiOscillator.audio.currentTime} `);
+      }
+      const currentTime = SuiOscillator.audio.currentTime;
+      this.samples.start({ note, time: currentTime + (this.delayTime), duration: this.duration, 
+        velocity: this.velocity, detune: this.detune});
     }
   }
 }

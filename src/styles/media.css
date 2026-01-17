@@ -95,21 +95,22 @@
   display: none;
 }
 #link-hdr {
-  position: relative;
-  background: #aaa;
-  display: block;
-  width: 100%;
+  display: inline-block;
+  width: auto;
   padding-left: 8px;
+  font-size: 1rem
+}
+#link-hdr a {
+  color: #000;
+  text-decoration: none;
 }
 #link-hdr.hide {
   display: none;
 }
 #link-hdr button {
-  position: absolute;
   right: 8px;
   border: 0;
   background: #aaa;
-  color: #990808;
   cursor: pointer;
 }
 body {
@@ -140,7 +141,7 @@ h1 {
 }
 
 .dom-container {
-	background-color:#999;
+	background: color #99a;;
 }
 .bold-italic {
   font-weight: bold;
@@ -266,7 +267,7 @@ body.printing .media div.d-flex
         padding-top: 0;
         position:relative;
         padding-left: 0;
-        background: #999;
+        background: #99a;
     }
     iframe {
         border:0;
@@ -277,9 +278,8 @@ body.printing .media div.d-flex
 
 }
 
-body.printing .workspace-container {
-    display:none;
-}
+body.printing .workspace-container,
+body.printing #top-bar ,
 body.printing .controls-left,
 body.printing .control-bar
  {
@@ -310,14 +310,14 @@ body.printing .printFrame {
   .workspace {
     padding-top: 2px;
     position:relative;
-    background: #999;
+    background: #99a;
     display:flex;
     flex-flow:row wrap;
   }
 }
 
 .musicRelief {
-	background:#999;
+	background:#99a;
 
 }
 .media {
@@ -325,6 +325,7 @@ body.printing .printFrame {
   flex-flow:row nowrap;
   flex-basis:100%;
   overflow-y:auto;
+  z-index: 1;
 }
 
 .saveLink {

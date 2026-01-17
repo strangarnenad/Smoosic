@@ -621,7 +621,7 @@ export class SuiScoreRender {
         this.score?.staves.forEach((curStaff) => {
           if (curStaff.partInfo.partAbbreviation.length > 0) {
             const numAr: any[] = [];
-            const mm = curStaff.measures[measure.measureNumber.localIndex];
+            const mm = curStaff.measures[measure.measureNumber.measureIndex];
             const modBox = context.offsetSvgPoint(mm.svg.logicalBox);
             numAr.push({ y: modBox.y + mm.svg.logicalBox.height / 2 });
             numAr.push({ x: modBox.x - (20 +  curStaff.partInfo.partAbbreviation.length) });
@@ -632,15 +632,15 @@ export class SuiScoreRender {
           }
         });
       }
-      if (measure.measureNumber.localIndex > 0 && measure.measureNumber.systemIndex === 0 && measure.svg.logicalBox && context) {
+      if (measure.measureNumber.measureIndex > 0 && measure.measureNumber.systemIndex === 0 && measure.svg.logicalBox && context) {
         const numAr: any[] = [];
         const modBox = context.offsetSvgPoint(measure.svg.logicalBox);
         numAr.push({ y: modBox.y - 10 });
         numAr.push({ x: modBox.x });
         numAr.push({ 'font-family': SourceSansProFont.fontFamily });
         numAr.push({ 'font-size': '10pt' });
-        SvgHelpers.placeSvgText(context.svg, numAr, 'measure-number', (measure.measureNumber.localIndex + 1).toString());
-
+        SvgHelpers.placeSvgText(context.svg, numAr, 'measure-number', (measure.measureNumber.displayMeasure + 1).toString());
+        
         // Show line-feed symbol
         if (measure.format.systemBreak && !printing) {
           const starAr: any[] = [];

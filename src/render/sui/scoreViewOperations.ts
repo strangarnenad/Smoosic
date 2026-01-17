@@ -140,6 +140,11 @@ export class SuiScoreViewOperations extends SuiScoreView {
     const altSelector = JSON.parse(JSON.stringify(selector)); // for full score
     const isPartExposed = this.isPartExposed();
     const partInfo = this.score.staves[0].partInfo;
+
+    // If this text was attached to a staff that is not in the part, ignore the update
+    if (newVersion.selector && newVersion.selector.staff >= this.score.staves.length) {
+      return;
+    }
     // Back up the original score text
     let ogtg = this.storeScore.textGroups.find((tg) => tg.attrs.id === newVersion.attrs.id);
     if (isPartExposed && partInfo.preserveTextGroups) {
@@ -291,7 +296,12 @@ export class SuiScoreViewOperations extends SuiScoreView {
             }
           }
       });
-    });   
+    });
+    // Make sure all the notes in the measure after the change are updated.  
+    // We only need to do this for the displayed score, not the storeScore.
+    SmoSelection.getMeasureList(this.tracker.selections).forEach((ms) => {
+      ms.measure.updateClefChangeNotes();
+    })
   }
   /**
    * Modify the dynamics assoicated with the specific selection
@@ -312,18 +322,18 @@ export class SuiScoreViewOperations extends SuiScoreView {
    */
   async removeDynamic(dynamic: SmoDynamicText): Promise<void> {
     const measures = SmoSelection.getMeasureList(this.tracker.selections);
-    for (let i = 0; i < measures.length; ++i) {
-      const selection = measures[i];
+    for (let j = 0; j < this.tracker.selections.length; ++j) {
+      const selection = this.tracker.selections[j];
       if (selection) {
         const equiv = this._getEquivalentSelection(selection);
-        if (equiv?.note) {
+        if (equiv?.note && selection.note) {
           const altModifiers = equiv.note.getModifiers('SmoDynamicText');
           SmoOperation.removeDynamic(selection, dynamic);
           if (altModifiers.length) {
             SmoOperation.removeDynamic(equiv, altModifiers[0] as SmoDynamicText);
           }
-        }
       }
+    }
     }
     this._renderChangedMeasures(measures);
     await this.renderer.updatePromise()
@@ -528,6 +538,20 @@ export class SuiScoreViewOperations extends SuiScoreView {
     // Assume that the view is now set to full score
     this.score.addOrReplaceSystemGroup(staffGroup);
     this.storeScore.addOrReplaceSystemGroup(staffGroup);
+    this.renderer.setDirty();
+    await this.renderer.updatePromise();
+  }
+  async removeStaffGroup(staffGroup: SmoSystemGroup):Promise<void> {
+    this._undoScore('ungroup staves');
+    this.score.removeSystemGroup(staffGroup);
+    this.storeScore.removeSystemGroup(staffGroup);
+    this.renderer.setDirty();
+    await this.renderer.updatePromise();
+  }
+  async clearSystemGroups(): Promise<void>{
+    this._undoScore('clear staff groups');
+    this.score.clearSystemGroups();
+    this.storeScore.clearSystemGroups();
     this.renderer.setDirty();
     await this.renderer.updatePromise();
   }
@@ -1785,9 +1809,15 @@ export class SuiScoreViewOperations extends SuiScoreView {
         nmeasure.measureNumber.measureIndex = pos;
         nmeasure.setActiveVoice(0);
         this.score.addMeasure(pos);
-        this.storeScore.addMeasure(pos);
+        this.storeScore.addMeasure(pos);        
       }
     }
+    const startMeasure = pos - (ix - 1);
+    const startSelector = SmoSelector.default;
+    const endSelector = SmoSelector.default;
+    startSelector.measure = startMeasure;
+    endSelector.measure = pos;
+    this._renderRectangle(startSelector, endSelector);
     this.renderer.setRefresh();
     return this.renderer.updatePromise();
   }
@@ -1827,10 +1857,20 @@ export class SuiScoreViewOperations extends SuiScoreView {
     }
     // if we are looking at a subset of the score,
     // revert to the full score view before removing the staff.
-    const sel = this.tracker.selections[0];
-    const scoreSel = this._getEquivalentSelection(sel);
-    const staffIndex = scoreSel!.selector.staff;
-    SmoOperation.removeStaff(this.storeScore, staffIndex);
+    const toRemove: number[] = [];
+    const selectedStaves: Record<number, boolean>  = {};
+    this.tracker.selections.forEach((sel) => {
+      const scoreSel = this._getEquivalentSelection(sel);
+      if (!selectedStaves[scoreSel!.selector.staff]) {
+        selectedStaves[scoreSel!.selector.staff] = true;
+        toRemove.push(scoreSel!.selector.staff);
+      }
+    });
+    // Sort in descending order so we don't mess up the staff indices as we remove
+    toRemove.sort((a, b) => b - a);
+    toRemove.forEach((staffIndex) => {
+      SmoOperation.removeStaff(this.storeScore, staffIndex);
+    });
     this.viewAll();
     this.renderer.setRefresh();
     return this.renderer.updatePromise();
@@ -1886,6 +1926,18 @@ export class SuiScoreViewOperations extends SuiScoreView {
       nInfo.stavesBefore = i;
       nInfo.stavesAfter = partLength - i - 1;
       this.storeScore.staves[nStaffIndex].partInfo = nInfo;
+      // Make sure that the next stave in the score has the correct 'staves before' setting
+      if (this.storeScore.staves.length > nStaffIndex + 1) {
+        if (nInfo.stavesAfter === 0) {
+          const nextStaff = this.storeScore.staves[nStaffIndex + 1];
+          nextStaff.partInfo.stavesBefore = 0;
+          const nextStaffDisplayIndex = this.staffMap.findIndex((x) => x === nStaffIndex + 1);
+          if (nextStaffDisplayIndex >= 0) {
+            this.score.staves[nextStaffDisplayIndex].partInfo = 
+              new SmoPartInfo(nextStaff.partInfo); 
+          }
+        }
+      }
       // If the staff index is currently displayed, 
       const displayedIndex = this.staffMap.findIndex((x) => x === nStaffIndex);
       if (displayedIndex >= 0) {
@@ -1955,6 +2007,16 @@ export class SuiScoreViewOperations extends SuiScoreView {
       SmoOperation.setMeasureFormat(this.score, m, format);
       if (isPart) {
         m.staff.partInfo.measureFormatting[m.measure.measureNumber.measureIndex] = new SmoMeasureFormat(format);
+        const alt = this._getEquivalentSelection(m);
+        SmoOperation.setMeasureFormat(this.storeScore, alt!, format);
+      } else {
+        // If we are seeing some set of staves that is not a part, make sure the whole column in the 
+        // score is updated.
+        const firstRow = SmoSelection.selectionFromSelector(
+          this.storeScore, {
+            staff: 0, measure: m.selector.measure, voice: m.selector.voice, tick: m.selector.tick, pitches: [] }
+        )
+        SmoOperation.setMeasureFormat(this.storeScore, firstRow!, format);
       }
       const alt = this._getEquivalentSelection(m);
       SmoOperation.setMeasureFormat(this.storeScore, alt!, format);
@@ -1993,9 +2055,9 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this._renderRectangle(fromSelector, toSelector);
     return this.renderer.updatePromise();
   }
-  renumberMeasures(measureIndex: number, localIndex: number) {
-    this.score.updateRenumberingMap(measureIndex, localIndex);
-    this.storeScore.updateRenumberingMap(measureIndex, localIndex);
+  renumberMeasures(measureIndex: number, displayIndex: number) {
+    this.score.updateRenumberingMap(measureIndex, displayIndex);
+    this.storeScore.updateRenumberingMap(measureIndex, displayIndex);
     const mmsel = SmoSelection.measureSelection(this.score, 0, measureIndex);
     if (mmsel) {
       this._renderChangedMeasures([mmsel]);

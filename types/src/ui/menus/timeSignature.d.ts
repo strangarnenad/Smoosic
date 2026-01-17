@@ -10,4 +10,3 @@ export declare class SuiTimeSignatureMenu extends SuiMenuBase {
     selection(ev: any): Promise<void>;
     keydown(): void;
 }
-//# sourceMappingURL=timeSignature.d.ts.map

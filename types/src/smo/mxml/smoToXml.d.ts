@@ -163,4 +163,3 @@ export declare class SmoToXml {
      */
     static transpose(attributesElement: Element, smoState: SmoState): void;
 }
-//# sourceMappingURL=smoToXml.d.ts.map

@@ -72,18 +72,15 @@ export class SmoAudioPitch {
   }
   static frequencyToVexPitch(freq: number): string {
     const keys = SmoAudioPitch.pitchFrequencyKeys;
-    const strs: string[] = keys.filter((k) => Math.abs(SmoAudioPitch.pitchFrequencyMap[k] - freq) < 1);
-    if (!strs.length) {
-      return Math.floor(freq).toString();
-    }
-    for (let i = 0; i < strs.length; ++i) {
-      const vexPitch = strs[i];
-      if (vexPitch.length === 3 && 
-        (vexPitch[1] === 'n' || vexPitch[1] === '#' || vexPitch[1] === 'b')) {
-        return vexPitch.substring(0, vexPitch.length-1)+'/'+vexPitch[vexPitch.length - 1];
-      }
-    }
-    return Math.floor(freq).toString();
+    const distance = (a:string, freq:number) => Math.abs(SmoAudioPitch.pitchFrequencyMap[a] - freq);
+    // Find closest pitch
+    const closest = SmoAudioPitch.pitchFrequencyKeys.reduce((a, b) => 
+      distance(a, freq) < distance(b, freq) ? a: b);
+    // get the shortest enharmonic (i.e. no double accidentals)
+    const enh = SmoMusic.getEnharmonics(
+      closest.slice(0,-1)).reduce((a,b) => a.length < b.length ? a : b);
+    const octave = closest.slice(-1);
+    return `${enh}/${octave}`;
   }
 
   static _rawPitchToFrequency(smoPitch: Pitch, offset: number): number {
@@ -886,8 +883,8 @@ export class SmoMusic {
    * @param smoPitch pitch to convert
    * @returns pitch in MIDI string format.
    */
-  static smoPitchToMidiString(smoPitch: Pitch): string {
-    const midiPitch = SmoMusic.smoIntToPitch(SmoMusic.smoPitchToInt(smoPitch));
+  static smoPitchToMidiString(smoPitch: Pitch, offset: number): string {
+    const midiPitch = SmoMusic.smoIntToPitch(SmoMusic.smoPitchToInt(smoPitch) + offset);
     let rv = midiPitch.letter.toUpperCase();
     if (midiPitch.accidental !== 'n') {
       rv += midiPitch.accidental;
@@ -895,10 +892,10 @@ export class SmoMusic {
     rv += midiPitch.octave;
     return rv;
   }
-  static smoPitchesToMidiStrings(smoPitches: Pitch[]): string[] {
+  static smoPitchesToMidiStrings(smoPitches: Pitch[], offset: number): string[] {
     const rv: string[] = [];
     smoPitches.forEach((pitch) => {
-      rv.push(SmoMusic.smoPitchToMidiString(pitch));
+      rv.push(SmoMusic.smoPitchToMidiString(pitch, offset));
     });
     return rv;
   }
@@ -923,6 +920,23 @@ export class SmoMusic {
   }
   static midiPitchToMidiNumber(midiPitch: string): number {
     return SmoMusic.smoPitchToInt(SmoMusic.midiPitchToSmoPitch(midiPitch)) + 12;
+  }
+  static midiNumberAndDetuneFromPitch(pitch: Pitch, xpose: number, microtone?: SmoMicrotone) {
+    // Frequency adjusted for microtones
+    const freq = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, microtone ?? null);
+    // Equal-tempered frequency
+    const toneFrequency = SmoAudioPitch.smoPitchToFrequency(pitch, xpose, null);
+    let offset = freq - toneFrequency;
+    let detune = 0;
+    // the next tone up or down is a semitone, calculate the frequency so we can derive cents
+    if (Math.abs(offset) > 1) {
+      const nextPitch = offset > 0 ? (Math.pow(2, 1 / 12) * toneFrequency) :
+        (toneFrequency / Math.pow(2, 1 / 12));
+      detune = (100 * Math.sign(offset) * offset)/(nextPitch - toneFrequency);
+    }
+    const midiStr = SmoMusic.smoPitchToMidiString(pitch, xpose);
+    const midinumber = SmoMusic.midiPitchToMidiNumber(midiStr);
+    return { midinumber, detune, frequency: toneFrequency };
   }
   static midiNumberToMidiPitch(midiNumber: number): string {
     const smoPitch = SmoMusic.smoIntToPitch(midiNumber - 24);
@@ -1787,7 +1801,7 @@ export class SmoMusic {
    * @returns
    */
   static splitIntoValidDurations(ticks: number): number[] {
-    const rv = [];
+    const rv: number[] = [];
     let closest = 0;
     while (ticks > 128) {
       closest = SmoMusic.closestDurationTickLtEq(ticks);
@@ -1843,7 +1857,7 @@ export class SmoMusic {
   static gcdMap(duration: number): number[] {
     let k = 0;
     const keys = Object.keys(SmoMusic.ticksToDuration).map((x) => parseInt(x, 10));
-    const dar = [];
+    const dar: number[] = [];
     const gcd = (td: number) => {
       let rv = keys[0];
       for (k = 1; k < keys.length; ++k) {

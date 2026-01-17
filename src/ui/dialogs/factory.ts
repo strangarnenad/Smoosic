@@ -7,15 +7,14 @@ import { SuiSlurAttributesDialog } from './slur';
 import { SuiPedalMarkingDialog } from './pedalMarking';
 import { SuiVoltaAttributeDialog } from './volta';
 import { SuiLyricDialog } from './lyric';
+import { SuiChordChangeDialog } from './chordChange';
 import { SuiTieAttributesDialog } from './tie';
 import { SuiDynamicModifierDialog } from './dynamics';
 import { SuiTextBlockDialog } from './textBlock';
 import { SuiTextBracketDialog } from './textBracket';
-import { SuiInsertMeasures } from './addMeasure';
 import { SuiArpeggioDialog } from './arpeggio';
 import { SuiDialogNotifier, SmoDynamicComponentCtor, SuiBaseComponentParams } from './components/baseComponent';
 import { SuiButtonComponent, SuiButtonComposite, SuiButtonCompositeParams, SuiButtonComponentParams } from './components/button';
-import { SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from './endings';
 import { CheckboxDropdownComponent, CheckboxDropdownComponentParams } from './components/checkdrop';
 import { SuiDragText } from './components/dragText';
 import { SuiDropdownComponent, SuiDropdownComponentParams, SuiDropdownCompositeParams, SuiDropdownComposite } from './components/dropdown';
@@ -32,13 +31,8 @@ import { SuiTextInputComponentParams, SuiTextInputComponent,
 import { TieMappingComponentParams, TieMappingComponent } from './components/tie';
 import { SuiToggleComponentParams, SuiToggleComponent, SuiToggleCompositeParams, SuiToggleComposite } from './components/toggle';
 import { SuiTreeComponent, SuiTreeComponentParams } from './components/tree';
-import { SuiArticulationButtonComponent } from './articulation';
-import { SuiDurationButtonComponent } from './durations';
-import { SuiGraceNoteButtonsComponent } from './gracenote';
-import { SuiMicrotoneButtonComponent } from './microtones';
-import { SuiNoteHeadButtonComponent, SuiStemButtonComponent  } from './noteHead';
-import { SuiOrnamentButtonComponent } from './ornament';
-import { SuiIntervalButtonComponent, SuiTransposeButtonComponent, SuiLetterButtonComponent } from './pitch';
+import { SmoLyric } from '../../smo/data/noteModifiers';
+import { SuiExceptionHandler } from '../exceptions';
 
 export type ModifiersWithDialogs = 'SmoStaffHairpin' | 'SmoTie' | 'SmoSlur' | 
 'SmoDynamicText' | 'SmoVolta' | 'SmoScoreText' | 'SmoLoadScore' | 'SmoLyric' | 'SmoPedalMarking';
@@ -77,7 +71,16 @@ export function isModifierWithDialog(modifier: SmoModifier) {
     } else if (ctor === 'SmoStaffTextBracket') {
       return createAndDisplayDialog(SuiTextBracketDialog, parameters);
     } else {
-      return createAndDisplayDialog(SuiLyricDialog, parameters);
+      if (modifier.ctor !== 'SmoLyric') {
+        throw new SuiExceptionHandler('Unknown modifier dialog type ' + ctor);
+      }
+      
+      const lModifier = (modifier as SmoLyric);
+      if (lModifier.parser == SmoLyric.parsers.lyric) {
+        return createAndDisplayDialog(SuiLyricDialog, parameters);
+      } else {
+        return createAndDisplayDialog(SuiChordChangeDialog, parameters);
+      }
     }
   }
 }
@@ -92,8 +95,7 @@ export const initDialogTranslationElements = () => {
   DialogTranslations.push(suiDialogTranslate(SuiTextBlockDialog.dialogElements, 'SuiTextBlockDialog'));
   DialogTranslations.push(suiDialogTranslate(SuiTextBlockDialog.dialogElements, 'SuiTextBracketDialog'));
   DialogTranslations.push(suiDialogTranslate(SuiLyricDialog.dialogElements, 'SuiLyricDialog'));
-  DialogTranslations.push(suiDialogTranslate(SuiInsertMeasures.dialogElements, 'SuiInsertMeasures'));
-  DialogTranslations.push(suiDialogTranslate(SuiArpeggioDialog.dialogElements, 'SuiArpeggioDialog'));
+  // DialogTranslations.push(suiDialogTranslate(SuiArpeggioDialog.dialogElements, 'SuiArpeggioDialog'));
 }
 export const initDialogConstructors = () => {
   SmoDynamicComponentCtor['SuiButtonComponent'] = 
@@ -151,31 +153,4 @@ export const initDialogConstructors = () => {
   (dialog: SuiDialogNotifier, params: SuiToggleCompositeParams) => new SuiToggleComposite(dialog, params);
   SmoDynamicComponentCtor['SuiTreeComponent'] = 
   (dialog: SuiDialogNotifier, params: SuiTreeComponentParams) => new SuiTreeComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiArticulationButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiArticulationButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiDurationButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiDurationButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiEndBarButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiEndBarButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiStartBarButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiStartBarButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiRepeatSymbolButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiRepeatSymbolButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiGraceNoteButtonsComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiGraceNoteButtonsComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiMicrotoneButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiMicrotoneButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiNoteHeadButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiNoteHeadButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiStemButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiStemButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiOrnamentButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiOrnamentButtonComponent(dialog, params);
-
-  SmoDynamicComponentCtor['SuiTransposeButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiTransposeButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiIntervalButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiIntervalButtonComponent(dialog, params);
-  SmoDynamicComponentCtor['SuiLetterButtonComponent'] = 
-  (dialog: SuiDialogNotifier, params: SuiBaseComponentParams) => new SuiLetterButtonComponent(dialog, params);
 }

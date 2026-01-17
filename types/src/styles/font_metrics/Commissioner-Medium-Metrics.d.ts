@@ -869,4 +869,3 @@ export namespace Commissioner_MediumFont {
     let resolution: number;
     let generatedOn: string;
 }
-//# sourceMappingURL=Commissioner-Medium-Metrics.d.ts.map

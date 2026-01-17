@@ -1,5 +1,5 @@
 import { TickMappable } from '../data/measure';
-import { Pitch, TickAccidental } from '../data/common';
+import { TickAccidental } from '../data/common';
 import { SmoNote } from '../data/note';
 /**
  * create a map note durations at each index into the voice, including the accidentals at each duration.
@@ -16,6 +16,7 @@ export declare class TickMap {
     keySignature: string;
     voice: number;
     notes: SmoNote[];
+    priorAccidentals: TickAccidental[];
     index: number;
     startIndex: number;
     endIndex: number;
@@ -28,8 +29,6 @@ export declare class TickMap {
     constructor(measure: TickMappable, voiceIndex: number);
     _getAccidentalsForKey(map: Record<string, TickAccidental>): void;
     updateAccidentalMap(note: SmoNote): void;
-    getActiveAccidental(pitch: Pitch, iteratorIndex: number, keySignature: string): string;
     get duration(): number;
     createMap(): void;
 }
-//# sourceMappingURL=tickMap.d.ts.map

@@ -13,4 +13,3 @@ export declare class defaultRibbonLayout {
     static get debugRibbonButtons(): ButtonDefinition[];
     static get leftRibbonButtons(): ButtonDefinition[];
 }
-//# sourceMappingURL=defaultRibbon.d.ts.map

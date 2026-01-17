@@ -32,8 +32,8 @@ export interface ModifierPlacement {
  * @category SmoTransform
  */
 export declare class PasteBuffer {
-    notes: PasteNote[];
-    totalDuration: number;
+    notes: Record<number, PasteNote[]>;
+    staffIndex: number;
     noteIndex: number;
     measures: SmoMeasure[];
     measureIndex: number;
@@ -53,13 +53,13 @@ export declare class PasteBuffer {
     _findModifier(selector: SmoSelector): StaffModifierBase | null;
     _findPlacedModifier(selector: SmoSelector): StaffModifierBase | null;
     _alignVoices(measure: SmoMeasure, voiceIndex: number): void;
-    _populateMeasureArray(selector: SmoSelector): void;
+    _populateMeasureArray(selector: SmoSelector, notes: PasteNote[]): void;
     _populatePre(voiceIndex: number, measure: SmoMeasure, startTick: number, tickmap: TickMap): SmoVoice;
     /**
      *
      * @param voiceIndex
      */
-    _populateVoice(): SmoVoice[];
+    _populateVoice(notes: PasteNote[]): SmoVoice[];
     static _countTicks(voice: SmoVoice): number;
     /**
      * If the source contains a staff modifier that ends on the source selection, copy the modifier
@@ -88,9 +88,12 @@ export declare class PasteBuffer {
      * @param startSelector
      * @returns
      */
-    _populateNew(voice: SmoVoice, measure: SmoMeasure, tickmap: TickMap, startSelector: SmoSelector): void;
+    _populateNew(voice: SmoVoice, measure: SmoMeasure, tickmap: TickMap, startSelector: SmoSelector, notes: PasteNote[]): void;
     _populatePost(voice: SmoVoice, voiceIndex: number, measure: SmoMeasure, tickmap: TickMap): void;
     _pasteVoiceSer(serializedMeasure: any, vobj: any, voiceIx: number): void;
+    pasteChordNotes(selector: SmoSelector, notes: PasteNote[]): PasteNote[];
+    pasteIntoScore(score: SmoScore, selector: SmoSelector, func: (selector: SmoSelector, notes: PasteNote[]) => PasteNote[]): void;
+    pasteChords(selector: SmoSelector): void;
     pasteSelections(selector: SmoSelector): void;
+    pasteNoteSelections(selector: SmoSelector, notes: PasteNote[]): PasteNote[];
 }
-//# sourceMappingURL=copypaste.d.ts.map

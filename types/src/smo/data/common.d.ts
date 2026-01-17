@@ -49,6 +49,8 @@ export interface Ticks {
     denominator: number;
     remainder: number;
 }
+export type ElementLike = SVGSVGElement | SVGGElement | SVGGraphicsElement | null;
+export declare const RemoveElementLike: (e: ElementLike) => void;
 /**
  * constraint for SmoPitch.letter value, in lower case
  */
@@ -190,6 +192,7 @@ export interface KeyEvent {
 }
 export declare function defaultKeyEvent(): KeyEvent;
 export declare function keyEventMatch(ev1: KeyEvent, ev2: KeyEvent): boolean;
+export type keyHandler = (key?: KeyEvent) => void;
 /**
  * @internal
  */
@@ -215,4 +218,3 @@ export interface AccidentalDisplay {
 }
 export declare const reverseStaticMaps: Record<string, Record<string, string>>;
 export declare function reverseStaticMap(name: string, o: Record<string, string>): Record<string, string>;
-//# sourceMappingURL=common.d.ts.map

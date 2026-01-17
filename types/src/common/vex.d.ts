@@ -1,4 +1,4 @@
-import { Note as VexNote, StaveNote as VexStaveNote, StemmableNote as VexStemmableNote, Beam as VexBeam, Tuplet as VexTuplet, Voice as VexVoice, Formatter as VexFormatter, Accidental as VexAccidental, Annotation as VexAnnotation, StaveNoteStruct as VexStaveNoteStruct, StaveText as VexStaveText, StaveModifier as VexStaveModifier, TextNote as VexTextNote, Stave as VexStave, StaveModifierPosition as VexStaveModifierPosition, Font as VexFont, FontInfo as VexFontInfo, FontStyle as VexFontStyle, FontWeight as VexFontWeight, TupletOptions as VexTupletOptions, Curve as VexCurve, StaveTie as VexStaveTie, ClefNote as VexClefNote, Music as VexMusic, ChordSymbol as VexChordSymbol, TabStave as VexTabStave, TabNote as VexTabNote, TabSlide as VexTabSlide, TabNotePosition as VexTabNotePosition, TabNoteStruct as VexTabNoteStruct, PedalMarking as VexPedalMarking, Stem as VexStem } from "vexflow_smoosic";
+import { Note as VexNote, StaveNote as VexStaveNote, StemmableNote as VexStemmableNote, Beam as VexBeam, Tuplet as VexTuplet, Voice as VexVoice, Formatter as VexFormatter, Accidental as VexAccidental, Annotation as VexAnnotation, StaveNoteStruct as VexStaveNoteStruct, StaveText as VexStaveText, StaveModifier as VexStaveModifier, TextNote as VexTextNote, Stave as VexStave, StaveModifierPosition as VexStaveModifierPosition, Font as VexFont, FontInfo as VexFontInfo, FontStyle as VexFontStyle, FontWeight as VexFontWeight, TupletOptions as VexTupletOptions, Curve as VexCurve, StaveTie as VexStaveTie, ClefNote as VexClefNote, Music as VexMusic, ChordSymbol as VexChordSymbol, TabStave as VexTabStave, TabNote as VexTabNote, TabSlide as VexTabSlide, TabNotePosition as VexTabNotePosition, TabNoteStruct as VexTabNoteStruct, PedalMarking as VexPedalMarking, Stem as VexStem, Renderer as VexRenderer, RenderContext as VexRenderContext, SVGContext as VexSVGContext } from "vexflow_smoosic";
 import { SvgBox } from "../smo/data/common";
 export declare const VexFlow: typeof import("vexflow_smoosic").Flow;
 export type Music = VexMusic;
@@ -32,6 +32,9 @@ export type TabNote = VexTabNote;
 export type TabSlide = VexTabSlide;
 export type TabNotePosition = VexTabNotePosition;
 export type TabNoteStruct = VexTabNoteStruct;
+export type Renderer = VexRenderer;
+export type RenderContext = VexRenderContext;
+export type SVGContext = VexSVGContext;
 /**
  * @internal
  */
@@ -53,6 +56,7 @@ export interface CreateVexNoteParams {
     stemTicks: string;
     keys: string[];
     noteType: string;
+    isCue?: boolean;
 }
 /**
  * @internal
@@ -94,6 +98,7 @@ export interface SmoVexStaveParams {
     canceledKey: string | null;
     startX: number;
     adjX: number;
+    lines: number;
     context: any;
 }
 export declare function createTabStave(box: SvgBox, spacing: number, numLines: number): TabStave;
@@ -172,6 +177,7 @@ export interface SmoVexTieParams {
     vexOptions: any;
 }
 export declare function createTie(params: SmoVexTieParams): StaveTie;
+export declare const vexNoteScale: number;
 export declare const defaultNoteScale: number;
 export declare const defaultCueScale: number;
 export declare function glyphPixels(): number;
@@ -214,4 +220,3 @@ export declare const ChordSymbolGlyphs: Record<string, {
     code: string;
 }>;
 export declare const vexOrnaments: Record<string, string>;
-//# sourceMappingURL=vex.d.ts.map

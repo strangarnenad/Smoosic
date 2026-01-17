@@ -47,9 +47,9 @@ export class SmoOperation {
       return;
     }
     score.staves.forEach((staff: SmoSystemStaff) => {
-      value.formatMeasure(staff.measures[selection.selector.measure]);
+      staff.measures[selection.selector.measure].format = new SmoMeasureFormat(value);
     });
-    score.formattingManager.updateMeasureFormat(value);
+    score.formattingManager.updateMeasureFormat(value, selection.selector.measure);
   }
 
   static addKeySignature(score: SmoScore, selection: SmoSelection, keySignature: string) {
@@ -859,7 +859,7 @@ export class SmoOperation {
     const lastIndex = selections.length - 1;
     const note1 = selections[0].note;
     const note2 = selections[lastIndex].note;
-    const inners = [];
+    const inners: SmoSelection[] = [];
     let minLine = -1;
     let maxLine = 0;
     if (selections.length > 2) {

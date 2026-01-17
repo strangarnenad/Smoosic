@@ -3,6 +3,12 @@ import { SuiTracker } from "../render/sui/tracker";
 import { CompleteNotifier } from "../ui/common";
 import { ModalComponent } from "../ui/common";
 import { BrowserEventSource, EventHandler } from "../ui/eventSource";
+export type trackerKeyAction = "moveHome" | "moveEnd" | "moveSelectionRight" | "moveSelectionLeft" | "moveSelectionUp" | "moveSelectionDown" | "moveSelectionRightMeasure" | "moveSelectionLeftMeasure" | "advanceModifierSelection" | "growSelectionRight" | "growSelectionLeft" | "growSelectionRightMeasure" | "growSelectionRightMeasure" | "moveSelectionPitchUp" | "moveSelectionPitchDown";
+export declare const trackerKeyActions: string[];
+export type editorKeyAction = "transposeUp" | "transposeDown" | "upOctave" | "downOctave" | "toggleCourtesyAccidental" | "toggleEnharmonic" | "doubleDuration" | "halveDuration" | "dotDuration" | "undotDuration" | "setPitch" | "slashGraceNotes" | "addGraceNote" | "removeGraceNote" | "playScore" | "stopPlayer" | "pausePlayer" | "togglePlayer" | "undo" | "copy" | "paste" | "makeTuplet" | "interval" | "unmakeTuplet" | "addMeasure" | "deleteNote" | "makeRest" | "unbeamSelections" | "beamSelections" | "toggleBeamDirection" | "addRemoveAccent" | "addRemoveTenuto" | "addRemoveStaccato" | "addRemovePizzicato" | "addRemoveMarcato";
+export declare const editorKeyActions: string[];
+export declare function isEditorKeyAction(action: string): boolean;
+export declare function isTrackerKeyAction(action: string): boolean;
 /**
  * A binding of a key to some action performed by a module
  * @category SuiApplication
@@ -39,8 +45,8 @@ export interface KeyCommandParams {
  */
 export declare abstract class ModalEventHandler {
     abstract mouseMove(ev: any): void;
-    abstract mouseClick(ev: any): void;
-    abstract evKey(evdata: any): void;
+    abstract mouseClick(ev: any): Promise<void>;
+    abstract evKey(evdata: any): Promise<void>;
     abstract keyUp(evdata: any): void;
 }
 export type handler = (ev: any) => void;
@@ -59,11 +65,10 @@ export declare class ModalEventHandlerProxy {
     mouseClickHandler: EventHandler | null;
     constructor(evSource: BrowserEventSource);
     set handler(value: ModalEventHandler);
-    evKey(ev: any): void;
+    evKey(ev: any): Promise<void>;
     keyUp(ev: any): void;
     mouseMove(ev: any): void;
-    mouseClick(ev: any): void;
+    mouseClick(ev: any): Promise<void>;
     bindEvents(): void;
     unbindKeyboardForModal(dialog: ModalComponent): void;
 }
-//# sourceMappingURL=common.d.ts.map

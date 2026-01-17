@@ -1,4 +1,3 @@
-/// <reference types="node" />
 import { SuiScoreViewOperations } from "./scoreViewOperations";
 import { SvgBox } from '../../smo/data/common';
 /**
@@ -45,4 +44,3 @@ export declare class SuiPiano {
     playNote(): void;
     render(): void;
 }
-//# sourceMappingURL=piano.d.ts.map

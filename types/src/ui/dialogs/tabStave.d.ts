@@ -4,6 +4,7 @@ import { SmoSelection } from '../../smo/xform/selections';
 import { SuiScoreViewOperations } from '../../render/sui/scoreViewOperations';
 import { DialogDefinition, SuiDialogParams } from './dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from './adapter';
+export declare const SuiTabStaveDialogVue: (parameters: SuiDialogParams) => Promise<void>;
 /**
  * Create or edit guitar tablature settings for a stave
  * @category SuiDialog
@@ -40,4 +41,3 @@ export declare class SuiTabStaveDialog extends SuiDialogAdapterBase<SuiTabStaveA
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=tabStave.d.ts.map

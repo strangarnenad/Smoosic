@@ -868,4 +868,3 @@ export namespace TimesFont {
     let resolution: number;
     let generatedOn: string;
 }
-//# sourceMappingURL=times_metrics.d.ts.map

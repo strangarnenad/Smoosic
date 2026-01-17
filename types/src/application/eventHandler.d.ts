@@ -57,7 +57,6 @@ export declare class SuiEventHandler implements ModalEventHandler {
     piano: SuiPiano | null;
     exhandler: SuiExceptionHandler;
     constructor(params: EventHandlerParams);
-    static get scrollable(): string;
     private static handleScrollEventDefer;
     handleScrollEvent(): void;
     createPiano(): void;
@@ -72,9 +71,8 @@ export declare class SuiEventHandler implements ModalEventHandler {
     menuHelp(): void;
     keyUp(evdata: any): void;
     handleMetaKeyDown(evdata: any): void;
-    evKey(evdata: any): void;
+    evKey(evdata: any): Promise<void>;
     mouseMove(ev: any): void;
-    mouseClick(ev: any): void;
+    mouseClick(ev: any): Promise<void>;
     bindEvents(): void;
 }
-//# sourceMappingURL=eventHandler.d.ts.map

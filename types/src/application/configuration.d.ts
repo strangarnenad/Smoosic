@@ -24,6 +24,7 @@ export interface SmoConfigurationParams {
     language: string;
     initialScore?: string | SmoScore;
     remoteScore?: string;
+    domContainer: string | HTMLElement;
     scoreDomContainer: string | HTMLElement;
     leftControls?: string | HTMLElement;
     topControls?: string | HTMLElement;
@@ -53,6 +54,7 @@ export interface SmoConfigurationParams {
 export declare class SmoConfiguration implements SmoRenderConfiguration, SmoUiConfiguration {
     mode: SmoMode;
     language: string;
+    domContainer?: string | HTMLElement;
     initialScore?: string | SmoScore;
     remoteScore?: string;
     leftControls?: string | HTMLElement;
@@ -70,4 +72,3 @@ export declare class SmoConfiguration implements SmoRenderConfiguration, SmoUiCo
     static get keyBindingDefaults(): KeyBindingConfiguration;
     constructor(params: Partial<SmoConfigurationParams>);
 }
-//# sourceMappingURL=configuration.d.ts.map

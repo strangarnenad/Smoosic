@@ -247,7 +247,8 @@ export declare abstract class SuiScoreView {
      */
     viewAll(): void;
     /**
-     * Update score based on transposing flag.
+     * If the score is non-transposed, transpose the part so it is in the
+     * correct key.
      */
     _setTransposing(): void;
     /**
@@ -264,4 +265,3 @@ export declare abstract class SuiScoreView {
      */
     undo(): Promise<void>;
 }
-//# sourceMappingURL=scoreView.d.ts.map

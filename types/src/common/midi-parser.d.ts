@@ -36,4 +36,3 @@ export function parseMidi(data: any): {
         programNumber: any;
     }[][];
 };
-//# sourceMappingURL=midi-parser.d.ts.map

@@ -223,7 +223,7 @@ export class StaffCheckComponent extends SuiComponentBase {
   show: boolean;
 }*/
   getValue(): StaffCheckValue[] {
-    const rv = [];
+    const rv: any = [];
     let i = 0;
     for (i = 0; i < this.staffRows.length; ++i) {
       const show = this.staffRows[i].showCtrl.getValue();

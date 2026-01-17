@@ -1,7 +1,7 @@
 import { OutlineInfo } from './svgHelpers';
 import { SmoTextGroup, SmoScoreText } from '../../smo/data/scoreText';
 import { SuiScroller } from './scroller';
-import { SmoAttrs, SvgBox } from '../../smo/data/common';
+import { SmoAttrs, SvgBox, ElementLike } from '../../smo/data/common';
 import { SvgPage, SvgPageMap } from './svgPageMap';
 import { TextFormatter } from '../../common/textformatter';
 /**
@@ -88,7 +88,7 @@ export declare class SuiInlineText {
     scroller: SuiScroller;
     artifacts: SuiInlineArtifact[];
     logicalBox: SvgBox;
-    element: SVGSVGElement | null;
+    element: ElementLike;
     updateFontInfo(): TextFormatter;
     constructor(params: SuiInlineTextParams);
     static fromScoreText(scoreText: SmoScoreText, context: SvgPage, pageMap: SvgPageMap, scroller: SuiScroller): SuiInlineText;
@@ -187,4 +187,3 @@ export declare class SuiTextBlock {
     unrender(): void;
     _justify(): void;
 }
-//# sourceMappingURL=textRender.d.ts.map

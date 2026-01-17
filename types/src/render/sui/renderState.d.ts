@@ -58,7 +58,7 @@ export declare class SuiRenderState {
      * Do a quick re-render of a measure that has changed, defer the whole score.
      * @returns
      */
-    replaceMeasures(): void;
+    replaceMeasures(): Promise<void>;
     preserveScroll(): Promise<void>;
     _renderStatePromise(condition: () => boolean): Promise<void>;
     renderPromise(): Promise<void>;
@@ -86,4 +86,3 @@ export declare class SuiRenderState {
     unrenderTextGroups(): Promise<void>;
     render(): Promise<any>;
 }
-//# sourceMappingURL=renderState.d.ts.map

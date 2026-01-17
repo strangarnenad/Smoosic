@@ -1,4 +1,4 @@
-import { Transposable, SvgBox, SvgPoint } from '../../smo/data/common';
+import { Transposable, SvgBox, SvgPoint, ElementLike } from '../../smo/data/common';
 import { SvgPage } from './svgPageMap';
 /**
  * @internal
@@ -22,7 +22,7 @@ export interface OutlineInfo {
     context: SvgPage;
     timeOff: number;
     timer?: number;
-    element?: SVGSVGElement;
+    element?: ElementLike;
 }
 /**
  * @internal
@@ -60,8 +60,8 @@ export declare class SvgBuilder {
 export declare class SvgHelpers {
     static get namespace(): string;
     static gradient(svg: SVGSVGElement, id: string, orientation: string, stops: GradientInfo[]): void;
-    static renderCursor(svg: SVGSVGElement, x: number, y: number, height: number): void;
-    static updateArtifactBox(context: SvgPage, element: SVGSVGElement | undefined, artifact: Transposable): void;
+    static renderCursor(svg: ElementLike, x: number, y: number, height: number): void;
+    static updateArtifactBox(context: SvgPage, element: ElementLike, artifact: Transposable): void;
     static eraseOutline(params: OutlineInfo): void;
     static outlineRect(params: OutlineInfo): void;
     static setSvgStyle(element: Element, attrs: StrokeInfo): void;
@@ -83,4 +83,3 @@ export declare class SvgHelpers {
     static svgViewport(svg: SVGSVGElement, xOffset: number, yOffset: Number, width: number, height: number, scale: number): void;
     static removeElementsByClass(svg: SVGSVGElement, className: string): void;
 }
-//# sourceMappingURL=svgHelpers.d.ts.map

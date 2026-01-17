@@ -25,4 +25,3 @@ export declare class SuiDragText extends SuiComponentBase {
     mouseUp(e: any): void;
     bind(): void;
 }
-//# sourceMappingURL=dragText.d.ts.map

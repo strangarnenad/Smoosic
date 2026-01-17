@@ -23,4 +23,3 @@ export declare class SuiCustomTupletDialog extends SuiDialogAdapterBase<SuiCusto
     static dialogElements: DialogDefinition;
     constructor(parameters: SuiDialogParams);
 }
-//# sourceMappingURL=customTuplets.d.ts.map

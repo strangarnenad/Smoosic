@@ -10,4 +10,3 @@ export interface SmoRenderConfiguration {
     scoreDomContainer: string | HTMLElement;
     audioAnimation: SuiAudioAnimationParams;
 }
-//# sourceMappingURL=configuration.d.ts.map

@@ -22,6 +22,7 @@ import { SmoConfiguration } from './configuration';
 import { SuiDom } from './dom';
 import { NoteEntryCaret } from '../render/sui/NoteEntryCaret';
 import {NoteEntryMediator} from "../render/sui/NoteEntryMediator";
+import { SuiNavigation } from '../ui/navigation'
 declare var $: any;
 
 /**
@@ -100,10 +101,6 @@ export class SuiEventHandler implements ModalEventHandler {
     // Initialize note entry caret
     this.noteEntryCaret = new NoteEntryCaret(this.view, this.tracker);
     this.noteEntryMediator = new NoteEntryMediator(this.tracker, this.noteEntryCaret, this.view);
-  }
-
-  static get scrollable() {
-    return '.musicRelief';
   }
 
   private static handleScrollEventDefer(handler: SuiEventHandler) {
@@ -188,7 +185,7 @@ export class SuiEventHandler implements ModalEventHandler {
   // in the tracker.
   bindResize() {
     const self = this;
-    const el: HTMLElement = $(SuiEventHandler.scrollable)[0];
+    const el: HTMLElement = $(SuiNavigation.scrollable)[0];
     // unit test programs don't have resize html
     if (!el) {
       return;

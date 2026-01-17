@@ -26,4 +26,3 @@ export declare class SuiFileDownloadComponent extends SuiComponentBase {
     setValue(value: any): void;
     bind(): void;
 }
-//# sourceMappingURL=fileDownload.d.ts.map

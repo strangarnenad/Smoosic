@@ -598,8 +598,8 @@ export class SvgPageMap {
             container.remove();
         }
         // pop last renderer off the stack.
-        const renderers = [];
-        const layouts = [];
+        const renderers: SvgPage[] = [];
+        const layouts: SmoPageLayout[] = [];
         for (i = 0; i < this.vfRenderers.length - 1; ++i) {
             renderers.push(this.vfRenderers[i]);
             layouts.push(this.pageLayouts[i]);

@@ -33,4 +33,3 @@ export declare class SuiChordChangeDialog extends SuiDialogBase {
     mouseMove(ev: any): void;
     mouseClick(ev: any): void;
 }
-//# sourceMappingURL=chordChange.d.ts.map

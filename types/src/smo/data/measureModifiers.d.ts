@@ -1,4 +1,4 @@
-import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase } from './common';
+import { SmoAttrs, MeasureNumber, SmoObjectParams, SvgBox, SmoModifierBase, ElementLike } from './common';
 import { SmoSelector } from '../xform/selections';
 import { FontInfo } from '../../common/vex';
 /**
@@ -189,9 +189,8 @@ export interface SmoRepeatSymbolParamsSer extends SmoRepeatSymbolParams {
  */
 export declare class SmoRepeatSymbol extends SmoMeasureModifierBase {
     static readonly symbols: Record<string, number>;
-    static readonly _repeatSymbolStrings: string[];
+    static readonly _repeatSymbolStrings: Record<number, string>;
     static repeatSymbolString(symbol: SmoRepeatSymbol): string;
-    static readonly defaultXOffset: number[];
     static readonly positions: Record<string, number>;
     static get defaults(): SmoRepeatSymbolParams;
     static get attributes(): string[];
@@ -257,7 +256,7 @@ export declare class SmoVolta extends SmoMeasureModifierBase {
     endingId: string | null;
     startSelector: SmoSelector | null;
     endSelector: SmoSelector | null;
-    elements: SVGSVGElement[];
+    elements: ElementLike[];
     constructor(parameters: SmoVoltaParams);
     get id(): string;
     get type(): string;
@@ -355,7 +354,7 @@ export declare class SmoRehearsalMark extends SmoMeasureModifierBase {
     symbol: string;
     increment: boolean;
     getIncrement(): string;
-    getInitial(): "1" | "a" | "A";
+    getInitial(): "a" | "A" | "1";
     serialize(): SmoRehearsalMarkParamsSer;
     constructor(parameters: SmoRehearsalMarkParams);
 }
@@ -505,4 +504,3 @@ export declare class TimeSignature extends SmoMeasureModifierBase {
     constructor(params: TimeSignatureParameters);
 }
 export declare const measureModifierDynamicCtorInit: () => void;
-//# sourceMappingURL=measureModifiers.d.ts.map

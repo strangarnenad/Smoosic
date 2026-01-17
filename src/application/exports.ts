@@ -16,7 +16,7 @@ import { CollapseRibbonControl, ExtendedCollapseParent } from '../ui/buttons/col
 import { DisplaySettings } from '../ui/buttons/display';
 import { SmoTranslationEditor } from '../ui/i18n/translationEditor';
 import { SmoConfiguration } from './configuration';
-import { RibbonLayout, ModalComponent, CompleteNotifier, RibbonDefinition } from '../ui/common';
+import { RibbonLayout, ModalComponent, CompleteNotifier, RibbonDefinition, replaceVueRoot } from '../ui/common';
 import { RibbonButtons } from '../ui/buttons/ribbon';
 import { simpleRibbonLayout } from '../ui/ribbonLayout/default/tabletRibbon';
 import { ModalEventHandler } from './common';
@@ -32,24 +32,23 @@ import { dynamicCtorInit } from './dynamicInit';
 // Dialogs
 import { SuiDialogBase, createAndDisplayDialog } from '../ui/dialogs/dialog';
 import { SuiComponentAdapter, SuiDialogAdapterBase } from '../ui/dialogs/adapter';
-import { SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent } from '../ui/dialogs/gracenote';
+import { SuiGraceNoteDialog } from '../ui/dialogs/gracenote';
 import { SuiModifierDialogFactory } from '../ui/dialogs/factory';
-import { SuiTransposeScoreDialog, SuiTransposeScoreAdapter } from '../ui/dialogs/transposeScore';
-import { SuiMeasureDialog } from '../ui/dialogs/measureFormat';
-import { SuiInsertMeasures } from '../ui/dialogs/addMeasure';
-import { SuiInstrumentDialog } from '../ui/dialogs/instrument';
+import { SuiTransposeScoreDialogVue} from '../ui/dialogs/transposeScore';
+import { SuiMeasureFormatDialogVue } from '../ui/dialogs/measureFormat';
+import { SuiInsertMeasuresVue } from '../ui/dialogs/addMeasure';
+import { SuiInstrumentDialogVue } from '../ui/dialogs/instrument';
 import { SuiTimeSignatureDialog } from '../ui/dialogs/timeSignature';
 import { SuiTempoDialog } from '../ui/dialogs/tempo';
-import { SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiNoteHeadButtonComponent, SuiStemButtonComponent } from '../ui/dialogs/noteHead';
-import { SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
-  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent } from '../ui/dialogs/endings';
-import { SuiScoreIdentificationDialog } from '../ui/dialogs/scoreId';
-import { SuiScorePreferencesDialog } from '../ui/dialogs/preferences';
-import { SuiPageLayoutDialog } from '../ui/dialogs/pageLayout';
+import { SuiNoteHeadDialog } from '../ui/dialogs/noteHead';
+import { SuiEndingsDialogVue } from '../ui/dialogs/endings';
+import { SuiScoreIdentificationDialogVue } from '../ui/dialogs/scoreId';
+import { SuiScorePreferencesDialogVue } from '../ui/dialogs/preferences';
+import { SuiPageLayoutDialogVue } from '../ui/dialogs/pageLayout';
 import { SuiTextBracketDialog } from '../ui/dialogs/textBracket';
-import { SuiScoreFontDialog } from '../ui/dialogs/fonts';
-import { SuiGlobalLayoutDialog } from '../ui/dialogs/globalLayout';
-import { SuiScoreViewDialog } from '../ui/dialogs/scoreView';import { SuiLibraryDialog } from '../ui/dialogs/library';
+import { SuiScoreFontDialogVue } from '../ui/dialogs/fonts';
+import { SuiGlobalLayoutDialogVue } from '../ui/dialogs/globalLayout';
+import { SuiScoreViewDialogVue } from '../ui/dialogs/scoreView';import { SuiLibraryDialog } from '../ui/dialogs/library';
 import { SuiChordChangeDialog } from '../ui/dialogs/chordChange';
 import { SuiLyricDialog } from '../ui/dialogs/lyric';
 import { SuiTextBlockDialog, helpModal } from '../ui/dialogs/textBlock';
@@ -59,16 +58,15 @@ import { SuiPedalMarkingDialog } from '../ui/dialogs/pedalMarking';
 import { SuiTieAttributesDialog } from '../ui/dialogs/tie';
 import { SuiVoltaAttributeDialog } from '../ui/dialogs/volta';
 import { SuiHairpinAttributesDialog } from '../ui/dialogs/hairpin';
-import { SuiStaffGroupDialog } from '../ui/dialogs/staffGroup';
-import { SuiOrnamentDialog, SuiOrnamentButtonComponent } from '../ui/dialogs/ornament';
-import { SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter } from '../ui/dialogs/articulation';
-import { SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog } from '../ui/dialogs/microtones';
+import { SuiStaffGroupDialogVue } from '../ui/dialogs/staffGroup';
+import { SuiOrnamentDialogVue } from '../ui/dialogs/ornament';
+import { SuiArticulationDialogVue } from '../ui/dialogs/articulation';
+import { SuiMicrotoneDialogVue } from '../ui/dialogs/microtones';
 import { SuiArpeggioDialog } from '../ui/dialogs/arpeggio';
 import { SuiClefChangeDialog } from '../ui/dialogs/clefChange';
-import { SuiPartInfoDialog } from '../ui/dialogs/partInfo';
-import { SuiLoadMxmlDialog, SuiLoadFileDialog,
-    SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog,
-    SuiSaveMidiDialog, SuiSaveVexDialog } from '../ui/dialogs/fileDialogs';
+import { SuiPartInfoDialogVue } from '../ui/dialogs/partInfo';
+import { SuiNavigation } from '../ui/navigation';
+import { SuiFileUploadDialog, SuiFileSaveDialog, SuiPrintDialog } from '../ui/dialogs/fileDialogs';
     // Dialog components
 
 import { SuiTextInputComponent, SuiTextInputComposite, SuiReadOnlyTextComponent } from '../ui/dialogs/components/textInput';
@@ -113,6 +111,7 @@ import { SuiLanguageMenu } from '../ui/menus/language';
 import { SmoLanguage, SmoTranslator } from '../ui/i18n/language';
 import { SuiMeasureMenu } from '../ui/menus/measure';
 import { SuiNoteMenu } from '../ui/menus/note';
+import { SuiHelpMenu } from '../ui/menus/help';
 import { SuiXhrLoader } from '../ui/fileio/xhrLoader';
 import { PromiseHelpers } from '../common/promiseHelpers';
 // render library
@@ -164,11 +163,12 @@ import { SmoToVex } from '../render/vex/toVex';
 import { buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer } from '../common/htmlHelpers';
 
 import { renderVexTests } from './generateVexTests';
-import { SuiDurationAdapter, SuiDurationButtonComponent, SuiDurationDialog } from '../ui/dialogs/durations';
-import { SuiPitchAdapter, SuiPitchDialog, SuiLetterButtonComponent, SuiIntervalButtonComponent, SuiTransposeButtonComponent } from '../ui/dialogs/pitch';
+import { SuiDurationNoteVue } from '../ui/dialogs/durations';
+import { SuiPitchDialogVue } from '../ui/dialogs/pitch';
 const getClass = (jsonString: string) => {
     return eval('Smo.' + jsonString);
 };
+export * from '../ui/modalDialogs';
 export * from './application';
 export * from './common';
 export * from './configuration';
@@ -280,7 +280,6 @@ export * from '../ui/dialogs/library';
 export * from '../ui/dialogs/lyric';
 export * from '../ui/dialogs/measureFormat';
 export * from '../ui/dialogs/microtones';
-export * from '../ui/dialogs/newPart';
 export * from '../ui/dialogs/noteHead';
 export * from '../ui/dialogs/ornament';
 export * from '../ui/dialogs/pageLayout';
@@ -309,6 +308,7 @@ export * from '../ui/fileio/xhrLoader';
 export * from '../ui/help';
 export * from '../ui/common';
 export * from '../ui/i18n/language';
+export * from '../ui/i18n/language_en';
 export * from '../ui/i18n/translationEditor';
 export * from '../ui/keyBindings/default/editorKeys';
 export * from '../ui/keyBindings/default/trackerKeys';
@@ -347,31 +347,28 @@ export const Smo = {
   // Menus
   SuiMenuManager, SuiMenuBase, SuiMenuCustomizer, SuiScoreMenu, SuiFileMenu,
   SuiTimeSignatureMenu, SuiKeySignatureMenu, SuiStaffModifierMenu,
-  SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SuiEditMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
+  SuiLanguageMenu, SuiMeasureMenu, SuiNoteMenu, SuiHelpMenu,SuiEditMenu, SmoLanguage, SmoTranslator, SuiPartMenu,
   SuiPartSelectionMenu, SuiTextMenu, SuiVoiceMenu, SuiBeamMenu,
   // Dialogs
-  SuiGraceNoteAdapter, SuiGraceNoteDialog, SuiGraceNoteButtonsComponent,
-  SuiDurationAdapter, SuiDurationDialog, SuiDurationButtonComponent,
+  SuiGraceNoteDialog,  SuiDurationNoteVue,
   SuiComponentAdapter, SuiDialogAdapterBase,
-  SuiTempoDialog, SuiInstrumentDialog, SuiModifierDialogFactory, SuiLibraryDialog,
+  SuiTempoDialog, SuiInstrumentDialogVue, SuiModifierDialogFactory, SuiLibraryDialog,
   SuiTextBracketDialog, SuiKeySignatureDialog, SuiKeySignatureAdapter,
-  SuiScoreViewDialog, SuiGlobalLayoutDialog, SuiScoreIdentificationDialog, SuiTransposeScoreAdapter,
-  SuiTransposeScoreDialog,
-  SuiScoreFontDialog, SuiPageLayoutDialog, SuiMeasureDialog, SuiInsertMeasures,
+  SuiScoreViewDialogVue, SuiGlobalLayoutDialogVue, SuiScoreIdentificationDialogVue, 
+  SuiTransposeScoreDialogVue,
+  SuiScoreFontDialogVue, SuiPageLayoutDialogVue, SuiMeasureFormatDialogVue, SuiInsertMeasuresVue,
   SuiTimeSignatureDialog,SuiTextBlockDialog, SuiLyricDialog, SuiChordChangeDialog,
   SuiSlurAttributesDialog, SuiPedalMarkingDialog, SuiTieAttributesDialog, SuiVoltaAttributeDialog,
-  SuiHairpinAttributesDialog, SuiStaffGroupDialog, helpModal,
-  SuiLoadFileDialog, SuiLoadMxmlDialog, SuiScorePreferencesDialog,
-  SuiPartInfoDialog, SuiOrnamentDialog, SuiOrnamentButtonComponent, 
-  SuiArticulationDialog, SuiArticulationButtonComponent, SuiArticulationAdapter,
-  SuiMicrotoneAdapter, SuiMicrotoneButtonComponent, SuiMicrotoneDialog,
-  SuiNoteHeadAdapter, SuiNoteHeadDialog, SuiStemButtonComponent, SuiNoteHeadButtonComponent,    
-  SuiEndingsAdapter, SuiEndingsDialog, endingsButtonFactory,
-  SuiEndBarButtonComponent, SuiStartBarButtonComponent, SuiRepeatSymbolButtonComponent,    
-  SuiPrintFileDialog, SuiSaveFileDialog, SuiSaveXmlDialog, SuiSaveVexDialog,
-  SuiSaveMidiDialog, SuiDialogBase, createAndDisplayDialog, 
-  SuiPitchDialog, SuiPitchAdapter,SuiIntervalButtonComponent, SuiLetterButtonComponent,
-  SuiTransposeButtonComponent,
+  SuiHairpinAttributesDialog, SuiStaffGroupDialogVue, helpModal,
+  SuiScorePreferencesDialogVue,
+  SuiPartInfoDialogVue, SuiOrnamentDialogVue, 
+  SuiArticulationDialogVue, 
+  SuiMicrotoneDialogVue,
+  SuiNoteHeadDialog,    
+  SuiEndingsDialogVue,  
+  SuiFileSaveDialog, SuiPrintDialog,
+  SuiDialogBase, createAndDisplayDialog,  SuiFileUploadDialog,
+  SuiPitchDialogVue,
   // Dialog components
   SuiTreeComponent,
   SuiDropdownComponent,
@@ -420,6 +417,6 @@ SuiPitchComposite,
     getClass,
   // utilities
   buildDom, addFileLink, InputTrapper, draggable, closeDialogPromise, getDomContainer, createTopDomContainer,
-  renderVexTests
+  renderVexTests, replaceVueRoot, SuiNavigation
 }
 export default Smo;

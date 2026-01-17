@@ -7,6 +7,7 @@ import { TickMap } from './tickMap';
  */
 export interface SmoBeamGroupParams {
     notes: SmoNote[];
+    secondaryBeamBreaks: number[];
     voice: number;
 }
 /**
@@ -15,6 +16,7 @@ export interface SmoBeamGroupParams {
  */
 export declare class SmoBeamGroup implements ISmoBeamGroup {
     notes: SmoNote[];
+    secondaryBeamBreaks: number[];
     attrs: SmoAttrs;
     voice: number;
     constructor(params: SmoBeamGroupParams);
@@ -32,6 +34,7 @@ export declare class SmoBeamer {
     beamBeats: number;
     skipNext: number;
     currentGroup: SmoNote[];
+    secondaryBeamBreaks: number[];
     constructor(measure: SmoMeasure, voice: number);
     get beamGroups(): ISmoBeamGroup[];
     _removeVoiceBeam(measure: SmoMeasure, voice: number): void;
@@ -40,6 +43,4 @@ export declare class SmoBeamer {
     _isRemainingTicksBeamable(tickmap: TickMap, index: number): boolean;
     allEighth(): boolean;
     beamNote(tickmap: TickMap, index: number, note: SmoNote): void;
-    static areTupletElementsTheSame(noteOne: SmoNote, noteTwo: SmoNote): boolean;
 }
-//# sourceMappingURL=beamers.d.ts.map

@@ -780,10 +780,10 @@ export class XmlToSmo {
       smoMeasure.format.systemBreak = XmlHelpers.isSystemBreak(measureElement);
       smoMeasure.tempo = xmlState.tempo;
       smoMeasure.format.proportionality = XmlToSmo.customProportionDefault;
-      xmlState.formattingManager.updateMeasureFormat(smoMeasure.format);
+      xmlState.formattingManager.updateMeasureFormat(smoMeasure.format, xmlState.measureNumber);
       smoMeasure.keySignature = xmlState.keySignature.toLowerCase();
       smoMeasure.timeSignature = SmoMeasure.convertLegacyTimeSignature(xmlState.timeSignature);
-      smoMeasure.measureNumber.localIndex = xmlState.measureNumber;
+      smoMeasure.measureNumber.displayMeasure = xmlState.measureNumber;
       smoMeasure.measureNumber.measureIndex = xmlState.measureIndex;
       smoMeasure.measureNumber.staffId = staffData.clefInfo.staffId + xmlState.smoStaves.length;
       const startBarDefs = SmoBarline.defaults;
