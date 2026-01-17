@@ -276,7 +276,7 @@ export class NoteEntryCaret {
 			return [];
 		}
 
-		const pitches = [];
+		const pitches: Pitch[] = [];
 		const clef = this.selection.measure.clef;
 
 		for (const staffLine of this.occupiedStaffLines) {
