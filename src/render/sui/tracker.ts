@@ -823,6 +823,8 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     // Single selection - just update voice UI and notify
     if (this.selections.length === 1 && note.logicalBox) {
       this._highlightActiveVoice(this.selections[0]);
+      // Clear any existing multi-selection rectangles
+      this.drawSelectionRects([]);
       // Get selected grace note if any
       let graceNote: SmoGraceNote | null = null;
       if (this.modifierSelections.length > 0 && this.modifierSelections[0].modifier instanceof SmoGraceNote) {
