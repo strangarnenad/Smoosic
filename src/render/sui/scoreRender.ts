@@ -372,8 +372,7 @@ export class SuiScoreRender {
       this.lyricsToOffset.forEach((vv) => {
         vv.updateLyricOffsets();
       });
-      // Don't clear measuresToMap here - keep it available for querying
-      // It will be cleared at the start of the next render pass in layout()
+      this.measuresToMap = [];
       this.lyricsToOffset = new Map();
       // We pro-rate the background render timer on how long it takes
       // to actually render the score, so we are not thrashing on a large
