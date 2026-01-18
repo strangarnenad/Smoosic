@@ -254,7 +254,10 @@ export class NoteEntryCaret {
 	private _fillOccupiedStaffLines(measure: SmoMeasure, note: Transposable) {
 		this.occupiedStaffLines = [];
 		for (const pitch of note.pitches) {
-			this.occupiedStaffLines.push(SmoMusic.pitchToStaffLine(measure.clef, pitch));
+			//todo: we are ignoring rests. For that to work we need to implement some sort of note type picker
+			if (note.noteType === 'n') {
+				this.occupiedStaffLines.push(SmoMusic.pitchToStaffLine(measure.clef, pitch));
+			}
 		}
 	}
 
