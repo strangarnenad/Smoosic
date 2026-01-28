@@ -31,9 +31,22 @@ export class NoteEntryCaret {
 
 	// Highlight colors
 	static readonly PITCH_SELECTION_COLOR = '#933';
-	static readonly PITCH_PREVIEW_COLOR = '#6d6d9a';
 	static readonly PITCH_DRAG_ORIGINAL_COLOR = '#aaaaaa7f'; // Light grey for the pitch being dragged
-	static readonly DEFAULT_NOTEHEAD_COLOR = '#000000';
+
+	static readonly VOICE_1_NOTEHEAD_COLOR = '#000000';
+	static readonly VOICE_2_NOTEHEAD_COLOR = '#115511';
+	static readonly VOICE_3_NOTEHEAD_COLOR = '#555511';
+	static readonly VOICE_4_NOTEHEAD_COLOR = '#883344';
+
+	static readonly VOICE_1_PREVIEW_NOTEHEAD_COLOR = '#808080';
+	static readonly VOICE_2_PREVIEW_NOTEHEAD_COLOR = '#88aa88';
+	static readonly VOICE_3_PREVIEW_NOTEHEAD_COLOR = '#aaaa88';
+	static readonly VOICE_4_PREVIEW_NOTEHEAD_COLOR = '#c499a2';
+
+	static readonly VOICE_1_CURSOR_RECTANGLE_COLOR = '#99aadd';
+	static readonly VOICE_2_CURSOR_RECTANGLE_COLOR = '#99dd99';
+	static readonly VOICE_3_CURSOR_RECTANGLE_COLOR = '#dddd99';
+	static readonly VOICE_4_CURSOR_RECTANGLE_COLOR = '#dd99aa';
 
 	//TODO: check if this is needed
 	static readonly DEFAULT_NOTE_DURATION: Ticks = { numerator: 4096, denominator: 1, remainder: 0 };
@@ -48,6 +61,7 @@ export class NoteEntryCaret {
 	note: SmoNote | null = null;
 	graceNote: SmoGraceNote | null = null;
 	activeNote: Transposable | null = null;
+	voice: number = 0;
 	vexNoteAbsoluteX: number = 0;
 	vexNoteLeftDisplacedHeadPx: number = 0;
 	vexNoteRightDisplacedHeadPx: number = 0;
@@ -98,6 +112,7 @@ export class NoteEntryCaret {
 		this.note = selection.note;
 		this.graceNote = graceNote;
 		this.activeNote = graceNote ?? selection.note;
+		this.voice = selection.selector.voice;
 		this.vexNoteAbsoluteX = targetVexNote.getAbsoluteX();
 		this.vexNoteHeadWidth = targetVexNote.getMetrics().glyphWidth!;
 		this.vexNoteXShift = targetVexNote.getXShift();
@@ -207,6 +222,7 @@ export class NoteEntryCaret {
 		this.note = null;
 		this.graceNote = null;
 		this.activeNote = null;
+		this.voice = 0;
 		this.vexNoteAbsoluteX = 0;
 		this.vexNoteLeftDisplacedHeadPx = 0;
 		this.vexNoteRightDisplacedHeadPx = 0;
@@ -307,13 +323,15 @@ export class NoteEntryCaret {
 	}
 
 	private _getCursorRectangleElement(x: number, y: number, width: number, height: number): SVGRectElement {
+		const color = this._getVoiceCursorRectangleColor();
+
 		const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 		rect.setAttribute('x', x.toString());
 		rect.setAttribute('y', y.toString());
 		rect.setAttribute('width', width.toString());
 		rect.setAttribute('height', height.toString());
 		rect.setAttribute('stroke', 'none');
-		rect.setAttribute('fill', '#99d');
+		rect.setAttribute('fill', color);
 		rect.setAttribute('opacity', '0.5');
 		rect.setAttribute('class', 'note-entry-caret');
 
@@ -341,7 +359,10 @@ export class NoteEntryCaret {
 				const x = this.vexNoteAbsoluteX + this.vexNoteXShift;
 				// Determine color based on drag state: black during drag, blue otherwise
 				const isDragging = this.staffLineOnMouseDown !== null && this.staffLineOnMouseUp === null;
-				const color = isDragging ? NoteEntryCaret.DEFAULT_NOTEHEAD_COLOR : NoteEntryCaret.PITCH_PREVIEW_COLOR;
+
+				const color = isDragging
+					? this._getVoiceNoteheadColor()
+					: this._getVoicePreviewColor();
 
 				// Render ledger lines if needed
 				const ledgerPositions = this._getLedgerLinePositions(staffLine);
@@ -457,8 +478,9 @@ export class NoteEntryCaret {
 			if (element) {
 				const pathElement = element.querySelector('path');
 				if (pathElement) {
-					pathElement.setAttribute('fill', NoteEntryCaret.DEFAULT_NOTEHEAD_COLOR);
-					pathElement.setAttribute('stroke', NoteEntryCaret.DEFAULT_NOTEHEAD_COLOR);
+					const color = this._getVoiceNoteheadColor();
+					pathElement.setAttribute('fill', color);
+					pathElement.setAttribute('stroke', color);
 				}
 			}
 
@@ -477,8 +499,9 @@ export class NoteEntryCaret {
 			if (element) {
 				const pathElement = element.querySelector('path');
 				if (pathElement) {
-					pathElement.setAttribute('fill', NoteEntryCaret.DEFAULT_NOTEHEAD_COLOR);
-					pathElement.setAttribute('stroke', NoteEntryCaret.DEFAULT_NOTEHEAD_COLOR);
+					const color = this._getVoiceNoteheadColor();
+					pathElement.setAttribute('fill', color);
+					pathElement.setAttribute('stroke', color);
 				}
 			}
 
@@ -504,6 +527,40 @@ export class NoteEntryCaret {
 		return preview;
 	}
 
+	private _getVoiceNoteheadColor(): string {
+		const colors = [
+			NoteEntryCaret.VOICE_1_NOTEHEAD_COLOR,
+			NoteEntryCaret.VOICE_2_NOTEHEAD_COLOR,
+			NoteEntryCaret.VOICE_3_NOTEHEAD_COLOR,
+			NoteEntryCaret.VOICE_4_NOTEHEAD_COLOR,
+		];
+
+		return colors[this.voice] ?? NoteEntryCaret.VOICE_1_NOTEHEAD_COLOR;
+	}
+
+	private _getVoicePreviewColor(): string {
+		const colors = [
+			NoteEntryCaret.VOICE_1_PREVIEW_NOTEHEAD_COLOR,
+			NoteEntryCaret.VOICE_2_PREVIEW_NOTEHEAD_COLOR,
+			NoteEntryCaret.VOICE_3_PREVIEW_NOTEHEAD_COLOR,
+			NoteEntryCaret.VOICE_4_PREVIEW_NOTEHEAD_COLOR,
+		];
+
+		return colors[this.voice] ?? NoteEntryCaret.VOICE_1_PREVIEW_NOTEHEAD_COLOR;
+	}
+
+	private _getVoiceCursorRectangleColor(): string {
+		const colors = [
+			NoteEntryCaret.VOICE_1_CURSOR_RECTANGLE_COLOR,
+			NoteEntryCaret.VOICE_2_CURSOR_RECTANGLE_COLOR,
+			NoteEntryCaret.VOICE_3_CURSOR_RECTANGLE_COLOR,
+			NoteEntryCaret.VOICE_4_CURSOR_RECTANGLE_COLOR,
+		];
+
+		return colors[this.voice] ?? NoteEntryCaret.VOICE_1_PREVIEW_NOTEHEAD_COLOR;
+	}
+
+	//todo: vexnote has maxLine and minLine and maybe we should use these properties instead of calculating
 	private _getLedgerLinePositions(staffLine: number): number[] {
 		const positions: number[] = [];
 
@@ -536,10 +593,10 @@ export class NoteEntryCaret {
 		const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
 
 		const y = this._calculateYFromStaffLine(staffLine) - this.context!.box.y;
-		const x = this.vexNoteAbsoluteX + this.vexNoteXShift;
+		// const x = this.vexNoteAbsoluteX + this.vexNoteXShift;
 
 		const ledgerLineWidth = 15;
-		const x1 = this.vexNoteAbsoluteX - 3;
+		const x1 = this.vexNoteAbsoluteX + this.vexNoteXShift - 3;
 		const x2 = x1 + ledgerLineWidth + 3;
 
 		line.setAttribute('x1', x1.toString());
