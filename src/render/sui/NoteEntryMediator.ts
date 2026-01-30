@@ -30,9 +30,7 @@ export class NoteEntryMediator implements TrackerDelegate, CaretDelegate {
    * TrackerDelegate
    */
   public onPitchIndexChanged(pitchIndex: number) {
-    if (pitchIndex >= 0) {
-      this.caret.renderPitchHighlight(pitchIndex);
-    }
+    this.caret.renderPitchHighlight(pitchIndex);
   }
 
   public onSingleNoteHighlighted(selection: SmoSelection, graceNote: SmoGraceNote | null) {
@@ -44,7 +42,12 @@ export class NoteEntryMediator implements TrackerDelegate, CaretDelegate {
    * CaretDelegate
    */
   public onPitchClicked(pitchIndex: number) {
-    this.tracker.setPitchIndex(pitchIndex);
+    const currentIndex = this.tracker.getPitchIndex();
+    if (currentIndex === pitchIndex) {
+      this.tracker.clearPitchIndex();
+    } else {
+      this.tracker.setPitchIndex(pitchIndex);
+    }
   }
 
   public onPitchesChanged(newPitches: Pitch[]) {

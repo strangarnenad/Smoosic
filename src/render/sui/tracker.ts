@@ -480,6 +480,19 @@ export class SuiTracker extends SuiMapper implements TrackerKeyHandler {
     this.delegate?.onPitchIndexChanged(index);
   }
 
+  getPitchIndex(): number {
+    return this.pitchIndex;
+  }
+
+  clearPitchIndex(): void {
+    this.pitchIndex = -1;
+    if (this.selections.length) {
+      this.selections[0].selector.pitches = [];
+    }
+    // Notify via callback
+    this.delegate?.onPitchIndexChanged(-1);
+  }
+
   // Suggest a specific pitch in a chord, so we can transpose just the one note vs. the whole chord.
   _moveSelectionPitch(index: number) {
     this.idleTimer = Date.now();
