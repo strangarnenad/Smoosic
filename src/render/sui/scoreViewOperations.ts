@@ -350,6 +350,17 @@ export class SuiScoreViewOperations extends SuiScoreView {
 
         const altSel = this._getEquivalentSelection(sel);
 
+        // If this is a chord and a specific pitch is selected, just remove that pitch
+        const pitchIndex = this.tracker.getPitchIndex();
+        if (sel.note.pitches.length > 1 && pitchIndex >= 0 && pitchIndex < sel.note.pitches.length) {
+          sel.note.pitches.splice(pitchIndex, 1);
+          altSel!.note!.pitches.splice(pitchIndex, 1);
+          SmoNote.sortPitches(sel.note);
+          SmoNote.sortPitches(altSel!.note! as SmoNote);
+          this.tracker.clearPitchIndex();
+          return; // skip rest/hide logic for this selection
+        }
+
         // set the pitch to be a good position for the rest
         const pitch = JSON.parse(JSON.stringify(
           SmoMeasure.defaultPitchForClef[sel.measure.clef]));
