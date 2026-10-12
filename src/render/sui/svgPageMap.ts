@@ -1,6 +1,7 @@
 import { SvgHelpers, StrokeInfo } from "./svgHelpers";
 import { SvgPoint, SvgBox, Renderable, ElementLike, RemoveElementLike } from '../../smo/data/common';
 import { layoutDebug } from './layoutDebug';
+import { PageDivision, computeDivisions, findDivision } from './pageDivisions';
 import { layoutProvider, isHorizontalLayout } from "./mapper";
 import { SmoGlobalLayout, SmoPageLayout } from '../../smo/data/scoreModifiers';
 import { SmoTextGroup } from '../../smo/data/scoreText';
@@ -186,10 +187,6 @@ export class MappedSystems extends SelectionMap<MappedMeasures, number> {
     }
   }
 }
-export function getDiv(dim: number, box: SvgBox, divSize: number, layoutSource: layoutProvider): number {
-  return Math.round((dim - layoutSource.getFlowDimensionExtent(box)) / divSize);
-}
-
 export interface SvgPageParameters {
   renderer: Renderer,
   layoutSource: layoutProvider,
@@ -210,7 +207,10 @@ export class SvgPage {
   pageNumber: number;
   box: SvgBox;
   systemMap: MappedSystems = new MappedSystems();
-  modifierYKeys: number[] = [];
+  /**
+   * The start/end of each of the `modifierDivs` divisions of this page, in score coordinates.
+   */
+  divisions: PageDivision[] = [];
   modifierTabDivs: Record<number, ModifierTab[]> = {};
   debug: layoutDebug;
   static get defaultMap() {
@@ -242,19 +242,18 @@ export class SvgPage {
     this.pageNumber = params.pageNumber;
     this.box = params.box;
     this.debug = params.debug;
-    let divEnd = this.divSize;
-    for (let i = 0; i < SvgPage.modifierDivs; ++i) {
-      this.modifierYKeys.push(divEnd);
-      divEnd += this.divSize;
-    }
+    // The page box is fixed when the page is created, so the divisions are computed once.
+    this.divisions = computeDivisions(this.layoutSource.getFlowDimensionPosition(this.box),
+      this.layoutSource.getFlowDimensionExtent(this.box), SvgPage.modifierDivs);
   }
   /**
-   * Given SVG y, return the div for modifiers
-   * @param y 
-   * @returns 
+   * Given a position along the flow dimension (SVG y, or x in horizontal layout), return the
+   * index of the modifier division that contains it.
+   * @param dim
+   * @returns the division index, or -1 if the position is outside this page
    */
   divIndex(dim: number): number {
-    return Math.round((dim - this.layoutSource.getFlowDimensionPosition(this.box)) / this.divSize);
+    return findDivision(dim, this.divisions);
   }
   /**
    * Remove all elements and modifiers in this page, for a redraw.
@@ -271,7 +270,7 @@ export class SvgPage {
   clearMeasure(selection: SmoSelection) {    
     this.systemMap.clearMeasure(selection);
     const div = this.divIndex(this.layoutSource.getFlowDimensionPosition(selection.measure.svg.logicalBox));
-    if (div < this.modifierYKeys.length) {
+    if (div >= 0 && this.modifierTabDivs[div]) {
       const mods: ModifierTab[] = [];
       this.modifierTabDivs[div].forEach((mt: ModifierTab) => {
         if (mt.selection) {
@@ -291,7 +290,7 @@ export class SvgPage {
    */
   addModifierTab(modifier: ModifierTab) {
     const div = this.divIndex(this.layoutSource.getFlowDimensionPosition(modifier.box));
-    if (div < this.modifierYKeys.length) {
+    if (div >= 0) {
       if (!this.modifierTabDivs[div]) {
         this.modifierTabDivs[div] = [];
       }
@@ -321,7 +320,7 @@ export class SvgPage {
   findModifierTabs(box: SvgBox): ModifierTab[] {
     const rv:ModifierTab[] = [];
     const div = this.divIndex(this.layoutSource.getFlowDimensionPosition(box));
-    if (div < this.modifierYKeys.length) {
+    if (div >= 0) {
       if (this.modifierTabDivs[div]) {
         this.modifierTabDivs[div].forEach((modTab) => {
           if (SvgHelpers.doesBox1ContainBox2(modTab.box, box)) {
