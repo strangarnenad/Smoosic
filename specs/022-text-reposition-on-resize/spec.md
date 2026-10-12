@@ -38,6 +38,7 @@ A user changes the page width or height (for example, switching paper size or or
 
 1. **Given** a text block positioned at some percentage of the current page width/height, **When** the page width and/or height is changed, **Then** the text block's x/y position is recalculated so it sits at the same percentage of the new page width/height.
 2. **Given** a part has its own page layout separate from the main score, **When** the part's page width/height is changed, **Then** only the part's text groups are repositioned proportionally; the score's own text groups (and other parts) are unaffected.
+4. **Given** a part is exposed and the user changes its svg scale, page width, or page height in the Part Properties dialog (`SuiScoreViewOperations.updatePartInfo`), **When** the change is applied (or cancelled, which re-applies the backup), **Then** the part's text groups are repositioned with the same scale-ratio and page-dimension-ratio logic as the Global Layout dialog, applied once per text group even if the part's staves share group objects.
 3. **Given** the score's page width/height is changed while a part is not exposed, **When** the change is applied, **Then** the score's own text groups are repositioned proportionally.
 
 ---

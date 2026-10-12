@@ -1,5 +1,6 @@
 // [Smoosic](https://github.com/AaronDavidNewman/Smoosic)
 // Copyright (c) Aaron David Newman 2021.
+import { toRaw } from 'vue';
 import { SuiScoreView, updateStaffModifierFunc } from './scoreView';
 import { SmoScore, engravingFontType } from '../../smo/data/score';
 import { SmoSystemStaffParams, SmoSystemStaff } from '../../smo/data/systemStaff';
@@ -1776,6 +1777,33 @@ export class SuiScoreViewOperations extends SuiScoreView {
     this.renderer.pageMap.updateContainerOffset(this.scroller.scrollState);
   }
   /**
+   * Keep text groups in the same visual position when a layout changes: rescale by the
+   * svg scale ratio, and by the page width/height ratios.  Groups are de-duplicated by
+   * identity, since a part's staves (and the view and store copies, after a part update)
+   * can share the same text group objects, and scaling one twice would double-apply it.
+   * @param textGroups groups to adjust
+   * @param previousLayout layout before the change
+   * @param layout layout after the change
+   */
+  static repositionTextGroups(textGroups: SmoTextGroup[], previousLayout: SmoGlobalLayout, layout: SmoGlobalLayout) {
+    const scaleChanged = previousLayout.svgScale !== layout.svgScale;
+    const widthChanged = previousLayout.pageWidth !== layout.pageWidth;
+    const heightChanged = previousLayout.pageHeight !== layout.pageHeight;
+    const scaleRatio = previousLayout.svgScale / layout.svgScale;
+    const widthRatio = widthChanged ? layout.pageWidth / previousLayout.pageWidth : 1;
+    const heightRatio = heightChanged ? layout.pageHeight / previousLayout.pageHeight : 1;
+    const unique = new Set<SmoTextGroup>();
+    textGroups.forEach((tg) => unique.add(toRaw(tg)));
+    unique.forEach((tg) => {
+      if (scaleChanged) {
+        tg.scaleText(scaleRatio);
+      }
+      if (widthChanged || heightChanged) {
+        tg.rescalePosition(widthRatio, heightRatio);
+      }
+    });
+  }
+  /**
    * set global page for score, zoom etc.
    * @param layout global SVG settings
    * @param previousLayout the layout as it was immediately before this change.  Callers must
@@ -1792,16 +1820,8 @@ export class SuiScoreViewOperations extends SuiScoreView {
       return;
     }
     this._undoScore('Set Global Layout');
-    const scaleRatio = previousLayout.svgScale / layout.svgScale;
-    const widthRatio = widthChanged ? layout.pageWidth / previousLayout.pageWidth : 1;
-    const heightRatio = heightChanged ? layout.pageHeight / previousLayout.pageHeight : 1;
     const repositionGroups = (textGroups: SmoTextGroup[]) => {
-      if (scaleChanged) {
-        textGroups.forEach((tg) => tg.scaleText(scaleRatio));
-      }
-      if (widthChanged || heightChanged) {
-        textGroups.forEach((tg) => tg.rescalePosition(widthRatio, heightRatio));
-      }
+      SuiScoreViewOperations.repositionTextGroups(textGroups, previousLayout, layout);
     };
     if (this.isPartExposed()) {
       // A part has its own layoutManager/textGroups (see SuiScoreView._mapPartFormatting,
@@ -2075,6 +2095,19 @@ export class SuiScoreViewOperations extends SuiScoreView {
     const resetView = !SmoLayoutManager.areLayoutsEqual(info.layoutManager.getGlobalLayout(), this.score.layoutManager!.getGlobalLayout());
     const restChange = this.score.staves[0].partInfo.expandMultimeasureRests != info.expandMultimeasureRests;
     const stavesChange = this.score.staves[0].partInfo.stavesAfter !== info.stavesAfter;
+    // The displayed part's layout has not been replaced yet, so it is the 'before' value.
+    // Reposition the part's text groups the same way setGlobalLayout does for the score.
+    const previousLayout = this.score.layoutManager!.getGlobalLayout();
+    const newLayout = info.layoutManager.getGlobalLayout();
+    if (previousLayout.svgScale !== newLayout.svgScale || previousLayout.pageWidth !== newLayout.pageWidth ||
+      previousLayout.pageHeight !== newLayout.pageHeight) {
+      const partText: SmoTextGroup[] = [];
+      for (i = 0; i < partLength; ++i) {
+        partText.push(...(this.storeScore.staves[storeStaff + i]?.partInfo.textGroups ?? []));
+        partText.push(...(this.score.staves[i]?.partInfo.textGroups ?? []));
+      }
+      SuiScoreViewOperations.repositionTextGroups(partText, previousLayout, newLayout);
+    }
     this.PartName.value = info.partName;
     for (i = 0; i < partLength; ++i) {
       const nStaffIndex = storeStaff + i;
