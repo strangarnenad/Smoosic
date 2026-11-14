@@ -1,0 +1,677 @@
+/* ==========================================================================
+   Tenorclef theme for the Smoosic chrome
+   Recolours the dialogs, menus, popups, sidebar and ribbon with the Tenorclef
+   "Ink & Brass" palette (tenorclef_app, src/theme/inkBrass.ts). Light and dark
+   follow the system setting, as the Tenorclef app does.
+
+   Link this sheet last. It is additive: it gives the Broadsheet colour tokens
+   of dialog2.css / ribbon.css new values and overrides colour properties of
+   chrome rules, nothing else. Remove the <link> and Smoosic looks as before.
+
+   The score is out of scope and must stay so:
+   - only colour properties are set here (color, background, border colour,
+     box-shadow, outline colour, and the Bootstrap colour variables);
+   - every rule below starts at a chrome container, never at svg, text, path,
+     body or *, and no Bootstrap variable is set on :root;
+   - .score-container, .musicRelief, .vf-*, .textEdit, .overlay, the note
+     caret, the debug boxes, the print rules and the piano are not touched.
+   ========================================================================== */
+
+/* ---------- palette ------------------------------------------------------ */
+:root {
+  --tc-brass-50: #fff5e5;
+  --tc-brass-100: #ffe8c9;
+  --tc-brass-200: #ffd39b;
+  --tc-brass-300: #fdb868;
+  --tc-brass-400: #f0a04b;
+  --tc-brass-500: #d9822b;
+  --tc-brass-600: #b66b18;
+  --tc-brass-700: #945413;
+  --tc-brass-800: #754113;
+  --tc-brass-900: #5d3414;
+
+  --tc-ink-50: #f6f3ed;
+  --tc-ink-100: #e8e7e7;
+  --tc-ink-200: #d2d4db;
+  --tc-ink-300: #b2b7c6;
+  --tc-ink-400: #8e94aa;
+  --tc-ink-500: #6c748b;
+  --tc-ink-600: #525a75;
+  --tc-ink-700: #3b4360;
+  --tc-ink-800: #29314f;
+  --tc-ink-900: #1c2340;
+  --tc-ink-950: #0f142a;
+  --tc-cream: #f5f1e8;
+
+  /* destructive actions use the same red as the Tenorclef app (Aura red) */
+  --tc-red-50: #fef2f2;
+  --tc-red-100: #fee2e2;
+  --tc-red-300: #fca5a5;
+  --tc-red-400: #f87171;
+  --tc-red-500: #ef4444;
+  --tc-red-600: #dc2626;
+  --tc-red-700: #b91c1c;
+  --tc-red-800: #991b1b;
+  --tc-red-900: #7f1d1d;
+}
+
+/* ---------- Broadsheet tokens: light ------------------------------------- */
+:root {
+  --color-bg: var(--tc-ink-50);
+  --color-surface: var(--tc-ink-100);
+  --color-text: var(--tc-ink-700);
+  --color-divider: color-mix(in srgb, var(--tc-ink-900) 16%, transparent);
+  --dlg-field: #fff;
+
+  /* the grey ramp becomes the ink ramp */
+  --color-neutral-100: #fff;
+  --color-neutral-200: var(--tc-ink-100);
+  --color-neutral-300: var(--tc-ink-200);
+  --color-neutral-400: var(--tc-ink-300);
+  --color-neutral-500: var(--tc-ink-500);
+  --color-neutral-600: var(--tc-ink-500);
+  --color-neutral-700: var(--tc-ink-600);
+  --color-neutral-800: var(--tc-ink-700);
+  --color-neutral-900: var(--tc-ink-900);
+
+  /* cyan becomes brass */
+  --color-accent: var(--tc-brass-500);
+  --color-accent-100: var(--tc-brass-50);
+  --color-accent-200: var(--tc-brass-100);
+  --color-accent-300: var(--tc-brass-300);
+  --color-accent-400: var(--tc-brass-400);
+  --color-accent-500: var(--tc-brass-500);
+  --color-accent-600: var(--tc-brass-600);
+  --color-accent-700: var(--tc-brass-700);
+  --color-accent-800: var(--tc-brass-800);
+  --color-accent-900: var(--tc-brass-900);
+
+  /* magenta becomes red */
+  --color-accent-2: var(--tc-red-500);
+  --color-accent-2-100: var(--tc-red-50);
+  --color-accent-2-200: var(--tc-red-100);
+  --color-accent-2-300: var(--tc-red-300);
+  --color-accent-2-400: var(--tc-red-400);
+  --color-accent-2-500: var(--tc-red-500);
+  --color-accent-2-600: var(--tc-red-600);
+  --color-accent-2-700: var(--tc-red-700);
+  --color-accent-2-800: var(--tc-red-800);
+  --color-accent-2-900: var(--tc-red-900);
+
+  --shadow-sm: 0 1px 2px color-mix(in srgb, var(--tc-ink-950) 14%, transparent);
+  --shadow-md: 0 3px 10px color-mix(in srgb, var(--tc-ink-950) 16%, transparent);
+  --shadow-lg: 0 12px 32px color-mix(in srgb, var(--tc-ink-950) 22%, transparent);
+
+  /* values the Broadsheet tokens have no slot for */
+  /* white on brass is only 2.9:1, so brass fills take ink text (5.3:1) */
+  --tc-on-accent: var(--tc-ink-900);
+  --tc-accent-hover: var(--tc-brass-400);
+  --tc-accent-active: var(--tc-brass-300);
+  --tc-chrome-bg: var(--tc-ink-50);
+  --tc-dialog-border: var(--tc-ink-300);
+  --tc-hover-bg: var(--tc-ink-100);
+  --tc-knob: #fff;
+  --tc-knob-on: #fff;
+  --tc-secondary-bg: var(--tc-ink-100);
+  --tc-secondary-hover-bg: var(--tc-ink-200);
+  --tc-secondary-active-bg: var(--tc-ink-300);
+  --tc-secondary-color: var(--tc-ink-600);
+  --tc-secondary-hover-color: var(--tc-ink-700);
+  --tc-disabled-bg: var(--tc-ink-100);
+  --tc-disabled-border: var(--tc-ink-200);
+  --tc-disabled-color: var(--tc-ink-400);
+  --tc-danger-color: var(--tc-red-600);
+  --tc-danger-border: var(--tc-red-300);
+  --tc-danger-hover-bg: var(--tc-red-50);
+  --tc-body-rgb: 59, 67, 96;
+  --tc-link-rgb: 148, 84, 19;
+  --tc-link-hover-rgb: 117, 65, 19;
+  --tc-focus-rgb: 217, 130, 43;
+  --tc-check-mark: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%231c2340' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m6 10 3 3 6-6'/%3e%3c/svg%3e");
+  --tc-radio-mark: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='2' fill='%231c2340'/%3e%3c/svg%3e");
+}
+
+/* ---------- Broadsheet tokens: dark -------------------------------------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: var(--tc-ink-950);
+    --color-surface: var(--tc-ink-800);
+    --color-text: var(--tc-cream);
+    --color-divider: color-mix(in srgb, var(--tc-cream) 16%, transparent);
+    --dlg-field: var(--tc-ink-950);
+
+    --color-neutral-100: var(--tc-ink-900);
+    --color-neutral-200: var(--tc-ink-800);
+    --color-neutral-300: var(--tc-ink-700);
+    --color-neutral-400: var(--tc-ink-600);
+    --color-neutral-500: var(--tc-ink-400);
+    --color-neutral-600: var(--tc-ink-400);
+    --color-neutral-700: var(--tc-ink-300);
+    --color-neutral-800: var(--tc-ink-200);
+    --color-neutral-900: var(--tc-ink-50);
+
+    --color-accent: var(--tc-brass-400);
+    --color-accent-100: color-mix(in srgb, var(--tc-brass-400) 16%, transparent);
+    --color-accent-200: color-mix(in srgb, var(--tc-brass-400) 24%, transparent);
+    --color-accent-300: var(--tc-brass-700);
+    --color-accent-400: var(--tc-brass-400);
+    --color-accent-500: var(--tc-brass-400);
+    --color-accent-600: var(--tc-brass-300);
+    --color-accent-700: var(--tc-brass-300);
+    --color-accent-800: var(--tc-brass-200);
+    --color-accent-900: var(--tc-brass-100);
+
+    --color-accent-2: var(--tc-red-400);
+    --color-accent-2-100: color-mix(in srgb, var(--tc-red-400) 16%, transparent);
+    --color-accent-2-200: color-mix(in srgb, var(--tc-red-400) 24%, transparent);
+    --color-accent-2-300: var(--tc-red-800);
+    --color-accent-2-400: var(--tc-red-400);
+    --color-accent-2-500: var(--tc-red-400);
+    --color-accent-2-600: var(--tc-red-300);
+    --color-accent-2-700: var(--tc-red-300);
+    --color-accent-2-800: var(--tc-red-100);
+    --color-accent-2-900: var(--tc-red-50);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 3px 10px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+
+    --tc-accent-hover: var(--tc-brass-300);
+    --tc-accent-active: var(--tc-brass-200);
+    --tc-chrome-bg: var(--tc-ink-950);
+    --tc-dialog-border: var(--tc-ink-700);
+    --tc-hover-bg: var(--tc-ink-800);
+    --tc-knob: var(--tc-ink-400);
+    --tc-knob-on: var(--tc-ink-900);
+    --tc-secondary-bg: var(--tc-ink-800);
+    --tc-secondary-hover-bg: var(--tc-ink-700);
+    --tc-secondary-active-bg: var(--tc-ink-600);
+    --tc-secondary-color: var(--tc-ink-300);
+    --tc-secondary-hover-color: var(--tc-ink-200);
+    --tc-disabled-bg: var(--tc-ink-800);
+    --tc-disabled-border: var(--tc-ink-700);
+    --tc-disabled-color: var(--tc-ink-500);
+    --tc-danger-color: var(--tc-red-400);
+    --tc-danger-border: var(--tc-red-800);
+    --tc-danger-hover-bg: color-mix(in srgb, var(--tc-red-400) 16%, transparent);
+    --tc-body-rgb: 245, 241, 232;
+    --tc-link-rgb: 240, 160, 75;
+    --tc-link-hover-rgb: 253, 184, 104;
+    --tc-focus-rgb: 240, 160, 75;
+  }
+
+  /* native controls inside the chrome (select lists, scrollbars, spinners)
+     follow the dark chrome; the page and the score keep the light scheme */
+  :is(.dlg, .attributeModal, .helpDialog, .modal-content, .mdrop, .menuElement, .side, .ribbon-host, .qwertyKb) {
+    color-scheme: dark;
+  }
+
+  /* Bootstrap's close glyph is a black drawing */
+  .modal-content .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+  }
+}
+
+/* ---------- chrome containers -------------------------------------------- */
+/* Bootstrap components read these where they are used, so setting them on the
+   chrome containers recolours the buttons, inputs, dropdowns and links inside
+   and leaves Bootstrap's page-level values alone. */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content, .mdrop, .menuElement, .side, .ribbon-host, .qwertyKb) {
+  --bs-body-color: var(--color-text);
+  --bs-body-color-rgb: var(--tc-body-rgb);
+  --bs-body-bg: var(--color-neutral-100);
+  --bs-emphasis-color: var(--color-neutral-900);
+  --bs-secondary-color: var(--color-neutral-700);
+  --bs-tertiary-color: var(--color-neutral-500);
+  --bs-secondary-bg: var(--color-surface);
+  --bs-tertiary-bg: var(--color-bg);
+  --bs-border-color: var(--dlg-line);
+  --bs-border-color-translucent: var(--dlg-rule);
+  --bs-heading-color: var(--color-text);
+  --bs-link-color-rgb: var(--tc-link-rgb);
+  --bs-link-hover-color-rgb: var(--tc-link-hover-rgb);
+  --bs-code-color: var(--color-accent-700);
+  --bs-focus-ring-color: rgba(var(--tc-focus-rgb), 0.25);
+  --bs-dropdown-bg: var(--dlg-field);
+  --bs-dropdown-color: var(--color-text);
+  --bs-dropdown-border-color: var(--tc-dialog-border);
+  --bs-dropdown-link-color: var(--color-text);
+  --bs-dropdown-link-hover-color: var(--color-text);
+  --bs-dropdown-link-hover-bg: var(--tc-hover-bg);
+  --bs-dropdown-link-active-color: var(--tc-on-accent);
+  --bs-dropdown-link-active-bg: var(--color-accent);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content, .mdrop, .menuElement, .side, .qwertyKb) {
+  color: var(--color-text);
+}
+
+/* tree.css paints every link green on hover and focus */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content, .mdrop, .side, .ribbon-host) a:hover,
+:is(.dlg, .attributeModal, .helpDialog, .modal-content, .mdrop, .side, .ribbon-host) a:focus {
+  background: transparent;
+}
+
+/* ---------- dialog shell -------------------------------------------------- */
+.dlg,
+.mdrop {
+  border-color: var(--tc-dialog-border);
+}
+
+.attributeModal {
+  background: var(--color-neutral-100);
+  border-color: var(--tc-dialog-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.draganime {
+  border-color: var(--color-accent);
+}
+
+/* ---------- sidebar and ribbon -------------------------------------------- */
+/* paper in light mode and deep ink in dark mode, like the Tenorclef sidebar */
+.side,
+.controls-left,
+.ribbon,
+.ribbon-host {
+  background: var(--tc-chrome-bg);
+}
+
+/* text and icons on a brass fill */
+.sbtn.is-on,
+.act-ok,
+.mbtn.is-open,
+.rbtn.is-on {
+  color: var(--tc-on-accent);
+}
+
+/* older ribbon and sidebar buttons */
+.controls-top .row .btn:hover,
+.btn-group-vertical.controls-left .btn:hover {
+  background-color: var(--color-accent-100);
+  border-color: var(--color-accent-300);
+  color: var(--color-text);
+}
+
+body.refresh-1 .refresh-button {
+  background: var(--color-accent-100);
+}
+
+.v1-active #V1Button,
+.v2-active #V2Button,
+.v3-active #V3Button,
+.v4-active #V4Button {
+  background-color: var(--color-accent);
+  color: var(--tc-on-accent);
+}
+
+/* ---------- menus ---------------------------------------------------------- */
+.menuElement,
+body.slash-menu .control-menu-message {
+  background: var(--color-neutral-100);
+}
+
+body.slash-menu .control-menu-message {
+  border-color: var(--color-accent);
+}
+
+.menuElement .menuOption button:focus-within {
+  background: var(--color-accent-100);
+}
+
+/* ---------- controls -------------------------------------------------------- */
+/* with a white dialog body these two hovers need a tint of their own */
+.sel-opt.is-hover,
+.sel-opt:hover,
+.sg-row:hover {
+  background: var(--tc-hover-bg);
+}
+
+.tgl-knob {
+  background: var(--tc-knob);
+}
+
+.tgl.is-on .tgl-knob {
+  background: var(--tc-knob-on);
+}
+
+.lt-tags .badge {
+  color: var(--color-neutral-700);
+  background-color: var(--color-bg);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(input, select, textarea) {
+  color: var(--color-text);
+}
+
+/* text-like fields: the browser's own field colour differs per colour scheme */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(input:not([type='checkbox'], [type='radio'], [type='range'], [type='file'], [type='color'], .tgl-knob), select, textarea) {
+  background-color: var(--dlg-field);
+}
+
+/* a <button> takes the system button colour unless told otherwise */
+.sel,
+.sg-act {
+  color: var(--color-text);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(input, select, textarea):disabled {
+  color: var(--tc-disabled-color);
+}
+
+/* ---------- Bootstrap buttons inside the chrome ------------------------------ */
+/* dialogs.css draws every button border in an open dialog with
+   --button-border-color, which nothing defines, so borders fall back to the
+   text colour. Feed it the button's own border colour for each state. */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .btn {
+  --button-border-color: var(--bs-btn-border-color);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .btn:hover {
+  --button-border-color: var(--bs-btn-hover-border-color);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(.btn:active, .btn.active, .btn.show, .btn-check:checked + .btn) {
+  --button-border-color: var(--bs-btn-active-border-color);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(.btn:disabled, .btn.disabled) {
+  --button-border-color: var(--bs-btn-disabled-border-color);
+}
+
+/* OK, Save, Download: the brass primary button, ink text */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .btn-primary {
+  --bs-btn-color: var(--tc-on-accent);
+  --bs-btn-bg: var(--color-accent);
+  --bs-btn-border-color: var(--color-accent);
+  --bs-btn-hover-color: var(--tc-on-accent);
+  --bs-btn-hover-bg: var(--tc-accent-hover);
+  --bs-btn-hover-border-color: var(--tc-accent-hover);
+  --bs-btn-active-color: var(--tc-on-accent);
+  --bs-btn-active-bg: var(--tc-accent-active);
+  --bs-btn-active-border-color: var(--tc-accent-active);
+  --bs-btn-focus-shadow-rgb: var(--tc-focus-rgb);
+  --bs-btn-disabled-color: var(--tc-disabled-color);
+  --bs-btn-disabled-bg: var(--tc-disabled-bg);
+  --bs-btn-disabled-border-color: var(--tc-disabled-bg);
+  --bs-btn-disabled-opacity: 1;
+}
+
+/* Cancel, Previous, Next: the ink-grey secondary button */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .btn-secondary {
+  --bs-btn-color: var(--tc-secondary-color);
+  --bs-btn-bg: var(--tc-secondary-bg);
+  --bs-btn-border-color: var(--tc-secondary-bg);
+  --bs-btn-hover-color: var(--tc-secondary-hover-color);
+  --bs-btn-hover-bg: var(--tc-secondary-hover-bg);
+  --bs-btn-hover-border-color: var(--tc-secondary-hover-bg);
+  --bs-btn-active-color: var(--tc-secondary-hover-color);
+  --bs-btn-active-bg: var(--tc-secondary-active-bg);
+  --bs-btn-active-border-color: var(--tc-secondary-active-bg);
+  --bs-btn-focus-shadow-rgb: var(--tc-focus-rgb);
+  --bs-btn-disabled-color: var(--tc-disabled-color);
+  --bs-btn-disabled-bg: var(--tc-disabled-bg);
+  --bs-btn-disabled-border-color: var(--tc-disabled-bg);
+  --bs-btn-disabled-opacity: 1;
+}
+
+/* Remove and "Don't save" share the secondary class with Cancel; they are the
+   destructive ones, so they are outlined in red and never filled */
+.attributeModal .buttonContainer .btn-secondary:not(.cancel-button) {
+  --bs-btn-color: var(--tc-danger-color);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: var(--tc-danger-border);
+  --bs-btn-hover-color: var(--tc-danger-color);
+  --bs-btn-hover-bg: var(--tc-danger-hover-bg);
+  --bs-btn-hover-border-color: var(--tc-danger-color);
+  --bs-btn-active-color: var(--tc-danger-color);
+  --bs-btn-active-bg: var(--tc-danger-hover-bg);
+  --bs-btn-active-border-color: var(--tc-danger-color);
+  --bs-btn-disabled-color: var(--tc-disabled-color);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--tc-disabled-border);
+}
+
+/* icon and word buttons inside dialogs */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(.btn-outline-dark, .btn-outline-secondary) {
+  --bs-btn-color: var(--color-text);
+  --bs-btn-border-color: var(--dlg-line);
+  --bs-btn-hover-color: var(--color-accent-700);
+  --bs-btn-hover-bg: var(--color-accent-100);
+  --bs-btn-hover-border-color: var(--color-accent);
+  --bs-btn-active-color: var(--tc-on-accent);
+  --bs-btn-active-bg: var(--color-accent);
+  --bs-btn-active-border-color: var(--color-accent-700);
+  --bs-btn-focus-shadow-rgb: var(--tc-focus-rgb);
+  --bs-btn-disabled-color: var(--tc-disabled-color);
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: var(--tc-disabled-border);
+  --bs-btn-disabled-opacity: 1;
+}
+
+:is(.dlg, .attributeModal) .btn-outline-secondary {
+  --bs-btn-color: var(--color-neutral-700);
+}
+
+/* ---------- Bootstrap inputs inside the chrome -------------------------------- */
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(.form-control, .form-select) {
+  color: var(--color-text);
+  background-color: var(--dlg-field);
+  border-color: var(--dlg-line);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(.form-control, .form-select):focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.2rem rgba(var(--tc-focus-rgb), 0.25);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) :is(.form-control, .form-select):disabled {
+  color: var(--tc-disabled-color);
+  background-color: var(--tc-disabled-bg);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .form-control::placeholder {
+  color: var(--color-neutral-500);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .form-check-input {
+  background-color: var(--dlg-field);
+  border-color: var(--dlg-line);
+  box-shadow: none;
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .form-check-input:checked {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: none;
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .form-check-input:checked[type='checkbox'] {
+  --bs-form-check-bg-image: var(--tc-check-mark);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .form-check-input:checked[type='radio'] {
+  --bs-form-check-bg-image: var(--tc-radio-mark);
+}
+
+:is(.dlg, .attributeModal, .helpDialog, .modal-content) .form-check-input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 0.2rem rgba(var(--tc-focus-rgb), 0.25);
+}
+
+/* ---------- older dialog controls (dialogs.css) -------------------------------- */
+.smoControl button,
+.smoControl input,
+.smoControl select,
+.dropdownControl select {
+  border-color: var(--dlg-line);
+}
+
+.show-group-line {
+  border-left-color: var(--color-neutral-800);
+}
+
+button.number-click {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+button.number-click:disabled {
+  background: var(--tc-disabled-bg);
+  color: var(--tc-disabled-color);
+}
+
+.pitch-array-item,
+.attributeModal .smoControl.multiControl,
+.attributeModal .smoControl.buttonArray {
+  border-color: var(--dlg-rule);
+}
+
+.attributeModal .nav-item {
+  border-bottom-color: var(--dlg-rule);
+}
+
+.attributeModal .smoControl.buttonArray .icon-bravura.icon-transparent {
+  color: var(--color-neutral-500);
+}
+
+.smoControl.buttonArray button:hover {
+  background: var(--color-accent-100);
+  color: var(--color-accent-700);
+}
+
+button.button-array.pushed {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent-700);
+  color: var(--tc-on-accent);
+}
+
+button.button-array.initial {
+  background-color: var(--color-surface);
+}
+
+.cbTextInPlace button span.icon-checkmark {
+  color: var(--color-accent-700);
+}
+
+/* ---------- popups: help, splash, bug report, keyboard, progress ---------------- */
+#help-dialog-container .helpDialog,
+.helpLine .help-title {
+  background: var(--color-neutral-100);
+}
+
+#help-dialog-container .helpDialog {
+  border: 1px solid var(--tc-dialog-border);
+}
+
+.helpDialog.card-view {
+  box-shadow: var(--shadow-lg);
+}
+
+.helpDialog .helpLine strong {
+  background: var(--color-accent-100);
+}
+
+.helpDialog button.close,
+.key-right-ctrl button.close,
+.bug-dismiss-button {
+  color: var(--color-neutral-700);
+  background: transparent;
+  border-color: transparent;
+}
+
+.helpDialog button.close:hover,
+.bug-dismiss-button:hover {
+  color: var(--color-text);
+  background: var(--tc-hover-bg);
+}
+
+.helpKey,
+.wideKey,
+.kb-float .helpKey,
+.kb-float .wideKey {
+  border-color: var(--color-neutral-500);
+}
+
+.modal-content {
+  --bs-modal-bg: var(--color-neutral-100);
+  --bs-modal-color: var(--color-text);
+  --bs-modal-border-color: var(--tc-dialog-border);
+  background-color: var(--color-neutral-100);
+  border-color: var(--tc-dialog-border);
+  box-shadow: var(--shadow-lg);
+}
+
+.bugDialog,
+.splashScreen .bugDialog,
+.modal-content .splash-div {
+  background: var(--color-neutral-100);
+}
+
+.modal-content #bug-text-area,
+.modal-content textarea {
+  background: var(--dlg-field);
+  border-color: var(--dlg-line);
+}
+
+body.showQwerty .qwertyKb {
+  background: var(--color-bg);
+}
+
+body.showQwerty .qwertyKb .kb-float {
+  border-color: var(--tc-dialog-border);
+}
+
+.reverse-button {
+  background: var(--color-accent);
+  color: var(--tc-on-accent);
+}
+
+.transition-button {
+  background: var(--color-surface);
+}
+
+#render-progress {
+  --bs-progress-bg: var(--tc-secondary-bg);
+  --bs-progress-bar-bg: var(--color-accent);
+  --bs-progress-bar-color: var(--tc-on-accent);
+}
+
+#render-progress[value]::-webkit-progress-bar {
+  background-color: var(--tc-secondary-bg);
+}
+
+#render-progress[value]::-webkit-progress-value {
+  background: var(--color-accent);
+}
+
+/* ---------- file tree (tree.css) -------------------------------------------------- */
+:is(.dlg, .attributeModal) ul.tree li {
+  border-left-color: var(--dlg-line);
+  color: var(--color-text);
+}
+
+:is(.dlg, .attributeModal) ul.tree li:before {
+  border-bottom-color: var(--dlg-line);
+}
+
+:is(.dlg, .attributeModal) ul.tree li:last-child:before {
+  border-left-color: var(--dlg-line);
+}
+
+:is(.dlg, .attributeModal) ul.tree li.selected > a,
+:is(.dlg, .attributeModal) ul.tree a:hover,
+:is(.dlg, .attributeModal) ul.tree a:focus {
+  background: var(--color-accent-100);
+}
+
+/* hotkeys and group headings on the paper sidebar: the hint colour is 4.2:1
+   there, the label colour is 6.2:1. The open button's hotkey sits on brass. */
+.side .mbtn-key,
+.side .side-group {
+  color: var(--color-neutral-700);
+}
+
+.side .mbtn.is-open .mbtn-key {
+  color: var(--tc-on-accent);
+}
